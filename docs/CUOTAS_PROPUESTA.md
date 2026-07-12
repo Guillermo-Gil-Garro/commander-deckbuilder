@@ -1,7 +1,8 @@
 # Propuesta de cuotas por arquetipo y diales de usuario 🔶
 
-Estado: **borrador para revisión de Guille** (2026-07-12). Nada de esto es config activa;
-cuando se apruebe, se convierte en `quotas.yaml` + código.
+Estado: **aprobado por Guille** (2026-07-12; bandas de §3 delegadas en la orquestadora,
+diales y suelo Karsten confirmados por él). Config activa en `quotas.yaml`; este doc
+queda como registro de diseño. Pendiente: lista de comandantes a individualizar.
 
 ## 1. Modelo de capas
 

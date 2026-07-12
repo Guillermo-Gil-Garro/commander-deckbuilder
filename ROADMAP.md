@@ -13,8 +13,8 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 
 ## Fase 1 — Sistema de cuotas
 - ✅ Cálculo de tierras Karsten (conteo por curva + distribución de color por pips) — portado del TFM a `backend/quotas/` (2026-07-12); la aplicación sobre bandas de categoría va con el esquema de cuotas
-- ⬜ 🔶 Esquema de cuotas `{categoria: {min, max}}` por arquetipo (valores los valida Guille)
-- ⬜ Validador de mazo de 99 (estado por categoría)
+- ✅ 🔶 Esquema de cuotas `{categoria: {min, max}}` por arquetipo — valores aprobados por Guille 2026-07-12 (`quotas.yaml` + `backend/quotas/{config,resolver}.py`; 7 arquetipos, 6 diales con memes, overrides por comandante pendientes de su lista)
+- ✅ Validador de mazo de 99 (estado por categoría, suelo Karsten infranqueable; `backend/quotas/validator.py`)
 
 ## Fase 2 — Experimentos de tagging
 - ⬜ 3-4 métodos de tagging sobre el mismo pool de test
