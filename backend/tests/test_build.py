@@ -1,7 +1,12 @@
 import json
 from pathlib import Path
 
-from pipeline.build import build, has_playable_layout, is_commander_legal
+from pipeline.build import (
+    build,
+    has_playable_layout,
+    has_playable_type,
+    is_commander_legal,
+)
 
 
 def _card(name: str, layout: str = "normal", commander: str = "legal") -> dict:
@@ -30,6 +35,17 @@ def test_has_playable_layout() -> None:
     assert has_playable_layout(_card("Normal"))
     for layout in ("token", "emblem", "art_series", "scheme", "vanguard", "planar"):
         assert not has_playable_layout(_card("Bad", layout=layout))
+
+
+def test_has_playable_type_excludes_stickers_and_attractions() -> None:
+    assert has_playable_type(_card("Elf"))
+    sticker = _card("Sticker Sheet")
+    sticker["type_line"] = "Stickers"
+    assert not has_playable_type(sticker)
+    attraction = _card("Ferris Wheel")
+    attraction["type_line"] = "Artifact — Attraction"
+    assert not has_playable_type(attraction)
+    assert has_playable_type({"name": "No Type Line"})
 
 
 def test_build_filters_and_writes_jsonl(tmp_path: Path) -> None:

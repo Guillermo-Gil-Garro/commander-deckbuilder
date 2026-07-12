@@ -28,8 +28,18 @@ def is_commander_legal(data: dict) -> bool:
     return data.get("legalities", {}).get("commander") == "legal"
 
 
+# Commander-legal on paper (the RC never banned them) but not real deck cards;
+# they would only pollute the recommender (group decision, 2026-07-12).
+EXCLUDED_TYPES = ("Stickers", "Attraction")
+
+
 def has_playable_layout(data: dict) -> bool:
     return data.get("layout") not in EXCLUDED_LAYOUTS
+
+
+def has_playable_type(data: dict) -> bool:
+    type_line = data.get("type_line") or ""
+    return not any(excluded in type_line for excluded in EXCLUDED_TYPES)
 
 
 def build(bulk_path: Path, output_path: Path) -> tuple[int, int, int]:
@@ -48,7 +58,7 @@ def build(bulk_path: Path, output_path: Path) -> tuple[int, int, int]:
             if not is_commander_legal(data):
                 continue
             legal += 1
-            if not has_playable_layout(data):
+            if not has_playable_layout(data) or not has_playable_type(data):
                 continue
             card = Card.from_scryfall(data)
             out.write(card.model_dump_json() + "\n")
