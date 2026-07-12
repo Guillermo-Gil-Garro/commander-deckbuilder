@@ -18,7 +18,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 
 ## Fase 2 — Experimentos de tagging
 - ⬜ 3-4 métodos de tagging sobre el mismo pool de test
-- ⬜ 🔶 Set de test ~200 cartas etiquetadas a mano (propuesta → revisión Guille)
+- 🔄 🔶 Set de test ~200 cartas etiquetadas a mano — propuesta generada (`experiments/tagging/test_set_proposal.csv`, 2026-07-12), pendiente de revisión/corrección de Guille
 - ⬜ 🔶 Informe comparativo en DECISIONS.md → Guille decide
 
 ## Fase 3 — Experimentos de selección
