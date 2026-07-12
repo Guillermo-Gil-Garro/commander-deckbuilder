@@ -15,9 +15,9 @@ Las cuotas `[min, max]` de un mazo se resuelven por precedencia:
 
 **Karsten es transversal, no una capa**: el suelo de tierras (regresión) y las fuentes
 de color (hipergeométrica) se calculan siempre sobre el mazo actual. El `min` efectivo
-de tierras es `max(min_banda, suelo_karsten)` — salvo en el dial low de tierras, que
-permite bajar hasta `karsten − 2` pero el semáforo nunca marca verde por debajo del
-suelo (ámbar como mejor caso). Propuesta discutible, ver §6.
+de tierras es SIEMPRE `max(min_banda, suelo_karsten)`: el suelo es infranqueable
+(decisión de Guille 2026-07-12). El dial low de tierras puede acercar la banda al
+suelo, nunca cruzarlo.
 
 ## 2. Categorías
 
@@ -65,14 +65,12 @@ Frases confirmadas por Guille:
 | tierras | "Mamá se llevó las tierras, qué caradura..." | "¡MOZÁ! ¡TENGO TIERRAS!" |
 | removal | "Soy pecifista" (sic, no es errata) | "¡Voy a matar a Moe! Weeeee" |
 | boardwipe | "Mi gente, tamo en japón. ¡Gente con cojone!" | "50.000 people used to live here... now it's a ghost town." |
+| ramp | "курва (kurwa para los que no leen cirílico)" | "It's raining lands! Hallelujah! It's raining lands!" |
+| robo | "Topdicker" | "Piggyhands" |
+| sinergia | "5C goodstuff" | "Technologia!" |
 
-Categorías que propongo AÑADIR como dial (🔶 Guille aporta memes si compra):
-- **ramp** — low: mazo que juega a curva / high: turbo-maná.
-- **robo** — low: top-deck warrior / high: motor de cartas.
-- **sinergia (techo)** — low: goodstuff genérico / high: all-in temático.
-
-No propongo dial para `wincons` (banda estrecha, poco juego real) ni para
-contrahechizos (viven dentro de removal).
+Seis diales confirmados (2026-07-12). Sin dial para `wincons` (banda estrecha, poco
+juego real) ni para contrahechizos (viven dentro de removal).
 
 ## 5. Asignación comandante → arquetipo
 
@@ -99,10 +97,10 @@ commanders:
 
 ## 6. Preguntas abiertas 🔶
 
-1. ¿Validas arquetipos y números de §3? (Cualquier celda es discutible; son puntos de
-   partida razonables, no dogma.)
-2. Dial low de tierras por debajo del suelo Karsten: ¿se permite con semáforo ámbar
-   (propuesto) o el suelo es infranqueable?
-3. ¿Compras los 3 diales extra de §4? → memes para ramp, robo y sinergia.
-4. ¿δ propuestos OK? (tierras ±3, etc.)
-5. Primeros comandantes a individualizar (cuando quieras).
+Resueltas 2026-07-12: suelo Karsten infranqueable; 6 diales confirmados con memes.
+
+1. ¿Validas arquetipos y bandas [min, max] de la tabla de §3? (Cualquier celda es
+   discutible; son puntos de partida razonables, no dogma.)
+2. ¿δ de los diales OK? (tierras ±3, ramp ±3, robo ±3, removal ±3, boardwipe ±2,
+   sinergia ±6)
+3. Lista de comandantes a individualizar — Guille la envía cuando quiera.
