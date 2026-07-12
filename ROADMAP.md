@@ -8,7 +8,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ✅ Scaffold inicial del repo (backend/, frontend/, data/, experiments/, docs/)
 - ✅ Pipeline de datos Scryfall: bulk oracle cards → filtro legalidad Commander → modelo de carta interno (`backend/pipeline/`, 2026-07-12; 31.622 cartas, 18 tests)
 - ⬜ Scaffold FastAPI + React + Vite + Dockerfile HF Spaces
-- ⬜ Fetcher EDHREC por comandante (recomendaciones + scores), con caché
+- ✅ Fetcher EDHREC por comandante (recomendaciones + scores), con caché (`backend/pipeline/edhrec.py`, 2026-07-12; verificado con Atraxa y Krenko)
 - ⬜ 🔶 `banlist.yaml` (oficial + custom; las custom las decide Guille)
 
 ## Fase 1 — Sistema de cuotas

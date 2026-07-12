@@ -1,0 +1,3069 @@
+{
+ "creature": 24,
+ "instant": 10,
+ "sorcery": 8,
+ "artifact": 9,
+ "enchantment": 7,
+ "battle": 0,
+ "planeswalker": 6,
+ "land": 35,
+ "basic": 12,
+ "nonbasic": 23,
+ "similar": [
+  "Atraxa, Grand Unifier",
+  "Ixhel, Scion of Atraxa",
+  "Reyhan, Last of the Abzan",
+  "Ishai, Ojutai Dragonspeaker",
+  "Vorel of the Hull Clade",
+  "Falco Spara, Pactweaver"
+ ],
+ "bracket_counts": {
+  "4": 2213,
+  "2": 3364,
+  "3": 3389,
+  "5": 142,
+  "1": 134
+ },
+ "budget_counts": {
+  "middle": 33997,
+  "budget": 4249,
+  "expensive": 4249
+ },
+ "tag_counts": {
+  "Infect": 4860,
+  "Planeswalkers": 2707,
+  "+1/+1 Counters": 2458,
+  "Phyrexians": 1352,
+  "Proliferate": 1283,
+  "-1/-1 Counters": 329,
+  "Tokens": 291,
+  "Control": 251,
+  "Midrange": 223,
+  "Combo": 201,
+  "Counters Matter": 185,
+  "Aggro": 166,
+  "Enchantress": 123,
+  "Sagas": 120,
+  "Energy": 116,
+  "Lifegain": 115,
+  "Artifacts": 111,
+  "Ramp": 109,
+  "Historic": 99,
+  "Stax": 95,
+  "Good Stuff": 94,
+  "Legends": 87,
+  "Angels": 80,
+  "Group Hug": 79,
+  "Extra Turns": 74,
+  "Pillow Fort": 70,
+  "Flying": 62,
+  "Saprolings": 62,
+  "cEDH": 57,
+  "Mill": 51,
+  "Voltron": 50,
+  "Reanimator": 50,
+  "Self-Damage": 48,
+  "Charge Counters": 40,
+  "Equipment": 34,
+  "Rad Counters": 32,
+  "Tempo": 31,
+  "Fungi": 31,
+  "Blink": 29,
+  "Card Draw": 28,
+  "Spellslinger": 28,
+  "Group Slug": 27,
+  "Commander Matters": 24,
+  "Lands Matter": 24,
+  "Auras": 23,
+  "Toolbox": 23,
+  "Horrors": 23,
+  "Birthing Pod": 23,
+  "Wheels": 23,
+  "X Spells": 22,
+  "Praetors": 22,
+  "Hydras": 21,
+  "Hatebears": 21,
+  "Aristocrats": 20,
+  "Deathtouch": 19,
+  "Clones": 18,
+  "Activated Abilities": 18,
+  "Prison": 17,
+  "Mutate": 17,
+  "Modular": 16,
+  "Big Mana": 13,
+  "Chaos": 13,
+  "Oil Counters": 13,
+  "Experience Counters": 11,
+  "Land Destruction": 11,
+  "Self-Mill": 11,
+  "Populate": 10,
+  "Keywords": 10,
+  "Incubate": 9,
+  "Sacrifice": 9,
+  "Elves": 9,
+  "Spirits": 9,
+  "Theft": 8,
+  "Defenders": 8,
+  "Ad Nauseam": 8,
+  "Snow": 8,
+  "Politics": 8,
+  "Landfall": 8,
+  "Spore Counters": 8,
+  "Mutants": 8,
+  "Zoo": 7,
+  "Graveyard": 7,
+  "Transform": 7,
+  "Zombies": 7,
+  "Burn": 7,
+  "Guildgates": 6,
+  "Indestructible": 6,
+  "Spacecraft": 6,
+  "Anthems": 6,
+  "Discard": 6,
+  "Exalted": 6,
+  "Stompy": 6,
+  "Insects": 6,
+  "Unnatural": 6,
+  "Tap / Untap": 6,
+  "Slime Against Humanity": 5,
+  "Modified Creatures": 5,
+  "Counterspells": 5,
+  "Unblockable": 5,
+  "Storm": 5,
+  "Lifedrain": 5,
+  "Stickers": 5,
+  "Affinity": 4,
+  "Vehicles": 4,
+  "Humans": 4,
+  "Rats": 4,
+  "Cycling": 4,
+  "Triggered Abilities": 4,
+  "Cantrips": 4,
+  "Eggs": 3,
+  "Forced Combat": 3,
+  "Oozes": 3,
+  "Turbo Fog": 3,
+  "Dredge": 3,
+  "Flashback": 3,
+  "Faeries": 3,
+  "Snakes": 3,
+  "Attractions": 3,
+  "Toughness Matters": 3,
+  "Primal Surge": 3,
+  "Merfolk": 3,
+  "Frogs": 3,
+  "Stun": 2,
+  "Exile": 2,
+  "Scry": 2,
+  "Creatureless": 2,
+  "Dragons": 2,
+  "Old School": 2,
+  "Plants": 2,
+  "Tron": 2,
+  "Connive": 2,
+  "Time Counters": 2,
+  "Nightmares": 2,
+  "Party": 2,
+  "Treasure": 2,
+  "Devotion": 2,
+  "Eldrazi": 2,
+  "Rube Goldberg": 1,
+  "Level Up": 1,
+  "Summons": 1,
+  "Weenies": 1,
+  "Power Matters": 1,
+  "Beasts": 1,
+  "Fight": 1,
+  "Morph": 1,
+  "Flash": 1,
+  "Food": 1,
+  "Advisors": 1,
+  "Relentless Rats": 1,
+  "Saboteurs": 1,
+  "Power": 1,
+  "Gyruda Companion": 1,
+  "Bounce": 1,
+  "ETB": 1,
+  "Craft": 1,
+  "Multicolor Matters": 1,
+  "Ninjutsu": 1,
+  "Birds": 1,
+  "Improvise": 1,
+  "Attack Triggers": 1,
+  "Knights": 1,
+  "Curses": 1,
+  "Battles": 1,
+  "Stoneblade": 1,
+  "Clerics": 1,
+  "Monkeys": 1,
+  "Apes": 1,
+  "Crabs": 1,
+  "Rock": 1,
+  "Donate": 1,
+  "Wraiths": 1,
+  "The Ring": 1,
+  "Golems": 1,
+  "Persistent Petitioners": 1,
+  "Allies": 1,
+  "Rogues": 1,
+  "Cascade": 1,
+  "Dinosaurs": 1,
+  "Myr": 1,
+  "Gods": 1,
+  "Topdeck": 1,
+  "Rat Colony": 1,
+  "Hellbent": 1,
+  "Bats": 1,
+  "Spiders": 1,
+  "Slivers": 1
+ },
+ "savedate_counts": {
+  "2024-07-13": 28,
+  "2024-07-14": 26,
+  "2024-07-15": 18,
+  "2024-07-16": 28,
+  "2024-07-17": 56,
+  "2024-07-18": 29,
+  "2024-07-19": 60,
+  "2024-07-20": 44,
+  "2024-07-21": 50,
+  "2024-07-22": 50,
+  "2024-07-23": 18,
+  "2024-07-24": 20,
+  "2024-07-25": 66,
+  "2024-07-26": 28,
+  "2024-07-27": 39,
+  "2024-07-28": 22,
+  "2024-07-29": 23,
+  "2024-07-30": 26,
+  "2024-07-31": 49,
+  "2024-08-01": 55,
+  "2024-08-02": 37,
+  "2024-08-03": 44,
+  "2024-08-04": 36,
+  "2024-08-05": 66,
+  "2024-08-06": 53,
+  "2024-08-07": 35,
+  "2024-08-08": 55,
+  "2024-08-09": 37,
+  "2024-08-10": 35,
+  "2024-08-11": 62,
+  "2024-08-12": 33,
+  "2024-08-13": 15,
+  "2024-08-14": 67,
+  "2024-08-15": 1,
+  "2024-08-16": 49,
+  "2024-08-17": 27,
+  "2024-08-18": 61,
+  "2024-08-19": 54,
+  "2024-08-20": 30,
+  "2024-08-21": 63,
+  "2024-08-22": 55,
+  "2024-08-23": 52,
+  "2024-08-24": 39,
+  "2024-08-25": 37,
+  "2024-08-26": 54,
+  "2024-08-27": 65,
+  "2024-08-28": 23,
+  "2024-08-29": 64,
+  "2024-08-30": 31,
+  "2024-08-31": 56,
+  "2024-09-01": 34,
+  "2024-09-02": 36,
+  "2024-09-03": 74,
+  "2024-09-04": 42,
+  "2024-09-05": 39,
+  "2024-09-06": 34,
+  "2024-09-07": 17,
+  "2024-09-08": 48,
+  "2024-09-09": 64,
+  "2024-09-10": 30,
+  "2024-09-11": 36,
+  "2024-09-12": 47,
+  "2024-09-13": 22,
+  "2024-09-14": 60,
+  "2024-09-15": 42,
+  "2024-09-16": 46,
+  "2024-09-17": 32,
+  "2024-09-18": 67,
+  "2024-09-19": 26,
+  "2024-09-20": 23,
+  "2024-09-21": 28,
+  "2024-09-22": 37,
+  "2024-09-23": 25,
+  "2024-09-24": 58,
+  "2024-09-25": 29,
+  "2024-09-26": 26,
+  "2024-09-27": 47,
+  "2024-09-28": 22,
+  "2024-09-29": 43,
+  "2024-09-30": 26,
+  "2024-10-01": 53,
+  "2024-10-02": 40,
+  "2024-10-03": 35,
+  "2024-10-04": 52,
+  "2024-10-05": 44,
+  "2024-10-06": 40,
+  "2024-10-07": 51,
+  "2024-10-08": 29,
+  "2024-10-09": 37,
+  "2024-10-10": 58,
+  "2024-10-11": 14,
+  "2024-10-12": 45,
+  "2024-10-13": 27,
+  "2024-10-14": 63,
+  "2024-10-15": 54,
+  "2024-10-16": 27,
+  "2024-10-17": 60,
+  "2024-10-18": 12,
+  "2024-10-19": 21,
+  "2024-10-20": 36,
+  "2024-10-21": 37,
+  "2024-10-22": 23,
+  "2024-10-23": 28,
+  "2024-10-24": 40,
+  "2024-10-25": 53,
+  "2024-10-26": 29,
+  "2024-10-27": 57,
+  "2024-10-28": 33,
+  "2024-10-29": 25,
+  "2024-10-30": 46,
+  "2024-10-31": 19,
+  "2024-11-01": 21,
+  "2024-11-02": 55,
+  "2024-11-03": 20,
+  "2024-11-04": 46,
+  "2024-11-05": 38,
+  "2024-11-06": 18,
+  "2024-11-07": 56,
+  "2024-11-08": 27,
+  "2024-11-09": 19,
+  "2024-11-10": 33,
+  "2024-11-11": 63,
+  "2024-11-12": 47,
+  "2024-11-13": 22,
+  "2024-11-14": 64,
+  "2024-11-15": 12,
+  "2024-11-16": 22,
+  "2024-11-17": 63,
+  "2024-11-18": 52,
+  "2024-11-19": 30,
+  "2024-11-20": 33,
+  "2024-11-21": 37,
+  "2024-11-22": 67,
+  "2024-11-23": 25,
+  "2024-11-24": 51,
+  "2024-11-25": 20,
+  "2024-11-26": 18,
+  "2024-11-27": 35,
+  "2024-11-28": 35,
+  "2024-11-29": 25,
+  "2024-11-30": 25,
+  "2024-12-01": 29,
+  "2024-12-02": 52,
+  "2024-12-03": 23,
+  "2024-12-04": 58,
+  "2024-12-05": 22,
+  "2024-12-06": 27,
+  "2024-12-07": 47,
+  "2024-12-08": 32,
+  "2024-12-09": 19,
+  "2024-12-10": 32,
+  "2024-12-11": 27,
+  "2024-12-12": 18,
+  "2024-12-13": 26,
+  "2024-12-14": 25,
+  "2024-12-15": 24,
+  "2024-12-16": 69,
+  "2024-12-17": 25,
+  "2024-12-18": 56,
+  "2024-12-19": 52,
+  "2024-12-20": 30,
+  "2024-12-21": 47,
+  "2024-12-22": 57,
+  "2024-12-23": 42,
+  "2024-12-24": 35,
+  "2024-12-25": 42,
+  "2024-12-26": 18,
+  "2024-12-27": 70,
+  "2024-12-28": 44,
+  "2024-12-29": 47,
+  "2024-12-30": 29,
+  "2024-12-31": 33,
+  "2025-01-01": 23,
+  "2025-01-02": 77,
+  "2025-01-03": 39,
+  "2025-01-04": 52,
+  "2025-01-05": 37,
+  "2025-01-06": 53,
+  "2025-01-07": 10,
+  "2025-01-08": 36,
+  "2025-01-09": 24,
+  "2025-01-10": 30,
+  "2025-01-11": 40,
+  "2025-01-12": 33,
+  "2025-01-13": 27,
+  "2025-01-14": 26,
+  "2025-01-15": 23,
+  "2025-01-16": 39,
+  "2025-01-17": 51,
+  "2025-01-18": 41,
+  "2025-01-19": 36,
+  "2025-01-20": 55,
+  "2025-01-21": 22,
+  "2025-01-22": 26,
+  "2025-01-23": 41,
+  "2025-01-24": 36,
+  "2025-01-25": 45,
+  "2025-01-26": 52,
+  "2025-01-27": 50,
+  "2025-01-28": 38,
+  "2025-01-29": 59,
+  "2025-01-30": 45,
+  "2025-01-31": 41,
+  "2025-02-01": 37,
+  "2025-02-02": 46,
+  "2025-02-03": 44,
+  "2025-02-04": 56,
+  "2025-02-05": 44,
+  "2025-02-06": 36,
+  "2025-02-07": 26,
+  "2025-02-08": 21,
+  "2025-02-09": 19,
+  "2025-02-10": 20,
+  "2025-02-11": 47,
+  "2025-02-12": 171,
+  "2025-02-13": 141,
+  "2025-02-14": 126,
+  "2025-02-15": 97,
+  "2025-02-16": 84,
+  "2025-02-17": 89,
+  "2025-02-18": 79,
+  "2025-02-19": 79,
+  "2025-02-20": 70,
+  "2025-02-21": 68,
+  "2025-02-22": 81,
+  "2025-02-23": 73,
+  "2025-02-24": 88,
+  "2025-02-25": 69,
+  "2025-02-26": 71,
+  "2025-02-27": 63,
+  "2025-02-28": 65,
+  "2025-03-01": 63,
+  "2025-03-02": 68,
+  "2025-03-03": 69,
+  "2025-03-04": 63,
+  "2025-03-05": 65,
+  "2025-03-06": 74,
+  "2025-03-07": 66,
+  "2025-03-08": 69,
+  "2025-03-09": 83,
+  "2025-03-10": 75,
+  "2025-03-11": 62,
+  "2025-03-12": 66,
+  "2025-03-13": 64,
+  "2025-03-14": 73,
+  "2025-03-15": 74,
+  "2025-03-16": 64,
+  "2025-03-17": 75,
+  "2025-03-18": 54,
+  "2025-03-19": 74,
+  "2025-03-20": 64,
+  "2025-03-21": 73,
+  "2025-03-22": 89,
+  "2025-03-23": 87,
+  "2025-03-24": 72,
+  "2025-03-25": 94,
+  "2025-03-26": 58,
+  "2025-03-27": 61,
+  "2025-03-28": 55,
+  "2025-03-29": 63,
+  "2025-03-30": 64,
+  "2025-03-31": 65,
+  "2025-04-01": 56,
+  "2025-04-02": 54,
+  "2025-04-03": 74,
+  "2025-04-04": 47,
+  "2025-04-05": 55,
+  "2025-04-06": 78,
+  "2025-04-07": 44,
+  "2025-04-08": 55,
+  "2025-04-09": 50,
+  "2025-04-10": 57,
+  "2025-04-11": 57,
+  "2025-04-12": 61,
+  "2025-04-13": 61,
+  "2025-04-14": 52,
+  "2025-04-15": 60,
+  "2025-04-16": 58,
+  "2025-04-17": 59,
+  "2025-04-18": 48,
+  "2025-04-19": 72,
+  "2025-04-20": 64,
+  "2025-04-21": 55,
+  "2025-04-22": 52,
+  "2025-04-23": 47,
+  "2025-04-24": 57,
+  "2025-04-25": 63,
+  "2025-04-26": 69,
+  "2025-04-27": 71,
+  "2025-04-28": 47,
+  "2025-04-29": 71,
+  "2025-04-30": 56,
+  "2025-05-01": 59,
+  "2025-05-02": 51,
+  "2025-05-03": 58,
+  "2025-05-04": 64,
+  "2025-05-05": 61,
+  "2025-05-06": 79,
+  "2025-05-07": 58,
+  "2025-05-08": 53,
+  "2025-05-09": 67,
+  "2025-05-10": 73,
+  "2025-05-11": 50,
+  "2025-05-12": 71,
+  "2025-05-13": 59,
+  "2025-05-14": 77,
+  "2025-05-15": 75,
+  "2025-05-16": 51,
+  "2025-05-17": 59,
+  "2025-05-18": 64,
+  "2025-05-19": 74,
+  "2025-05-20": 55,
+  "2025-05-21": 48,
+  "2025-05-22": 65,
+  "2025-05-23": 51,
+  "2025-05-24": 57,
+  "2025-05-25": 49,
+  "2025-05-26": 47,
+  "2025-05-27": 52,
+  "2025-05-28": 56,
+  "2025-05-29": 58,
+  "2025-05-30": 58,
+  "2025-05-31": 43,
+  "2025-06-01": 50,
+  "2025-06-02": 53,
+  "2025-06-03": 42,
+  "2025-06-04": 40,
+  "2025-06-05": 53,
+  "2025-06-06": 47,
+  "2025-06-07": 56,
+  "2025-06-08": 50,
+  "2025-06-09": 65,
+  "2025-06-10": 47,
+  "2025-06-11": 50,
+  "2025-06-12": 38,
+  "2025-06-13": 50,
+  "2025-06-14": 55,
+  "2025-06-15": 50,
+  "2025-06-16": 62,
+  "2025-06-17": 54,
+  "2025-06-18": 45,
+  "2025-06-19": 50,
+  "2025-06-20": 46,
+  "2025-06-21": 48,
+  "2025-06-22": 48,
+  "2025-06-23": 48,
+  "2025-06-24": 58,
+  "2025-06-25": 60,
+  "2025-06-26": 45,
+  "2025-06-27": 59,
+  "2025-06-28": 45,
+  "2025-06-29": 48,
+  "2025-06-30": 46,
+  "2025-07-01": 40,
+  "2025-07-02": 29,
+  "2025-07-03": 51,
+  "2025-07-04": 39,
+  "2025-07-05": 49,
+  "2025-07-06": 65,
+  "2025-07-07": 55,
+  "2025-07-08": 54,
+  "2025-07-09": 47,
+  "2025-07-10": 49,
+  "2025-07-11": 59,
+  "2025-07-12": 70,
+  "2025-07-13": 63,
+  "2025-07-14": 50,
+  "2025-07-15": 62,
+  "2025-07-16": 41,
+  "2025-07-17": 66,
+  "2025-07-18": 52,
+  "2025-07-19": 48,
+  "2025-07-20": 54,
+  "2025-07-21": 45,
+  "2025-07-22": 53,
+  "2025-07-23": 53,
+  "2025-07-24": 59,
+  "2025-07-25": 51,
+  "2025-07-26": 49,
+  "2025-07-27": 57,
+  "2025-07-28": 64,
+  "2025-07-29": 83,
+  "2025-07-30": 65,
+  "2025-07-31": 46,
+  "2025-08-01": 55,
+  "2025-08-02": 53,
+  "2025-08-03": 79,
+  "2025-08-04": 58,
+  "2025-08-05": 40,
+  "2025-08-06": 57,
+  "2025-08-07": 53,
+  "2025-08-08": 55,
+  "2025-08-09": 64,
+  "2025-08-10": 62,
+  "2025-08-11": 47,
+  "2025-08-12": 62,
+  "2025-08-13": 54,
+  "2025-08-14": 54,
+  "2025-08-15": 58,
+  "2025-08-16": 45,
+  "2025-08-17": 59,
+  "2025-08-18": 48,
+  "2025-08-19": 60,
+  "2025-08-20": 73,
+  "2025-08-21": 57,
+  "2025-08-22": 57,
+  "2025-08-23": 44,
+  "2025-08-24": 83,
+  "2025-08-25": 62,
+  "2025-08-26": 56,
+  "2025-08-27": 62,
+  "2025-08-28": 61,
+  "2025-08-29": 54,
+  "2025-08-30": 56,
+  "2025-08-31": 47,
+  "2025-09-01": 52,
+  "2025-09-02": 64,
+  "2025-09-03": 67,
+  "2025-09-04": 56,
+  "2025-09-05": 71,
+  "2025-09-06": 47,
+  "2025-09-07": 58,
+  "2025-09-08": 57,
+  "2025-09-09": 47,
+  "2025-09-10": 45,
+  "2025-09-11": 48,
+  "2025-09-12": 48,
+  "2025-09-13": 38,
+  "2025-09-14": 53,
+  "2025-09-15": 58,
+  "2025-09-16": 57,
+  "2025-09-17": 50,
+  "2025-09-18": 59,
+  "2025-09-19": 55,
+  "2025-09-20": 44,
+  "2025-09-21": 47,
+  "2025-09-22": 43,
+  "2025-09-23": 53,
+  "2025-09-24": 55,
+  "2025-09-25": 40,
+  "2025-09-26": 54,
+  "2025-09-27": 51,
+  "2025-09-28": 62,
+  "2025-09-29": 45,
+  "2025-09-30": 66,
+  "2025-10-01": 53,
+  "2025-10-02": 57,
+  "2025-10-03": 49,
+  "2025-10-04": 54,
+  "2025-10-05": 47,
+  "2025-10-06": 60,
+  "2025-10-07": 55,
+  "2025-10-08": 56,
+  "2025-10-09": 49,
+  "2025-10-10": 55,
+  "2025-10-11": 45,
+  "2025-10-12": 55,
+  "2025-10-13": 59,
+  "2025-10-14": 56,
+  "2025-10-15": 48,
+  "2025-10-16": 51,
+  "2025-10-17": 66,
+  "2025-10-18": 60,
+  "2025-10-19": 52,
+  "2025-10-20": 50,
+  "2025-10-21": 43,
+  "2025-10-22": 61,
+  "2025-10-23": 43,
+  "2025-10-24": 52,
+  "2025-10-25": 52,
+  "2025-10-26": 50,
+  "2025-10-27": 52,
+  "2025-10-28": 49,
+  "2025-10-29": 54,
+  "2025-10-30": 57,
+  "2025-10-31": 55,
+  "2025-11-01": 35,
+  "2025-11-02": 42,
+  "2025-11-03": 84,
+  "2025-11-04": 50,
+  "2025-11-05": 69,
+  "2025-11-06": 66,
+  "2025-11-07": 60,
+  "2025-11-08": 46,
+  "2025-11-09": 46,
+  "2025-11-10": 44,
+  "2025-11-11": 42,
+  "2025-11-12": 46,
+  "2025-11-13": 59,
+  "2025-11-14": 45,
+  "2025-11-15": 34,
+  "2025-11-16": 61,
+  "2025-11-17": 36,
+  "2025-11-18": 44,
+  "2025-11-19": 61,
+  "2025-11-20": 25,
+  "2025-11-21": 79,
+  "2025-11-22": 56,
+  "2025-11-23": 85,
+  "2025-11-24": 57,
+  "2025-11-25": 59,
+  "2025-11-26": 55,
+  "2025-11-27": 56,
+  "2025-11-28": 41,
+  "2025-11-29": 66,
+  "2025-11-30": 50,
+  "2025-12-01": 44,
+  "2025-12-02": 53,
+  "2025-12-03": 39,
+  "2025-12-04": 48,
+  "2025-12-05": 28,
+  "2025-12-06": 77,
+  "2025-12-07": 50,
+  "2025-12-08": 51,
+  "2025-12-09": 48,
+  "2025-12-10": 62,
+  "2025-12-11": 50,
+  "2025-12-12": 58,
+  "2025-12-13": 53,
+  "2025-12-14": 66,
+  "2025-12-15": 44,
+  "2025-12-16": 54,
+  "2025-12-17": 67,
+  "2025-12-18": 62,
+  "2025-12-19": 58,
+  "2025-12-20": 49,
+  "2025-12-21": 66,
+  "2025-12-22": 68,
+  "2025-12-23": 41,
+  "2025-12-24": 44,
+  "2025-12-25": 42,
+  "2025-12-26": 45,
+  "2025-12-27": 87,
+  "2025-12-28": 67,
+  "2025-12-29": 72,
+  "2025-12-30": 73,
+  "2025-12-31": 53,
+  "2026-01-01": 56,
+  "2026-01-02": 59,
+  "2026-01-03": 65,
+  "2026-01-04": 77,
+  "2026-01-05": 64,
+  "2026-01-06": 65,
+  "2026-01-07": 67,
+  "2026-01-08": 53,
+  "2026-01-09": 56,
+  "2026-01-10": 70,
+  "2026-01-11": 67,
+  "2026-01-12": 51,
+  "2026-01-13": 63,
+  "2026-01-14": 56,
+  "2026-01-15": 60,
+  "2026-01-16": 63,
+  "2026-01-17": 63,
+  "2026-01-18": 69,
+  "2026-01-19": 77,
+  "2026-01-20": 72,
+  "2026-01-21": 65,
+  "2026-01-22": 58,
+  "2026-01-23": 69,
+  "2026-01-24": 79,
+  "2026-01-25": 80,
+  "2026-01-26": 68,
+  "2026-01-27": 79,
+  "2026-01-28": 60,
+  "2026-01-29": 72,
+  "2026-01-30": 22,
+  "2026-01-31": 39,
+  "2026-02-01": 126,
+  "2026-02-02": 84,
+  "2026-02-03": 101,
+  "2026-02-04": 74,
+  "2026-02-05": 83,
+  "2026-02-06": 97,
+  "2026-02-07": 69,
+  "2026-02-08": 76,
+  "2026-02-09": 38,
+  "2026-02-10": 102,
+  "2026-02-11": 89,
+  "2026-02-12": 89,
+  "2026-02-13": 94,
+  "2026-02-14": 73,
+  "2026-02-15": 70,
+  "2026-02-16": 59,
+  "2026-02-17": 74,
+  "2026-02-18": 83,
+  "2026-02-19": 68,
+  "2026-02-20": 75,
+  "2026-02-21": 43,
+  "2026-02-22": 107,
+  "2026-02-23": 81,
+  "2026-02-24": 79,
+  "2026-02-25": 79,
+  "2026-02-26": 75,
+  "2026-02-27": 65,
+  "2026-02-28": 75,
+  "2026-03-01": 67,
+  "2026-03-02": 88,
+  "2026-03-03": 79,
+  "2026-03-04": 58,
+  "2026-03-05": 108,
+  "2026-03-06": 71,
+  "2026-03-07": 64,
+  "2026-03-08": 63,
+  "2026-03-09": 77,
+  "2026-03-10": 76,
+  "2026-03-11": 84,
+  "2026-03-12": 70,
+  "2026-03-13": 74,
+  "2026-03-14": 66,
+  "2026-03-15": 78,
+  "2026-03-16": 84,
+  "2026-03-17": 73,
+  "2026-03-18": 83,
+  "2026-03-19": 65,
+  "2026-03-20": 57,
+  "2026-03-21": 64,
+  "2026-03-22": 99,
+  "2026-03-23": 66,
+  "2026-03-24": 77,
+  "2026-03-25": 73,
+  "2026-03-26": 91,
+  "2026-03-27": 64,
+  "2026-03-28": 55,
+  "2026-03-29": 90,
+  "2026-03-30": 71,
+  "2026-03-31": 76,
+  "2026-04-01": 73,
+  "2026-04-02": 76,
+  "2026-04-03": 108,
+  "2026-04-04": 74,
+  "2026-04-05": 81,
+  "2026-04-06": 77,
+  "2026-04-07": 76,
+  "2026-04-08": 74,
+  "2026-04-09": 65,
+  "2026-04-10": 76,
+  "2026-04-11": 60,
+  "2026-04-12": 46,
+  "2026-04-13": 143,
+  "2026-04-14": 70,
+  "2026-04-15": 75,
+  "2026-04-16": 91,
+  "2026-04-17": 75,
+  "2026-04-18": 75,
+  "2026-04-19": 79,
+  "2026-04-20": 70,
+  "2026-04-21": 58,
+  "2026-04-22": 75,
+  "2026-04-23": 77,
+  "2026-04-24": 94,
+  "2026-04-25": 77,
+  "2026-04-26": 90,
+  "2026-04-27": 78,
+  "2026-04-28": 78,
+  "2026-04-29": 76,
+  "2026-04-30": 83,
+  "2026-05-01": 84,
+  "2026-05-02": 92,
+  "2026-05-03": 97,
+  "2026-05-04": 77,
+  "2026-05-05": 94,
+  "2026-05-06": 77,
+  "2026-05-07": 87,
+  "2026-05-08": 76,
+  "2026-05-09": 74,
+  "2026-05-10": 95,
+  "2026-05-11": 77,
+  "2026-05-12": 92,
+  "2026-05-13": 85,
+  "2026-05-14": 86,
+  "2026-05-15": 91,
+  "2026-05-16": 93,
+  "2026-05-17": 107,
+  "2026-05-18": 79,
+  "2026-05-19": 98,
+  "2026-05-20": 92,
+  "2026-05-21": 50,
+  "2026-05-22": 125,
+  "2026-05-23": 92,
+  "2026-05-24": 88,
+  "2026-05-25": 94,
+  "2026-05-26": 78,
+  "2026-05-27": 95,
+  "2026-05-28": 86,
+  "2026-05-29": 84,
+  "2026-05-30": 76,
+  "2026-05-31": 82,
+  "2026-06-01": 90,
+  "2026-06-02": 93,
+  "2026-06-03": 74,
+  "2026-06-04": 81,
+  "2026-06-05": 80,
+  "2026-06-06": 77,
+  "2026-06-07": 91,
+  "2026-06-08": 77,
+  "2026-06-09": 85,
+  "2026-06-10": 87,
+  "2026-06-11": 82,
+  "2026-06-12": 86,
+  "2026-06-13": 89,
+  "2026-06-14": 90,
+  "2026-06-15": 80,
+  "2026-06-16": 81,
+  "2026-06-17": 76,
+  "2026-06-18": 87,
+  "2026-06-19": 83,
+  "2026-06-20": 70,
+  "2026-06-21": 84,
+  "2026-06-22": 90,
+  "2026-06-23": 90,
+  "2026-06-24": 72,
+  "2026-06-25": 71,
+  "2026-06-26": 95,
+  "2026-06-27": 91,
+  "2026-06-28": 107,
+  "2026-06-29": 103,
+  "2026-06-30": 113,
+  "2026-07-01": 89,
+  "2026-07-02": 114,
+  "2026-07-03": 110,
+  "2026-07-04": 117,
+  "2026-07-05": 107,
+  "2026-07-06": 103,
+  "2026-07-07": 118,
+  "2026-07-08": 126,
+  "2026-07-09": 113,
+  "2026-07-10": 144,
+  "2026-07-11": 135,
+  "2026-07-12": 74
+ },
+ "header": "Atraxa, Praetors' Voice (Commander)",
+ "panels": {
+  "piechart": {
+   "content": [
+    {
+     "label": "Land",
+     "value": 35,
+     "color": "#e98125"
+    },
+    {
+     "label": "Planeswalker",
+     "value": 6,
+     "color": "#7b6688"
+    },
+    {
+     "label": "Enchantment",
+     "value": 7,
+     "color": "#d8d138"
+    },
+    {
+     "label": "Artifact",
+     "value": 9,
+     "color": "#634c22"
+    },
+    {
+     "label": "Sorcery",
+     "value": 8,
+     "color": "#961818"
+    },
+    {
+     "label": "Instant",
+     "value": 10,
+     "color": "#2081c1"
+    },
+    {
+     "label": "Creature",
+     "value": 24,
+     "color": "#64a61f"
+    }
+   ],
+   "title": "Average Type Distribution"
+  },
+  "taglinks": [
+   {
+    "count": 4860,
+    "slug": "infect",
+    "value": "Infect"
+   },
+   {
+    "count": 2707,
+    "slug": "planeswalkers",
+    "value": "Planeswalkers"
+   },
+   {
+    "count": 2458,
+    "slug": "plus-1-plus-1-counters",
+    "value": "+1/+1 Counters"
+   },
+   {
+    "count": 1352,
+    "slug": "phyrexians",
+    "value": "Phyrexians"
+   },
+   {
+    "count": 1283,
+    "slug": "proliferate",
+    "value": "Proliferate"
+   },
+   {
+    "count": 329,
+    "slug": "minus-1-minus-1-counters",
+    "value": "-1/-1 Counters"
+   },
+   {
+    "count": 291,
+    "slug": "tokens",
+    "value": "Tokens"
+   },
+   {
+    "count": 251,
+    "slug": "control",
+    "value": "Control"
+   },
+   {
+    "count": 223,
+    "slug": "midrange",
+    "value": "Midrange"
+   },
+   {
+    "count": 201,
+    "slug": "combo",
+    "value": "Combo"
+   },
+   {
+    "count": 185,
+    "slug": "counters-matter",
+    "value": "Counters Matter"
+   },
+   {
+    "count": 166,
+    "slug": "aggro",
+    "value": "Aggro"
+   },
+   {
+    "count": 123,
+    "slug": "enchantress",
+    "value": "Enchantress"
+   },
+   {
+    "count": 120,
+    "slug": "sagas",
+    "value": "Sagas"
+   },
+   {
+    "count": 116,
+    "slug": "energy",
+    "value": "Energy"
+   },
+   {
+    "count": 115,
+    "slug": "lifegain",
+    "value": "Lifegain"
+   },
+   {
+    "count": 111,
+    "slug": "artifacts",
+    "value": "Artifacts"
+   },
+   {
+    "count": 109,
+    "slug": "ramp",
+    "value": "Ramp"
+   },
+   {
+    "count": 99,
+    "slug": "historic",
+    "value": "Historic"
+   },
+   {
+    "count": 95,
+    "slug": "stax",
+    "value": "Stax"
+   },
+   {
+    "count": 94,
+    "slug": "good-stuff",
+    "value": "Good Stuff"
+   },
+   {
+    "count": 87,
+    "slug": "legends",
+    "value": "Legends"
+   },
+   {
+    "count": 80,
+    "slug": "angels",
+    "value": "Angels"
+   },
+   {
+    "count": 79,
+    "slug": "group-hug",
+    "value": "Group Hug"
+   },
+   {
+    "count": 74,
+    "slug": "extra-turns",
+    "value": "Extra Turns"
+   },
+   {
+    "count": 70,
+    "slug": "pillow-fort",
+    "value": "Pillow Fort"
+   },
+   {
+    "count": 62,
+    "slug": "flying",
+    "value": "Flying"
+   },
+   {
+    "count": 62,
+    "slug": "saprolings",
+    "value": "Saprolings"
+   },
+   {
+    "count": 51,
+    "slug": "mill",
+    "value": "Mill"
+   },
+   {
+    "count": 50,
+    "slug": "reanimator",
+    "value": "Reanimator"
+   },
+   {
+    "count": 50,
+    "slug": "voltron",
+    "value": "Voltron"
+   },
+   {
+    "count": 48,
+    "slug": "self-damage",
+    "value": "Self-Damage"
+   },
+   {
+    "count": 40,
+    "slug": "charge-counters",
+    "value": "Charge Counters"
+   },
+   {
+    "count": 34,
+    "slug": "equipment",
+    "value": "Equipment"
+   },
+   {
+    "count": 32,
+    "slug": "rad-counters",
+    "value": "Rad Counters"
+   },
+   {
+    "count": 31,
+    "slug": "fungi",
+    "value": "Fungi"
+   },
+   {
+    "count": 31,
+    "slug": "tempo",
+    "value": "Tempo"
+   },
+   {
+    "count": 29,
+    "slug": "blink",
+    "value": "Blink"
+   },
+   {
+    "count": 28,
+    "slug": "card-draw",
+    "value": "Card Draw"
+   },
+   {
+    "count": 28,
+    "slug": "spellslinger",
+    "value": "Spellslinger"
+   },
+   {
+    "count": 27,
+    "slug": "group-slug",
+    "value": "Group Slug"
+   },
+   {
+    "count": 24,
+    "slug": "commander-matters",
+    "value": "Commander Matters"
+   },
+   {
+    "count": 24,
+    "slug": "lands-matter",
+    "value": "Lands Matter"
+   },
+   {
+    "count": 23,
+    "slug": "auras",
+    "value": "Auras"
+   },
+   {
+    "count": 23,
+    "slug": "birthing-pod",
+    "value": "Birthing Pod"
+   },
+   {
+    "count": 23,
+    "slug": "horrors",
+    "value": "Horrors"
+   },
+   {
+    "count": 23,
+    "slug": "toolbox",
+    "value": "Toolbox"
+   },
+   {
+    "count": 23,
+    "slug": "wheels",
+    "value": "Wheels"
+   },
+   {
+    "count": 22,
+    "slug": "praetors",
+    "value": "Praetors"
+   },
+   {
+    "count": 22,
+    "slug": "x-spells",
+    "value": "X Spells"
+   },
+   {
+    "count": 21,
+    "slug": "hatebears",
+    "value": "Hatebears"
+   },
+   {
+    "count": 21,
+    "slug": "hydras",
+    "value": "Hydras"
+   },
+   {
+    "count": 20,
+    "slug": "aristocrats",
+    "value": "Aristocrats"
+   },
+   {
+    "count": 19,
+    "slug": "deathtouch",
+    "value": "Deathtouch"
+   },
+   {
+    "count": 18,
+    "slug": "activated-abilities",
+    "value": "Activated Abilities"
+   },
+   {
+    "count": 18,
+    "slug": "clones",
+    "value": "Clones"
+   },
+   {
+    "count": 17,
+    "slug": "mutate",
+    "value": "Mutate"
+   },
+   {
+    "count": 17,
+    "slug": "prison",
+    "value": "Prison"
+   },
+   {
+    "count": 16,
+    "slug": "modular",
+    "value": "Modular"
+   },
+   {
+    "count": 13,
+    "slug": "big-mana",
+    "value": "Big Mana"
+   },
+   {
+    "count": 13,
+    "slug": "chaos",
+    "value": "Chaos"
+   },
+   {
+    "count": 13,
+    "slug": "oil-counters",
+    "value": "Oil Counters"
+   },
+   {
+    "count": 11,
+    "slug": "experience-counters",
+    "value": "Experience Counters"
+   },
+   {
+    "count": 11,
+    "slug": "land-destruction",
+    "value": "Land Destruction"
+   },
+   {
+    "count": 11,
+    "slug": "self-mill",
+    "value": "Self-Mill"
+   },
+   {
+    "count": 10,
+    "slug": "keywords",
+    "value": "Keywords"
+   },
+   {
+    "count": 10,
+    "slug": "populate",
+    "value": "Populate"
+   },
+   {
+    "count": 9,
+    "slug": "elves",
+    "value": "Elves"
+   },
+   {
+    "count": 9,
+    "slug": "incubate",
+    "value": "Incubate"
+   },
+   {
+    "count": 9,
+    "slug": "sacrifice",
+    "value": "Sacrifice"
+   },
+   {
+    "count": 9,
+    "slug": "spirits",
+    "value": "Spirits"
+   },
+   {
+    "count": 8,
+    "slug": "ad-nauseam",
+    "value": "Ad Nauseam"
+   },
+   {
+    "count": 8,
+    "slug": "defenders",
+    "value": "Defenders"
+   },
+   {
+    "count": 8,
+    "slug": "landfall",
+    "value": "Landfall"
+   },
+   {
+    "count": 8,
+    "slug": "mutants",
+    "value": "Mutants"
+   },
+   {
+    "count": 8,
+    "slug": "politics",
+    "value": "Politics"
+   },
+   {
+    "count": 8,
+    "slug": "snow",
+    "value": "Snow"
+   },
+   {
+    "count": 8,
+    "slug": "spore-counters",
+    "value": "Spore Counters"
+   },
+   {
+    "count": 8,
+    "slug": "theft",
+    "value": "Theft"
+   },
+   {
+    "count": 7,
+    "slug": "burn",
+    "value": "Burn"
+   },
+   {
+    "count": 7,
+    "slug": "graveyard",
+    "value": "Graveyard"
+   },
+   {
+    "count": 7,
+    "slug": "transform",
+    "value": "Transform"
+   },
+   {
+    "count": 7,
+    "slug": "zombies",
+    "value": "Zombies"
+   },
+   {
+    "count": 7,
+    "slug": "zoo",
+    "value": "Zoo"
+   },
+   {
+    "count": 6,
+    "slug": "anthems",
+    "value": "Anthems"
+   },
+   {
+    "count": 6,
+    "slug": "discard",
+    "value": "Discard"
+   },
+   {
+    "count": 6,
+    "slug": "exalted",
+    "value": "Exalted"
+   },
+   {
+    "count": 6,
+    "slug": "guildgates",
+    "value": "Guildgates"
+   },
+   {
+    "count": 6,
+    "slug": "indestructible",
+    "value": "Indestructible"
+   },
+   {
+    "count": 6,
+    "slug": "insects",
+    "value": "Insects"
+   },
+   {
+    "count": 6,
+    "slug": "spacecraft",
+    "value": "Spacecraft"
+   },
+   {
+    "count": 6,
+    "slug": "stompy",
+    "value": "Stompy"
+   },
+   {
+    "count": 6,
+    "slug": "tap-untap",
+    "value": "Tap / Untap"
+   },
+   {
+    "count": 6,
+    "slug": "unnatural",
+    "value": "Unnatural"
+   },
+   {
+    "count": 5,
+    "slug": "counterspells",
+    "value": "Counterspells"
+   },
+   {
+    "count": 5,
+    "slug": "lifedrain",
+    "value": "Lifedrain"
+   },
+   {
+    "count": 5,
+    "slug": "modified-creatures",
+    "value": "Modified Creatures"
+   },
+   {
+    "count": 5,
+    "slug": "slime-against-humanity",
+    "value": "Slime Against Humanity"
+   },
+   {
+    "count": 5,
+    "slug": "stickers",
+    "value": "Stickers"
+   },
+   {
+    "count": 5,
+    "slug": "storm",
+    "value": "Storm"
+   },
+   {
+    "count": 5,
+    "slug": "unblockable",
+    "value": "Unblockable"
+   },
+   {
+    "count": 4,
+    "slug": "affinity",
+    "value": "Affinity"
+   },
+   {
+    "count": 4,
+    "slug": "cantrips",
+    "value": "Cantrips"
+   },
+   {
+    "count": 4,
+    "slug": "cycling",
+    "value": "Cycling"
+   },
+   {
+    "count": 4,
+    "slug": "humans",
+    "value": "Humans"
+   },
+   {
+    "count": 4,
+    "slug": "rats",
+    "value": "Rats"
+   },
+   {
+    "count": 4,
+    "slug": "triggered-abilities",
+    "value": "Triggered Abilities"
+   },
+   {
+    "count": 4,
+    "slug": "vehicles",
+    "value": "Vehicles"
+   },
+   {
+    "count": 3,
+    "slug": "attractions",
+    "value": "Attractions"
+   },
+   {
+    "count": 3,
+    "slug": "dredge",
+    "value": "Dredge"
+   },
+   {
+    "count": 3,
+    "slug": "eggs",
+    "value": "Eggs"
+   },
+   {
+    "count": 3,
+    "slug": "faeries",
+    "value": "Faeries"
+   },
+   {
+    "count": 3,
+    "slug": "flashback",
+    "value": "Flashback"
+   },
+   {
+    "count": 3,
+    "slug": "forced-combat",
+    "value": "Forced Combat"
+   },
+   {
+    "count": 3,
+    "slug": "frogs",
+    "value": "Frogs"
+   },
+   {
+    "count": 3,
+    "slug": "merfolk",
+    "value": "Merfolk"
+   },
+   {
+    "count": 3,
+    "slug": "oozes",
+    "value": "Oozes"
+   },
+   {
+    "count": 3,
+    "slug": "primal-surge",
+    "value": "Primal Surge"
+   },
+   {
+    "count": 3,
+    "slug": "snakes",
+    "value": "Snakes"
+   },
+   {
+    "count": 3,
+    "slug": "toughness-matters",
+    "value": "Toughness Matters"
+   },
+   {
+    "count": 3,
+    "slug": "turbo-fog",
+    "value": "Turbo Fog"
+   },
+   {
+    "count": 2,
+    "slug": "connive",
+    "value": "Connive"
+   },
+   {
+    "count": 2,
+    "slug": "creatureless",
+    "value": "Creatureless"
+   },
+   {
+    "count": 2,
+    "slug": "devotion",
+    "value": "Devotion"
+   },
+   {
+    "count": 2,
+    "slug": "dragons",
+    "value": "Dragons"
+   },
+   {
+    "count": 2,
+    "slug": "eldrazi",
+    "value": "Eldrazi"
+   },
+   {
+    "count": 2,
+    "slug": "exile",
+    "value": "Exile"
+   },
+   {
+    "count": 2,
+    "slug": "nightmares",
+    "value": "Nightmares"
+   },
+   {
+    "count": 2,
+    "slug": "old-school",
+    "value": "Old School"
+   },
+   {
+    "count": 2,
+    "slug": "party",
+    "value": "Party"
+   },
+   {
+    "count": 2,
+    "slug": "plants",
+    "value": "Plants"
+   },
+   {
+    "count": 2,
+    "slug": "scry",
+    "value": "Scry"
+   },
+   {
+    "count": 2,
+    "slug": "stun",
+    "value": "Stun"
+   },
+   {
+    "count": 2,
+    "slug": "time-counters",
+    "value": "Time Counters"
+   },
+   {
+    "count": 2,
+    "slug": "treasure",
+    "value": "Treasure"
+   },
+   {
+    "count": 2,
+    "slug": "tron",
+    "value": "Tron"
+   },
+   {
+    "count": 1,
+    "slug": "advisors",
+    "value": "Advisors"
+   },
+   {
+    "count": 1,
+    "slug": "allies",
+    "value": "Allies"
+   },
+   {
+    "count": 1,
+    "slug": "apes",
+    "value": "Apes"
+   },
+   {
+    "count": 1,
+    "slug": "attack-triggers",
+    "value": "Attack Triggers"
+   },
+   {
+    "count": 1,
+    "slug": "bats",
+    "value": "Bats"
+   },
+   {
+    "count": 1,
+    "slug": "battles",
+    "value": "Battles"
+   },
+   {
+    "count": 1,
+    "slug": "beasts",
+    "value": "Beasts"
+   },
+   {
+    "count": 1,
+    "slug": "birds",
+    "value": "Birds"
+   },
+   {
+    "count": 1,
+    "slug": "bounce",
+    "value": "Bounce"
+   },
+   {
+    "count": 1,
+    "slug": "cascade",
+    "value": "Cascade"
+   },
+   {
+    "count": 1,
+    "slug": "clerics",
+    "value": "Clerics"
+   },
+   {
+    "count": 1,
+    "slug": "crabs",
+    "value": "Crabs"
+   },
+   {
+    "count": 1,
+    "slug": "craft",
+    "value": "Craft"
+   },
+   {
+    "count": 1,
+    "slug": "curses",
+    "value": "Curses"
+   },
+   {
+    "count": 1,
+    "slug": "dinosaurs",
+    "value": "Dinosaurs"
+   },
+   {
+    "count": 1,
+    "slug": "donate",
+    "value": "Donate"
+   },
+   {
+    "count": 1,
+    "slug": "etb",
+    "value": "ETB"
+   },
+   {
+    "count": 1,
+    "slug": "fight",
+    "value": "Fight"
+   },
+   {
+    "count": 1,
+    "slug": "flash",
+    "value": "Flash"
+   },
+   {
+    "count": 1,
+    "slug": "food",
+    "value": "Food"
+   },
+   {
+    "count": 1,
+    "slug": "gods",
+    "value": "Gods"
+   },
+   {
+    "count": 1,
+    "slug": "golems",
+    "value": "Golems"
+   },
+   {
+    "count": 1,
+    "slug": "gyruda-companion",
+    "value": "Gyruda Companion"
+   },
+   {
+    "count": 1,
+    "slug": "hellbent",
+    "value": "Hellbent"
+   },
+   {
+    "count": 1,
+    "slug": "improvise",
+    "value": "Improvise"
+   },
+   {
+    "count": 1,
+    "slug": "knights",
+    "value": "Knights"
+   },
+   {
+    "count": 1,
+    "slug": "level-up",
+    "value": "Level Up"
+   },
+   {
+    "count": 1,
+    "slug": "monkeys",
+    "value": "Monkeys"
+   },
+   {
+    "count": 1,
+    "slug": "morph",
+    "value": "Morph"
+   },
+   {
+    "count": 1,
+    "slug": "multicolor-matters",
+    "value": "Multicolor Matters"
+   },
+   {
+    "count": 1,
+    "slug": "myr",
+    "value": "Myr"
+   },
+   {
+    "count": 1,
+    "slug": "ninjutsu",
+    "value": "Ninjutsu"
+   },
+   {
+    "count": 1,
+    "slug": "persistent-petitioners",
+    "value": "Persistent Petitioners"
+   },
+   {
+    "count": 1,
+    "slug": "power",
+    "value": "Power"
+   },
+   {
+    "count": 1,
+    "slug": "power-matters",
+    "value": "Power Matters"
+   },
+   {
+    "count": 1,
+    "slug": "rat-colony",
+    "value": "Rat Colony"
+   },
+   {
+    "count": 1,
+    "slug": "relentless-rats",
+    "value": "Relentless Rats"
+   },
+   {
+    "count": 1,
+    "slug": "rock",
+    "value": "Rock"
+   },
+   {
+    "count": 1,
+    "slug": "rogues",
+    "value": "Rogues"
+   },
+   {
+    "count": 1,
+    "slug": "rube-goldberg",
+    "value": "Rube Goldberg"
+   },
+   {
+    "count": 1,
+    "slug": "saboteurs",
+    "value": "Saboteurs"
+   },
+   {
+    "count": 1,
+    "slug": "slivers",
+    "value": "Slivers"
+   },
+   {
+    "count": 1,
+    "slug": "spiders",
+    "value": "Spiders"
+   },
+   {
+    "count": 1,
+    "slug": "stoneblade",
+    "value": "Stoneblade"
+   },
+   {
+    "count": 1,
+    "slug": "summons",
+    "value": "Summons"
+   },
+   {
+    "count": 1,
+    "slug": "the-ring",
+    "value": "The Ring"
+   },
+   {
+    "count": 1,
+    "slug": "topdeck",
+    "value": "Topdeck"
+   },
+   {
+    "count": 1,
+    "slug": "weenies",
+    "value": "Weenies"
+   },
+   {
+    "count": 1,
+    "slug": "wraiths",
+    "value": "Wraiths"
+   }
+  ],
+  "mana_curve": {
+   "0": 1,
+   "1": 8,
+   "2": 18,
+   "3": 16,
+   "4": 10,
+   "5": 6,
+   "6": 4,
+   "7": 1
+  },
+  "rank_over_time": {
+   "2024-07-01": {
+    "commander_count": 680,
+    "perc_of_decks_overall": 0.573,
+    "perc_of_decks_overall_ma": 0.595,
+    "rank": 8,
+    "rank_ma": 9
+   },
+   "2024-08-01": {
+    "commander_count": 1391,
+    "perc_of_decks_overall": 0.616,
+    "perc_of_decks_overall_ma": 0.578,
+    "rank": 9,
+    "rank_ma": 7
+   },
+   "2024-09-01": {
+    "commander_count": 1160,
+    "perc_of_decks_overall": 0.543,
+    "perc_of_decks_overall_ma": 0.55,
+    "rank": 3,
+    "rank_ma": 6
+   },
+   "2024-10-01": {
+    "commander_count": 1188,
+    "perc_of_decks_overall": 0.49,
+    "perc_of_decks_overall_ma": 0.512,
+    "rank": 7,
+    "rank_ma": 6
+   },
+   "2024-11-01": {
+    "commander_count": 1079,
+    "perc_of_decks_overall": 0.502,
+    "perc_of_decks_overall_ma": 0.513,
+    "rank": 8,
+    "rank_ma": 5
+   },
+   "2024-12-01": {
+    "commander_count": 1157,
+    "perc_of_decks_overall": 0.547,
+    "perc_of_decks_overall_ma": 0.533,
+    "rank": 1,
+    "rank_ma": 4
+   },
+   "2025-01-01": {
+    "commander_count": 1207,
+    "perc_of_decks_overall": 0.551,
+    "perc_of_decks_overall_ma": 0.551,
+    "rank": 2,
+    "rank_ma": 3
+   },
+   "2025-02-01": {
+    "commander_count": 1910,
+    "perc_of_decks_overall": 0.555,
+    "perc_of_decks_overall_ma": 0.552,
+    "rank": 5,
+    "rank_ma": 4
+   },
+   "2025-03-01": {
+    "commander_count": 2146,
+    "perc_of_decks_overall": 0.55,
+    "perc_of_decks_overall_ma": 0.533,
+    "rank": 4,
+    "rank_ma": 8
+   },
+   "2025-04-01": {
+    "commander_count": 1750,
+    "perc_of_decks_overall": 0.492,
+    "perc_of_decks_overall_ma": 0.512,
+    "rank": 14,
+    "rank_ma": 9
+   },
+   "2025-05-01": {
+    "commander_count": 1842,
+    "perc_of_decks_overall": 0.494,
+    "perc_of_decks_overall_ma": 0.476,
+    "rank": 8,
+    "rank_ma": 13
+   },
+   "2025-06-01": {
+    "commander_count": 1508,
+    "perc_of_decks_overall": 0.44,
+    "perc_of_decks_overall_ma": 0.465,
+    "rank": 17,
+    "rank_ma": 13
+   },
+   "2025-07-01": {
+    "commander_count": 1668,
+    "perc_of_decks_overall": 0.459,
+    "perc_of_decks_overall_ma": 0.455,
+    "rank": 15,
+    "rank_ma": 14
+   },
+   "2025-08-01": {
+    "commander_count": 1775,
+    "perc_of_decks_overall": 0.466,
+    "perc_of_decks_overall_ma": 0.461,
+    "rank": 9,
+    "rank_ma": 11
+   },
+   "2025-09-01": {
+    "commander_count": 1590,
+    "perc_of_decks_overall": 0.457,
+    "perc_of_decks_overall_ma": 0.453,
+    "rank": 10,
+    "rank_ma": 9
+   },
+   "2025-10-01": {
+    "commander_count": 1645,
+    "perc_of_decks_overall": 0.436,
+    "perc_of_decks_overall_ma": 0.435,
+    "rank": 9,
+    "rank_ma": 11
+   },
+   "2025-11-01": {
+    "commander_count": 1599,
+    "perc_of_decks_overall": 0.411,
+    "perc_of_decks_overall_ma": 0.423,
+    "rank": 13,
+    "rank_ma": 11
+   },
+   "2025-12-01": {
+    "commander_count": 1719,
+    "perc_of_decks_overall": 0.422,
+    "perc_of_decks_overall_ma": 0.409,
+    "rank": 11,
+    "rank_ma": 14
+   },
+   "2026-01-01": {
+    "commander_count": 1964,
+    "perc_of_decks_overall": 0.396,
+    "perc_of_decks_overall_ma": 0.415,
+    "rank": 17,
+    "rank_ma": 13
+   },
+   "2026-02-01": {
+    "commander_count": 2228,
+    "perc_of_decks_overall": 0.426,
+    "perc_of_decks_overall_ma": 0.42,
+    "rank": 12,
+    "rank_ma": 13
+   },
+   "2026-03-01": {
+    "commander_count": 2311,
+    "perc_of_decks_overall": 0.439,
+    "perc_of_decks_overall_ma": 0.427,
+    "rank": 10,
+    "rank_ma": 13
+   },
+   "2026-04-01": {
+    "commander_count": 2350,
+    "perc_of_decks_overall": 0.417,
+    "perc_of_decks_overall_ma": 0.421,
+    "rank": 16,
+    "rank_ma": 16
+   },
+   "2026-05-01": {
+    "commander_count": 2703,
+    "perc_of_decks_overall": 0.408,
+    "perc_of_decks_overall_ma": 0.415,
+    "rank": 21,
+    "rank_ma": 18
+   },
+   "2026-06-01": {
+    "commander_count": 90,
+    "perc_of_decks_overall": 0.42,
+    "perc_of_decks_overall_ma": 0.414,
+    "rank": 16,
+    "rank_ma": 19
+   }
+  },
+  "combocounts": [
+   {
+    "value": "Vraska, Betrayal's Sting + Vorinclex, Monstrous Raider",
+    "alt": "Vraska, Betrayal's Sting + Vorinclex, Monstrous Raider",
+    "href": "/combos/golgari/1529-1887"
+   },
+   {
+    "value": "Vraska, Betrayal's Sting + Innkeeper's Talent",
+    "alt": "Vraska, Betrayal's Sting + Innkeeper's Talent",
+    "href": "/combos/golgari/1529-5902"
+   },
+   {
+    "value": "Teferi, Temporal Archmage + The Chain Veil",
+    "alt": "Teferi, Temporal Archmage + The Chain Veil",
+    "href": "/combos/mono-blue/787-1124"
+   },
+   {
+    "value": "See More...",
+    "alt": "See More...",
+    "href": "/combos/atraxa-praetors-voice"
+   }
+  ],
+  "articles": [
+   {
+    "alt": "Article",
+    "date": "Jun 30, 2026",
+    "href": "https://edhrec.com/articles/ranking-every-four-color-commander/",
+    "site": {
+     "api": "https://edhrec.com/articles/wp-json/wp/v2/",
+     "auth": "Y29udGVudGFkbWluOkF1R3EgYkQxMCAzOEp6IFY2SGkgaTQycCBPdjBv",
+     "id": "edhrec",
+     "name": "EDHREC",
+     "parent_page_id": 70919,
+     "tags": true
+    },
+    "value": "Ranking Every Four-Color Commander",
+    "author": {
+     "avatar": "https://secure.gravatar.com/avatar/b2ffbea38cefb7a910a32948c1629ef41a583acec81240fbdaaeb74215c3bc6c?s=96&d=mm&r=g",
+     "id": 172,
+     "link": "https://edhrec.com/articles/author/alejandro-fuentes/",
+     "name": "Alejandro Fuentes"
+    },
+    "excerpt": "Alejandro ranks every four-color commander in Magic, from S to D, including the seven new cards from Marvel Super Heroes. Where do they rank?",
+    "media": "https://cloudflare.edhrec.com/articles/wp-content/uploads/2026/06/ee1c53b5-d4dd-4c7c-aade-8e91b7ea42c3__22252-e1782778714809-1024x734.webp"
+   },
+   {
+    "alt": "Article",
+    "date": "Jun 4, 2026",
+    "href": "https://edhrec.com/articles/the-five-best-end-step-triggers-in-commander/",
+    "site": {
+     "api": "https://edhrec.com/articles/wp-json/wp/v2/",
+     "auth": "Y29udGVudGFkbWluOkF1R3EgYkQxMCAzOEp6IFY2SGkgaTQycCBPdjBv",
+     "id": "edhrec",
+     "name": "EDHREC",
+     "parent_page_id": 70919,
+     "tags": true
+    },
+    "value": "The Five Best End Step Triggers in Commander",
+    "author": {
+     "avatar": "https://secure.gravatar.com/avatar/89efdebaf754503a2d5d2baf81c7a0464d5cc01bc99a6e475882b077c06c848d?s=96&d=mm&r=g",
+     "id": 112,
+     "link": "https://edhrec.com/articles/author/jonathan-zucchetti/",
+     "name": "Jonathan Zucchetti"
+    },
+    "excerpt": "The five best end step triggers in Commander, ranked: plus two honorable mentions and an entire flicker squad sharing the top spot!",
+    "media": "https://cloudflare.edhrec.com/articles/wp-content/uploads/2026/05/card-r46W1-art_crop.webp"
+   }
+  ]
+ },
+ "description": "",
+ "container": {
+  "breadcrumb": [
+   {
+    "/commanders": "Commanders"
+   },
+   {
+    "/commanders/atraxa-praetors-voice": "Atraxa, Praetors' Voice"
+   }
+  ],
+  "description": "Popular decks and cards for Atraxa, Praetors&#x27; Voice",
+  "json_dict": {
+   "cardlists": [
+    {
+     "header": "New Cards",
+     "tag": "newcards",
+     "cardviews": [
+      {
+       "id": "209855ee-d531-4b58-926b-8da171d46619",
+       "name": "The Serpent Society",
+       "sanitized": "the-serpent-society",
+       "slug": "the-serpent-society",
+       "url": "/cards/the-serpent-society",
+       "synergy": 0.008202212182582958,
+       "num_decks": 75,
+       "potential_decks": 3668,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "1abc652f-8e9d-4df7-bc4e-d8b515a40fec",
+       "name": "Baxter Building",
+       "sanitized": "baxter-building",
+       "slug": "baxter-building",
+       "url": "/cards/baxter-building",
+       "synergy": 0.002283152446729328,
+       "num_decks": 30,
+       "potential_decks": 3668,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "801f0417-b663-4e28-9a61-9570061654d7",
+       "name": "Powerful Broker",
+       "sanitized": "powerful-broker",
+       "slug": "powerful-broker",
+       "url": "/cards/powerful-broker",
+       "synergy": 0.003129410541002452,
+       "num_decks": 26,
+       "potential_decks": 3339,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "19dc5fcc-d05d-41a0-84c5-2dec996f3e4f",
+       "name": "Doc Samson, Super Psychiatrist",
+       "sanitized": "doc-samson-super-psychiatrist",
+       "slug": "doc-samson-super-psychiatrist",
+       "url": "/cards/doc-samson-super-psychiatrist",
+       "synergy": 0.001702373776008521,
+       "num_decks": 18,
+       "potential_decks": 3742,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "081cdbd0-5081-4a9e-90ba-f5baf4ac137e",
+       "name": "Gathering Place",
+       "sanitized": "gathering-place",
+       "slug": "gathering-place",
+       "url": "/cards/gathering-place",
+       "synergy": 0.0003991742988861159,
+       "num_decks": 17,
+       "potential_decks": 3742,
+       "trend_zscore": 0.0
+      }
+     ]
+    },
+    {
+     "header": "High Synergy Cards",
+     "tag": "highsynergycards",
+     "cardviews": [
+      {
+       "id": "2d389264-e2d2-4589-9636-faa11fe46710",
+       "name": "Tekuthal, Inquiry Dominus",
+       "sanitized": "tekuthal-inquiry-dominus",
+       "slug": "tekuthal-inquiry-dominus",
+       "url": "/cards/tekuthal-inquiry-dominus",
+       "synergy": 0.2717298248462816,
+       "num_decks": 28009,
+       "potential_decks": 42495,
+       "trend_zscore": 1.5450403205350791
+      },
+      {
+       "id": "1d58d08d-cd62-416d-8d8e-7d9c56d5c4da",
+       "name": "Evolution Sage",
+       "sanitized": "evolution-sage",
+       "slug": "evolution-sage",
+       "url": "/cards/evolution-sage",
+       "synergy": 0.2413909999846373,
+       "num_decks": 25043,
+       "potential_decks": 42495,
+       "trend_zscore": 1.1075581334694313
+      },
+      {
+       "id": "22017ec2-3552-4865-af76-dba042b141f5",
+       "name": "Karn's Bastion",
+       "sanitized": "karns-bastion",
+       "slug": "karns-bastion",
+       "url": "/cards/karns-bastion",
+       "synergy": 0.23825757850424123,
+       "num_decks": 25307,
+       "potential_decks": 42495,
+       "trend_zscore": 0.25606054787603094
+      },
+      {
+       "id": "d38961ce-0257-412f-acec-c5c9886061f8",
+       "name": "Ezuri, Stalker of Spheres",
+       "sanitized": "ezuri-stalker-of-spheres",
+       "slug": "ezuri-stalker-of-spheres",
+       "url": "/cards/ezuri-stalker-of-spheres",
+       "synergy": 0.217851503973215,
+       "num_decks": 22685,
+       "potential_decks": 42495,
+       "trend_zscore": -0.17782676366136377
+      },
+      {
+       "id": "9f1fa1c5-ff87-4bbc-89aa-dbebc91eada0",
+       "name": "Vraska, Betrayal's Sting",
+       "sanitized": "vraska-betrayals-sting",
+       "slug": "vraska-betrayals-sting",
+       "url": "/cards/vraska-betrayals-sting",
+       "synergy": 0.2089038346841896,
+       "num_decks": 22307,
+       "potential_decks": 42495,
+       "trend_zscore": 0.8690866754309837
+      }
+     ]
+    },
+    {
+     "header": "Top Cards",
+     "tag": "topcards",
+     "cardviews": [
+      {
+       "id": "b4e9c870-23c0-413a-ae39-265f09da16d1",
+       "name": "Swords to Plowshares",
+       "sanitized": "swords-to-plowshares",
+       "slug": "swords-to-plowshares",
+       "url": "/cards/swords-to-plowshares",
+       "synergy": -0.029658406215931743,
+       "num_decks": 23409,
+       "potential_decks": 42495,
+       "trend_zscore": 0.6467804071519857
+      },
+      {
+       "id": "c1aac0f5-1d01-4673-b8d3-878d9a1d423c",
+       "name": "Farseek",
+       "sanitized": "farseek",
+       "slug": "farseek",
+       "url": "/cards/farseek",
+       "synergy": 0.062103498821105996,
+       "num_decks": 19560,
+       "potential_decks": 42495,
+       "trend_zscore": 1.216966329247562
+      },
+      {
+       "id": "ac625f30-ed91-4b21-ada8-aaa5b2ad79b8",
+       "name": "Prologue to Phyresis",
+       "sanitized": "prologue-to-phyresis",
+       "slug": "prologue-to-phyresis",
+       "url": "/cards/prologue-to-phyresis",
+       "synergy": 0.15926994313549633,
+       "num_decks": 17155,
+       "potential_decks": 42495,
+       "trend_zscore": 1.5225685276779881
+      },
+      {
+       "id": "e60deb92-f7dd-4f4e-9036-e47dd586f985",
+       "name": "Cultivate",
+       "sanitized": "cultivate",
+       "slug": "cultivate",
+       "url": "/cards/cultivate",
+       "synergy": 0.07344438463352487,
+       "num_decks": 16665,
+       "potential_decks": 42495,
+       "trend_zscore": -1.9287948738679774
+      },
+      {
+       "id": "0a10f284-b043-4307-bdc7-6dad47cc9221",
+       "name": "Infectious Inquiry",
+       "sanitized": "infectious-inquiry",
+       "slug": "infectious-inquiry",
+       "url": "/cards/infectious-inquiry",
+       "synergy": 0.14704633445457224,
+       "num_decks": 15752,
+       "potential_decks": 42495,
+       "trend_zscore": 1.26466983356923
+      }
+     ]
+    },
+    {
+     "header": "Game Changers",
+     "tag": "gamechangers",
+     "cardviews": [
+      {
+       "id": "9f37c5b6-a59c-45cd-9a99-e9357fe9ea1b",
+       "name": "Rhystic Study",
+       "sanitized": "rhystic-study",
+       "slug": "rhystic-study",
+       "url": "/cards/rhystic-study",
+       "synergy": -0.10636563947570854,
+       "num_decks": 12204,
+       "potential_decks": 42495,
+       "trend_zscore": 0.4924095372638553
+      },
+      {
+       "id": "dfb7c4b9-f2f4-4d4e-baf2-86551c8150fe",
+       "name": "Cyclonic Rift",
+       "sanitized": "cyclonic-rift",
+       "slug": "cyclonic-rift",
+       "url": "/cards/cyclonic-rift",
+       "synergy": -0.06004265862904773,
+       "num_decks": 10959,
+       "potential_decks": 42495,
+       "trend_zscore": 1.3459773245951294
+      },
+      {
+       "id": "a24b4cb6-cebb-428b-8654-74347a6a8d63",
+       "name": "Demonic Tutor",
+       "sanitized": "demonic-tutor",
+       "slug": "demonic-tutor",
+       "url": "/cards/demonic-tutor",
+       "synergy": -0.1174745407350209,
+       "num_decks": 9846,
+       "potential_decks": 42495,
+       "trend_zscore": 0.123237144392211
+      },
+      {
+       "id": "483fa1cb-1e35-44f2-a143-98c0f107f5ca",
+       "name": "Teferi's Protection",
+       "sanitized": "teferis-protection",
+       "slug": "teferis-protection",
+       "url": "/cards/teferis-protection",
+       "synergy": 0.05116615053203316,
+       "num_decks": 9742,
+       "potential_decks": 42495,
+       "trend_zscore": -0.12683770595798508
+      },
+      {
+       "id": "861b5889-0183-4bee-afeb-a4b2aa700a8e",
+       "name": "Smothering Tithe",
+       "sanitized": "smothering-tithe",
+       "slug": "smothering-tithe",
+       "url": "/cards/smothering-tithe",
+       "synergy": -0.11041569039030788,
+       "num_decks": 9437,
+       "potential_decks": 42495,
+       "trend_zscore": -0.9261597670634382
+      }
+     ]
+    },
+    {
+     "header": "Creatures",
+     "tag": "creatures",
+     "cardviews": [
+      {
+       "id": "89b39293-6f57-4294-85fc-c718bdbb4d40",
+       "name": "Cankerbloom",
+       "sanitized": "cankerbloom",
+       "slug": "cankerbloom",
+       "url": "/cards/cankerbloom",
+       "synergy": 0.12492153506117326,
+       "num_decks": 14032,
+       "potential_decks": 42495,
+       "trend_zscore": -0.022614047736901326
+      },
+      {
+       "id": "2013aed6-7415-4bf0-a3bb-46d6beecbaff",
+       "name": "Ichor Rats",
+       "sanitized": "ichor-rats",
+       "slug": "ichor-rats",
+       "url": "/cards/ichor-rats",
+       "synergy": 0.1352498569463957,
+       "num_decks": 13695,
+       "potential_decks": 42495,
+       "trend_zscore": -0.01700993892406591
+      },
+      {
+       "id": "fd7dc03e-2a61-482a-b7eb-6cdb7f375fd8",
+       "name": "Dreamtide Whale",
+       "sanitized": "dreamtide-whale",
+       "slug": "dreamtide-whale",
+       "url": "/cards/dreamtide-whale",
+       "synergy": 0.13170097200185935,
+       "num_decks": 13359,
+       "potential_decks": 42495,
+       "trend_zscore": 1.4527175021093799
+      },
+      {
+       "id": "492c2f9a-51e7-4e0f-9899-23bf43ea988b",
+       "name": "Birds of Paradise",
+       "sanitized": "birds-of-paradise",
+       "slug": "birds-of-paradise",
+       "url": "/cards/birds-of-paradise",
+       "synergy": -0.13512037018473594,
+       "num_decks": 13090,
+       "potential_decks": 42495,
+       "trend_zscore": 1.4305163060491823
+      },
+      {
+       "id": "6fb36f7b-6d31-413d-8392-ae4f8ca3c0c4",
+       "name": "Deepglow Skate",
+       "sanitized": "deepglow-skate",
+       "slug": "deepglow-skate",
+       "url": "/cards/deepglow-skate",
+       "synergy": 0.12700853917778504,
+       "num_decks": 13067,
+       "potential_decks": 42495,
+       "trend_zscore": -1.0558294418301801
+      }
+     ]
+    },
+    {
+     "header": "Instants",
+     "tag": "instants",
+     "cardviews": [
+      {
+       "id": "8b817b17-27cf-4f6b-baf2-4c4dbb3e71d1",
+       "name": "Experimental Augury",
+       "sanitized": "experimental-augury",
+       "slug": "experimental-augury",
+       "url": "/cards/experimental-augury",
+       "synergy": 0.1317051800127231,
+       "num_decks": 14115,
+       "potential_decks": 42495,
+       "trend_zscore": 0.07261859337168944
+      },
+      {
+       "id": "83dfb2a5-cd5c-46c6-9bb8-7c5d00f3e003",
+       "name": "Infectious Bite",
+       "sanitized": "infectious-bite",
+       "slug": "infectious-bite",
+       "url": "/cards/infectious-bite",
+       "synergy": 0.11798142827780864,
+       "num_decks": 12641,
+       "potential_decks": 42495,
+       "trend_zscore": 1.2642889150872885
+      },
+      {
+       "id": "e32c67d1-187f-40df-b3b3-6036f5c92834",
+       "name": "Heroic Intervention",
+       "sanitized": "heroic-intervention",
+       "slug": "heroic-intervention",
+       "url": "/cards/heroic-intervention",
+       "synergy": 0.04760626539055918,
+       "num_decks": 9632,
+       "potential_decks": 42495,
+       "trend_zscore": 0.1945344042014072
+      },
+      {
+       "id": "592cbafc-ab4e-461f-b64f-0bf9d83aaff3",
+       "name": "Atomize",
+       "sanitized": "atomize",
+       "slug": "atomize",
+       "url": "/cards/atomize",
+       "synergy": 0.08694188450810392,
+       "num_decks": 8900,
+       "potential_decks": 42495,
+       "trend_zscore": -0.5120300886510459
+      },
+      {
+       "id": "aaf258fc-3ba4-4b83-bdbf-10a07e0b6c03",
+       "name": "Assassin's Trophy",
+       "sanitized": "assassins-trophy",
+       "slug": "assassins-trophy",
+       "url": "/cards/assassins-trophy",
+       "synergy": -0.012899265166797597,
+       "num_decks": 7796,
+       "potential_decks": 42495,
+       "trend_zscore": 0.7860431995644014
+      }
+     ]
+    },
+    {
+     "header": "Sorceries",
+     "tag": "sorceries",
+     "cardviews": [
+      {
+       "id": "4d4e6a91-59cc-4f7f-af25-16acabdafb1a",
+       "name": "Unnatural Restoration",
+       "sanitized": "unnatural-restoration",
+       "slug": "unnatural-restoration",
+       "url": "/cards/unnatural-restoration",
+       "synergy": 0.12428824687847134,
+       "num_decks": 13652,
+       "potential_decks": 42495,
+       "trend_zscore": 0.3970280485546265
+      },
+      {
+       "id": "812498c8-974c-460c-b782-506f5f735346",
+       "name": "Phyresis Outbreak",
+       "sanitized": "phyresis-outbreak",
+       "slug": "phyresis-outbreak",
+       "url": "/cards/phyresis-outbreak",
+       "synergy": 0.12337560459865624,
+       "num_decks": 12897,
+       "potential_decks": 42495,
+       "trend_zscore": 1.6732349214035491
+      },
+      {
+       "id": "7afc4a15-5ff8-457a-aa62-803b2d78d912",
+       "name": "Nature's Lore",
+       "sanitized": "natures-lore",
+       "slug": "natures-lore",
+       "url": "/cards/natures-lore",
+       "synergy": 0.017009218535393,
+       "num_decks": 12112,
+       "potential_decks": 42495,
+       "trend_zscore": 1.8159466736849472
+      },
+      {
+       "id": "bf148ef4-0ed7-4fbe-8ab6-01dd3981c8d3",
+       "name": "Drown in Ichor",
+       "sanitized": "drown-in-ichor",
+       "slug": "drown-in-ichor",
+       "url": "/cards/drown-in-ichor",
+       "synergy": 0.10227627579955578,
+       "num_decks": 11022,
+       "potential_decks": 42495,
+       "trend_zscore": 0.8549269173791478
+      },
+      {
+       "id": "99bf792f-963e-4509-8d3c-7db129c6a77f",
+       "name": "Three Visits",
+       "sanitized": "three-visits",
+       "slug": "three-visits",
+       "url": "/cards/three-visits",
+       "synergy": 0.013662517346480746,
+       "num_decks": 9844,
+       "potential_decks": 42495,
+       "trend_zscore": 1.8161808263993031
+      }
+     ]
+    },
+    {
+     "header": "Utility Artifacts",
+     "tag": "utilityartifacts",
+     "cardviews": [
+      {
+       "id": "dce72636-08e4-484e-ad81-4d1597a31ffb",
+       "name": "Contagion Engine",
+       "sanitized": "contagion-engine",
+       "slug": "contagion-engine",
+       "url": "/cards/contagion-engine",
+       "synergy": 0.12210134273679046,
+       "num_decks": 12135,
+       "potential_decks": 42495,
+       "trend_zscore": -2.8992932408285226
+      },
+      {
+       "id": "b61634ae-05be-4b56-8ebb-9d4ade902e42",
+       "name": "Lightning Greaves",
+       "sanitized": "lightning-greaves",
+       "slug": "lightning-greaves",
+       "url": "/cards/lightning-greaves",
+       "synergy": 0.06515917604206653,
+       "num_decks": 10538,
+       "potential_decks": 42495,
+       "trend_zscore": 0.5143710775172436
+      },
+      {
+       "id": "2c093ce0-2561-4847-ab58-f6f1650d743e",
+       "name": "Ichormoon Gauntlet",
+       "sanitized": "ichormoon-gauntlet",
+       "slug": "ichormoon-gauntlet",
+       "url": "/cards/ichormoon-gauntlet",
+       "synergy": 0.09070200894154587,
+       "num_decks": 9168,
+       "potential_decks": 42495,
+       "trend_zscore": -0.7339859568927213
+      },
+      {
+       "id": "6675632d-d74a-4b1e-8539-ac678d5545a5",
+       "name": "Swiftfoot Boots",
+       "sanitized": "swiftfoot-boots",
+       "slug": "swiftfoot-boots",
+       "url": "/cards/swiftfoot-boots",
+       "synergy": 0.031821031589801346,
+       "num_decks": 7613,
+       "potential_decks": 42495,
+       "trend_zscore": -0.39716117820725755
+      },
+      {
+       "id": "edd7f08a-3baf-4fb0-921e-b0e7b4a1a545",
+       "name": "Contagion Clasp",
+       "sanitized": "contagion-clasp",
+       "slug": "contagion-clasp",
+       "url": "/cards/contagion-clasp",
+       "synergy": 0.0687235305154929,
+       "num_decks": 6931,
+       "potential_decks": 42495,
+       "trend_zscore": -1.9449979756432512
+      }
+     ]
+    },
+    {
+     "header": "Enchantments",
+     "tag": "enchantments",
+     "cardviews": [
+      {
+       "id": "799de0f1-6bf2-4158-8a4f-bedc3d2f6578",
+       "name": "Brokers Ascendancy",
+       "sanitized": "brokers-ascendancy",
+       "slug": "brokers-ascendancy",
+       "url": "/cards/brokers-ascendancy",
+       "synergy": 0.12982110407705885,
+       "num_decks": 13968,
+       "potential_decks": 42495,
+       "trend_zscore": -0.5677236487333728
+      },
+      {
+       "id": "f2c4f80e-84a0-463b-82c3-5c6503809351",
+       "name": "Doubling Season",
+       "sanitized": "doubling-season",
+       "slug": "doubling-season",
+       "url": "/cards/doubling-season",
+       "synergy": 0.12864508936893193,
+       "num_decks": 13691,
+       "potential_decks": 42495,
+       "trend_zscore": -0.88417342551823
+      },
+      {
+       "id": "76f28aa2-1c18-4d58-a3f9-6cd5b49280d8",
+       "name": "Norn's Decree",
+       "sanitized": "norns-decree",
+       "slug": "norns-decree",
+       "url": "/cards/norns-decree",
+       "synergy": 0.10325327009634813,
+       "num_decks": 11073,
+       "potential_decks": 42495,
+       "trend_zscore": 1.1136399233948981
+      },
+      {
+       "id": "941b0afc-0e8f-45f2-ae7f-07595e164611",
+       "name": "Innkeeper's Talent",
+       "sanitized": "innkeepers-talent",
+       "slug": "innkeepers-talent",
+       "url": "/cards/innkeepers-talent",
+       "synergy": 0.07750867631189523,
+       "num_decks": 8493,
+       "potential_decks": 42495,
+       "trend_zscore": 0.5459195793989343
+      },
+      {
+       "id": "0784b6f0-9ebf-43d2-ba0f-a6bc93ba0c48",
+       "name": "Phyrexian Arena",
+       "sanitized": "phyrexian-arena",
+       "slug": "phyrexian-arena",
+       "url": "/cards/phyrexian-arena",
+       "synergy": 0.04760159558888272,
+       "num_decks": 8191,
+       "potential_decks": 42495,
+       "trend_zscore": 0.19116013361326084
+      }
+     ]
+    },
+    {
+     "header": "Planeswalkers",
+     "tag": "planeswalkers",
+     "cardviews": [
+      {
+       "id": "576ba8db-fad9-4c48-96be-a8a7e5f43039",
+       "name": "Tamiyo, Field Researcher",
+       "sanitized": "tamiyo-field-researcher",
+       "slug": "tamiyo-field-researcher",
+       "url": "/cards/tamiyo-field-researcher",
+       "synergy": 0.11367490430586219,
+       "num_decks": 11604,
+       "potential_decks": 42495,
+       "trend_zscore": -0.8967201849046559
+      },
+      {
+       "id": "7641f4d9-4614-41c8-87f5-4845bd78e9b3",
+       "name": "Ajani, Sleeper Agent",
+       "sanitized": "ajani-sleeper-agent",
+       "slug": "ajani-sleeper-agent",
+       "url": "/cards/ajani-sleeper-agent",
+       "synergy": 0.0940077679732278,
+       "num_decks": 9714,
+       "potential_decks": 42495,
+       "trend_zscore": -0.6993585473816941
+      },
+      {
+       "id": "9c0c61e3-9f3d-4e7f-9046-0ea336dd8a2d",
+       "name": "Teferi, Master of Time",
+       "sanitized": "teferi-master-of-time",
+       "slug": "teferi-master-of-time",
+       "url": "/cards/teferi-master-of-time",
+       "synergy": 0.07024524367934366,
+       "num_decks": 7134,
+       "potential_decks": 42495,
+       "trend_zscore": -0.06721248140648244
+      },
+      {
+       "id": "3462a3d0-5552-49fa-9eb7-100960c55891",
+       "name": "Oko, Thief of Crowns",
+       "sanitized": "oko-thief-of-crowns",
+       "slug": "oko-thief-of-crowns",
+       "url": "/cards/oko-thief-of-crowns",
+       "synergy": 0.05136840749462891,
+       "num_decks": 7009,
+       "potential_decks": 42495,
+       "trend_zscore": -0.8525779679380289
+      },
+      {
+       "id": "368c6e60-804c-447c-bc2b-ac9dc4cab5e7",
+       "name": "Teferi, Temporal Archmage",
+       "sanitized": "teferi-temporal-archmage",
+       "slug": "teferi-temporal-archmage",
+       "url": "/cards/teferi-temporal-archmage",
+       "synergy": 0.06165057099422373,
+       "num_decks": 6081,
+       "potential_decks": 42495,
+       "trend_zscore": -0.21909416971013262
+      }
+     ]
+    },
+    {
+     "header": "Utility Lands",
+     "tag": "utilitylands",
+     "cardviews": [
+      {
+       "id": "e2a27742-08c1-4153-af7f-25a7a98f585e",
+       "name": "Reliquary Tower",
+       "sanitized": "reliquary-tower",
+       "slug": "reliquary-tower",
+       "url": "/cards/reliquary-tower",
+       "synergy": -0.014321657474658744,
+       "num_decks": 10495,
+       "potential_decks": 42495,
+       "trend_zscore": -0.37920010084079203
+      },
+      {
+       "id": "335444f0-0848-4c17-b056-56d4fc876a58",
+       "name": "Rogue's Passage",
+       "sanitized": "rogues-passage",
+       "slug": "rogues-passage",
+       "url": "/cards/rogues-passage",
+       "synergy": 0.047432408717389185,
+       "num_decks": 6796,
+       "potential_decks": 42495,
+       "trend_zscore": -0.6602508871899041
+      },
+      {
+       "id": "4e4b6e22-93b2-4896-bba5-0ceaa5d8ea3c",
+       "name": "Yavimaya, Cradle of Growth",
+       "sanitized": "yavimaya-cradle-of-growth",
+       "slug": "yavimaya-cradle-of-growth",
+       "url": "/cards/yavimaya-cradle-of-growth",
+       "synergy": 0.012782174167889293,
+       "num_decks": 6404,
+       "potential_decks": 42495,
+       "trend_zscore": -1.2051197356696002
+      },
+      {
+       "id": "ec50c1c3-885e-47d3-ada7-cc0edbf09df1",
+       "name": "Inkmoth Nexus",
+       "sanitized": "inkmoth-nexus",
+       "slug": "inkmoth-nexus",
+       "url": "/cards/inkmoth-nexus",
+       "synergy": 0.05613321853800621,
+       "num_decks": 5740,
+       "potential_decks": 42495,
+       "trend_zscore": 0.5413053229673845
+      },
+      {
+       "id": "9e1a9e38-6ffc-490f-b0be-23ba4e8204c6",
+       "name": "Urborg, Tomb of Yawgmoth",
+       "sanitized": "urborg-tomb-of-yawgmoth",
+       "slug": "urborg-tomb-of-yawgmoth",
+       "url": "/cards/urborg-tomb-of-yawgmoth",
+       "synergy": 0.01564417941090772,
+       "num_decks": 5516,
+       "potential_decks": 42495,
+       "trend_zscore": -0.8105880283110211
+      }
+     ]
+    },
+    {
+     "header": "Mana Artifacts",
+     "tag": "manaartifacts",
+     "cardviews": [
+      {
+       "id": "91fdb56b-54d5-4272-8319-505ff987fe9b",
+       "name": "Sol Ring",
+       "sanitized": "sol-ring",
+       "slug": "sol-ring",
+       "url": "/cards/sol-ring",
+       "synergy": -0.019280771867497437,
+       "num_decks": 36130,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "1cad1bd2-7c56-4ce0-99a6-b2a49c1288dd",
+       "name": "Arcane Signet",
+       "sanitized": "arcane-signet",
+       "slug": "arcane-signet",
+       "url": "/cards/arcane-signet",
+       "synergy": -0.007843170687721002,
+       "num_decks": 33267,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "693da13a-49af-4f7e-b247-36b454fb31a0",
+       "name": "Chromatic Lantern",
+       "sanitized": "chromatic-lantern",
+       "slug": "chromatic-lantern",
+       "url": "/cards/chromatic-lantern",
+       "synergy": 0.10027627492539659,
+       "num_decks": 19130,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "15175742-11ae-4819-a5bd-412084b0b686",
+       "name": "Astral Cornucopia",
+       "sanitized": "astral-cornucopia",
+       "slug": "astral-cornucopia",
+       "url": "/cards/astral-cornucopia",
+       "synergy": 0.1880532190034419,
+       "num_decks": 18618,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "e4ed0052-d6dd-4f69-8313-10863baefac9",
+       "name": "Everflowing Chalice",
+       "sanitized": "everflowing-chalice",
+       "slug": "everflowing-chalice",
+       "url": "/cards/everflowing-chalice",
+       "synergy": 0.15896339898066583,
+       "num_decks": 16100,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      }
+     ]
+    },
+    {
+     "header": "Lands",
+     "tag": "lands",
+     "cardviews": [
+      {
+       "id": "0548fb60-c843-4f8f-a029-6f10efc63a41",
+       "name": "Command Tower",
+       "sanitized": "command-tower",
+       "slug": "command-tower",
+       "url": "/cards/command-tower",
+       "synergy": -0.004667656434189982,
+       "num_decks": 38990,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "22463284-2478-4b1e-9a37-6dd2383266cf",
+       "name": "Forest",
+       "sanitized": "forest",
+       "slug": "forest",
+       "url": "/cards/forest",
+       "synergy": 0.13492062017480622,
+       "num_decks": 38955,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "5a74175b-2418-4226-8435-1490532e644f",
+       "name": "Island",
+       "sanitized": "island",
+       "slug": "island",
+       "url": "/cards/island",
+       "synergy": 0.13396394683600366,
+       "num_decks": 38718,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "5f9b6584-ad27-410d-b6f1-c25c91630aea",
+       "name": "Plains",
+       "sanitized": "plains",
+       "slug": "plains",
+       "url": "/cards/plains",
+       "synergy": 0.13628765565649725,
+       "num_decks": 38052,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      },
+      {
+       "id": "74414c62-4b68-4e1b-9241-feff3231b9ee",
+       "name": "Swamp",
+       "sanitized": "swamp",
+       "slug": "swamp",
+       "url": "/cards/swamp",
+       "synergy": 0.1391180280744011,
+       "num_decks": 37938,
+       "potential_decks": 42495,
+       "trend_zscore": 0.0
+      }
+     ]
+    }
+   ],
+   "card": {
+    "num_decks": 42495,
+    "rank": 4,
+    "cmc": 4.0,
+    "color_identity": [
+     "G",
+     "W",
+     "U",
+     "B"
+    ],
+    "id": "d0d33d52-3d28-4635-b985-51e126289259",
+    "image_uris": [
+     {
+      "normal": "https://card-images.edhrec.com/normal/front/d/0/d0d33d52-3d28-4635-b985-51e126289259.jpg?1782743917",
+      "art_crop": "https://card-images.edhrec.com/art_crop/front/d/0/d0d33d52-3d28-4635-b985-51e126289259.jpg?1782743917"
+     }
+    ],
+    "layout": "normal",
+    "name": "Atraxa, Praetors' Voice",
+    "names": [
+     "Atraxa, Praetors' Voice"
+    ],
+    "prices": {
+     "cardhoarder": {
+      "price": 0.03,
+      "slug": "62331",
+      "url": "https://www.cardhoarder.com/cards/62331?affiliate_id=edhrec"
+     },
+     "cardkingdom": {
+      "price": 29.99,
+      "slug": "mtg/multiverse-legends/atraxa-praetors-voice",
+      "url": "https://www.cardkingdom.com/mtg/multiverse-legends/atraxa-praetors-voice?partner=edhrec&utm_source=edhrec&utm_medium=affiliate&utm_campaign=edhrec"
+     },
+     "cardmarket": {
+      "price": 16.33,
+      "set": "Multiverse Legends",
+      "url": "https://www.cardmarket.com/en/Magic/Products/Search?searchString=Atraxa%2C+Praetors%27+Voice"
+     },
+     "cardtrader": {
+      "price": 20.25,
+      "slug": "237952"
+     },
+     "face2face": {
+      "price": 31.74,
+      "slug": "Atraxa, Praetors' Voice",
+      "url": "https://www.facetofacegames.com/search?q=Atraxa, Praetors' Voice"
+     },
+     "manapool": {
+      "price": 26.05,
+      "slug": "mul/33/atraxa-praetors-voice"
+     },
+     "mtgstocks": {
+      "price": 27.94,
+      "slug": "91295-atraxa-praetors-voice",
+      "url": "https://www.mtgstocks.com/prints/91295-atraxa-praetors-voice"
+     },
+     "scg": {
+      "price": 22.39,
+      "slug": "atraxa-praetors-voice-sgl-mtg-c16-28-enf"
+     },
+     "tcgplayer": {
+      "price": 27.94,
+      "price_source": "marketPrice",
+      "slug": "484652/magic-march-of-the-machine-multiverse-legends-atraxa-praetors-voice",
+      "sub_type": "Normal",
+      "tier": 1,
+      "url": "https://www.tcgplayer.com/product/484652/magic-march-of-the-machine-multiverse-legends-atraxa-praetors-voice"
+     },
+     "tcgl": {
+      "price": 889.0,
+      "price_usd": 43.6,
+      "slug": "mul_33_en"
+     }
+    },
+    "primary_type": "Creature",
+    "rarity": "mythic",
+    "salt": 1.722789115646258,
+    "sanitized": "atraxa-praetors-voice",
+    "scryfall_uri": "https://scryfall.com/card/2xm/190/atraxa-praetors-voice?utm_source=api",
+    "slug": "atraxa-praetors-voice",
+    "type_line": "Legendary Creature — Phyrexian Angel Horror",
+    "type": "Legendary Creature — Phyrexian Angel Horror",
+    "combos": true,
+    "is_commander": true,
+    "legal_commander": true,
+    "precon": "Breed Lethality",
+    "url": "/commanders/atraxa-praetors-voice"
+   }
+  },
+  "keywords": "Atraxa,Praetors&#x27;,Voice,Commander",
+  "title": "Atraxa, Praetors' Voice (Commander)"
+ }
+}
