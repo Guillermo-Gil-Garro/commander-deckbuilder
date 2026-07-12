@@ -1,0 +1,69 @@
+# featured_commanders.yaml — Comandantes ofrecidos prioritariamente en la UI.
+# Lista decidida por Guille (2026-07-12). Independiente de quotas.yaml (cuotas
+# individualizadas) y de banlist.yaml (ninguno de estos puede estar
+# banned_as_commander — el loader debe validarlo).
+# Resolución de nombres: misma regla de dos pasos que banlist.yaml.
+
+featured:
+  # Mono / incoloro
+  - Giada, Font of Hope              # W
+  - Urza, Lord High Artificer        # U
+  - Baral, Chief of Compliance       # U
+  - Talrand, Sky Summoner            # U
+  - Bruvac the Grandiloquent         # U
+  - Emry, Lurker of the Loch         # U
+  - Sephiroth, Fabled SOLDIER        # B
+  - K'rrik, Son of Yawgmoth          # B
+  - Krenko, Mob Boss                 # R
+  - Azusa, Lost but Seeking          # G
+  - Lumra, Bellow of the Woods       # G
+  - Titania, Protector of Argoth     # G
+  - Selvala, Heart of the Wilds      # G
+  - Zhulodok, Void Gorger            # incoloro
+
+  # Parejas
+  - Grand Arbiter Augustin IV        # WU
+  - Wilhelt, the Rotcleaver          # UB
+  - Captain N'ghathrod               # UB
+  - Prosper, Tome-Bound              # BR
+  - Olivia, Crimson Bride            # BR
+  - Etali, Primal Conqueror          # RG
+  - Minsc & Boo, Timeless Heroes     # RG
+  - Sythis, Harvest's Hand           # WG
+  - Ketramose, the New Dawn          # WB
+  - Athreos, God of Passage          # WB
+  - The Locust God                   # UR
+  - Niv-Mizzet, Parun                # UR
+  - Lathril, Blade of the Elves      # BG
+  - Meren of Clan Nel Toth           # BG
+  - Winota, Joiner of Forces         # WR
+  - Hakbal of the Surging Soul       # UG
+  - Kinnan, Bonder Prodigy           # UG
+  - Aesi, Tyrant of Gyre Strait      # UG
+  - Volo, Guide to Monsters          # UG
+
+  # Tríos
+  - Oloro, Ageless Ascetic           # WUB
+  - Zur the Enchanter                # WUB
+  - Kefka, Court Mage                # UBR
+  - Obeka, Brute Chronologist        # UBR
+  - Korvold, Fae-Cursed King         # BRG
+  - Winter, Misanthropic Guide       # BRG
+  - Gishath, Sun's Avatar            # WRG
+  - Arcades, the Strategist          # WUG
+  - Thalia and The Gitrog Monster    # WBG
+  - Kykar, Wind's Fury               # WUR
+  - Narset, Enlightened Master       # WUR
+  - Muldrotha, the Gravetide         # UBG
+  - Glarb, Calamity's Augur          # UBG
+  - Edgar Markov                     # WBR
+  - Kaalia of the Vast               # WBR
+  - Isshin, Two Heavens as One       # WBR
+  - Flubs, the Fool                  # URG
+  - Animar, Soul of Elements         # URG
+
+  # 4 y 5 colores
+  - Omnath, Locus of Creation        # WURG
+  - The Ur-Dragon                    # WUBRG
+  - Ulalek, Fused Atrocity           # WUBRG
+  - The First Sliver                 # WUBRG
