@@ -1,0 +1,168 @@
+# banlist.yaml — Commander Deckbuilder
+# Fuente única de verdad de la banlist del grupo.
+# Resolución de cartas: por nombre EXACTO contra el bulk data de Scryfall.
+# El pipeline debe resolver cada nombre a su oracle_id en build time y FALLAR
+# si un nombre no matchea exactamente 1 carta (ojo: "The Mind Stone" (Marvel)
+# vs "Mind Stone" (roca clásica) — nunca matchear por substring).
+# Cartas multicara: resolución en dos pasos, siempre por igualdad exacta.
+# 1) nombre completo Scryfall ("A // B"); 2) solo si no hay match, nombre
+# exacto de una cara ("Tergrid, God of Fright"). El orden importa: existe
+# "Emeritus of Woe // Demonic Tutor", pero "Demonic Tutor" resuelve al tutor
+# clásico por el paso 1. Ambigüedad en cualquier paso -> FALLAR.
+
+meta:
+  version: "1.0-rc"
+  status: pending_group_review   # cambiar a "active" tras revisión de Guille + grupo
+  updated: "2026-07-12"
+  review_cycle: quarterly
+  notes: >
+    Los bans oficiales de WotC se asumen aparte (campo `legalities.commander`
+    de Scryfall). Este archivo solo contiene las decisiones propias del grupo.
+
+# Estados posibles:
+#   banned                -> ilegal en el mazo
+#   banned_as_commander   -> oculto del selector de comandantes; legal en las 99
+#   banned_pending_review -> ban temporal con condición de revisión
+#   watchlist             -> legal, pero NUNCA auto-recomendada por el sistema;
+#                            solo añadible manualmente desde el maybeboard
+
+# ---------------------------------------------------------------------------
+# Reglas programáticas (se evalúan contra el pool completo; sobreviven a sets
+# nuevos sin tocar la enumeración)
+# ---------------------------------------------------------------------------
+rules:
+  - id: generic_tutor_game_changer
+    status: banned
+    predicate: "is_generic_tutor AND scryfall.game_changer == true"
+    reason: >
+      Tutores genéricos a mano/top van contra la filosofía singleton:
+      convierten las 99 en "las 10 que importan". Los tutores de categoría
+      estrecha y on-theme siguen legales.
+    resolved_cards:  # snapshot 2026-07-12; regenerar en cada update del bulk data
+      - Demonic Tutor
+      - Vampiric Tutor
+      - Imperial Seal
+      - Mystical Tutor
+      - Enlightened Tutor
+      - Worldly Tutor
+      - Gamble
+      - Gifts Ungiven
+      - Intuition
+    exceptions:
+      - name: Natural Order
+        reason: "Tutor de criatura = categoría estrecha. Decisión de grupo 2026-07-12."
+      - name: Survival of the Fittest
+        reason: "Tutor de criatura = categoría estrecha. Decisión de grupo 2026-07-12."
+      - name: Crop Rotation
+        reason: "Tutor de tierras = ramp, categoría estrecha legal."
+
+  - id: infinity_stones
+    status: banned_pending_review
+    predicate: "type_line CONTAINS 'Infinity Stone'"
+    reason: >
+      Solo existen 2 de 6 stones (blanca y negra): desequilibra en favor de
+      W/B. Se revisa el pack completo cuando estén publicadas las seis.
+    review_condition: "las 6 Infinity Stones publicadas"
+    resolved_cards:  # snapshot 2026-07-12
+      - The Soul Stone
+      - The Mind Stone
+
+# ---------------------------------------------------------------------------
+# Bans manuales (carta a carta)
+# ---------------------------------------------------------------------------
+cards:
+  - name: Rhystic Study
+    status: banned
+    reason: "Auto-include azul; ventaja pasiva que castiga jugar Magic."
+  - name: Smothering Tithe
+    status: banned
+    reason: "Auto-include blanco; ventaja pasiva que castiga jugar Magic."
+  - name: Esper Sentinel
+    status: banned
+    reason: "Rhystic Study con patas; completa el trío de taxes pasivos."
+  - name: Mystic Remora
+    status: banned
+    reason: "Rhystic pequeño; mismo patrón de tax pasivo."
+  - name: The One Ring
+    status: banned
+    reason: "Ventaja genérica incolora; va en cualquier mazo."
+  - name: Thassa's Oracle
+    status: banned
+    reason: "Final no-juego. WotC lo tiene en consideración de ban oficial."
+  - name: Drannith Magistrate
+    status: banned
+    reason: "Apaga la command zone de toda la mesa."
+  - name: Grim Tutor
+    status: banned
+    reason: >
+      Tutor genérico a mano; no está en Game Changers así que la regla
+      programática no lo captura. Ban manual por definición de criterio.
+
+# ---------------------------------------------------------------------------
+# Comandantes ocultos del selector (legales en las 99)
+# ---------------------------------------------------------------------------
+commanders:
+  - name: Yuriko, the Tiger's Shadow
+    status: banned_as_commander
+    reason: "El mazo se construye solo; daño gratis ineludible desde la command zone."
+  - name: Tergrid, God of Fright
+    status: banned_as_commander
+    reason: >
+      Cada simetría de descarte/sacrificio se vuelve robo asimétrico
+      garantizado. Miserable para la mesa y para quien la pilota
+      (experiencia de primera mano). Vigilar también en las 99 (ver watchlist).
+  - name: Vivi Ornitier
+    status: banned_as_commander
+    reason: >
+      Motor de maná escalable siempre accesible; el mazo Izzet spellslinger
+      se construye solo. En las 99 es una criatura buena que muere a removal.
+
+# ---------------------------------------------------------------------------
+# Watchlist (legal; nunca auto-recomendada, solo añadible a mano)
+# ---------------------------------------------------------------------------
+watchlist:
+  - name: Necropotence
+    reason: "Auto-include potencial en negro; pendiente del script de inclusión."
+  - name: Consecrated Sphinx
+    reason: "Auto-include azul clásico; su inclusión actual puede no superar umbral. Pendiente del script."
+  - name: Jin-Gitaxias, Core Augur
+    reason: "Legal hasta que alguien se queje (acuerdo explícito de grupo)."
+  - name: Tergrid, God of Fright
+    scope: in_the_99
+    reason: "Con paquete de descarte sigue siendo un 80% de miserable aun sin ser comandante."
+
+# ---------------------------------------------------------------------------
+# Explícitamente legales (para que conste en acta; evita reabrir debates)
+# ---------------------------------------------------------------------------
+explicitly_legal:
+  - { name: Stasis, note: "El stax no nos disgusta." }
+  - { name: Winter Orb, note: "Ídem." }
+  - { name: Static Orb, note: "Ídem." }
+  - { name: Armageddon, note: "MLD legal; decisión estratégica legítima." }
+  - { name: Orcish Bowmasters, note: "Se considera interacción." }
+  - { name: Jeska's Will, note: "No se nota en mesa." }
+  - { name: Cyclonic Rift, note: "Respuesta; aceptada." }
+  - { name: Deflecting Swat, note: "Aceptada (WotC la sacó de Game Changers 10/2025)." }
+  - { name: Fierce Guardianship, note: "Aceptada." }
+  - { name: Teferi's Protection, note: "Free spells aceptados en bloque." }
+  - { name: Blood Moon, note: "Stax de tierras; coherencia con pro-stax." }
+  - { name: Back to Basics, note: "Ídem." }
+  - { name: Crop Rotation, note: "Excepción a regla de tutores (tierras = ramp)." }
+  - { name: Natural Order, note: "Excepción a regla de tutores (criaturas = estrecho)." }
+  - { name: Survival of the Fittest, note: "Excepción a regla de tutores." }
+  - category: extra_turns
+    note: "Ningún turno extra baneado; anti-abuso vía cuota (max 2 en la categoría)."
+  - category: mass_land_destruction
+    note: "Legal sin regla social; que la mesa aprenda a no girarlo todo."
+
+# ---------------------------------------------------------------------------
+# Regla de banlist viva
+# ---------------------------------------------------------------------------
+nomination_rule:
+  who: "cualquier jugador, tras una partida"
+  cooldown: "voto en frío, mínimo 1 día después"
+  threshold: "mayoría simple"
+  effect: "ban hasta la siguiente revisión trimestral"
+  logging: >
+    El historial de nominaciones se persiste: es señal directa para el
+    ajuste de cuotas del recomendador.
