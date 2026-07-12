@@ -41,7 +41,7 @@ from __future__ import annotations
 
 import re
 from math import comb
-from typing import Mapping
+from typing import Iterable, Mapping
 
 PIPS: tuple[int, ...] = (1, 2, 3)
 TURNS: tuple[int, ...] = (1, 2, 3, 4, 5, 6, 7)
@@ -166,6 +166,42 @@ def color_source_demand(pips: int, turn: int) -> int:
     if turn not in row:
         raise ValueError(f"turn must be one of {TURNS}, got {turn}")
     return round(DEMAND_CALIBRATION_FACTOR * row[turn])
+
+
+def target_turn(card_mana_value: float, commander_mana_value: float) -> int:
+    """Target casting turn for the color-source demand lookup (TFM's Karsten ext.).
+
+    ``clamp(round(CMC) + [+1 if CMC >= commander CMC], 1, 7)``: a card at or above
+    the commander's cost is an "archetype-late" play and is shifted one turn later
+    (less demanding). The +1 offset is fixed by design, not calibrable.
+    """
+    turn = int(round(card_mana_value)) + (
+        1 if card_mana_value >= commander_mana_value else 0
+    )
+    return max(1, min(max(TURNS), turn))
+
+
+def pool_color_source_targets(
+    cards: Iterable[tuple[str, float]], commander_mana_value: float
+) -> dict[str, int]:
+    """Calibrated minimum color sources per color for a pool, CMC-modulated.
+
+    ``cards`` are ``(mana_cost, mana_value)`` pairs. Each card demands
+    ``color_source_demand(pips, target_turn(mv, commander_mv))`` for every color
+    it has **pure** pips in (pips above 3 clamp to the table domain); the pool
+    target per color is the maximum demand over its cards. Unlike the on-curve
+    ``color_source_targets`` benchmark, cards at or above the commander's cost
+    relax one turn, so a splashed finisher does not dictate the whole manabase.
+    """
+    targets: dict[str, int] = {}
+    for mana_cost, mana_value in cards:
+        turn = target_turn(mana_value, commander_mana_value)
+        for color, pips in card_color_pips(mana_cost).items():
+            capped = min(pips, max(PIPS))
+            demand = color_source_demand(capped, max(turn, capped))
+            if demand > targets.get(color, 0):
+                targets[color] = demand
+    return targets
 
 
 def color_source_targets(max_pips_by_color: Mapping[str, int]) -> dict[str, int]:

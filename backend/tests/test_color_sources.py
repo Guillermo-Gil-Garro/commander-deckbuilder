@@ -25,7 +25,9 @@ from quotas.color_sources import (
     color_source_demand,
     color_source_targets,
     min_sources,
+    pool_color_source_targets,
     prob_at_least,
+    target_turn,
 )
 
 
@@ -198,6 +200,43 @@ def test_card_color_pips_ignores_generic_colorless_variable() -> None:
     assert card_color_pips("{3}") == {}
     assert card_color_pips("{X}{C}{1}") == {}
     assert card_color_pips("") == {}
+
+
+def test_target_turn_shifts_at_or_above_commander_cost() -> None:
+    # Below the commander's cost: cast on curve. At or above: one turn later.
+    assert target_turn(2.0, commander_mana_value=4.0) == 2
+    assert target_turn(4.0, commander_mana_value=4.0) == 5
+    assert target_turn(6.0, commander_mana_value=4.0) == 7
+
+
+def test_target_turn_clamps_to_table_domain() -> None:
+    assert target_turn(0.0, commander_mana_value=4.0) == 1
+    assert target_turn(9.0, commander_mana_value=4.0) == 7
+    assert target_turn(7.0, commander_mana_value=8.0) == 7
+
+
+def test_pool_targets_relax_vs_on_curve_for_late_cards() -> None:
+    # A double-pip card at the commander's cost demands turn 5 sources, strictly
+    # fewer than the on-curve turn-2 benchmark for the same two pips.
+    pool = pool_color_source_targets([("{2}{U}{U}", 4.0)], commander_mana_value=4.0)
+    on_curve = color_source_targets({"U": 2})
+    assert pool["U"] == color_source_demand(2, 5)
+    assert pool["U"] < on_curve["U"]
+
+
+def test_pool_targets_take_max_demand_per_color() -> None:
+    # The early single-pip card, not the late double-pip one, can dominate.
+    pool = pool_color_source_targets(
+        [("{R}", 1.0), ("{5}{R}{R}", 7.0)], commander_mana_value=5.0
+    )
+    assert pool["R"] == max(color_source_demand(1, 1), color_source_demand(2, 7))
+
+
+def test_pool_targets_ignore_colorless_and_hybrid_only_cards() -> None:
+    pool = pool_color_source_targets(
+        [("{3}", 3.0), ("{W/U}{W/U}", 2.0)], commander_mana_value=4.0
+    )
+    assert pool == {}
 
 
 def test_pure_pips_differ_from_pipeline_count_pips_on_hybrids() -> None:
