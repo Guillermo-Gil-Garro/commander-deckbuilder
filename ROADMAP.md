@@ -12,7 +12,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ✅ 🔶 `banlist.yaml` v1.0-rc (custom decidida por Guille 2026-07-12; los 44 nombres validados contra el pool; `status: pending_group_review` hasta OK del grupo)
 
 ## Fase 1 — Sistema de cuotas
-- ⬜ Cálculo de tierras Karsten (conteo por curva + distribución de color por pips)
+- ✅ Cálculo de tierras Karsten (conteo por curva + distribución de color por pips) — portado del TFM a `backend/quotas/` (2026-07-12); la aplicación sobre bandas de categoría va con el esquema de cuotas
 - ⬜ 🔶 Esquema de cuotas `{categoria: {min, max}}` por arquetipo (valores los valida Guille)
 - ⬜ Validador de mazo de 99 (estado por categoría)
 
