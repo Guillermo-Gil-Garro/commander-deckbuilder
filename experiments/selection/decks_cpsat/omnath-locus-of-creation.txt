@@ -1,0 +1,150 @@
+# Omnath, Locus of Creation — selector CP-SAT (prototipo Fase 3)
+# Construido en 0.03s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
+# Objetivo: 66.2930 (score bruto 66.8935, penalizaciones escaladas 600490)
+# Fixing color (fuentes/objetivo): G: 18/38 (déficit 20), R: 14/32 (déficit 18), U: 15/32 (déficit 17), W: 14/24 (déficit 10)
+
+## Resumen de cuotas
+categoría      n  banda      estado
+lands         42  [38-42]    in_range  (suelo Karsten: 35, mínimo efectivo: 38)
+ramp          16  [12-16]    in_range
+card_draw     11  [ 9-12]    in_range
+removal        9  [ 6- 9]    in_range
+board_wipe     4  [ 2- 4]    in_range
+wincons        3  [ 2- 4]    in_range
+synergy       18  [ 0-18]    in_range
+
+# Nota: una carta multicategoría cuenta en todas sus categorías,
+# por eso la suma de conteos puede superar 99.
+
+## Mainboard (99)
+
+### lands (42)
+1x Misty Rainforest                           score 1.10  [lands]  cp-sat, score 1.10
+1x Windswept Heath                            score 1.09  [lands]  cp-sat, score 1.09
+1x Wooded Foothills                           score 1.08  [lands]  cp-sat, score 1.08
+1x Scalding Tarn                              score 1.03  [lands]  cp-sat, score 1.03
+1x Arid Mesa                                  score 1.03  [lands]  cp-sat, score 1.03
+1x Stomping Ground                            score 1.02  [lands]  cp-sat, score 1.02
+1x Field of the Dead                          score 1.02  [lands]  cp-sat, score 1.02
+1x Flooded Strand                             score 1.02  [lands]  cp-sat, score 1.02
+1x Breeding Pool                              score 0.99  [lands]  cp-sat, score 0.99
+1x Temple Garden                              score 0.95  [lands]  cp-sat, score 0.95
+1x Command Tower                              score 0.88  [lands]  cp-sat, score 0.88
+1x Hallowed Fountain                          score 0.86  [lands]  cp-sat, score 0.86
+1x Steam Vents                                score 0.85  [lands]  cp-sat, score 0.85
+1x Sacred Foundry                             score 0.82  [lands]  cp-sat, score 0.82
+1x Fabled Passage                             score 0.79  [lands]  cp-sat, score 0.79
+1x Simic Growth Chamber                       score 0.72  [lands]  cp-sat, score 0.72
+1x Ketria Triome                              score 0.71  [lands]  cp-sat, score 0.71
+1x Verdant Catacombs                          score 0.63  [lands]  cp-sat, score 0.63
+1x Yavimaya, Cradle of Growth                 score 0.62  [lands]  cp-sat, score 0.62
+1x Gruul Turf                                 score 0.60  [lands]  cp-sat, score 0.60
+1x Boseiju, Who Endures                       score 0.60  [lands/removal]  cp-sat, score 0.60
+1x Spara's Headquarters                       score 0.58  [lands]  cp-sat, score 0.58
+1x Prismatic Vista                            score 0.57  [lands]  cp-sat, score 0.57
+1x Selesnya Sanctuary                         score 0.56  [lands]  cp-sat, score 0.56
+1x Polluted Delta                             score 0.54  [lands]  cp-sat, score 0.54
+1x Marsh Flats                                score 0.54  [lands]  cp-sat, score 0.54
+1x Jetmir's Garden                            score 0.54  [lands]  cp-sat, score 0.54
+1x Raugrin Triome                             score 0.52  [lands]  cp-sat, score 0.52
+1x Bloodstained Mire                          score 0.50  [lands]  cp-sat, score 0.50
+1x Oboro, Palace in the Clouds                score 0.42  [lands]  cp-sat, score 0.42
+1x Izzet Boilerworks                          score 0.36  [lands]  cp-sat, score 0.36
+1x Exotic Orchard                             score 0.33  [lands]  cp-sat, score 0.33
+1x Evolving Wilds                             score 0.33  [lands]  cp-sat, score 0.33
+1x Azorius Chancery                           score 0.33  [lands]  cp-sat, score 0.33
+1x Boros Garrison                             score 0.33  [lands]  cp-sat, score 0.33
+1x Terramorphic Expanse                       score 0.28  [lands]  cp-sat, score 0.28
+1x Vesuva                                     score 0.27  [lands]  cp-sat, score 0.27
+1x Bala Ged Recovery // Bala Ged Sanctuary    score 0.25  [lands]  cp-sat, score 0.25
+1x Taiga                                      score 0.25  [lands]  cp-sat, score 0.25
+1x Savannah                                   score 0.24  [lands]  cp-sat, score 0.24
+1x Tropical Island                            score 0.24  [lands]  cp-sat, score 0.24
+1x Thespian's Stage                           score 0.23  [lands]  cp-sat, score 0.23
+
+### ramp (16)
+1x Lotus Cobra                                score 1.39  [ramp]  cp-sat, score 1.39
+1x Azusa, Lost but Seeking                    score 1.37  [ramp]  cp-sat, score 1.37
+1x Exploration                                score 1.26  [ramp]  cp-sat, score 1.26
+1x Dryad of the Ilysian Grove                 score 1.24  [ramp]  cp-sat, score 1.24
+1x Aesi, Tyrant of Gyre Strait                score 1.16  [card_draw/ramp]  cp-sat, score 1.16
+1x Tireless Provisioner                       score 0.92  [ramp]  cp-sat, score 0.92
+1x Oracle of Mul Daya                         score 0.91  [ramp]  cp-sat, score 0.91
+1x Ashaya, Soul of the Wild                   score 0.89  [ramp]  cp-sat, score 0.89
+1x Three Visits                               score 0.76  [ramp]  cp-sat, score 0.76
+1x Nature's Lore                              score 0.75  [ramp]  cp-sat, score 0.75
+1x Farseek                                    score 0.71  [ramp]  cp-sat, score 0.71
+1x Mina and Denn, Wildborn                    score 0.70  [ramp]  cp-sat, score 0.70
+1x Sol Ring                                   score 0.68  [ramp]  staple (auto-include)
+1x Nissa, Resurgent Animist                   score 0.65  [ramp]  cp-sat, score 0.65
+1x Kodama of the East Tree                    score 0.64  [ramp]  cp-sat, score 0.64
+1x Arcane Signet                              score 0.44  [ramp]  staple (auto-include)
+
+### card_draw (9)
+1x Tatyova, Benthic Druid                     score 1.29  [card_draw]  cp-sat, score 1.29
+1x Sylvan Library                             score 0.64  [card_draw]  cp-sat, score 0.64
+1x Valakut Exploration                        score 0.60  [card_draw]  cp-sat, score 0.60
+1x Tireless Tracker                           score 0.35  [card_draw]  cp-sat, score 0.35
+1x Courser of Kruphix                         score 0.30  [card_draw]  cp-sat, score 0.30
+1x Augur of Autumn                            score 0.27  [card_draw]  cp-sat, score 0.27
+1x Trade Routes                               score 0.21  [card_draw]  cp-sat, score 0.21
+1x Horn of Greed                              score 0.16  [card_draw]  cp-sat, score 0.16
+1x Escape to the Wilds                        score 0.14  [card_draw]  cp-sat, score 0.14
+
+### removal (7)
+1x Omnath, Locus of Rage                      score 1.12  [removal]  cp-sat, score 1.12
+1x Omnath, Locus of the Roil                  score 0.78  [card_draw/removal]  cp-sat, score 0.78
+1x Swords to Plowshares                       score 0.75  [removal]  cp-sat, score 0.75
+1x Path to Exile                              score 0.59  [removal]  cp-sat, score 0.59
+1x Fierce Guardianship                        score 0.58  [removal]  cp-sat, score 0.58
+1x Beast Within                               score 0.45  [removal]  cp-sat, score 0.45
+1x Counterspell                               score 0.44  [removal]  cp-sat, score 0.44
+
+### board_wipe (4)
+1x Cyclonic Rift                              score 0.92  [board_wipe/removal]  cp-sat, score 0.92
+1x Farewell                                   score 0.29  [board_wipe]  cp-sat, score 0.29
+1x Dragonback Assault                         score 0.25  [board_wipe]  cp-sat, score 0.25
+1x Blasphemous Act                            score 0.19  [board_wipe]  cp-sat, score 0.19
+
+### wincons (3)
+1x Moraug, Fury of Akoum                      score 0.63  [wincons]  cp-sat, score 0.63
+1x Finale of Devastation                      score 0.39  [wincons]  cp-sat, score 0.39
+1x Craterhoof Behemoth                        score 0.30  [wincons]  cp-sat, score 0.30
+
+### synergy (18)
+1x Ancient Greenwarden                        score 1.29  [synergy]  cp-sat, score 1.29
+1x Scute Swarm                                score 1.25  [synergy]  cp-sat, score 1.25
+1x Crop Rotation                              score 1.16  [synergy]  cp-sat, score 1.16
+1x Ramunap Excavator                          score 1.04  [synergy]  cp-sat, score 1.04
+1x Crucible of Worlds                         score 1.03  [synergy]  cp-sat, score 1.03
+1x Avenger of Zendikar                        score 0.97  [synergy]  cp-sat, score 0.97
+1x Felidar Retreat                            score 0.89  [synergy]  cp-sat, score 0.89
+1x Scapeshift                                 score 0.75  [synergy]  cp-sat, score 0.75
+1x Rampaging Baloths                          score 0.70  [synergy]  cp-sat, score 0.70
+1x Elesh Norn, Mother of Machines             score 0.66  [synergy]  cp-sat, score 0.66
+1x Traveling Chocobo                          score 0.63  [synergy]  cp-sat, score 0.63
+1x Teferi's Protection                        score 0.61  [synergy]  cp-sat, score 0.61
+1x Tannuk, Memorial Ensign                    score 0.57  [synergy]  cp-sat, score 0.57
+1x Conduit of Worlds                          score 0.57  [synergy]  cp-sat, score 0.57
+1x Heroic Intervention                        score 0.56  [synergy]  cp-sat, score 0.56
+1x Retreat to Coralhelm                       score 0.55  [synergy]  cp-sat, score 0.55
+1x Springheart Nantuko                        score 0.49  [synergy]  cp-sat, score 0.49
+1x Roil Elemental                             score 0.48  [synergy]  cp-sat, score 0.48
+
+## Maybeboard (15)
+1x Loot, Exuberant Explorer                   score 0.59  [ramp]  fuera: cuota llena en ramp
+1x Risen Reef                                 score 0.59  [ramp]  fuera: cuota llena en ramp
+1x Harrow                                     score 0.58  [ramp]  fuera: cuota llena en ramp
+1x Icetill Explorer                           score 0.57  [ramp]  fuera: cuota llena en ramp
+1x Splendid Reclamation                       score 0.51  [ramp]  fuera: cuota llena en ramp
+1x Titania, Protector of Argoth               score 0.48  [ramp]  fuera: cuota llena en ramp
+1x Strip Mine                                 score 0.46  [lands/removal]  fuera: cuota llena en lands/removal
+1x Mossborn Hydra                             score 0.45  [synergy]  fuera: cuota llena en synergy
+1x Cultivate                                  score 0.44  [ramp]  fuera: cuota llena en ramp
+1x Burgeoning                                 score 0.43  [ramp]  fuera: cuota llena en ramp
+1x Awaken the Woods                           score 0.42  [ramp]  fuera: cuota llena en ramp
+1x Eternal Witness                            score 0.42  [synergy]  fuera: cuota llena en synergy
+1x Kodama's Reach                             score 0.42  [ramp]  fuera: cuota llena en ramp
+1x Birds of Paradise                          score 0.40  [ramp]  fuera: cuota llena en ramp
+1x Sakura-Tribe Elder                         score 0.39  [ramp]  fuera: cuota llena en ramp
