@@ -1,0 +1,476 @@
+{
+  "Blighted Woodland": [
+    "lands",
+    "ramp"
+  ],
+  "Flagstones of Trokair": [
+    "lands"
+  ],
+  "Tolaria West": [
+    "lands"
+  ],
+  "Ant-Man's Army": [],
+  "Baylen, the Haymaker": [
+    "ramp",
+    "card_draw"
+  ],
+  "Black Tom Cassidy": [
+    "ramp"
+  ],
+  "Buy Your Silence": [
+    "removal"
+  ],
+  "Celestial Prism": [
+    "ramp"
+  ],
+  "Deathbloom Ritualist": [
+    "ramp"
+  ],
+  "Dimir Locket": [
+    "ramp",
+    "card_draw"
+  ],
+  "Emergency Eject": [
+    "removal"
+  ],
+  "Endrider Catalyzer": [
+    "ramp"
+  ],
+  "Exploding Barrel": [
+    "ramp",
+    "removal"
+  ],
+  "Fabrication Foundry": [
+    "ramp"
+  ],
+  "Freyalise, Llanowar's Fury": [
+    "ramp",
+    "removal"
+  ],
+  "Glasspool Mimic // Glasspool Shore": [
+    "lands"
+  ],
+  "Goblin Glasswright // Craft with Pride": [],
+  "Grim Monolith": [
+    "ramp"
+  ],
+  "Herald of Hadar": [],
+  "Hydro-Man, Fluid Felon": [],
+  "Kabira Takedown // Kabira Plateau": [
+    "lands",
+    "removal"
+  ],
+  "Kolaghan Monument": [
+    "ramp"
+  ],
+  "Loot, the Pathfinder": [
+    "card_draw",
+    "removal"
+  ],
+  "Malcolm, Keen-Eyed Navigator": [
+    "ramp",
+    "synergy"
+  ],
+  "Mana Cylix": [
+    "ramp"
+  ],
+  "Nardole, Resourceful Cyborg": [
+    "ramp"
+  ],
+  "Ojer Pakpatiq, Deepest Epoch // Temple of Cyclical Time": [],
+  "Patron of the Moon": [
+    "ramp"
+  ],
+  "Phyrexian Totem": [
+    "ramp"
+  ],
+  "Powerstone Engineer": [
+    "ramp"
+  ],
+  "Proctor's Gaze": [
+    "ramp",
+    "removal"
+  ],
+  "Razorgrass Ambush // Razorgrass Field": [
+    "lands",
+    "removal"
+  ],
+  "Rev, Tithe Extractor": [
+    "ramp",
+    "card_draw"
+  ],
+  "Ronin, Shadow Stalker": [
+    "ramp",
+    "removal"
+  ],
+  "Sea Scryer": [
+    "ramp"
+  ],
+  "Sejiri Shelter // Sejiri Glacier": [
+    "lands"
+  ],
+  "Serum Powder": [
+    "ramp"
+  ],
+  "Spelunking": [
+    "ramp"
+  ],
+  "Spikefield Hazard // Spikefield Cave": [
+    "lands",
+    "removal"
+  ],
+  "Stark Industries Executive": [
+    "ramp"
+  ],
+  "Static Net": [
+    "ramp",
+    "removal"
+  ],
+  "Thran Dynamo": [
+    "ramp"
+  ],
+  "Witch Engine": [
+    "ramp"
+  ],
+  "Anticausal Vestige": [],
+  "Baleful Mastery": [
+    "removal"
+  ],
+  "Battle of Frost and Fire": [
+    "board_wipe"
+  ],
+  "Battlefield Scavenger": [
+    "card_draw"
+  ],
+  "Book Devourer": [
+    "card_draw"
+  ],
+  "Break the Spell": [
+    "removal"
+  ],
+  "Case of the Ransacked Lab": [
+    "card_draw"
+  ],
+  "Champions from Beyond": [
+    "card_draw"
+  ],
+  "Conch Horn": [
+    "card_draw"
+  ],
+  "Drag the Canal": [],
+  "Dream Fracture": [
+    "removal"
+  ],
+  "Feather of Flight": [],
+  "Fungal Plots": [
+    "card_draw"
+  ],
+  "Futurist Forge": [
+    "card_draw"
+  ],
+  "Gempalm Incinerator": [
+    "removal",
+    "synergy"
+  ],
+  "Gibbering Barricade": [
+    "card_draw"
+  ],
+  "Gran-Gran": [
+    "card_draw"
+  ],
+  "Happily Ever After": [
+    "wincons"
+  ],
+  "Infernal Tribute": [
+    "card_draw"
+  ],
+  "Katara, Waterbending Master": [
+    "card_draw"
+  ],
+  "Laboratory Maniac": [
+    "wincons"
+  ],
+  "Leinore, Autumn Sovereign": [
+    "card_draw"
+  ],
+  "Meltstrider Eulogist": [
+    "card_draw"
+  ],
+  "Mu Yanling, Sky Dancer": [],
+  "Nylea's Presence": [],
+  "Panther Pounce": [],
+  "Persuasive Interrogators": [
+    "synergy"
+  ],
+  "Professor of Symbology": [],
+  "Pyknite": [],
+  "Rime Chill": [],
+  "Scorn-Blade Berserker": [],
+  "Sensation Gorger": [
+    "card_draw",
+    "synergy"
+  ],
+  "Skybox Ferry": [],
+  "Skyship Buccaneer": [],
+  "Starfall Invocation": [
+    "board_wipe"
+  ],
+  "Starwinder": [
+    "card_draw"
+  ],
+  "Study Break": [],
+  "Summon: Primal Odin": [
+    "removal"
+  ],
+  "Swat": [
+    "removal"
+  ],
+  "The End": [
+    "removal"
+  ],
+  "The Immortal Sun": [
+    "card_draw"
+  ],
+  "Access Denied": [
+    "removal"
+  ],
+  "Atzocan Archer": [
+    "removal"
+  ],
+  "Aven Cloudchaser": [
+    "removal"
+  ],
+  "Ayara, Widow of the Realm // Ayara, Furnace Queen": [],
+  "Blood Spatter Analysis": [
+    "removal"
+  ],
+  "Clash of the Eikons": [
+    "removal"
+  ],
+  "Disrupting Shoal": [
+    "removal"
+  ],
+  "Disruptor Wanderglyph": [],
+  "Eldrazi Confluence": [
+    "removal"
+  ],
+  "First Volley": [
+    "removal"
+  ],
+  "Fowl Strike": [
+    "removal"
+  ],
+  "Frantic Purification": [
+    "removal"
+  ],
+  "HYDRA Assault Robot": [],
+  "Heartwood Giant": [],
+  "Hisoka's Defiance": [
+    "removal"
+  ],
+  "Hopeful Initiate": [
+    "removal"
+  ],
+  "Ice Out": [
+    "removal"
+  ],
+  "Infernal Grasp": [
+    "removal"
+  ],
+  "Into the Maw of Hell": [
+    "removal"
+  ],
+  "Morkrut Banshee": [
+    "removal"
+  ],
+  "Murdock's Crusade": [
+    "removal"
+  ],
+  "Natural End": [
+    "removal"
+  ],
+  "Obliterating Bolt": [
+    "removal"
+  ],
+  "Sparkcaster": [],
+  "Syncopate": [
+    "removal"
+  ],
+  "Tibalt's Rager": [],
+  "Trystan's Command": [
+    "removal"
+  ],
+  "Vial of Dragonfire": [
+    "removal"
+  ],
+  "Violet Pall": [
+    "removal"
+  ],
+  "Acid Rain": [
+    "board_wipe"
+  ],
+  "Caldera Hellion": [
+    "board_wipe"
+  ],
+  "Coastal Breach": [
+    "board_wipe"
+  ],
+  "Dragonback Assault": [
+    "board_wipe"
+  ],
+  "Fortunate Few": [
+    "board_wipe"
+  ],
+  "Glorious End": [],
+  "Myojin of Cleansing Fire": [
+    "board_wipe"
+  ],
+  "Nature's Ruin": [
+    "board_wipe"
+  ],
+  "Plague Wind": [
+    "board_wipe"
+  ],
+  "Primeval Light": [
+    "board_wipe"
+  ],
+  "Serenity": [
+    "board_wipe"
+  ],
+  "Star of Extinction": [
+    "board_wipe"
+  ],
+  "Szat's Will": [
+    "removal"
+  ],
+  "Tibor and Lumia": [],
+  "Tornado Elemental": [
+    "board_wipe"
+  ],
+  "Wirefly Hive": [],
+  "Wormfang Behemoth": [],
+  "Zero Point Ballad": [
+    "board_wipe"
+  ],
+  "Angel's Grace": [],
+  "Bloodroot Apothecary": [
+    "synergy"
+  ],
+  "Chance for Glory": [],
+  "Everybody Lives!": [],
+  "Fynn, the Fangbearer": [
+    "wincons",
+    "synergy"
+  ],
+  "Lich's Tomb": [],
+  "Mechanized Production": [
+    "wincons"
+  ],
+  "Ramses, Assassin Lord": [
+    "wincons",
+    "synergy"
+  ],
+  "Share the Spoils": [],
+  "Transcendence": [],
+  "Virulent Silencer": [
+    "synergy"
+  ],
+  "Bladestitched Skaab": [
+    "synergy"
+  ],
+  "Etchings of the Chosen": [
+    "synergy"
+  ],
+  "Galadhrim Brigade": [
+    "synergy"
+  ],
+  "Hero of Iroas": [
+    "synergy"
+  ],
+  "Jet Medallion": [
+    "ramp"
+  ],
+  "Joraga Warcaller": [
+    "synergy"
+  ],
+  "Kefnet's Monument": [
+    "ramp"
+  ],
+  "Lord of the Accursed": [
+    "synergy"
+  ],
+  "Paragon of Fierce Defiance": [
+    "synergy"
+  ],
+  "Rundvelt Hordemaster": [
+    "synergy"
+  ],
+  "Splinter, Hamato Yoshi": [
+    "synergy"
+  ],
+  "Veteran Armorer": [],
+  "Voyager Quickwelder": [
+    "ramp"
+  ],
+  "Akroan Line Breaker": [],
+  "Argivian Phalanx": [],
+  "Armasaur Guide": [],
+  "Artifact Ward": [],
+  "Bloodhusk Ritualist": [],
+  "Caverns of Despair": [],
+  "Cloven Casting": [],
+  "Collective Inferno": [
+    "synergy"
+  ],
+  "Cowardice": [],
+  "Daggerdrome Imp": [],
+  "Dark Suspicions": [],
+  "Deception": [],
+  "Desecrated Tomb": [],
+  "Diving Griffin": [],
+  "Draugr Thought-Thief": [],
+  "Dross Scorpion": [],
+  "Elgaud Inquisitor": [],
+  "Eriette, the Beguiler": [
+    "synergy"
+  ],
+  "Estrid's Invocation": [
+    "synergy"
+  ],
+  "Fallow Wurm": [],
+  "Font of Progress": [],
+  "Gobhobbler Rats": [],
+  "Hulking Raptor": [
+    "ramp"
+  ],
+  "Infantry Shield": [],
+  "Jaded Analyst": [],
+  "Kresh the Bloodbraided": [],
+  "Krosan Archer": [],
+  "Lonesome Unicorn // Rider in Need": [],
+  "Nightmare Unmaking": [
+    "board_wipe"
+  ],
+  "Numa, Joraga Chieftain": [
+    "synergy"
+  ],
+  "Phantom Flock": [],
+  "Phyrexian War Beast": [],
+  "Picklock Prankster // Free the Fae": [],
+  "Resplendent Griffin": [],
+  "Return the Favor": [],
+  "Rocket-Powered Goblin Glider": [],
+  "Sarkhan's Triumph": [
+    "synergy"
+  ],
+  "Skirge Familiar": [
+    "ramp"
+  ],
+  "Soulless Jailer": [],
+  "Spectacular Spider-Man": [],
+  "Stallion of Ashmouth": [],
+  "Tales of Master Seshiro // Seshiro's Living Legacy": [],
+  "The Flood of Mars": [],
+  "Thunderhead Squadron": [],
+  "Vincent Valentine // Galian Beast": []
+}

@@ -23,6 +23,7 @@ build/
 # Data cache
 data/cache/
 data/processed/
+experiments/tagging/cache/
 
 # OS / editor
 .DS_Store

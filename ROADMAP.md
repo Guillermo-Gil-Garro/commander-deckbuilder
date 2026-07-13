@@ -17,7 +17,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ✅ Validador de mazo de 99 (estado por categoría, suelo Karsten infranqueable; `backend/quotas/validator.py`)
 
 ## Fase 2 — Experimentos de tagging
-- ⬜ 3-4 métodos de tagging sobre el mismo pool de test
+- ✅ 4 métodos de tagging implementados sobre el set de test (2026-07-13): regex serio, EDHREC headers (ciego a 4/7 categorías — hallazgo), Scryfall otags, LLM cacheado con rúbrica; predicciones en `experiments/tagging/predictions/`, comparador `evaluate.py` listo
 - 🔄 🔶 Set de test ~200 cartas etiquetadas a mano — propuesta generada (`experiments/tagging/test_set_proposal.csv`, 2026-07-12), pendiente de revisión/corrección de Guille
 - ⬜ 🔶 Informe comparativo en DECISIONS.md → Guille decide
 
