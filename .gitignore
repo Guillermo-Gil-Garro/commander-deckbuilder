@@ -24,8 +24,9 @@ build/
 data/cache/
 data/processed/
 experiments/tagging/cache/
-# Regenerable labeling batches (data/tags/ itself IS versioned)
+# Regenerable labeling batches and merged intermediates (data/tags/ IS versioned)
 experiments/tagging/production/batches/
+experiments/tagging/production/labeled/
 
 # OS / editor
 .DS_Store
