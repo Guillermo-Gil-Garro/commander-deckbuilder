@@ -21,7 +21,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pipeline.edhrec import fetch_commander, slugify_commander  # noqa: E402
 from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
-from selector.greedy import GreedyResult, build_deck_greedy, load_pool  # noqa: E402
+from selector.cp_sat import build_deck_cpsat  # noqa: E402
+from selector.greedy import build_deck_greedy, load_pool  # noqa: E402
 from selector.provisional_tags import otag_tagger  # noqa: E402
 
 from run_greedy import BANLIST_PATH, COMMANDERS, POOL_PATH, load_banlist  # noqa: E402
@@ -43,7 +44,7 @@ CATEGORY_LABELS = {
 }
 
 
-def format_archidekt(result: GreedyResult) -> str:
+def format_archidekt(result) -> str:
     lines = [f"1x {result.commander_name} [Commander]"]
     for entry in result.mainboard:
         label = CATEGORY_LABELS.get(entry.slot, entry.slot)
@@ -63,21 +64,26 @@ def main() -> None:
     tagger = otag_tagger(pool.cards())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    builders = {"greedy": build_deck_greedy, "cpsat": build_deck_cpsat}
     for commander in COMMANDERS:
         data = fetch_commander(commander)
-        result = build_deck_greedy(
-            commander,
-            pool=pool,
-            recommendations=data.recommendations,
-            bands=resolve_bands(config, commander),
-            tagger=tagger,
-            banned_names=banned,
-            watchlist_names=watchlist,
-        )
-        out_path = OUT_DIR / f"{slugify_commander(commander)}.txt"
-        out_path.write_text(format_archidekt(result), encoding="utf-8")
-        total = sum(e.count for e in result.mainboard)
-        log.info("%s: %d cartas + comandante -> %s", commander, total, out_path.name)
+        bands = resolve_bands(config, commander)
+        for method, builder in builders.items():
+            result = builder(
+                commander,
+                pool=pool,
+                recommendations=data.recommendations,
+                bands=bands,
+                tagger=tagger,
+                banned_names=banned,
+                watchlist_names=watchlist,
+            )
+            out_dir = OUT_DIR if method == "greedy" else OUT_DIR.parent / "archidekt_cpsat"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_path = out_dir / f"{slugify_commander(commander)}.txt"
+            out_path.write_text(format_archidekt(result), encoding="utf-8")
+            total = sum(e.count for e in result.mainboard)
+            log.info("%s [%s]: %d cartas + comandante -> %s", commander, method, total, out_path.name)
 
 
 if __name__ == "__main__":
