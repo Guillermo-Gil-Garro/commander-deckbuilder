@@ -5,10 +5,10 @@
 categoría      n  banda      estado
 lands         36  [36-39]    in_range  (suelo Karsten: 34, objetivo: 36)
 ramp          12  [ 9-12]    in_range
-card_draw     12  [ 9-12]    in_range
+card_draw      9  [ 9-12]    in_range
 removal       11  [ 8-11]    in_range
 board_wipe     3  [ 3- 5]    in_range
-wincons        1  [ 2- 4]    below
+wincons        2  [ 2- 4]    in_range
 synergy       28  [ 0-28]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
@@ -20,6 +20,7 @@ synergy       28  [ 0-28]    in_range
 1x Hall of Heliod's Generosity                score 1.10  [lands]  tierra recomendada, score 1.10
 1x Command Tower                              score 0.92  [lands]  tierra recomendada, score 0.92
 1x Reliquary Tower                            score 0.92  [lands]  tierra recomendada, score 0.92
+1x Strength of the Harvest // Haven of the Harvest score 0.71  [lands]  tierra recomendada, score 0.71
 1x Temple Garden                              score 0.71  [lands]  tierra recomendada, score 0.71
 1x Canopy Vista                               score 0.64  [lands]  tierra recomendada, score 0.64
 1x Sunpetal Grove                             score 0.61  [lands]  tierra recomendada, score 0.61
@@ -30,7 +31,7 @@ synergy       28  [ 0-28]    in_range
 1x Branchloft Pathway // Boulderloft Pathway  score 0.42  [lands]  tierra recomendada, score 0.42
 1x Sungrass Prairie                           score 0.41  [lands]  tierra recomendada, score 0.41
 1x Overgrown Farmland                         score 0.40  [lands]  tierra recomendada, score 0.40
-1x Horizon Canopy                             score 0.38  [card_draw/lands]  tierra recomendada, score 0.38
+1x Horizon Canopy                             score 0.38  [lands]  tierra recomendada, score 0.38
 1x Yavimaya, Cradle of Growth                 score 0.37  [lands]  tierra recomendada, score 0.37
 1x Temple of Plenty                           score 0.36  [lands]  tierra recomendada, score 0.36
 1x Boseiju, Who Endures                       score 0.35  [lands/removal]  tierra recomendada, score 0.35
@@ -42,6 +43,7 @@ synergy       28  [ 0-28]    in_range
 1x Razorverge Thicket                         score 0.21  [lands]  tierra recomendada, score 0.21
 1x Misty Rainforest                           score 0.21  [lands]  tierra recomendada, score 0.21
 1x Verdant Catacombs                          score 0.21  [lands]  tierra recomendada, score 0.21
+1x Eiganjo, Seat of the Empire                score 0.20  [lands/removal]  tierra recomendada, score 0.20
 1x Exotic Orchard                             score 0.20  [lands]  tierra recomendada, score 0.20
 1x Flooded Strand                             score 0.20  [lands]  tierra recomendada, score 0.20
 1x Marsh Flats                                score 0.20  [lands]  tierra recomendada, score 0.20
@@ -49,24 +51,22 @@ synergy       28  [ 0-28]    in_range
 1x Selesnya Sanctuary                         score 0.18  [lands]  tierra recomendada, score 0.18
 1x Lush Portico                               score 0.18  [lands]  tierra recomendada, score 0.18
 1x Prismatic Vista                            score 0.16  [lands]  tierra recomendada, score 0.16
-1x Scattered Groves                           score 0.14  [card_draw/lands]  tierra recomendada, score 0.14
-1x Adagia, Windswept Bastion                  score 0.11  [lands]  tierra recomendada, score 0.11
-1x Shifting Woodland                          score 0.11  [lands]  tierra recomendada, score 0.11
-1x Ishgard, the Holy See // Faith & Grief     score 0.10  [lands]  tierra recomendada, score 0.10
+1x Scattered Groves                           score 0.14  [lands]  tierra recomendada, score 0.14
+1x Gemstone Caverns                           score 0.12  [lands]  tierra recomendada, score 0.12
 
 ### ramp (12)
 1x Sanctum Weaver                             score 1.65  [ramp]  ramp (cuota), score 1.65
+1x Jukai Naturalist                           score 1.42  [ramp]  ramp (cuota), score 1.42
 1x Wild Growth                                score 1.33  [ramp]  ramp (cuota), score 1.33
 1x Utopia Sprawl                              score 1.31  [ramp]  ramp (cuota), score 1.31
 1x Fertile Ground                             score 1.18  [ramp]  ramp (cuota), score 1.18
 1x Dryad of the Ilysian Grove                 score 0.84  [ramp]  ramp (cuota), score 0.84
 1x Exploration                                score 0.78  [ramp]  ramp (cuota), score 0.78
-1x Mirari's Wake                              score 0.63  [ramp]  ramp (cuota), score 0.63
-1x Overgrowth                                 score 0.59  [ramp]  ramp (cuota), score 0.59
-1x Burgeoning                                 score 0.45  [ramp]  ramp (cuota), score 0.45
-1x Composer of Spring                         score 0.45  [ramp]  relleno por score 0.45
-1x Wolfwillow Haven                           score 0.44  [ramp]  relleno por score 0.44
-1x Sol Ring                                   score 0.44  [ramp]  relleno por score 0.44
+1x Starfield Mystic                           score 0.76  [ramp]  ramp (cuota), score 0.76
+1x Abundant Growth                            score 0.65  [ramp]  ramp (cuota), score 0.65
+1x Mirari's Wake                              score 0.63  [ramp]  relleno por score 0.63
+1x Overgrowth                                 score 0.59  [ramp]  relleno por score 0.59
+1x Burgeoning                                 score 0.45  [ramp]  relleno por score 0.45
 
 ### card_draw (9)
 1x Enchantress's Presence                     score 1.63  [card_draw]  card_draw (cuota), score 1.63
@@ -76,12 +76,12 @@ synergy       28  [ 0-28]    in_range
 1x Satyr Enchanter                            score 1.13  [card_draw]  card_draw (cuota), score 1.13
 1x Verduran Enchantress                       score 0.99  [card_draw]  card_draw (cuota), score 0.99
 1x Argothian Enchantress                      score 0.78  [card_draw]  card_draw (cuota), score 0.78
-1x Abundant Growth                            score 0.65  [card_draw]  card_draw (cuota), score 0.65
-1x Sylvan Library                             score 0.50  [card_draw]  relleno por score 0.50
+1x Sylvan Library                             score 0.50  [card_draw]  card_draw (cuota), score 0.50
+1x Courser of Kruphix                         score 0.49  [card_draw]  card_draw (cuota), score 0.49
 
-### removal (10)
+### removal (9)
 1x Darksteel Mutation                         score 1.18  [removal]  removal (cuota), score 1.18
-1x Kenrith's Transformation                   score 1.18  [card_draw/removal]  removal (cuota), score 1.18
+1x Kenrith's Transformation                   score 1.18  [removal]  removal (cuota), score 1.18
 1x Grasp of Fate                              score 0.87  [removal]  removal (cuota), score 0.87
 1x Seal of Cleansing                          score 0.85  [removal]  removal (cuota), score 0.85
 1x Seal of Primordium                         score 0.76  [removal]  removal (cuota), score 0.76
@@ -89,20 +89,19 @@ synergy       28  [ 0-28]    in_range
 1x Aura of Silence                            score 0.66  [removal]  removal (cuota), score 0.66
 1x Song of the Dryads                         score 0.46  [removal]  removal (cuota), score 0.46
 1x Karmic Justice                             score 0.45  [removal]  relleno por score 0.45
-1x Aura Shards                                score 0.44  [removal]  relleno por score 0.44
 
 ### board_wipe (3)
 1x Winds of Rath                              score 0.51  [board_wipe]  board_wipe (cuota), score 0.51
 1x Austere Command                            score 0.32  [board_wipe]  board_wipe (cuota), score 0.32
 1x Farewell                                   score 0.19  [board_wipe]  board_wipe (cuota), score 0.19
 
-### wincons (1)
+### wincons (2)
 1x Approach of the Second Sun                 score 0.28  [wincons]  wincons (cuota), score 0.28
+1x Aetherflux Reservoir                       score 0.26  [wincons]  wincons (cuota), score 0.26
 
 ### synergy (28)
 1x Destiny Spinner                            score 1.47  [synergy]  relleno por score 1.47
 1x Sterling Grove                             score 1.47  [synergy]  relleno por score 1.47
-1x Jukai Naturalist                           score 1.42  [synergy]  relleno por score 1.42
 1x Sigil of the Empty Throne                  score 1.28  [synergy]  relleno por score 1.28
 1x Archon of Sun's Grace                      score 1.05  [synergy]  relleno por score 1.05
 1x Ethereal Armor                             score 1.03  [synergy]  relleno por score 1.03
@@ -117,8 +116,6 @@ synergy       28  [ 0-28]    in_range
 1x Heliod, Sun-Crowned                        score 0.78  [synergy]  relleno por score 0.78
 1x Idyllic Tutor                              score 0.78  [synergy]  relleno por score 0.78
 1x Authority of the Consuls                   score 0.76  [synergy]  relleno por score 0.76
-1x Starfield Mystic                           score 0.76  [synergy]  relleno por score 0.76
-1x Strength of the Harvest // Haven of the Harvest score 0.71  [synergy]  relleno por score 0.71
 1x Flickering Ward                            score 0.70  [synergy]  relleno por score 0.70
 1x Rancor                                     score 0.67  [synergy]  relleno por score 0.67
 1x Solitary Confinement                       score 0.64  [synergy]  relleno por score 0.64
@@ -128,17 +125,20 @@ synergy       28  [ 0-28]    in_range
 1x Calix, Guided by Fate                      score 0.58  [synergy]  relleno por score 0.58
 1x Greater Auramancy                          score 0.55  [synergy]  relleno por score 0.55
 1x Privileged Position                        score 0.55  [synergy]  relleno por score 0.55
+1x Stony Silence                              score 0.48  [synergy]  relleno por score 0.48
+1x Ajani's Chosen                             score 0.47  [synergy]  relleno por score 0.47
+1x Rest in Peace                              score 0.46  [synergy]  relleno por score 0.46
 
 ## Maybeboard (15)
-1x Courser of Kruphix                         score 0.49  [synergy]  fuera: cuota llena en synergy
 1x Serra's Sanctum                            score 0.49  [lands/ramp]  fuera por score 0.49
-1x Stony Silence                              score 0.48  [synergy]  fuera: cuota llena en synergy
-1x Ajani's Chosen                             score 0.47  [synergy]  fuera: cuota llena en synergy
-1x Rest in Peace                              score 0.46  [synergy]  fuera: cuota llena en synergy
+1x Composer of Spring                         score 0.45  [ramp]  fuera: cuota llena en ramp
+1x Wolfwillow Haven                           score 0.44  [ramp]  fuera: cuota llena en ramp
+1x Sol Ring                                   score 0.44  [ramp]  fuera: cuota llena en ramp
+1x Aura Shards                                score 0.44  [removal]  fuera: cuota llena en removal
 1x Resurgent Belief                           score 0.43  [synergy]  fuera: cuota llena en synergy
 1x Yenna, Redtooth Regent                     score 0.43  [synergy]  fuera: cuota llena en synergy
 1x Lignify                                    score 0.41  [removal]  fuera: cuota llena en removal
-1x Path to Exile                              score 0.40  [ramp/removal]  fuera: cuota llena en ramp/removal
+1x Path to Exile                              score 0.40  [removal]  fuera: cuota llena en removal
 1x Walking Ballista                           score 0.40  [removal]  fuera: cuota llena en removal
 1x Carpet of Flowers                          score 0.39  [ramp]  fuera: cuota llena en ramp
 1x Banishing Light                            score 0.39  [removal]  fuera: cuota llena en removal

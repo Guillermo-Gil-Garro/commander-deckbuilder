@@ -1,5 +1,6 @@
 1x Sythis, Harvest's Hand [Commander]
 1x Approach of the Second Sun [Wincons]
+1x Aetherflux Reservoir [Wincons]
 1x Winds of Rath [Board Wipe]
 1x Austere Command [Board Wipe]
 1x Farewell [Board Wipe]
@@ -12,14 +13,14 @@
 1x Aura of Silence [Removal]
 1x Song of the Dryads [Removal]
 1x Sanctum Weaver [Ramp]
+1x Jukai Naturalist [Ramp]
 1x Wild Growth [Ramp]
 1x Utopia Sprawl [Ramp]
 1x Fertile Ground [Ramp]
 1x Dryad of the Ilysian Grove [Ramp]
 1x Exploration [Ramp]
-1x Mirari's Wake [Ramp]
-1x Overgrowth [Ramp]
-1x Burgeoning [Ramp]
+1x Starfield Mystic [Ramp]
+1x Abundant Growth [Ramp]
 1x Enchantress's Presence [Card Draw]
 1x Setessan Champion [Card Draw]
 1x Eidolon of Blossoms [Card Draw]
@@ -27,10 +28,10 @@
 1x Satyr Enchanter [Card Draw]
 1x Verduran Enchantress [Card Draw]
 1x Argothian Enchantress [Card Draw]
-1x Abundant Growth [Card Draw]
+1x Sylvan Library [Card Draw]
+1x Courser of Kruphix [Card Draw]
 1x Destiny Spinner [Synergy]
 1x Sterling Grove [Synergy]
-1x Jukai Naturalist [Synergy]
 1x Sigil of the Empty Throne [Synergy]
 1x Archon of Sun's Grace [Synergy]
 1x Ethereal Armor [Synergy]
@@ -45,26 +46,26 @@
 1x Heliod, Sun-Crowned [Synergy]
 1x Idyllic Tutor [Synergy]
 1x Authority of the Consuls [Synergy]
-1x Starfield Mystic [Synergy]
-1x Strength of the Harvest // Haven of the Harvest [Synergy]
 1x Flickering Ward [Synergy]
 1x Rancor [Synergy]
 1x Solitary Confinement [Synergy]
+1x Mirari's Wake [Ramp]
 1x Weaver of Harmony [Synergy]
 1x Whip Silk [Synergy]
 1x Moon-Blessed Cleric [Synergy]
+1x Overgrowth [Ramp]
 1x Calix, Guided by Fate [Synergy]
 1x Greater Auramancy [Synergy]
 1x Privileged Position [Synergy]
-1x Sylvan Library [Card Draw]
+1x Stony Silence [Synergy]
+1x Ajani's Chosen [Synergy]
+1x Rest in Peace [Synergy]
 1x Karmic Justice [Removal]
-1x Composer of Spring [Ramp]
-1x Wolfwillow Haven [Ramp]
-1x Sol Ring [Ramp]
-1x Aura Shards [Removal]
+1x Burgeoning [Ramp]
 1x Hall of Heliod's Generosity [Lands]
 1x Command Tower [Lands]
 1x Reliquary Tower [Lands]
+1x Strength of the Harvest // Haven of the Harvest [Lands]
 1x Temple Garden [Lands]
 1x Canopy Vista [Lands]
 1x Sunpetal Grove [Lands]
@@ -87,6 +88,7 @@
 1x Razorverge Thicket [Lands]
 1x Misty Rainforest [Lands]
 1x Verdant Catacombs [Lands]
+1x Eiganjo, Seat of the Empire [Lands]
 1x Exotic Orchard [Lands]
 1x Flooded Strand [Lands]
 1x Marsh Flats [Lands]
@@ -95,16 +97,14 @@
 1x Lush Portico [Lands]
 1x Prismatic Vista [Lands]
 1x Scattered Groves [Lands]
-1x Adagia, Windswept Bastion [Lands]
-1x Shifting Woodland [Lands]
-1x Ishgard, the Holy See // Faith & Grief [Lands]
+1x Gemstone Caverns [Lands]
 
 # Sideboard
-1x Courser of Kruphix
 1x Serra's Sanctum
-1x Stony Silence
-1x Ajani's Chosen
-1x Rest in Peace
+1x Composer of Spring
+1x Wolfwillow Haven
+1x Sol Ring
+1x Aura Shards
 1x Resurgent Belief
 1x Yenna, Redtooth Regent
 1x Lignify

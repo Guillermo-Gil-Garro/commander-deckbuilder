@@ -6,7 +6,7 @@
 1x Goblin Chieftain [Synergy]
 1x Goblin Bombardment [Removal]
 1x Pashalik Mons [Removal]
-1x Brightstone Ritual [Ramp]
+1x Brightstone Ritual [Synergy]
 1x Goblin King [Synergy]
 1x Hobgoblin Bandit Lord [Removal]
 1x Siege-Gang Commander [Removal]
@@ -17,12 +17,12 @@
 1x Goblin Recruiter [Synergy]
 1x Skullclamp [Card Draw]
 1x Goblin Chirurgeon [Synergy]
-1x Goblin War Strike [Synergy]
-1x Goblin Ringleader [Synergy]
+1x Goblin War Strike [Removal]
+1x Goblin Ringleader [Card Draw]
 1x Dragon Fodder [Synergy]
 1x Muxus, Goblin Grandee [Synergy]
 1x Shared Animosity [Synergy]
-1x Battle Hymn [Ramp]
+1x Battle Hymn [Synergy]
 1x Sol Ring [Ramp]
 1x Rundvelt Hordemaster [Synergy]
 1x Howlsquad Heavy [Ramp]
@@ -42,42 +42,41 @@
 1x Beetleback Chief [Synergy]
 1x Goblin Grenade [Removal]
 1x Castle Embereth [Lands]
-1x Boggart Shenanigans [Removal]
+1x Grenzo, Havoc Raiser [Card Draw]
 1x Path of Ancestry [Lands]
 1x Three Tree City [Lands]
-1x Treasure Nabber [Ramp]
 1x Staff of Domination [Card Draw]
 1x Patriar's Seal [Ramp]
 1x Den of the Bugbear [Lands]
 1x Volley Veteran [Removal]
-1x Thornbite Staff [Removal]
+1x Moria Marauder [Card Draw]
 1x Arcane Signet [Ramp]
+1x Ruby Medallion [Ramp]
 1x Ashnod's Altar [Ramp]
-1x Hazoret's Monument [Card Draw]
+1x Hazoret's Monument [Ramp]
 1x Heraldic Banner [Ramp]
+1x Dark-Dweller Oracle [Card Draw]
 1x Vanquisher's Banner [Card Draw]
 1x Patchwork Banner [Ramp]
 1x Cavern of Souls [Lands]
-1x Faithless Looting [Card Draw]
+1x Mana Echoes [Ramp]
+1x Vandalblast [Board Wipe]
 1x Arena of Glory [Lands]
 1x Thrill of Possibility [Card Draw]
 1x Forgotten Cave [Lands]
-1x Goblin Chainwhirler [Board Wipe]
 1x Goblin Burrows [Lands]
-1x Collective Inferno [Wincons]
 1x Blasphemous Act [Board Wipe]
-1x Relentless Assault [Wincons]
 1x Idol of Oblivion [Card Draw]
-1x City on Fire [Wincons]
+1x Chronicle of Victory [Card Draw]
 1x Command Tower [Lands]
-1x War Room [Lands]
+1x Tormenting Voice [Card Draw]
 1x Reliquary Tower [Lands]
 1x Smoldering Crater [Lands]
 1x Command Beacon [Lands]
 1x Buried Ruin [Lands]
 1x Great Furnace [Lands]
 1x Chain Reaction [Board Wipe]
-21x Mountain [Lands]
+22x Mountain [Lands]
 
 # Sideboard
 1x Hexing Squelcher
@@ -85,13 +84,13 @@
 1x Mogg War Marshal
 1x Sting, the Glinting Dagger
 1x Thousand-Year Elixir
+1x Boggart Shenanigans
 1x Goro-Goro, Disciple of Ryusei
 1x Empty the Warrens
-1x Grenzo, Havoc Raiser
 1x Raid Bombardment
 1x Searslicer Goblin
 1x Quest for the Goblin Lord
+1x Treasure Nabber
 1x Marvin, Murderous Mimic
 1x Goblin Motivator
 1x Coat of Arms
-1x Siege-Gang Lieutenant

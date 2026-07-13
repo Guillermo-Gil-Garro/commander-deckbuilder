@@ -7,9 +7,9 @@ lands         36  [36-39]    in_range  (suelo Karsten: 33, objetivo: 36)
 ramp          12  [ 9-12]    in_range
 card_draw     12  [ 9-12]    in_range
 removal       11  [ 8-11]    in_range
-board_wipe     5  [ 3- 5]    in_range
+board_wipe     4  [ 3- 5]    in_range
 wincons        2  [ 2- 4]    in_range
-synergy       28  [ 0-28]    in_range
+synergy       26  [ 0-28]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -33,115 +33,115 @@ synergy       28  [ 0-28]    in_range
 1x Evolving Wilds                             score 0.36  [lands]  tierra recomendada, score 0.36
 1x Stormcarved Coast                          score 0.36  [lands]  tierra recomendada, score 0.36
 1x Exotic Orchard                             score 0.35  [lands]  tierra recomendada, score 0.35
+1x Fiery Islet                                score 0.33  [lands]  tierra recomendada, score 0.33
 1x Scalding Tarn                              score 0.30  [lands]  tierra recomendada, score 0.30
 1x Riverglide Pathway // Lavaglide Pathway    score 0.25  [lands]  tierra recomendada, score 0.25
 1x Terramorphic Expanse                       score 0.24  [lands]  tierra recomendada, score 0.24
 1x Ferrous Lake                               score 0.24  [lands]  tierra recomendada, score 0.24
+1x Ojer Axonil, Deepest Might // Temple of Power score 0.24  [lands]  tierra recomendada, score 0.24
+1x Cephalid Coliseum                          score 0.19  [lands]  tierra recomendada, score 0.19
 1x Spirebluff Canal                           score 0.18  [lands]  tierra recomendada, score 0.18
 1x Highland Lake                              score 0.18  [lands]  tierra recomendada, score 0.18
+1x Lonely Sandbar                             score 0.18  [lands]  tierra recomendada, score 0.18
+1x Forgotten Cave                             score 0.17  [lands]  tierra recomendada, score 0.17
 1x City of Brass                              score 0.15  [lands]  tierra recomendada, score 0.15
 1x Thundering Falls                           score 0.15  [lands]  tierra recomendada, score 0.15
 1x Volcanic Island                            score 0.14  [lands]  tierra recomendada, score 0.14
+1x Hydroelectric Specimen // Hydroelectric Laboratory score 0.14  [lands]  tierra recomendada, score 0.14
 1x Flooded Strand                             score 0.13  [lands]  tierra recomendada, score 0.13
 1x Path of Ancestry                           score 0.13  [lands]  tierra recomendada, score 0.13
 1x Molten Tributary                           score 0.13  [lands]  tierra recomendada, score 0.13
 1x Polluted Delta                             score 0.13  [lands]  tierra recomendada, score 0.13
 1x Mana Confluence                            score 0.13  [lands]  tierra recomendada, score 0.13
-1x Reflecting Pool                            score 0.13  [lands]  tierra recomendada, score 0.13
-1x Misty Rainforest                           score 0.12  [lands]  tierra recomendada, score 0.12
-1x Castle Vantress                            score 0.12  [lands]  tierra recomendada, score 0.12
-1x Prismari Campus                            score 0.12  [lands]  tierra recomendada, score 0.12
-1x Bloodstained Mire                          score 0.12  [lands]  tierra recomendada, score 0.12
-1x Mistrise Village                           score 0.12  [lands]  tierra recomendada, score 0.12
 
 ### ramp (12)
 1x Arcane Signet                              score 0.84  [ramp]  ramp (cuota), score 0.84
 1x Izzet Signet                               score 0.83  [ramp]  ramp (cuota), score 0.83
+1x Goblin Electromancer                       score 0.81  [ramp]  ramp (cuota), score 0.81
 1x Sol Ring                                   score 0.78  [ramp]  ramp (cuota), score 0.78
 1x Storm-Kiln Artist                          score 0.63  [ramp]  ramp (cuota), score 0.63
 1x Talisman of Creativity                     score 0.59  [ramp]  ramp (cuota), score 0.59
-1x Commander's Sphere                         score 0.58  [card_draw/ramp]  ramp (cuota), score 0.58
+1x Commander's Sphere                         score 0.58  [ramp]  ramp (cuota), score 0.58
+1x Baral, Chief of Compliance                 score 0.56  [ramp]  ramp (cuota), score 0.56
 1x Decanter of Endless Water                  score 0.43  [ramp]  ramp (cuota), score 0.43
-1x Thought Vessel                             score 0.42  [ramp]  ramp (cuota), score 0.42
-1x Fellwar Stone                              score 0.41  [ramp]  ramp (cuota), score 0.41
+1x Thought Vessel                             score 0.42  [ramp]  relleno por score 0.42
+1x Fellwar Stone                              score 0.41  [ramp]  relleno por score 0.41
 1x Vivi Ornitier                              score 0.30  [ramp]  relleno por score 0.30
-1x Ojer Axonil, Deepest Might // Temple of Power score 0.24  [ramp]  relleno por score 0.24
-1x Sky Diamond                                score 0.20  [ramp]  relleno por score 0.20
 
-### card_draw (7)
+### card_draw (10)
 1x Curiosity                                  score 1.22  [card_draw]  card_draw (cuota), score 1.22
 1x Brainstorm                                 score 1.05  [card_draw]  card_draw (cuota), score 1.05
-1x Opt                                        score 0.93  [card_draw]  card_draw (cuota), score 0.93
 1x Ophidian Eye                               score 0.89  [card_draw]  card_draw (cuota), score 0.89
-1x Preordain                                  score 0.81  [card_draw]  relleno por score 0.81
-1x Tandem Lookout                             score 0.80  [card_draw]  relleno por score 0.80
-1x Ponder                                     score 0.79  [card_draw]  relleno por score 0.79
+1x Tandem Lookout                             score 0.80  [card_draw]  card_draw (cuota), score 0.80
+1x Niv-Mizzet, Visionary                      score 0.73  [card_draw]  card_draw (cuota), score 0.73
+1x Windfall                                   score 0.65  [card_draw]  card_draw (cuota), score 0.65
+1x Archmage Emeritus                          score 0.61  [card_draw]  card_draw (cuota), score 0.61
+1x Thrill of Possibility                      score 0.49  [card_draw]  relleno por score 0.49
+1x Teferi's Ageless Insight                   score 0.45  [card_draw]  relleno por score 0.45
+1x Treasure Cruise                            score 0.43  [card_draw]  relleno por score 0.43
 
 ### removal (9)
 1x Counterspell                               score 0.92  [removal]  removal (cuota), score 0.92
 1x Niv-Mizzet, the Firemind                   score 0.82  [card_draw/removal]  removal (cuota), score 0.82
-1x Izzet Charm                                score 0.74  [card_draw/removal]  removal (cuota), score 0.74
+1x Izzet Charm                                score 0.74  [removal]  removal (cuota), score 0.74
 1x Negate                                     score 0.72  [removal]  removal (cuota), score 0.72
 1x Lightning Bolt                             score 0.67  [removal]  removal (cuota), score 0.67
-1x Arcane Denial                              score 0.60  [card_draw/removal]  removal (cuota), score 0.60
+1x Arcane Denial                              score 0.60  [removal]  removal (cuota), score 0.60
 1x Abrade                                     score 0.52  [removal]  relleno por score 0.52
 1x Pongify                                    score 0.50  [removal]  relleno por score 0.50
 1x An Offer You Can't Refuse                  score 0.50  [removal]  relleno por score 0.50
 
-### board_wipe (5)
+### board_wipe (4)
 1x Blasphemous Act                            score 0.57  [board_wipe]  board_wipe (cuota), score 0.57
 1x Cyclonic Rift                              score 0.46  [board_wipe/removal]  board_wipe (cuota), score 0.46
 1x Vandalblast                                score 0.45  [board_wipe/removal]  board_wipe (cuota), score 0.45
 1x Aetherize                                  score 0.30  [board_wipe]  relleno por score 0.30
-1x Chain Reaction                             score 0.19  [board_wipe]  relleno por score 0.19
 
 ### wincons (2)
 1x Laboratory Maniac                          score 0.47  [wincons]  wincons (cuota), score 0.47
 1x Jace, Wielder of Mysteries                 score 0.22  [card_draw/wincons]  wincons (cuota), score 0.22
 
-### synergy (28)
+### synergy (26)
+1x Opt                                        score 0.93  [synergy]  relleno por score 0.93
 1x Guttersnipe                                score 0.88  [synergy]  relleno por score 0.88
-1x Goblin Electromancer                       score 0.81  [synergy]  relleno por score 0.81
+1x Preordain                                  score 0.81  [synergy]  relleno por score 0.81
+1x Ponder                                     score 0.79  [synergy]  relleno por score 0.79
+1x Frantic Search                             score 0.75  [synergy]  relleno por score 0.75
+1x Faithless Looting                          score 0.72  [synergy]  relleno por score 0.72
 1x Talrand, Sky Summoner                      score 0.59  [synergy]  relleno por score 0.59
+1x Consider                                   score 0.58  [synergy]  relleno por score 0.58
 1x Psychosis Crawler                          score 0.56  [synergy]  relleno por score 0.56
 1x Harmonic Prodigy                           score 0.51  [synergy]  relleno por score 0.51
+1x Serum Visions                              score 0.50  [synergy]  relleno por score 0.50
+1x Gitaxian Probe                             score 0.47  [synergy]  relleno por score 0.47
 1x Electrostatic Field                        score 0.46  [synergy]  relleno por score 0.46
 1x Young Pyromancer                           score 0.42  [synergy]  relleno por score 0.42
 1x Narset, Parter of Veils                    score 0.33  [synergy]  relleno por score 0.33
 1x Thousand-Year Storm                        score 0.30  [synergy]  relleno por score 0.30
 1x Fiery Inscription                          score 0.30  [synergy]  relleno por score 0.30
-1x Stormcatch Mentor                          score 0.29  [synergy]  relleno por score 0.29
 1x Propaganda                                 score 0.29  [synergy]  relleno por score 0.29
-1x Expressive Iteration                       score 0.26  [synergy]  relleno por score 0.26
 1x Torbran, Thane of Red Fell                 score 0.26  [synergy]  relleno por score 0.26
 1x Deflecting Swat                            score 0.26  [synergy]  relleno por score 0.26
 1x Murmuring Mystic                           score 0.26  [synergy]  relleno por score 0.26
 1x Veyran, Voice of Duality                   score 0.25  [synergy]  relleno por score 0.25
+1x Crackling Drake                            score 0.25  [synergy]  relleno por score 0.25
 1x Swiftfoot Boots                            score 0.24  [synergy]  relleno por score 0.24
 1x Coruscation Mage                           score 0.24  [synergy]  relleno por score 0.24
-1x Dig Through Time                           score 0.23  [synergy]  relleno por score 0.23
-1x Misdirection                               score 0.22  [synergy]  relleno por score 0.22
-1x Mizzix's Mastery                           score 0.21  [synergy]  relleno por score 0.21
-1x Bolt Bend                                  score 0.20  [synergy]  relleno por score 0.20
-1x Spellskite                                 score 0.20  [synergy]  relleno por score 0.20
-1x Thermo-Alchemist                           score 0.18  [synergy]  relleno por score 0.18
-1x Isochron Scepter                           score 0.18  [synergy]  relleno por score 0.18
-1x Dragonologist                              score 0.18  [synergy]  relleno por score 0.18
-1x Haughty Djinn                              score 0.18  [synergy]  relleno por score 0.18
+1x Winds of Change                            score 0.23  [synergy]  relleno por score 0.23
 
 ## Maybeboard (15)
-1x Frantic Search                             score 0.75  [card_draw]  fuera: cuota llena en card_draw
-1x Niv-Mizzet, Visionary                      score 0.73  [card_draw]  fuera: cuota llena en card_draw
-1x Faithless Looting                          score 0.72  [card_draw]  fuera: cuota llena en card_draw
-1x Windfall                                   score 0.65  [card_draw]  fuera: cuota llena en card_draw
-1x Archmage Emeritus                          score 0.61  [card_draw]  fuera: cuota llena en card_draw
-1x Consider                                   score 0.58  [card_draw]  fuera: cuota llena en card_draw
-1x Baral, Chief of Compliance                 score 0.56  [card_draw]  fuera: cuota llena en card_draw
-1x Serum Visions                              score 0.50  [card_draw]  fuera: cuota llena en card_draw
-1x Thrill of Possibility                      score 0.49  [card_draw]  fuera: cuota llena en card_draw
-1x Gitaxian Probe                             score 0.47  [card_draw]  fuera: cuota llena en card_draw
-1x Teferi's Ageless Insight                   score 0.45  [card_draw]  fuera: cuota llena en card_draw
-1x Treasure Cruise                            score 0.43  [card_draw]  fuera: cuota llena en card_draw
 1x Rapid Hybridization                        score 0.43  [removal]  fuera: cuota llena en removal
 1x Dispel                                     score 0.40  [removal]  fuera: cuota llena en removal
 1x Swan Song                                  score 0.39  [removal]  fuera: cuota llena en removal
+1x Snap                                       score 0.38  [removal]  fuera: cuota llena en removal
+1x Flame of Anor                              score 0.38  [card_draw/removal]  fuera: cuota llena en card_draw/removal
+1x Chaos Warp                                 score 0.36  [removal]  fuera: cuota llena en removal
+1x The Locust God                             score 0.36  [card_draw]  fuera: cuota llena en card_draw
+1x Midnight Clock                             score 0.32  [card_draw/ramp]  fuera: cuota llena en card_draw/ramp
+1x Mana Drain                                 score 0.31  [removal]  fuera: cuota llena en removal
+1x Rewind                                     score 0.31  [removal]  fuera: cuota llena en removal
+1x Fierce Guardianship                        score 0.30  [removal]  fuera: cuota llena en removal
+1x Stormcatch Mentor                          score 0.29  [ramp]  fuera: cuota llena en ramp
+1x Prismari Command                           score 0.29  [removal]  fuera: cuota llena en removal
+1x Spell Pierce                               score 0.28  [removal]  fuera: cuota llena en removal
+1x Force of Will                              score 0.27  [removal]  fuera: cuota llena en removal

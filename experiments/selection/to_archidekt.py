@@ -23,7 +23,7 @@ from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
 from selector.cp_sat import build_deck_cpsat  # noqa: E402
 from selector.greedy import build_deck_greedy, load_pool  # noqa: E402
-from selector.provisional_tags import otag_tagger  # noqa: E402
+from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 from run_greedy import BANLIST_PATH, COMMANDERS, POOL_PATH, load_banlist  # noqa: E402
 
@@ -61,7 +61,7 @@ def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
     banned, watchlist = load_banlist(BANLIST_PATH)
-    tagger = otag_tagger(pool.cards())
+    tagger = tagger_from_store(load_tags(), pool.cards())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     builders = {"greedy": build_deck_greedy, "cpsat": build_deck_cpsat}

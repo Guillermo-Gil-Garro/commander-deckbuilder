@@ -1,21 +1,23 @@
 1x Niv-Mizzet, Parun [Commander]
 1x Curiosity [Card Draw]
 1x Brainstorm [Card Draw]
-1x Opt [Card Draw]
+1x Opt [Synergy]
 1x Counterspell [Removal]
 1x Ophidian Eye [Card Draw]
 1x Guttersnipe [Synergy]
 1x Command Tower [Lands]
 1x Arcane Signet [Ramp]
 1x Izzet Signet [Ramp]
-1x Goblin Electromancer [Synergy]
-1x Preordain [Card Draw]
+1x Niv-Mizzet, the Firemind [Removal]
+1x Goblin Electromancer [Ramp]
+1x Preordain [Synergy]
 1x Tandem Lookout [Card Draw]
-1x Ponder [Card Draw]
+1x Ponder [Synergy]
 1x Sol Ring [Ramp]
-1x Frantic Search [Card Draw]
+1x Frantic Search [Synergy]
+1x Izzet Charm [Removal]
 1x Niv-Mizzet, Visionary [Card Draw]
-1x Faithless Looting [Card Draw]
+1x Faithless Looting [Synergy]
 1x Negate [Removal]
 1x Reliquary Tower [Lands]
 1x Sulfur Falls [Lands]
@@ -23,95 +25,93 @@
 1x Windfall [Card Draw]
 1x Shivan Reef [Lands]
 1x Storm-Kiln Artist [Ramp]
+1x Archmage Emeritus [Card Draw]
 1x Izzet Boilerworks [Lands]
+1x Arcane Denial [Removal]
 1x Temple of Epiphany [Lands]
 1x Talisman of Creativity [Ramp]
 1x Talrand, Sky Summoner [Synergy]
+1x Consider [Synergy]
+1x Commander's Sphere [Ramp]
 1x Blasphemous Act [Board Wipe]
+1x Baral, Chief of Compliance [Ramp]
 1x Psychosis Crawler [Synergy]
 1x Abrade [Removal]
 1x Swiftwater Cliffs [Lands]
 1x Steam Vents [Lands]
 1x Harmonic Prodigy [Synergy]
+1x Serum Visions [Synergy]
 1x Pongify [Removal]
 1x An Offer You Can't Refuse [Removal]
+1x Thrill of Possibility [Card Draw]
 1x Frostboil Snarl [Lands]
 1x Cascade Bluffs [Lands]
+1x Gitaxian Probe [Synergy]
 1x Laboratory Maniac [Wincons]
 1x Mystic Sanctuary [Lands]
 1x Electrostatic Field [Synergy]
 1x Cyclonic Rift [Board Wipe]
 1x Vandalblast [Board Wipe]
-1x Rapid Hybridization [Removal]
+1x Teferi's Ageless Insight [Card Draw]
+1x Treasure Cruise [Card Draw]
 1x Decanter of Endless Water [Ramp]
 1x Young Pyromancer [Synergy]
 1x Thought Vessel [Ramp]
 1x Izzet Guildgate [Lands]
 1x Fellwar Stone [Ramp]
-1x Dispel [Removal]
-1x Swan Song [Removal]
 1x Training Center [Lands]
 1x Evolving Wilds [Lands]
 1x Stormcarved Coast [Lands]
+1x The Locust God [Card Draw]
 1x Exotic Orchard [Lands]
+1x Fiery Islet [Lands]
 1x Narset, Parter of Veils [Synergy]
 1x Vivi Ornitier [Ramp]
 1x Thousand-Year Storm [Synergy]
 1x Aetherize [Board Wipe]
 1x Scalding Tarn [Lands]
 1x Fiery Inscription [Synergy]
-1x Stormcatch Mentor [Synergy]
 1x Propaganda [Synergy]
-1x Expressive Iteration [Synergy]
 1x Torbran, Thane of Red Fell [Synergy]
 1x Deflecting Swat [Synergy]
 1x Murmuring Mystic [Synergy]
 1x Veyran, Voice of Duality [Synergy]
 1x Riverglide Pathway // Lavaglide Pathway [Lands]
+1x Crackling Drake [Synergy]
 1x Terramorphic Expanse [Lands]
 1x Ferrous Lake [Lands]
-1x Ojer Axonil, Deepest Might // Temple of Power [Ramp]
+1x Ojer Axonil, Deepest Might // Temple of Power [Lands]
 1x Swiftfoot Boots [Synergy]
 1x Coruscation Mage [Synergy]
-1x Dig Through Time [Synergy]
-1x Jace, Wielder of Mysteries [Wincons]
-1x Misdirection [Synergy]
-1x Mizzix's Mastery [Synergy]
-1x Bolt Bend [Synergy]
-1x Spellskite [Synergy]
-1x Chromatic Lantern [Ramp]
-1x Chain Reaction [Board Wipe]
+1x Cephalid Coliseum [Lands]
 1x Spirebluff Canal [Lands]
-1x Myriad Landscape [Lands]
 1x Highland Lake [Lands]
-1x Thermo-Alchemist [Synergy]
+1x Lonely Sandbar [Lands]
+1x Forgotten Cave [Lands]
 1x City of Brass [Lands]
 1x Thundering Falls [Lands]
 1x Volcanic Island [Lands]
+1x Hydroelectric Specimen // Hydroelectric Laboratory [Lands]
 1x Flooded Strand [Lands]
 1x Path of Ancestry [Lands]
 1x Molten Tributary [Lands]
 1x Polluted Delta [Lands]
 1x Mana Confluence [Lands]
-1x Reflecting Pool [Lands]
-1x Misty Rainforest [Lands]
-1x Castle Vantress [Lands]
-1x Prismari Campus [Lands]
-1x Bloodstained Mire [Lands]
+1x Rite of the Dragoncaller [Wincons]
 
 # Sideboard
-1x Niv-Mizzet, the Firemind
-1x Izzet Charm
-1x Archmage Emeritus
-1x Arcane Denial
-1x Consider
-1x Commander's Sphere
-1x Baral, Chief of Compliance
-1x Serum Visions
-1x Thrill of Possibility
-1x Gitaxian Probe
-1x Teferi's Ageless Insight
-1x Treasure Cruise
+1x Rapid Hybridization
+1x Dispel
+1x Swan Song
 1x Snap
 1x Flame of Anor
 1x Chaos Warp
+1x Midnight Clock
+1x Mana Drain
+1x Rewind
+1x Fierce Guardianship
+1x Stormcatch Mentor
+1x Prismari Command
+1x Spell Pierce
+1x Force of Will
+1x Force of Negation

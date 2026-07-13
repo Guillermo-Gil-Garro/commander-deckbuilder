@@ -1,16 +1,16 @@
 # Atraxa, Praetors' Voice — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.03s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 40.5012 (score bruto 40.7885, penalizaciones escaladas 287335)
-# Fixing color (fuentes/objetivo): B: 21/32 (déficit 11), G: 22/29 (déficit 7), U: 21/32 (déficit 11), W: 22/32 (déficit 10)
+# Objetivo: 38.2358 (score bruto 38.4311, penalizaciones escaladas 195255)
+# Fixing color (fuentes/objetivo): B: 23/32 (déficit 9), G: 25/29 (déficit 4), U: 24/32 (déficit 8), W: 24/32 (déficit 8)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         38  [36-39]    in_range  (suelo Karsten: 34, mínimo efectivo: 36)
+lands         39  [36-39]    in_range  (suelo Karsten: 35, mínimo efectivo: 36)
 ramp          12  [ 9-12]    in_range
-card_draw     12  [ 9-12]    in_range
-removal        9  [ 8-11]    in_range
-board_wipe     5  [ 3- 5]    in_range
+card_draw      9  [ 9-12]    in_range
+removal       10  [ 8-11]    in_range
+board_wipe     4  [ 3- 5]    in_range
 wincons        2  [ 2- 4]    in_range
 synergy       28  [ 0-28]    in_range
 
@@ -19,22 +19,22 @@ synergy       28  [ 0-28]    in_range
 
 ## Mainboard (99)
 
-### lands (38)
+### lands (39)
 1x Command Tower                              score 0.91  [lands]  cp-sat, score 0.91
 1x Karn's Bastion                             score 0.83  [lands]  cp-sat, score 0.83
 1x Exotic Orchard                             score 0.61  [lands]  cp-sat, score 0.61
 1x Temple Garden                              score 0.47  [lands]  cp-sat, score 0.47
 1x Overgrown Tomb                             score 0.46  [lands]  cp-sat, score 0.46
 1x Godless Shrine                             score 0.46  [lands]  cp-sat, score 0.46
-1x Indatha Triome                             score 0.44  [card_draw/lands]  cp-sat, score 0.44
+1x Indatha Triome                             score 0.44  [lands]  cp-sat, score 0.44
 1x Hallowed Fountain                          score 0.44  [lands]  cp-sat, score 0.44
-1x Zagoth Triome                              score 0.44  [card_draw/lands]  cp-sat, score 0.44
+1x Zagoth Triome                              score 0.44  [lands]  cp-sat, score 0.44
 1x Breeding Pool                              score 0.42  [lands]  cp-sat, score 0.42
-1x Spara's Headquarters                       score 0.41  [card_draw/lands]  cp-sat, score 0.41
+1x Spara's Headquarters                       score 0.41  [lands]  cp-sat, score 0.41
 1x Sandsteppe Citadel                         score 0.41  [lands]  cp-sat, score 0.41
 1x Watery Grave                               score 0.41  [lands]  cp-sat, score 0.41
 1x Opulent Palace                             score 0.39  [lands]  cp-sat, score 0.39
-1x Raffine's Tower                            score 0.37  [card_draw/lands]  cp-sat, score 0.37
+1x Raffine's Tower                            score 0.37  [lands]  cp-sat, score 0.37
 1x Seaside Citadel                            score 0.36  [lands]  cp-sat, score 0.36
 1x Path of Ancestry                           score 0.36  [lands]  cp-sat, score 0.36
 1x Arcane Sanctum                             score 0.35  [lands]  cp-sat, score 0.35
@@ -55,60 +55,67 @@ synergy       28  [ 0-28]    in_range
 1x Rogue's Passage                            score 0.21  [lands]  cp-sat, score 0.21
 1x Marsh Flats                                score 0.21  [lands]  cp-sat, score 0.21
 1x Morphic Pool                               score 0.20  [lands]  cp-sat, score 0.20
-1x Inkmoth Nexus                              score 0.19  [lands]  cp-sat, score 0.19
+1x Inkmoth Nexus                              score 0.19  [lands/wincons]  cp-sat, score 0.19
 1x Vault of Champions                         score 0.19  [lands]  cp-sat, score 0.19
 1x The Seedcore                               score 0.18  [lands]  cp-sat, score 0.18
+1x Hinterland Harbor                          score 0.16  [lands]  cp-sat, score 0.16
 
-### ramp (11)
+### ramp (12)
 1x Sol Ring                                   score 0.83  [ramp]  cp-sat, score 0.83
 1x Arcane Signet                              score 0.78  [ramp]  cp-sat, score 0.78
-1x Vraska, Betrayal's Sting                   score 0.73  [card_draw/ramp]  cp-sat, score 0.73
-1x Astral Cornucopia                          score 0.63  [ramp]  cp-sat, score 0.63
 1x Chromatic Lantern                          score 0.55  [ramp]  cp-sat, score 0.55
 1x Everflowing Chalice                        score 0.54  [ramp]  cp-sat, score 0.54
 1x Farseek                                    score 0.52  [ramp]  cp-sat, score 0.52
 1x Cultivate                                  score 0.47  [ramp]  cp-sat, score 0.47
-1x Glistening Sphere                          score 0.39  [ramp]  cp-sat, score 0.39
 1x Nature's Lore                              score 0.30  [ramp]  cp-sat, score 0.30
-1x Replicating Ring                           score 0.26  [ramp]  cp-sat, score 0.26
+1x Three Visits                               score 0.25  [ramp]  cp-sat, score 0.25
+1x Kodama's Reach                             score 0.21  [ramp]  cp-sat, score 0.21
+1x Fellwar Stone                              score 0.20  [ramp]  cp-sat, score 0.20
+1x Commander's Sphere                         score 0.18  [ramp]  cp-sat, score 0.18
+1x Birds of Paradise                          score 0.17  [ramp]  cp-sat, score 0.17
 
 ### card_draw (7)
-1x Ezuri, Stalker of Spheres                  score 0.75  [card_draw]  cp-sat, score 0.75
-1x Tezzeret's Gambit                          score 0.68  [card_draw]  cp-sat, score 0.68
-1x Prologue to Phyresis                       score 0.56  [card_draw]  cp-sat, score 0.56
-1x Infectious Inquiry                         score 0.52  [card_draw]  cp-sat, score 0.52
-1x Tamiyo, Field Researcher                   score 0.39  [card_draw]  cp-sat, score 0.39
-1x Norn's Decree                              score 0.36  [card_draw]  cp-sat, score 0.36
-1x Contentious Plan                           score 0.32  [card_draw]  cp-sat, score 0.32
+1x Phyrexian Arena                            score 0.24  [card_draw]  cp-sat, score 0.24
+1x Teferi, Master of Time                     score 0.24  [card_draw]  cp-sat, score 0.24
+1x Teferi, Temporal Archmage                  score 0.20  [card_draw]  cp-sat, score 0.20
+1x Narset Transcendent                        score 0.16  [card_draw]  cp-sat, score 0.16
+1x Teferi, Who Slows the Sunset               score 0.13  [card_draw]  cp-sat, score 0.13
+1x Inspiring Call                             score 0.12  [card_draw]  cp-sat, score 0.12
+1x Insight Engine                             score 0.12  [card_draw]  cp-sat, score 0.12
 
 ### removal (8)
 1x Swords to Plowshares                       score 0.52  [removal]  cp-sat, score 0.52
-1x Vraska's Fall                              score 0.51  [removal]  cp-sat, score 0.51
 1x Cankerbloom                                score 0.46  [removal]  cp-sat, score 0.46
 1x Counterspell                               score 0.42  [removal]  cp-sat, score 0.42
-1x Path to Exile                              score 0.38  [ramp/removal]  cp-sat, score 0.38
-1x Drown in Ichor                             score 0.36  [removal]  cp-sat, score 0.36
-1x Atomize                                    score 0.30  [removal]  cp-sat, score 0.30
-1x Contagion Clasp                            score 0.23  [removal]  cp-sat, score 0.23
+1x Infectious Bite                            score 0.42  [removal]  cp-sat, score 0.42
+1x Path to Exile                              score 0.38  [removal]  cp-sat, score 0.38
+1x Oko, Thief of Crowns                       score 0.22  [removal]  cp-sat, score 0.22
+1x Teferi, Hero of Dominaria                  score 0.20  [card_draw/removal]  cp-sat, score 0.20
+1x Liliana, Dreadhorde General                score 0.13  [card_draw/removal]  cp-sat, score 0.13
 
-### board_wipe (5)
-1x Phyresis Outbreak                          score 0.43  [board_wipe]  cp-sat, score 0.43
-1x Contagion Engine                           score 0.41  [board_wipe]  cp-sat, score 0.41
+### board_wipe (4)
 1x Farewell                                   score 0.25  [board_wipe]  cp-sat, score 0.25
-1x White Sun's Twilight                       score 0.23  [board_wipe]  cp-sat, score 0.23
 1x Cyclonic Rift                              score 0.20  [board_wipe/removal]  cp-sat, score 0.20
+1x Ugin, the Spirit Dragon                    score 0.19  [board_wipe/removal]  cp-sat, score 0.19
+1x Elspeth, Sun's Champion                    score 0.18  [board_wipe]  cp-sat, score 0.18
 
-### wincons (2)
-1x Ichormoon Gauntlet                         score 0.31  [wincons]  cp-sat, score 0.31
-1x Triumph of the Hordes                      score 0.11  [wincons]  cp-sat, score 0.11
+### wincons (1)
+1x Tyrranax Rex                               score 0.20  [wincons]  cp-sat, score 0.20
 
 ### synergy (28)
 1x Tekuthal, Inquiry Dominus                  score 0.93  [synergy]  cp-sat, score 0.93
 1x Evolution Sage                             score 0.83  [synergy]  cp-sat, score 0.83
+1x Ezuri, Stalker of Spheres                  score 0.75  [synergy]  cp-sat, score 0.75
+1x Vraska, Betrayal's Sting                   score 0.73  [synergy]  cp-sat, score 0.73
 1x Thrummingbird                              score 0.71  [synergy]  cp-sat, score 0.71
 1x Inexorable Tide                            score 0.70  [synergy]  cp-sat, score 0.70
+1x Tezzeret's Gambit                          score 0.68  [synergy]  cp-sat, score 0.68
+1x Astral Cornucopia                          score 0.63  [synergy]  cp-sat, score 0.63
 1x Vorinclex, Monstrous Raider                score 0.58  [synergy]  cp-sat, score 0.58
 1x Flux Channeler                             score 0.57  [synergy]  cp-sat, score 0.57
+1x Prologue to Phyresis                       score 0.56  [synergy]  cp-sat, score 0.56
+1x Infectious Inquiry                         score 0.52  [synergy]  cp-sat, score 0.52
+1x Vraska's Fall                              score 0.51  [synergy]  cp-sat, score 0.51
 1x Bloated Contaminator                       score 0.49  [synergy]  cp-sat, score 0.49
 1x Venerated Rotpriest                        score 0.48  [synergy]  cp-sat, score 0.48
 1x Experimental Augury                        score 0.46  [synergy]  cp-sat, score 0.46
@@ -118,33 +125,26 @@ synergy       28  [ 0-28]    in_range
 1x Dreamtide Whale                            score 0.45  [synergy]  cp-sat, score 0.45
 1x Unnatural Restoration                      score 0.45  [synergy]  cp-sat, score 0.45
 1x Deepglow Skate                             score 0.43  [synergy]  cp-sat, score 0.43
+1x Phyresis Outbreak                          score 0.43  [synergy]  cp-sat, score 0.43
 1x Blighted Agent                             score 0.42  [synergy]  cp-sat, score 0.42
-1x Infectious Bite                            score 0.42  [synergy]  cp-sat, score 0.42
 1x Metastatic Evangel                         score 0.41  [synergy]  cp-sat, score 0.41
 1x Skrelv, Defector Mite                      score 0.41  [synergy]  cp-sat, score 0.41
-1x Ixhel, Scion of Atraxa                     score 0.41  [synergy]  cp-sat, score 0.41
-1x Voidwing Hybrid                            score 0.37  [synergy]  cp-sat, score 0.37
-1x Skithiryx, the Blight Dragon               score 0.35  [synergy]  cp-sat, score 0.35
-1x Blightbelly Rat                            score 0.34  [synergy]  cp-sat, score 0.34
-1x Ajani, Sleeper Agent                       score 0.32  [synergy]  cp-sat, score 0.32
-1x Tainted Observer                           score 0.32  [synergy]  cp-sat, score 0.32
-1x Lightning Greaves                          score 0.31  [synergy]  cp-sat, score 0.31
-1x Plague Stinger                             score 0.30  [synergy]  cp-sat, score 0.30
-1x Phyrexian Swarmlord                        score 0.29  [synergy]  cp-sat, score 0.29
+1x Contagion Engine                           score 0.41  [synergy]  cp-sat, score 0.41
+1x Glistening Sphere                          score 0.39  [synergy]  cp-sat, score 0.39
 
 ## Maybeboard (15)
-1x Contaminant Grafter                        score 0.37  [card_draw/ramp]  fuera: cuota llena en card_draw/ramp
-1x Teferi's Protection                        score 0.28  [synergy]  fuera: cuota llena en synergy
-1x Vishgraz, the Doomhive                     score 0.28  [synergy]  fuera: cuota llena en synergy
-1x Innkeeper's Talent                         score 0.28  [synergy]  fuera: cuota llena en synergy
-1x Heroic Intervention                        score 0.27  [synergy]  fuera: cuota llena en synergy
-1x Norn's Choirmaster                         score 0.27  [synergy]  fuera: cuota llena en synergy
-1x Oath of Teferi                             score 0.27  [synergy]  fuera: cuota llena en synergy
-1x Thirsting Roots                            score 0.27  [synergy]  fuera: cuota llena en synergy
-1x Grateful Apparition                        score 0.26  [synergy]  fuera: cuota llena en synergy
-1x Shalai, Voice of Plenty                    score 0.25  [synergy]  fuera: cuota llena en synergy
-1x Three Visits                               score 0.25  [ramp]  fuera: cuota llena en ramp
-1x Staff of Compleation                       score 0.24  [card_draw/ramp]  fuera: cuota llena en card_draw/ramp
-1x Phyrexian Arena                            score 0.24  [card_draw]  fuera: cuota llena en card_draw
-1x Teferi, Master of Time                     score 0.24  [card_draw/wincons]  fuera por score 0.24
-1x Ripples of Potential                       score 0.24  [synergy]  fuera: cuota llena en synergy
+1x Ixhel, Scion of Atraxa                     score 0.41  [synergy]  fuera: cuota llena en synergy
+1x Tamiyo, Field Researcher                   score 0.39  [synergy]  fuera: cuota llena en synergy
+1x Contaminant Grafter                        score 0.37  [synergy]  fuera: cuota llena en synergy
+1x Voidwing Hybrid                            score 0.37  [synergy]  fuera: cuota llena en synergy
+1x Norn's Decree                              score 0.36  [synergy]  fuera: cuota llena en synergy
+1x Drown in Ichor                             score 0.36  [synergy]  fuera: cuota llena en synergy
+1x Skithiryx, the Blight Dragon               score 0.35  [synergy]  fuera: cuota llena en synergy
+1x Blightbelly Rat                            score 0.34  [synergy]  fuera: cuota llena en synergy
+1x Ajani, Sleeper Agent                       score 0.32  [synergy]  fuera: cuota llena en synergy
+1x Contentious Plan                           score 0.32  [synergy]  fuera: cuota llena en synergy
+1x Tainted Observer                           score 0.32  [synergy]  fuera: cuota llena en synergy
+1x Lightning Greaves                          score 0.31  [synergy]  fuera: cuota llena en synergy
+1x Ichormoon Gauntlet                         score 0.31  [synergy]  fuera: cuota llena en synergy
+1x Plague Stinger                             score 0.30  [synergy]  fuera: cuota llena en synergy
+1x Atomize                                    score 0.30  [synergy]  fuera: cuota llena en synergy

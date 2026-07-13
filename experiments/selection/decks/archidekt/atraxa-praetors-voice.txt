@@ -1,38 +1,46 @@
 1x Atraxa, Praetors' Voice [Commander]
-1x Ichormoon Gauntlet [Wincons]
-1x Teferi, Master of Time [Wincons]
-1x Phyresis Outbreak [Board Wipe]
-1x Contagion Engine [Board Wipe]
+1x Tyrranax Rex [Wincons]
+1x Bloodroot Apothecary [Wincons]
 1x Farewell [Board Wipe]
+1x Cyclonic Rift [Board Wipe]
+1x Ugin, the Spirit Dragon [Board Wipe]
 1x Swords to Plowshares [Removal]
-1x Vraska's Fall [Removal]
 1x Cankerbloom [Removal]
 1x Counterspell [Removal]
+1x Infectious Bite [Removal]
 1x Path to Exile [Removal]
-1x Drown in Ichor [Removal]
-1x Atomize [Removal]
-1x Contagion Clasp [Removal]
+1x Oko, Thief of Crowns [Removal]
 1x Sol Ring [Ramp]
 1x Arcane Signet [Ramp]
-1x Vraska, Betrayal's Sting [Ramp]
-1x Astral Cornucopia [Ramp]
 1x Chromatic Lantern [Ramp]
 1x Everflowing Chalice [Ramp]
 1x Farseek [Ramp]
 1x Cultivate [Ramp]
-1x Ezuri, Stalker of Spheres [Card Draw]
-1x Tezzeret's Gambit [Card Draw]
-1x Prologue to Phyresis [Card Draw]
-1x Infectious Inquiry [Card Draw]
-1x Tamiyo, Field Researcher [Card Draw]
-1x Contaminant Grafter [Card Draw]
-1x Norn's Decree [Card Draw]
+1x Nature's Lore [Ramp]
+1x Three Visits [Ramp]
+1x Kodama's Reach [Ramp]
+1x Phyrexian Arena [Card Draw]
+1x Teferi, Master of Time [Card Draw]
+1x Teferi, Temporal Archmage [Card Draw]
+1x Teferi, Hero of Dominaria [Card Draw]
+1x Narset Transcendent [Card Draw]
+1x Teferi, Who Slows the Sunset [Card Draw]
+1x Liliana, Dreadhorde General [Card Draw]
+1x Inspiring Call [Card Draw]
+1x Insight Engine [Card Draw]
 1x Tekuthal, Inquiry Dominus [Synergy]
 1x Evolution Sage [Synergy]
+1x Ezuri, Stalker of Spheres [Synergy]
+1x Vraska, Betrayal's Sting [Synergy]
 1x Thrummingbird [Synergy]
 1x Inexorable Tide [Synergy]
+1x Tezzeret's Gambit [Synergy]
+1x Astral Cornucopia [Synergy]
 1x Vorinclex, Monstrous Raider [Synergy]
 1x Flux Channeler [Synergy]
+1x Prologue to Phyresis [Synergy]
+1x Infectious Inquiry [Synergy]
+1x Vraska's Fall [Synergy]
 1x Bloated Contaminator [Synergy]
 1x Venerated Rotpriest [Synergy]
 1x Experimental Augury [Synergy]
@@ -42,37 +50,33 @@
 1x Dreamtide Whale [Synergy]
 1x Unnatural Restoration [Synergy]
 1x Deepglow Skate [Synergy]
+1x Phyresis Outbreak [Synergy]
 1x Blighted Agent [Synergy]
-1x Infectious Bite [Synergy]
 1x Metastatic Evangel [Synergy]
 1x Skrelv, Defector Mite [Synergy]
+1x Contagion Engine [Synergy]
 1x Ixhel, Scion of Atraxa [Synergy]
-1x Glistening Sphere [Ramp]
-1x Voidwing Hybrid [Synergy]
-1x Skithiryx, the Blight Dragon [Synergy]
-1x Blightbelly Rat [Synergy]
-1x Ajani, Sleeper Agent [Synergy]
-1x Contentious Plan [Card Draw]
-1x Tainted Observer [Synergy]
-1x Lightning Greaves [Synergy]
-1x Nature's Lore [Ramp]
-1x Plague Stinger [Synergy]
-1x Phyrexian Swarmlord [Synergy]
-1x Phyrexian Arena [Card Draw]
-1x White Sun's Twilight [Board Wipe]
-1x Fathom Mage [Card Draw]
-1x Cyclonic Rift [Board Wipe]
+1x Fellwar Stone [Ramp]
+1x Rampant Growth [Ramp]
+1x Elspeth, Sun's Champion [Board Wipe]
+1x Commander's Sphere [Ramp]
+1x Supreme Verdict [Board Wipe]
+1x Assassin's Trophy [Removal]
 1x Command Tower [Lands]
 1x Karn's Bastion [Lands]
 1x Exotic Orchard [Lands]
 1x Temple Garden [Lands]
 1x Overgrown Tomb [Lands]
 1x Godless Shrine [Lands]
+1x Indatha Triome [Lands]
 1x Hallowed Fountain [Lands]
+1x Zagoth Triome [Lands]
 1x Breeding Pool [Lands]
+1x Spara's Headquarters [Lands]
 1x Sandsteppe Citadel [Lands]
 1x Watery Grave [Lands]
 1x Opulent Palace [Lands]
+1x Raffine's Tower [Lands]
 1x Seaside Citadel [Lands]
 1x Path of Ancestry [Lands]
 1x Arcane Sanctum [Lands]
@@ -94,24 +98,20 @@
 1x Marsh Flats [Lands]
 1x Morphic Pool [Lands]
 1x Inkmoth Nexus [Lands]
-1x Vault of Champions [Lands]
-1x The Seedcore [Lands]
-1x Hinterland Harbor [Lands]
-1x Yavimaya, Cradle of Growth [Lands]
 
 # Sideboard
-1x Indatha Triome
-1x Zagoth Triome
-1x Spara's Headquarters
-1x Raffine's Tower
-1x Teferi's Protection
-1x Vishgraz, the Doomhive
-1x Innkeeper's Talent
-1x Heroic Intervention
-1x Norn's Choirmaster
-1x Oath of Teferi
-1x Thirsting Roots
-1x Replicating Ring
-1x Grateful Apparition
-1x Shalai, Voice of Plenty
-1x Three Visits
+1x Glistening Sphere
+1x Tamiyo, Field Researcher
+1x Contaminant Grafter
+1x Voidwing Hybrid
+1x Norn's Decree
+1x Drown in Ichor
+1x Skithiryx, the Blight Dragon
+1x Blightbelly Rat
+1x Ajani, Sleeper Agent
+1x Contentious Plan
+1x Tainted Observer
+1x Lightning Greaves
+1x Ichormoon Gauntlet
+1x Plague Stinger
+1x Atomize

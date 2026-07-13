@@ -3,7 +3,7 @@
 1x Enchantress's Presence [Card Draw]
 1x Destiny Spinner [Synergy]
 1x Sterling Grove [Synergy]
-1x Jukai Naturalist [Synergy]
+1x Jukai Naturalist [Ramp]
 1x Setessan Champion [Card Draw]
 1x Wild Growth [Ramp]
 1x Utopia Sprawl [Ramp]
@@ -37,14 +37,14 @@
 1x Idyllic Tutor [Synergy]
 1x Authority of the Consuls [Synergy]
 1x Seal of Primordium [Removal]
-1x Starfield Mystic [Synergy]
-1x Strength of the Harvest // Haven of the Harvest [Synergy]
+1x Starfield Mystic [Ramp]
+1x Strength of the Harvest // Haven of the Harvest [Lands]
 1x Temple Garden [Lands]
 1x Flickering Ward [Synergy]
 1x Rancor [Synergy]
 1x Swords to Plowshares [Removal]
 1x Aura of Silence [Removal]
-1x Abundant Growth [Card Draw]
+1x Abundant Growth [Ramp]
 1x Solitary Confinement [Synergy]
 1x Canopy Vista [Lands]
 1x Mirari's Wake [Ramp]
@@ -61,20 +61,20 @@
 1x Bountiful Promenade [Lands]
 1x Winds of Rath [Board Wipe]
 1x Sylvan Library [Card Draw]
+1x Courser of Kruphix [Card Draw]
 1x Serra's Sanctum [Lands]
+1x Stony Silence [Synergy]
+1x Ajani's Chosen [Synergy]
 1x Song of the Dryads [Removal]
+1x Rest in Peace [Synergy]
 1x Fortified Village [Lands]
 1x Karmic Justice [Removal]
-1x Burgeoning [Ramp]
-1x Composer of Spring [Ramp]
-1x Wolfwillow Haven [Ramp]
 1x Aura Shards [Removal]
 1x Branchloft Pathway // Boulderloft Pathway [Lands]
 1x Sungrass Prairie [Lands]
 1x Overgrown Farmland [Lands]
 1x Horizon Canopy [Lands]
 1x Yavimaya, Cradle of Growth [Lands]
-1x Spirited Companion [Card Draw]
 1x Temple of Plenty [Lands]
 1x Boseiju, Who Endures [Lands]
 1x Austere Command [Board Wipe]
@@ -82,6 +82,7 @@
 1x Hushwood Verge [Lands]
 1x Savannah [Lands]
 1x Approach of the Second Sun [Wincons]
+1x Aetherflux Reservoir [Wincons]
 1x Wooded Bastion [Lands]
 1x Wooded Foothills [Lands]
 1x Razorverge Thicket [Lands]
@@ -95,15 +96,13 @@
 1x Selesnya Sanctuary [Lands]
 1x Lush Portico [Lands]
 1x Prismatic Vista [Lands]
-1x Shifting Woodland [Lands]
-1x Mana Confluence [Lands]
-1x City of Brass [Lands]
+1x Scattered Groves [Lands]
+1x Gemstone Caverns [Lands]
 
 # Sideboard
-1x Courser of Kruphix
-1x Stony Silence
-1x Ajani's Chosen
-1x Rest in Peace
+1x Burgeoning
+1x Composer of Spring
+1x Wolfwillow Haven
 1x Sol Ring
 1x Resurgent Belief
 1x Yenna, Redtooth Regent
@@ -115,3 +114,4 @@
 1x Calix, Destiny's Hand
 1x Land Tax
 1x Sheltered by Ghosts
+1x Heroic Intervention

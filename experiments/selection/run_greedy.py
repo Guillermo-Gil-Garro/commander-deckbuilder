@@ -25,7 +25,7 @@ from pipeline.edhrec import fetch_commander, slugify_commander  # noqa: E402
 from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
 from selector.greedy import DECK_SIZE, GreedyResult, load_pool  # noqa: E402
-from selector.provisional_tags import otag_tagger  # noqa: E402
+from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger("run_greedy")
@@ -140,7 +140,7 @@ def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
     banned, watchlist = load_banlist(BANLIST_PATH)
-    tagger = otag_tagger(pool.cards())
+    tagger = tagger_from_store(load_tags(), pool.cards())
     DECKS_DIR.mkdir(parents=True, exist_ok=True)
 
     log.info("pool: %d cartas | banlist: %d baneadas, %d watchlist", len(pool.by_name), len(banned), len(watchlist))
