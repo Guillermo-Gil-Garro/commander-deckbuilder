@@ -38,10 +38,12 @@ Lecturas clave:
   criterio con el etiquetado de Guille sobre MDFCs hechizo//tierra — a unificar en la
   rúbrica, no un error de método.
 
-**Recomendación de la orquestadora**: LLM cacheado como motor primario (batch offline
-sobre el pool + incremental por set nuevo, nunca en caliente), con regex como
-contraste de auditoría (donde discrepen → cola de revisión) y otags como tercera
-señal gratuita. EDHREC solo para scores. 🔶 Guille decide.
+**Decisión de Guille (2026-07-13)**: ✅ aprobada la recomendación — LLM cacheado como
+motor primario (batch offline + incremental por set nuevo, nunca en caliente), regex
+como contraste de auditoría (discrepancia → cola de revisión), otags como tercera
+señal gratuita, EDHREC solo para scores. Criterio MDFC unificado: las caras de tierra
+de una MDFC hechizo//tierra SÍ cuentan como `lands` (los ~5 desacuerdos del ground
+truth en lands quedan resueltos a favor del criterio de la rúbrica).
 
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
