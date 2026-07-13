@@ -27,6 +27,7 @@ def count_pips(mana_cost: str) -> dict[str, int]:
 
 class Card(BaseModel):
     name: str
+    oracle_id: str
     mana_cost: str
     cmc: float
     type_line: str
@@ -60,6 +61,10 @@ class Card(BaseModel):
 
         return cls(
             name=data["name"],
+            # oracle_id is top-level even for multi-faced cards; Scryfall only
+            # moves it into the faces for reversible_card layouts, hence the
+            # fallback.
+            oracle_id=data.get("oracle_id") or front.get("oracle_id"),
             mana_cost=mana_cost,
             cmc=float(data.get("cmc") or 0.0),
             type_line=type_line,

@@ -2,6 +2,7 @@ from pipeline.model import Card
 
 BEAR = {
     "id": "aaaa1111-1111-1111-1111-111111111111",
+    "oracle_id": "oracle-aaaa-1111",
     "name": "Grizzly Bears",
     "mana_cost": "{1}{G}",
     "cmc": 2.0,
@@ -15,6 +16,7 @@ BEAR = {
 
 LEGENDARY_CREATURE = {
     "id": "bbbb2222-2222-2222-2222-222222222222",
+    "oracle_id": "oracle-bbbb-2222",
     "name": "Test Commander",
     "mana_cost": "{W}{U}{B}",
     "cmc": 3.0,
@@ -28,6 +30,7 @@ LEGENDARY_CREATURE = {
 
 SORCERY = {
     "id": "cccc3333-3333-3333-3333-333333333333",
+    "oracle_id": "oracle-cccc-3333",
     "name": "Legendary Ritual",
     "mana_cost": "{R}",
     "cmc": 1.0,
@@ -41,6 +44,7 @@ SORCERY = {
 
 PLANESWALKER_COMMANDER = {
     "id": "dddd4444-4444-4444-4444-444444444444",
+    "oracle_id": "oracle-dddd-4444",
     "name": "Test Walker",
     "mana_cost": "{2}{B}{G}",
     "cmc": 4.0,
@@ -54,6 +58,7 @@ PLANESWALKER_COMMANDER = {
 
 TWO_FACED = {
     "id": "eeee5555-5555-5555-5555-555555555555",
+    "oracle_id": "oracle-eeee-5555",
     "name": "Front Side // Back Side",
     "cmc": 3.0,
     "color_identity": ["U"],
@@ -85,11 +90,13 @@ def test_basic_parsing() -> None:
     assert card.cmc == 2.0
     assert card.pips["G"] == 1
     assert card.scryfall_id == BEAR["id"]
+    assert card.oracle_id == BEAR["oracle_id"]
     assert card.layout == "normal"
 
 
 def test_two_faced_uses_front_face() -> None:
     card = Card.from_scryfall(TWO_FACED)
+    assert card.oracle_id == TWO_FACED["oracle_id"]
     assert card.mana_cost == "{2}{U}"
     assert card.type_line == "Creature — Human Rogue"
     assert card.pips["U"] == 1

@@ -12,6 +12,7 @@ from pipeline.build import (
 def _card(name: str, layout: str = "normal", commander: str = "legal") -> dict:
     return {
         "id": f"00000000-0000-0000-0000-{abs(hash(name)) % 10**12:012d}",
+        "oracle_id": f"oracle-{abs(hash(name)) % 10**12:012d}",
         "name": name,
         "mana_cost": "{G}",
         "cmc": 1.0,
