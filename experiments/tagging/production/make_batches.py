@@ -1,7 +1,9 @@
 """Build the initial LLM tagging surface and split it into labeling batches.
 
 Surface = union of every card recommended on the 55 cached EDHREC pages of
-``featured_commanders.yaml``, resolved against the processed pool
+``featured_commanders.yaml`` (global pages by default; pass
+``--variant optimized`` to use the Bracket 4 subpages instead), resolved
+against the processed pool
 (two-step exact rule); unresolvable names are reported and discarded.
 Cards already present in the tag store (human ground truth or previously
 merged LLM batches) are subtracted, so re-running after merges only emits
@@ -15,6 +17,7 @@ Batches are regenerable and gitignored.
 
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 import sys
@@ -49,14 +52,22 @@ def load_featured_names() -> list[str]:
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--variant",
+        default=None,
+        help="EDHREC page variant, e.g. 'optimized' (Bracket 4). Default: global pages.",
+    )
+    args = parser.parse_args()
+
     commanders = load_featured_names()
     rec_names: set[str] = set()
     for name in commanders:
-        data = fetch_commander(name)
+        data = fetch_commander(name, variant=args.variant)
         rec_names.update(rec.name for rec in data.recommendations)
     logger.info(
-        "EDHREC union: %d distinct recommended names across %d commanders",
-        len(rec_names), len(commanders),
+        "EDHREC union (%s): %d distinct recommended names across %d commanders",
+        args.variant or "global", len(rec_names), len(commanders),
     )
 
     name_index = build_name_index()

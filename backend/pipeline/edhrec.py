@@ -4,6 +4,12 @@ Fetches the public page JSON from ``https://json.edhrec.com/pages/commanders/
 <slug>.json`` and caches the raw response under ``data/cache/edhrec/``. The
 cache never expires by time; parsing always starts from the cached raw file.
 
+Bracket-filtered subpages (e.g. ``optimized`` = Bracket 4) live at
+``.../commanders/<slug>/<variant>.json`` and share the exact cardlist
+structure; pass ``variant="optimized"`` to fetch them. Variant pages are
+cached side by side as ``data/cache/edhrec/<slug>--<variant>.json`` so the
+global cache is never overwritten.
+
 A card can appear in several EDHREC cardlists (e.g. "High Synergy Cards" and
 "Creatures"); recommendations are deduplicated by name and keep every list
 header in ``categories``.
@@ -25,6 +31,9 @@ from pipeline.scryfall import REPO_ROOT
 logger = logging.getLogger(__name__)
 
 PAGE_URL_TEMPLATE = "https://json.edhrec.com/pages/commanders/{slug}.json"
+VARIANT_PAGE_URL_TEMPLATE = (
+    "https://json.edhrec.com/pages/commanders/{slug}/{variant}.json"
+)
 
 HEADERS = {
     "User-Agent": "commander-deckbuilder/0.1",
@@ -72,8 +81,18 @@ def slugify_commander(name: str) -> str:
     return _NON_ALNUM_RE.sub("-", without_apostrophes).strip("-")
 
 
-def _download_page(slug: str, cache_path: Path) -> None:
-    url = PAGE_URL_TEMPLATE.format(slug=slug)
+def _page_url(slug: str, variant: str | None) -> str:
+    if variant is None:
+        return PAGE_URL_TEMPLATE.format(slug=slug)
+    return VARIANT_PAGE_URL_TEMPLATE.format(slug=slug, variant=variant)
+
+
+def _cache_path(slug: str, variant: str | None) -> Path:
+    stem = slug if variant is None else f"{slug}--{variant}"
+    return CACHE_DIR / f"{stem}.json"
+
+
+def _download_page(url: str, cache_path: Path) -> None:
     logger.info("Downloading EDHREC page %s", url)
     try:
         response = httpx.get(url, headers=HEADERS, timeout=_TIMEOUT)
@@ -82,7 +101,7 @@ def _download_page(slug: str, cache_path: Path) -> None:
         # Missing pages surface as 403 (S3 AccessDenied) on json.edhrec.com.
         if exc.response.status_code in (403, 404):
             raise EdhrecError(
-                f"Commander not found on EDHREC: '{slug}' "
+                f"EDHREC page not found "
                 f"(HTTP {exc.response.status_code} at {url})"
             ) from exc
         raise EdhrecError(f"EDHREC request failed: {exc}") from exc
@@ -150,18 +169,21 @@ def parse_commander_page(raw: dict, slug: str) -> EdhrecCommanderData:
     )
 
 
-def fetch_commander(name: str) -> EdhrecCommanderData:
+def fetch_commander(name: str, variant: str | None = None) -> EdhrecCommanderData:
     """Return EDHREC recommendations for a commander, downloading once.
 
-    Uses ``data/cache/edhrec/<slug>.json`` if present; otherwise downloads the
-    raw page JSON there first. Parsing always reads the cached file.
+    ``variant=None`` fetches the global commander page; ``variant="optimized"``
+    fetches the Bracket 4 subpage (same structure). Uses
+    ``data/cache/edhrec/<slug>.json`` (global) or ``<slug>--<variant>.json``
+    if present; otherwise downloads the raw page JSON there first. Parsing
+    always reads the cached file.
     """
     slug = slugify_commander(name)
-    cache_path = CACHE_DIR / f"{slug}.json"
+    cache_path = _cache_path(slug, variant)
     if cache_path.exists():
         logger.info("Using cached EDHREC page %s", cache_path)
     else:
-        _download_page(slug, cache_path)
+        _download_page(_page_url(slug, variant), cache_path)
 
     try:
         raw = json.loads(cache_path.read_text(encoding="utf-8"))

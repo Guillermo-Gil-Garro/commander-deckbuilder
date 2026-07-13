@@ -159,3 +159,65 @@ def test_fetch_commander_downloads_and_caches(
 
     fetch_commander("Atraxa, Praetors' Voice")
     assert len(calls) == 1
+
+
+def test_fetch_commander_variant_uses_separate_url_and_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import pipeline.edhrec as edhrec
+
+    monkeypatch.setattr(edhrec, "CACHE_DIR", tmp_path)
+    payload = FIXTURE.read_bytes()
+    calls: list[str] = []
+
+    class FakeResponse:
+        content = payload
+
+        def raise_for_status(self) -> None:
+            return None
+
+    def _fake_get(url: str, **kwargs: object) -> FakeResponse:
+        calls.append(url)
+        return FakeResponse()
+
+    monkeypatch.setattr(edhrec.httpx, "get", _fake_get)
+
+    data = fetch_commander("Atraxa, Praetors' Voice", variant="optimized")
+
+    assert calls == [
+        "https://json.edhrec.com/pages/commanders/atraxa-praetors-voice/optimized.json"
+    ]
+    variant_cache = tmp_path / "atraxa-praetors-voice--optimized.json"
+    assert variant_cache.read_bytes() == payload
+    assert not (tmp_path / "atraxa-praetors-voice.json").exists()
+    assert len(data.recommendations) == 65
+
+    # Variant cache hit: no second download.
+    fetch_commander("Atraxa, Praetors' Voice", variant="optimized")
+    assert len(calls) == 1
+
+    # Global page is a separate cache entry and URL.
+    fetch_commander("Atraxa, Praetors' Voice")
+    assert calls[1] == (
+        "https://json.edhrec.com/pages/commanders/atraxa-praetors-voice.json"
+    )
+    assert (tmp_path / "atraxa-praetors-voice.json").read_bytes() == payload
+
+
+def test_fetch_commander_variant_cache_does_not_shadow_global(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import pipeline.edhrec as edhrec
+
+    monkeypatch.setattr(edhrec, "CACHE_DIR", tmp_path)
+    (tmp_path / "atraxa-praetors-voice.json").write_bytes(FIXTURE.read_bytes())
+
+    def _no_network(*args: object, **kwargs: object) -> None:
+        raise AssertionError("network access attempted for uncached variant")
+
+    monkeypatch.setattr(edhrec.httpx, "get", _no_network)
+
+    fetch_commander("Atraxa, Praetors' Voice")
+
+    with pytest.raises(AssertionError, match="network access attempted"):
+        fetch_commander("Atraxa, Praetors' Voice", variant="optimized")
