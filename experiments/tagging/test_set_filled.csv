@@ -1,0 +1,201 @@
+name,type_line,mana_cost,suggested_labels,final_labels,notes
+Blighted Woodland,Land,,lands,lands|ramp,Tierra que se sacrifica para buscar 2 basicas al campo: lands + ramp.
+Flagstones of Trokair,Legendary Land,,lands,lands,El reemplazo al morir no acelera mana.
+Tolaria West,Land,,lands,lands,Regla del doc: tierras = lands. Anotar: transmutar la convierte en tutor de coste 0.
+Ant-Man's Army,Creature — Insect,{2}{G},ramp,none,"ETB crea UN Food o Treasure: efecto marginal, no ramp real (falso positivo)."
+"Baylen, the Haymaker",Legendary Creature — Rabbit Warrior,{R}{G}{W},ramp|card_draw,ramp|card_draw,Gira tokens para mana o robo; requiere mazo de tokens.
+Black Tom Cassidy,Legendary Creature — Mutant Villain,{1}{G},ramp,ramp,Dork: {T}: Add {G}.
+Buy Your Silence,Sorcery,{4}{W},ramp|removal,removal,"Exilia permanente; el 'regalo' (token) es del oponente, no ramp propio. VERIFICAR texto exacto."
+Celestial Prism,Artifact,{3},ramp,none,Filtro de mana 1 a 1: no acelera (falso positivo de 'Add').
+Deathbloom Ritualist,Creature — Elf Warlock,{3}{B}{G},ramp,ramp,"Dork grande: {T}: X mana, X = criaturas en tu cementerio."
+Dimir Locket,Artifact,{3},ramp|card_draw,ramp|card_draw,Roca + sacrificio tardio para robar 2 (patron Commander's Sphere).
+Emergency Eject,Instant,{2}{W},ramp|removal,removal,Destruye permanente no tierra; el Lander lo recibe el OPONENTE: no es ramp.
+Endrider Catalyzer,Creature — Human Warrior,{1}{R},ramp,ramp,Dork condicional: {T}: {R}{R} solo a velocidad maxima.
+Exploding Barrel,Artifact,{3},ramp|removal,ramp|removal,Roca de cualquier color + sac tardio: 20 danos a criatura. Sugerencia correcta.
+Fabrication Foundry,Artifact,{1}{W},ramp,ramp,Mana restringido a artefactos + recursion de artefactos; condicional.
+"Freyalise, Llanowar's Fury",Legendary Planeswalker — Freyalise,{3}{G}{G},ramp|card_draw|removal,ramp|removal,"+2 crea dork, -2 destruye artefacto/encantamiento. Quito card_draw: la ultimate es situacional."
+Glasspool Mimic // Glasspool Shore,Creature — Shapeshifter Rogue,{2}{U},ramp,none,Clon (sin categoria). MDFC con tierra detras: politica propuesta = manda la cara frontal.
+Goblin Glasswright // Craft with Pride,Creature — Goblin Sorcerer,{1}{R},ramp,none,"El prep spell crea UN Treasure: marginal, no ramp real."
+Grim Monolith,Artifact,{2},ramp,ramp,Roca clasica.
+Herald of Hadar,Creature — Human Warlock,{4}{B},ramp,none,Drenaje activado caro con d20; Treasures solo con 20 natural. No es ramp.
+"Hydro-Man, Fluid Felon",Legendary Creature — Elemental Villain,{U}{U},ramp,none,Solo es tierra-{U} en turnos ajenos: ramp muy marginal; payoff de hechizos azules.
+Kabira Takedown // Kabira Plateau,Instant,{1}{W},ramp,removal,Dano igual a tus criaturas a criatura/planeswalker; condicional. MDFC tierra detras.
+Kolaghan Monument,Artifact,{3},ramp,ramp,Roca B/R (+ modo criatura tardio).
+"Loot, the Pathfinder",Legendary Creature — Beast Noble,{2}{G}{U}{R},ramp|card_draw|removal,ramp|card_draw|removal,"Tres modales exhaust de UN uso cada uno: ritual de 3, roba 3, 3 danos. Sugerencia correcta."
+"Malcolm, Keen-Eyed Navigator",Legendary Creature — Siren Pirate,{2}{U},ramp,ramp|synergy,Treasures repetibles pero exige paquete Pirata.
+Mana Cylix,Artifact,{1},ramp,none,"Filtro de mana, no acelera (coherente con Celestial Prism)."
+"Nardole, Resourceful Cyborg",Legendary Artifact Creature — Scientist,{1}{U},ramp,ramp,Dork que escala con contadores; empieza generando 0 y el mana es solo para no-criaturas.
+"Ojer Pakpatiq, Deepest Epoch // Temple of Cyclical Time",Legendary Creature — God,{2}{U}{U},ramp,synergy,Rebound a tus instantaneas: pieza clara de paquete spellslinger. MDFC tierra detras.
+Patron of the Moon,Legendary Creature — Spirit,{5}{U}{U},ramp,ramp,{1}: pon hasta 2 tierras de la mano al campo.
+Phyrexian Totem,Artifact,{3},ramp,ramp,Roca {T}: {B} (+ modo criatura).
+Powerstone Engineer,Creature — Human Artificer,{1}{W},ramp,ramp,Powerstone al morir; modesto y mana solo-artefactos.
+Proctor's Gaze,Instant,{2}{G}{U},ramp,ramp|removal,Busca basica al campo + bounce opcional (removal blando/temporal).
+Razorgrass Ambush // Razorgrass Field,Instant,{1}{W},ramp|removal,removal,3 danos a atacante o bloqueadora (condicional). MDFC tierra detras.
+"Rev, Tithe Extractor",Legendary Creature — Human Rogue,{3}{B},ramp,ramp|card_draw,Treasure repetible al conectar + 'roba' jugando la biblioteca del rival.
+"Ronin, Shadow Stalker",Legendary Creature — Human Rogue Hero,{2}{B},ramp|removal,ramp|removal,Ritual solo para equipos + sac equipo: -4/-4 repetible. Pensado para mazos de equipo.
+Sea Scryer,Creature — Merfolk Wizard,{1}{U},ramp,ramp,Dork de mana (verificar coste exacto de la segunda habilidad).
+Sejiri Shelter // Sejiri Glacier,Instant,{1}{W},ramp,none,Proteccion de color: sin categoria. MDFC tierra detras.
+Serum Powder,Artifact,{3},ramp|card_draw|board_wipe,none,"Se juega por el mulligan, no como roca (aunque tapee por {C}). Festival de falsos positivos."
+Spelunking,Enchantment,{2}{G},ramp|card_draw,ramp,Pon tierra de la mano al campo + tierras entran enderezadas; el robo ETB es cantrip marginal.
+Spikefield Hazard // Spikefield Cave,Instant,{R},ramp|removal,removal,1 dano + exilio si muere; pequeno. MDFC tierra detras.
+Stark Industries Executive,Creature — Human Advisor,{R},ramp,ramp,"Treasures repetibles ({2},{T}: neto negativo; mas fijacion/almacen que aceleracion)."
+Static Net,Enchantment,{3}{W},ramp|removal,removal,O-ring de permanente; la Powerstone propia es un rider menor (quito ramp).
+Thran Dynamo,Artifact,{4},ramp,ramp,Roca clasica.
+Witch Engine,Creature — Horror,{5}{B},ramp,ramp,Ritual {B}{B}{B}{B} con drawback (el rival gana su control).
+Anticausal Vestige,Creature — Eldrazi,{6},card_draw,none,"Valor al salir del campo (roba 1 + baja permanente): puntual, no motor de robo."
+Baleful Mastery,Instant,{3}{B},card_draw|removal,removal,El robo lo hace el OPONENTE como coste alternativo: solo removal.
+Battle of Frost and Fire,Enchantment — Saga,{3}{U}{R},card_draw,board_wipe|synergy,Cap. I: 4 danos a cada no-Gigante (asimetrico en paquete Gigantes); scry/robo condicional secundario.
+Battlefield Scavenger,Creature — Jackal Rogue,{1}{R},card_draw,card_draw,Rummage repetible al atacar con exert (filtrado; criterio Brainstorm).
+Book Devourer,Creature — Beast,{5}{R},card_draw,card_draw,Mini-wheel personal al conectar dano de combate.
+Break the Spell,Instant,{W},card_draw|removal,removal,Destruye encantamiento; el robo solo si el encantamiento era tuyo (rider).
+Case of the Ransacked Lab,Enchantment — Case,{2}{U},card_draw|synergy,card_draw|synergy,Motor de robo condicionado a paquete spellslinger. Sugerencia correcta.
+Champions from Beyond,Enchantment,{X}{W}{W},card_draw,card_draw|synergy,X tokens + scry/robo al atacar con 4+: payoff de paquete go-wide.
+Conch Horn,Artifact,{2},card_draw,card_draw,Sac: roba 2 y devuelve 1 arriba (verificar redaccion exacta).
+Drag the Canal,Instant,{U}{B},card_draw,none,"Token 2/2 + surveil/clue condicionales: truco de valor puntual, no motor de robo."
+Dream Fracture,Instant,{1}{U}{U},card_draw|removal,removal,Contrahechizo con cantrip simetrico (el rival tambien roba): la funcion es contrarrestar.
+Feather of Flight,Enchantment — Aura,{1}{W},card_draw,none,"Aura cantrip: se reemplaza a si misma, no da ventaja."
+Fungal Plots,Enchantment,{1}{G},card_draw,card_draw,Motor lento: sac 2 saprolings: roba 1 (+ genera saprolings del cementerio).
+Futurist Forge,Artifact,{1}{U},card_draw,card_draw,ETB roba 1 + sac: roba 2.
+Gempalm Incinerator,Creature — Goblin,{2}{R},card_draw|removal,removal|synergy,Cycling-removal que escala con Goblins: paquete inequivoco; el ciclo repone pero la funcion es matar.
+Gibbering Barricade,Creature — Nightmare Wall,{2}{B},card_draw,card_draw,Sac-outlet repetible que roba (aristocratas).
+Gran-Gran,Legendary Creature — Human Peasant Ally,{U},card_draw|synergy,card_draw|synergy,Loot repetible al girarse + descuento con Lessons en cementerio.
+Happily Ever After,Enchantment,{2}{W},card_draw|wincons,wincons,Victoria alternativa; el 'gana 5 y roba 1' del ETB es marginal.
+Infernal Tribute,Enchantment,{B}{B}{B},card_draw,card_draw,Motor de robo sacrificando permanentes no token.
+"Katara, Waterbending Master",Legendary Creature — Human Warrior Ally,{1}{U},card_draw,card_draw,Motor de robo escalado por contadores de experiencia.
+Laboratory Maniac,Creature — Human Wizard,{2}{U},card_draw|wincons,wincons,No roba nada: convierte robar sin biblioteca en victoria. Falso positivo de card_draw.
+"Leinore, Autumn Sovereign",Legendary Creature — Human Noble,{2}{G}{W},card_draw,card_draw,Robo recurrente con coven + contador cada combate.
+Meltstrider Eulogist,Creature — Insect Soldier,{2}{G},card_draw,card_draw,Roba cuando mueren tus criaturas con contadores +1/+1 (requiere paquete de counters).
+"Mu Yanling, Sky Dancer",Legendary Planeswalker — Yanling,{1}{U}{U},card_draw|removal,none,-2/-0 temporal y ficha 4/4: ni roba ni elimina. Doble falso positivo.
+Nylea's Presence,Enchantment — Aura,{1}{G},card_draw,none,Fijacion de tipos de tierra con cantrip.
+Panther Pounce,Instant,{W},card_draw,none,Truco de combate + un Clue: marginal.
+Persuasive Interrogators,Creature — Gorgon Detective,{4}{B}{B},card_draw|wincons,card_draw|wincons,Clues + 2 venenos al sacrificar Clue: motor de robo y plan de veneno en mazo dedicado. Duda razonable con wincons.
+Professor of Symbology,Creature — Kor Cleric,{1}{W},card_draw,none,Learn sin banquillo en Commander = rummage puntual.
+Pyknite,Creature — Ouphe,{2}{G},card_draw,none,Cantrip diferido con cuerpo: neutral en cartas.
+Rime Chill,Instant,{6}{U},card_draw,none,Tempo (gira 2 + stun) con cantrip: ni removal ni motor de robo.
+Scorn-Blade Berserker,Creature — Human Berserker,{B},card_draw,none,"{1}, sac: roba 1 — cantrip diferido, no motor."
+Sensation Gorger,Creature — Goblin Shaman,{1}{R}{R},card_draw,card_draw|synergy,Mini-wheel repetible condicionado a kinship tribal.
+Skybox Ferry,Artifact — Vehicle,{5},card_draw,none,"Vehiculo con cycling: el ciclo es neutral en cartas, no robo."
+Skyship Buccaneer,Creature — Human Pirate,{3}{U}{U},card_draw,card_draw,VERIFICAR: no he podido confirmar el texto; mantengo la sugerencia provisionalmente.
+Starfall Invocation,Sorcery,{3}{W}{W},card_draw|board_wipe,board_wipe,"VERIFICAR texto exacto; probable barrida masiva, dudoso el card_draw."
+Starwinder,Creature — Leviathan,{5}{U}{U},card_draw,card_draw,Motor de robo masivo: roba por cada dano de combate a jugadores.
+Study Break,Instant,{1}{W},card_draw,none,Gira criaturas + learn: sin banquillo aporta poco (verificar redaccion exacta).
+Summon: Primal Odin,Enchantment Creature — Saga Knight,{4}{B}{B},card_draw|removal|wincons,removal|wincons,I destruye criatura; II 'ese jugador pierde la partida'; el robo del III es puntual (lo quito).
+Swat,Instant,{1}{B}{B},card_draw|removal,removal,Mata criatura pequena; el cycling repone la carta pero la funcion es removal.
+The End,Instant,{2}{B}{B},card_draw|removal,removal,Exilio + extraccion de copias del mismo nombre.
+The Immortal Sun,Legendary Artifact,{6},card_draw,card_draw,Robo extra cada turno; descuento/anthem/anti-walker como riders.
+Access Denied,Instant,{3}{U}{U},removal,removal,Contrahechizo (+ thopters).
+Atzocan Archer,Creature — Human Archer,{2}{G},removal,removal,ETB pelea contra voladora: removal condicional y fragil.
+Aven Cloudchaser,Creature — Bird Soldier,{3}{W},removal,removal,ETB destruye encantamiento.
+"Ayara, Widow of the Realm // Ayara, Furnace Queen",Legendary Creature — Elf Noble,{1}{B}{B},removal,removal,Sac repetible: X danos a criatura/planeswalker (X = resistencia sacrificada).
+Blood Spatter Analysis,Enchantment,{B}{R},removal,removal,VERIFICAR texto (MKM); mantengo sugerencia provisionalmente.
+Clash of the Eikons,Sorcery,{G},removal,removal,Fight modal; el modo de sagas es un rider de paquete.
+Disrupting Shoal,Instant — Arcane,{X}{U}{U},removal,removal,Contrahechizo pitch condicional.
+Disruptor Wanderglyph,Artifact Creature — Golem,{4},removal,removal,VERIFICAR texto; mantengo sugerencia provisionalmente.
+Eldrazi Confluence,Instant,{2}{C}{C},removal,removal,VERIFICAR modos exactos; mantengo sugerencia provisionalmente.
+First Volley,Instant — Arcane,{1}{R},removal,removal,1 dano a criatura (y a su controlador): muy pequeno pero es interaccion.
+Fowl Strike,Instant,{1}{G},removal,removal,Destruye voladora; reinforce como modo alternativo.
+Frantic Purification,Instant,{2}{W},removal,removal,VERIFICAR texto; mantengo sugerencia provisionalmente.
+HYDRA Assault Robot,Artifact Creature — Robot Villain,{1}{R},removal,synergy,Pinger a OPONENTES con ETB de Villanos/artefactos: payoff de paquete. NO es removal (no toca criaturas).
+Heartwood Giant,Creature — Giant,{3}{G}{G},removal,none,"VERIFICAR: creo que quema JUGADORES (sac Forest: 2 al jugador), no criaturas -> no removal."
+Hisoka's Defiance,Instant,{1}{U},removal,removal,Contrahechizo condicional (solo Spirit/Arcane).
+Hopeful Initiate,Creature — Human Warlock,{W},removal,removal,Quita contadores de training: destruye artefacto/encantamiento.
+Ice Out,Instant,{1}{U}{U},removal,removal,Contrahechizo con bargain.
+Infernal Grasp,Instant,{1}{B},removal,removal,Removal limpio estandar.
+Into the Maw of Hell,Sorcery,{4}{R}{R},removal,removal,Destruye tierra + 13 danos a criatura.
+Morkrut Banshee,Creature — Spirit,{3}{B}{B},removal,removal,-4/-4 con morbid; condicional.
+Murdock's Crusade,Sorcery,{1}{W},removal,removal,Modal: exilia criatura resistencia>=4 / encantamiento CMV>=4 (ambos con teamwork).
+Natural End,Instant,{2}{G},removal,removal,Destruye artefacto/encantamiento + 3 vidas (verificar redaccion).
+Obliterating Bolt,Sorcery,{1}{R},removal,removal,4 danos + exilio.
+Sparkcaster,Creature — Kavu,{2}{R}{G},removal,none,VERIFICAR: kavu con gating y dano a JUGADOR -> probablemente no removal.
+Syncopate,Instant,{X}{U},removal,removal,Contrahechizo.
+Tibalt's Rager,Creature — Devil,{1}{R},removal,removal,VERIFICAR texto; mantengo sugerencia provisionalmente.
+Trystan's Command,Kindred Sorcery — Elf,{4}{B}{G},removal,removal,VERIFICAR modos exactos; mantengo sugerencia provisionalmente.
+Vial of Dragonfire,Artifact,{2},removal,removal,Sac: 2 danos a criatura.
+Violet Pall,Kindred Instant — Faerie,{4}{B},removal,removal,Destruye no-Hada + crea ficha Hada (verificar redaccion).
+Acid Rain,Sorcery,{3}{U},board_wipe,board_wipe,Destruye TODOS los Forests: masivo pero de odio muy estrecho; anotado.
+Caldera Hellion,Creature — Hellion,{3}{R}{R},board_wipe,board_wipe,3 danos a cada criatura (+ devour para salvarlo).
+Coastal Breach,Sorcery,{6}{U},board_wipe,board_wipe,Rebote masivo de no-tierras (undaunted).
+Dragonback Assault,Enchantment,{3}{G}{U}{R},board_wipe,board_wipe,VERIFICAR texto (Tarkir: Dragonstorm); mantengo sugerencia provisionalmente.
+Fortunate Few,Sorcery,{3}{W}{W},board_wipe,board_wipe,Destruye todo lo no elegido: barrida politica.
+Glorious End,Instant,{2}{R},board_wipe|wincons,none,Termina el turno y pierdes al final: pieza de combo/proteccion. Ni wipe ni wincon (dobles falsos positivos de la regex).
+Myojin of Cleansing Fire,Legendary Creature — Spirit,{5}{W}{W}{W},board_wipe,board_wipe,Quita contador de divinidad: destruye las demas criaturas.
+Nature's Ruin,Sorcery,{2}{B},board_wipe,board_wipe,Solo criaturas verdes: hoser de color; anotado.
+Plague Wind,Sorcery,{7}{B}{B},board_wipe,board_wipe,Barrida asimetrica clasica.
+Primeval Light,Sorcery,{3}{G},board_wipe,board_wipe,Todos los encantamientos de UN jugador: masivo pero estrecho (verificar redaccion).
+Serenity,Enchantment,{1}{W},board_wipe,board_wipe,Barrida diferida de artefactos y encantamientos.
+Star of Extinction,Sorcery,{5}{R}{R},board_wipe,board_wipe,20 danos a todo + destruye tierra.
+Szat's Will,Instant,{4}{B},board_wipe,board_wipe,VERIFICAR texto (Commander Legends); mantengo sugerencia provisionalmente.
+Tibor and Lumia,Legendary Creature — Human Wizard,{2}{U}{R},board_wipe,none,"1 dano a no-voladoras por CADA hechizo rojo: pinger condicional, no barrida real."
+Tornado Elemental,Creature — Elemental,{5}{G}{G},board_wipe,board_wipe,6 danos a cada voladora: barrida estrecha.
+Wirefly Hive,Artifact,{3},board_wipe,none,El 'destroy all Wireflies' solo mata sus propias fichas al fallar la moneda: falso positivo.
+Wormfang Behemoth,Creature — Nightmare Fish Beast,{3}{U}{U},board_wipe,none,Exilia TU mano al entrar: falso positivo obvio de la regex.
+Zero Point Ballad,Sorcery,{X}{B},board_wipe,board_wipe,-X toughness wipe; con X>=6 reanima una de las muertas.
+Angel's Grace,Instant,{W},wincons,none,Proteccion/pieza de combo (Ad Nauseam); 'can't lose' disparo la regex.
+Bloodroot Apothecary,Creature — Squirrel Druid,{2}{G},wincons,wincons,Plan de veneno: toxic 2 + 2 venenos cuando el rival sacrifica fichas no criatura (group-slug).
+Chance for Glory,Instant,{1}{R}{W},wincons,none,"Turno extra kamikaze: habilitador de all-in, no wincon por si misma. Duda razonable."
+Everybody Lives!,Instant,{1}{W},wincons,none,Fog/proteccion total de un turno; 'players can't lose' es lo que pico la regex.
+"Fynn, the Fangbearer",Legendary Creature — Human Warrior,{1}{G},wincons,wincons,Plan de veneno explicito. Sugerencia correcta.
+Lich's Tomb,Artifact,{4},wincons,none,"No pierdes pero sacrificas permanentes: proteccion fragil, no wincon."
+Mechanized Production,Enchantment — Aura,{2}{U}{U},wincons,wincons,Victoria alternativa con 8 artefactos del mismo nombre. Sugerencia correcta.
+"Ramses, Assassin Lord",Legendary Creature — Human Assassin,{2}{U}{B},wincons|synergy,wincons|synergy,Lord de Asesinos con clausula de victoria al conectar. Sugerencia correcta.
+Share the Spoils,Enchantment,{1}{R},wincons,none,Recurso compartido multijugador: sin categoria funcional.
+Transcendence,Enchantment,{3}{W}{W}{W},wincons,none,Pieza de combo rara con el total de vidas; no es un plan de victoria en si.
+Virulent Silencer,Artifact Creature — Robot Assassin,{3},wincons,none,VERIFICAR: criatura con toxic (?); decidir entre none/synergy/wincons segun texto real.
+Bladestitched Skaab,Creature — Zombie Soldier,{U}{B},synergy,synergy,Lord de Zombies.
+Etchings of the Chosen,Enchantment,{1}{W}{B},synergy,synergy,Lord de tipo elegido + proteccion.
+Galadhrim Brigade,Creature — Elf Soldier,{2}{G},synergy,synergy,VERIFICAR texto (LTR); mantengo sugerencia provisionalmente.
+Hero of Iroas,Creature — Human Soldier,{1}{W},synergy,synergy,Pieza de paquete de auras/heroic.
+Jet Medallion,Artifact,{2},synergy,ramp,Reductor de coste: hueco de la guia. Propuesta: tratarlo como ramp funcional (no es 'de paquete').
+Joraga Warcaller,Creature — Elf Warrior,{G},synergy,synergy,Lord de Elfos.
+Kefnet's Monument,Legendary Artifact,{3},synergy,ramp,Misma politica que los medallones (reduce criaturas azules); rider de tap menor.
+Lord of the Accursed,Creature — Zombie,{2}{B},synergy,synergy,Lord de Zombies.
+Paragon of Fierce Defiance,Creature — Human Warrior,{3}{R},synergy,synergy,Lord de COLOR (rojas +1/+1): anotar si 'paquete de color' cuenta como paquete.
+Rundvelt Hordemaster,Creature — Goblin Warrior,{1}{R},synergy,synergy,Lord de Goblins + ventaja al morir goblins.
+"Splinter, Hamato Yoshi",Legendary Creature — Mutant Ninja Rat,{1}{B},synergy,synergy,Lord de Ninjas (+1/+1) con sneak.
+Veteran Armorer,Creature — Human Soldier,{1}{W},synergy,none,+0/+1 generico a tus criaturas: demasiado debil/generico para 'paquete'.
+Voyager Quickwelder,Artifact Creature — Robot Artificer,{2}{W},synergy,ramp,Reductor de artefactos: politica medallones (alternativa defendible: synergy artefactos).
+Akroan Line Breaker,Creature — Human Warrior,{2}{R},none,none,Heroic agresivo de draft.
+Argivian Phalanx,Creature — Human Kor Soldier,{5}{W},none,none,Cuerpo con descuento por criaturas.
+Armasaur Guide,Creature — Dinosaur,{4}{W},none,none,Payoff menor de ataque (draft).
+Artifact Ward,Enchantment — Aura,{W},none,none,Aura de proteccion marginal.
+Bloodhusk Ritualist,Creature — Vampire Shaman,{2}{B},none,none,Descarte con multikicker: disrupcion sin categoria en la guia.
+Caverns of Despair,World Enchantment,{2}{R}{R},none,none,Stax de combate.
+Cloven Casting,Enchantment,{5}{U}{R},none,none,Copia hechizos multicolor: spellslinger marginal (duda con synergy).
+Collective Inferno,Enchantment,{3}{R}{R},none,synergy,Duplicador de dano del TIPO elegido: pieza clara de paquete tribal (la regex lo perdio).
+Cowardice,Enchantment,{3}{U}{U},none,none,Stax/combo raro.
+Daggerdrome Imp,Creature — Imp,{1}{B},none,none,Bicho de draft con lifelink.
+Dark Suspicions,Enchantment,{2}{B}{B},none,none,Castigo por cartas en mano: group-slug sin categoria.
+Deception,Sorcery,{2}{B},none,none,Descarte puntual.
+Desecrated Tomb,Artifact,{3},none,none,Payoff menor de recursion (duda con synergy cementerio).
+Diving Griffin,Creature — Griffin,{1}{W}{W},none,none,Bicho de draft.
+Draugr Thought-Thief,Creature — Zombie Rogue,{2}{U},none,none,Valor menor de surveil.
+Dross Scorpion,Artifact Creature — Scorpion,{4},none,none,Pieza de combo de artefactos; sin categoria de la guia.
+Elgaud Inquisitor,Creature — Human Cleric,{3}{W},none,none,Bicho de draft con rider.
+"Eriette, the Beguiler",Legendary Creature — Human Warlock,{1}{W}{U}{B},none,synergy,Roba criaturas encantadas por TUS auras: pieza inequivoca de paquete de auras (la regex lo perdio).
+Estrid's Invocation,Enchantment,{2}{U},none,synergy,Copia tu mejor encantamiento cada turno: solo tiene sentido en enchantress. Duda razonable.
+Fallow Wurm,Creature — Wurm,{2}{G},none,none,Bicho con drawback.
+Font of Progress,Artifact,{U},none,none,VERIFICAR texto; mantengo sugerencia provisionalmente.
+Gobhobbler Rats,Creature — Rat,{B}{R},none,none,Bicho hellbent de draft.
+Hulking Raptor,Creature — Dinosaur,{2}{G}{G},none,ramp,Genera {G}{G} en tu primera fase principal: ramp real que la regex perdio (verificar).
+Infantry Shield,Artifact — Equipment,{2}{R},none,none,Equipo agresivo (menace + mobilize X).
+Jaded Analyst,Creature — Human Detective,{1}{U},none,none,Valor menor de evidencia.
+Kresh the Bloodbraided,Legendary Creature — Human Warrior,{2}{B}{R}{G},none,none,Comandante que crece con muertes: goodstuff/voltron de su propio mazo.
+Krosan Archer,Creature — Centaur Archer,{3}{G},none,none,Bicho de draft con reach.
+Lonesome Unicorn // Rider in Need,Creature — Unicorn,{4}{W},none,none,Aventura de valor: 2 cuerpos.
+Nightmare Unmaking,Sorcery,{3}{B}{B},none,board_wipe,"Exilio masivo segun tamano de mano: FALSO NEGATIVO de la regex, es una barrida."
+"Numa, Joraga Chieftain",Legendary Creature — Elf Warrior,{2}{G},none,synergy,Pone contadores a Elfos: senor/payoff de paquete Elfos (la regex lo perdio).
+Phantom Flock,Creature — Bird Soldier Spirit,{3}{W}{W},none,none,Bicho de draft con contadores.
+Phyrexian War Beast,Artifact Creature — Phyrexian Beast,{3},none,none,Bicho con drawback.
+Picklock Prankster // Free the Fae,Creature — Faerie Rogue,{1}{U},none,none,Autofresado con seleccion: valor menor 2x1.
+Resplendent Griffin,Creature — Griffin,{1}{W}{U},none,none,Bicho de draft con ascend.
+Return the Favor,Instant,{R}{R},none,none,Copia/redirige hechizo o habilidad: utilidad sin categoria.
+Rocket-Powered Goblin Glider,Artifact — Equipment,{3},none,none,"Equipo de pump (+2/+0, vuela, prisa) con mayhem."
+Sarkhan's Triumph,Instant,{2}{R},none,none,Tutor de Dragon: los tutores no estan cubiertos por la guia (hueco); alternativa: synergy dragones.
+Skirge Familiar,Creature — Phyrexian Imp,{4}{B},none,ramp,'Descarta una carta: agrega {B}': motor de mana de combo. FALSO NEGATIVO de la regex.
+Soulless Jailer,Artifact Creature — Phyrexian Golem,{2},none,none,Stax de cementerio/exilio.
+Spectacular Spider-Man,Legendary Creature — Spider Human Hero,{1}{W},none,none,"Sac: hexproof + indestructible al equipo: proteccion, sin categoria."
+Stallion of Ashmouth,Creature — Nightmare Horse,{3}{B},none,none,Bicho de draft con coste de sacrificio.
+Tales of Master Seshiro // Seshiro's Living Legacy,Enchantment — Saga,{4}{G},none,none,Saga de valor que se hace criatura.
+The Flood of Mars,Creature — Alien Zombie Horror,{2}{U}{U},none,none,Copia/isla-iza al atacar: sin categoria funcional.
+Thunderhead Squadron,Creature — Human Knight,{5}{U},none,none,Volador vanilla con convoke.
+Vincent Valentine // Galian Beast,Legendary Creature — Assassin,{2}{B}{B},none,none,Amenaza que crece con muertes rivales: sin categoria funcional.

@@ -16,6 +16,33 @@ Guille autorizó reutilizar su repo antiguo (https://github.com/Guillermo-Gil-Ga
 
 Implicación pendiente para Fases 2-3: el TFM ya contiene un CP-SAT maduro y scoring ML; el experimento de Fase 3 probablemente sea "port simplificado del CP-SAT del TFM vs greedy" en lugar de construir desde cero. 🔶 A decidir al llegar.
 
+## 2026-07-13 — Informe comparativo de tagging funcional (Fase 2) 🔶 pendiente decisión
+
+Cuatro métodos evaluados sobre 200 cartas etiquetadas a mano por Guille
+(`experiments/tagging/test_set_filled.csv`; métricas por `evaluate.py`, multi-etiqueta):
+
+| Método | micro-F1 | exact-match | Fuerte en | Débil en |
+|---|---|---|---|---|
+| **LLM cacheado** | **0.89** | **173/200** | card_draw 0.95, removal 0.95, synergy 0.76 | wincons R=0.62 |
+| Regex | 0.85 | 162/200 | precisión perfecta en wipes/wincons | synergy R=0.57 |
+| Scryfall otags | 0.75 | 133/200 | lands 1.00, wipes 0.94 | card_draw P=0.50, synergy 0.00 |
+| EDHREC headers | 0.08 | 75/200 | — | ciego a 4/7 categorías (hallazgo estructural) |
+
+Lecturas clave:
+- EDHREC queda **descartado como tagger** (sus páginas agrupan por tipo, no por función);
+  sus scores de sinergia/inclusión siguen siendo la señal de *puntuación* del selector.
+- La synergy solo la capturan decentemente LLM (0.76) y regex tribal (0.68 con recall bajo).
+- wincons es la categoría difícil para todos (recall 0.62 en los dos mejores): las
+  wincons implícitas (veneno, drenajes) no tienen marcador textual fiable.
+- Los "fallos" de lands de LLM/regex (P=0.38) son en realidad una discrepancia de
+  criterio con el etiquetado de Guille sobre MDFCs hechizo//tierra — a unificar en la
+  rúbrica, no un error de método.
+
+**Recomendación de la orquestadora**: LLM cacheado como motor primario (batch offline
+sobre el pool + incremental por set nuevo, nunca en caliente), con regex como
+contraste de auditoría (donde discrepen → cola de revisión) y otags como tercera
+señal gratuita. EDHREC solo para scores. 🔶 Guille decide.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).
