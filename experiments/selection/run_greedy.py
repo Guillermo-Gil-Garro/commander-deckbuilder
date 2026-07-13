@@ -25,6 +25,7 @@ from pipeline.edhrec import fetch_commander, slugify_commander  # noqa: E402
 from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
 from selector.greedy import DECK_SIZE, GreedyResult, load_pool  # noqa: E402
+from selector.staples import load_staples  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -140,13 +141,16 @@ def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
     banned, watchlist = load_banlist(BANLIST_PATH)
+    staples = load_staples()
     tagger = tagger_from_store(load_tags(), pool.cards())
     DECKS_DIR.mkdir(parents=True, exist_ok=True)
 
     log.info("pool: %d cartas | banlist: %d baneadas, %d watchlist", len(pool.by_name), len(banned), len(watchlist))
 
     for commander in COMMANDERS:
-        data = fetch_commander(commander)
+        # Guille decision 2026-07-14: metrics and candidates come from the
+        # bracket-4 ("optimized") pages only, not the global aggregate.
+        data = fetch_commander(commander, variant="optimized")
         bands = resolve_bands(config, commander)
         start = time.perf_counter()
         result = build_deck_greedy(
@@ -157,6 +161,7 @@ def main() -> None:
             tagger=tagger,
             banned_names=banned,
             watchlist_names=watchlist,
+            staples=staples,
         )
         elapsed = time.perf_counter() - start
         assert result.total_cards == DECK_SIZE

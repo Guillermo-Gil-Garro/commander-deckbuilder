@@ -28,9 +28,19 @@ Constraints and penalties:
   ``soft_category_floors`` (category minimums become penalised soft floors)
   → ``drop_ceilings`` (category/lands maximums dropped too) →
   ``base_size_and_lands`` (only 99 + lands ≥ Karsten/band floor). Banlist,
-  color identity and the Karsten floor are never relaxed.
+  color identity, the Karsten floor and auto-include staples are never
+  relaxed.
+- **Staples** (``staples.yaml``, optional): auto-includes are forced with a
+  hard ``x == 1`` at every stage (banlist wins: banned staples never reach
+  the model); preferred staples add their flat boost to the score.
+- **Score corrections** (COMPARATIVA_EDHREC_B4): negative EDHREC synergy is
+  clamped to 0 by default (``ScoreWeights``); non-basic lands scoring below
+  ``ScoreWeights.land_score_floor`` are excluded (``x == 0`` — basics are
+  strictly better); and the objective embeds a lexicographic CMC tiebreak
+  (score coefficients stretched by ``TIEBREAK_SCALE``, each card paying a
+  tiny CMC term) so among equal-score optima the cheaper deck wins.
 - **Determinism**: 1 worker, fixed seed, stable variable order
-  ``(-score, name)``.
+  ``(-score, cmc, name)``.
 
 The result mirrors ``GreedyResult`` (mainboard ``DeckEntry`` rows with score
 and reason, counts, validator statuses, maybeboard) plus solver metadata
@@ -77,12 +87,21 @@ from selector.greedy import (
     _name_variants,
     _sorted_candidates,
 )
+from selector.staples import StaplesConfig, boost_for, preferred_boosts, resolve_auto_includes
 
 logger = logging.getLogger(__name__)
 
 # Wide scale so close-but-distinct float scores keep distinct integer
 # coefficients (TFM: a low scale would collapse them into artificial ties).
 SCORE_SCALE = 1_000_000
+# Lexicographic CMC tiebreak: score coefficients are stretched by
+# TIEBREAK_SCALE and each selected card pays round(cmc * CMC_TIEBREAK_UNIT)
+# (clamped so the whole deck's CMC term stays below ONE stretched score unit,
+# i.e. 1e-6 score). Among equal-score optima the cheaper deck wins; no real
+# score difference can ever be overturned.
+TIEBREAK_SCALE = 8192
+CMC_TIEBREAK_UNIT = 4
+_MAX_CMC_TIEBREAK = TIEBREAK_SCALE // DECK_SIZE - 1
 DEFAULT_RANDOM_SEED = 0
 DEFAULT_TIME_LIMIT_S = 10.0
 
@@ -272,6 +291,8 @@ def _assemble_model(
     lands_min: int,
     color_targets: Mapping[str, int],
     producers: Mapping[str, frozenset[str]],  # candidate name -> colors produced
+    forced: frozenset[str] = frozenset(),  # auto-include staples: x == 1
+    excluded: frozenset[str] = frozenset(),  # weak non-basic lands: x == 0
 ) -> tuple[cp_model.CpModel, dict[str, cp_model.IntVar], dict[str, cp_model.IntVar]]:
     """One CP-SAT model for a relaxation stage and a fixed lands lower bound."""
     model = cp_model.CpModel()
@@ -281,9 +302,17 @@ def _assemble_model(
     for cand in ordered:
         var = model.new_bool_var(f"x_{cand.name}")
         x[cand.name] = var
-        coefficient = round(cand.score * SCORE_SCALE)
+        cmc_term = min(round(cand.cmc * CMC_TIEBREAK_UNIT), _MAX_CMC_TIEBREAK)
+        coefficient = round(cand.score * SCORE_SCALE) * TIEBREAK_SCALE - cmc_term
         if coefficient:
             score_terms.append(coefficient * var)
+
+    # Auto-include staples and the land quality gate are as hard as the
+    # banlist: active at EVERY relaxation stage, never dropped.
+    for name in sorted(forced):
+        model.add(x[name] == 1)
+    for name in sorted(excluded):
+        model.add(x[name] == 0)
 
     b: dict[str, cp_model.IntVar] = {}
     for basic_name, _color in basic_types:
@@ -317,7 +346,8 @@ def _assemble_model(
                 else:
                     deficit = model.new_int_var(0, band.min, f"deficit_{category}")
                     model.add(deficit >= band.min - count_expr)
-                    penalty_terms.append(FLOOR_PENALTY_PER_CARD * deficit)
+                    # TIEBREAK_SCALE keeps the penalty/score ratio intact.
+                    penalty_terms.append(FLOOR_PENALTY_PER_CARD * TIEBREAK_SCALE * deficit)
 
         # Color fixing (soft, epigraph form): deficit of sources vs the fixed
         # pool demand target per identity color.
@@ -337,7 +367,8 @@ def _assemble_model(
                 pen = model.new_int_var(0, max(max_pen, 0), f"colorpen_{color}")
                 for slope, intercept in lines:
                     model.add(pen >= slope * deficit + intercept)
-                penalty_terms.append(pen)
+                # TIEBREAK_SCALE keeps the penalty/score ratio intact.
+                penalty_terms.append(TIEBREAK_SCALE * pen)
 
     objective = sum(score_terms)
     if penalty_terms:
@@ -356,6 +387,7 @@ def build_deck_cpsat(
     banned_names: frozenset[str] | set[str],
     watchlist_names: frozenset[str] | set[str],
     weights: ScoreWeights = ScoreWeights(),
+    staples: StaplesConfig | None = None,
     time_limit_s: float = DEFAULT_TIME_LIMIT_S,
     random_seed: int = DEFAULT_RANDOM_SEED,
 ) -> CpSatResult:
@@ -368,6 +400,10 @@ def build_deck_cpsat(
     lands_band = bands.get(LANDS_CATEGORY)
     if lands_band is None:
         raise SelectorError("bands must include a 'lands' band")
+
+    boosts: Mapping[str, float] = (
+        preferred_boosts(staples, commander_identity) if staples is not None else {}
+    )
 
     # ── candidate filtering (same rules as the greedy, kept in lockstep) ──
     candidates: dict[str, _Candidate] = {}
@@ -394,7 +430,7 @@ def build_deck_cpsat(
             categories = {SYNERGY_CATEGORY}
         candidates[full_name] = _Candidate(
             name=full_name,
-            score=weights.synergy * rec.synergy + weights.inclusion * rec.inclusion,
+            score=weights.score(rec.synergy, rec.inclusion) + boost_for(boosts, full_name),
             categories=frozenset(categories),
             cmc=float(card.get("cmc") or 0.0),
             mana_cost=card.get("mana_cost") or "",
@@ -406,7 +442,57 @@ def build_deck_cpsat(
             len(unresolved),
         )
 
+    # ── auto-include staples (forced with x == 1; same rules as the greedy) ──
+    forced_names: set[str] = set()
+    if staples is not None:
+        auto_names = resolve_auto_includes(
+            staples, commander_identity, commander_full_name, banned_names
+        )
+        for staple_name in auto_names:
+            card = pool.resolve(staple_name)
+            if card is None:
+                raise SelectorError(
+                    f"auto-include staple not found in pool: {staple_name!r}"
+                )
+            full_name = card["name"]
+            if full_name == commander_full_name or "Basic" in card.get("type_line", ""):
+                continue
+            if _name_variants(full_name) & set(watchlist_names):
+                # Watchlist contract: never auto-recommended, staples included.
+                logger.info(
+                    "%s: auto-include %s is on the watchlist, skipped",
+                    commander_name, full_name,
+                )
+                continue
+            if not set(card.get("color_identity", [])) <= commander_identity:
+                logger.info(
+                    "%s: auto-include %s outside commander color identity, skipped",
+                    commander_name, full_name,
+                )
+                continue
+            if full_name not in candidates:
+                categories = tagger(full_name) & set(bands) - {SYNERGY_CATEGORY}
+                if not categories:
+                    categories = {SYNERGY_CATEGORY}
+                candidates[full_name] = _Candidate(
+                    name=full_name,
+                    # No EDHREC recommendation: only a preferred boost, if any.
+                    score=boost_for(boosts, full_name),
+                    categories=frozenset(categories),
+                    cmc=float(card.get("cmc") or 0.0),
+                    mana_cost=card.get("mana_cost") or "",
+                )
+            forced_names.add(full_name)
+
     ordered = _sorted_candidates(candidates.values())
+    forced = frozenset(forced_names)
+    # Land quality gate (COMPARATIVA_EDHREC_B4): weak non-basic lands are
+    # excluded outright — the basics IntVars are always a better filler.
+    excluded_lands = frozenset(
+        c.name
+        for c in ordered
+        if c.is_land and c.score < weights.land_score_floor and c.name not in forced
+    )
 
     # ── basics available to the solver (one IntVar per type) ─────────────
     identity_colors = [c for c in _WUBRG if c in commander_identity]
@@ -445,7 +531,15 @@ def build_deck_cpsat(
         solved = False
         for stage in _STAGES:
             model, x, bvars = _assemble_model(
-                ordered, basic_types, bands, stage, lands_min, color_targets, producers
+                ordered,
+                basic_types,
+                bands,
+                stage,
+                lands_min,
+                color_targets,
+                producers,
+                forced=forced,
+                excluded=excluded_lands,
             )
             solver = _make_solver(random_seed, time_limit_s)
             status = solver.solve(model)
@@ -503,7 +597,11 @@ def build_deck_cpsat(
             name=cand.name,
             categories=tuple(sorted(cand.categories)),
             score=cand.score,
-            reason=f"cp-sat, score {cand.score:.2f}",
+            reason=(
+                "staple (auto-include)"
+                if cand.name in forced
+                else f"cp-sat, score {cand.score:.2f}"
+            ),
             slot=slot,
         )
 
@@ -615,7 +713,7 @@ def build_deck_cpsat(
         solver_status=solver_status,
         relaxation_stage=stage_used.name,
         solve_time_s=total_solve_time,
-        objective_value=objective_scaled / SCORE_SCALE,
+        objective_value=objective_scaled / (SCORE_SCALE * TIEBREAK_SCALE),
         raw_score_sum=raw_score_sum,
         penalties=penalties,
         unresolved=unresolved,

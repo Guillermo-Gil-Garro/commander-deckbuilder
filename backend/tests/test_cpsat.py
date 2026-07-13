@@ -8,7 +8,8 @@ import pytest
 
 from quotas.config import QuotaBand
 from selector.cp_sat import CpSatResult, build_deck_cpsat
-from selector.greedy import DECK_SIZE, PoolIndex
+from selector.greedy import DECK_SIZE, PoolIndex, ScoreWeights
+from selector.staples import StaplesConfig
 
 
 @dataclass
@@ -241,3 +242,143 @@ def test_missing_commander_raises() -> None:
             banned_names=set(),
             watchlist_names=set(),
         )
+
+
+# ── staples y correcciones de sesgo del score (COMPARATIVA_EDHREC_B4) ───────
+
+
+def staples_fixture() -> StaplesConfig:
+    return StaplesConfig.model_validate(
+        {
+            "auto_includes": [
+                {"name": "Sol Ring", "condition": "always"},
+                {
+                    "name": "Arcane Signet",
+                    "condition": "multicolor_or_listed_mono",
+                    "mono_exceptions": ["Urza, Lord High Artificer"],
+                },
+            ],
+        }
+    )
+
+
+def add_staple_cards(pool: PoolIndex) -> None:
+    for name, cmc in (("Sol Ring", 1.0), ("Arcane Signet", 2.0)):
+        card = make_card(
+            name, mana_cost=f"{{{int(cmc)}}}", cmc=cmc, type_line="Artifact",
+            color_identity=[],
+        )
+        pool.by_name[card["name"]] = card
+        TAGS[name] = {"ramp"}
+
+
+def build_with(
+    pool: PoolIndex,
+    recs: list[Rec],
+    *,
+    commander: str = "Boss Goblin",
+    staples: StaplesConfig | None = None,
+    banned: set[str] = frozenset(),
+    weights: ScoreWeights = ScoreWeights(),
+    bands: dict[str, QuotaBand] | None = None,
+) -> CpSatResult:
+    return build_deck_cpsat(
+        commander,
+        pool=pool,
+        recommendations=recs,
+        bands=bands if bands is not None else bands_fixture(),
+        tagger=tagger,
+        banned_names=banned,
+        watchlist_names=set(),
+        weights=weights,
+        staples=staples,
+        time_limit_s=10.0,
+    )
+
+
+def test_sol_ring_forced_signet_not_in_plain_mono() -> None:
+    pool, recs = build_inputs()
+    add_staple_cards(pool)
+    result = build_with(pool, recs, staples=staples_fixture())
+    entry = next(e for e in result.mainboard if e.name == "Sol Ring")
+    assert entry.reason == "staple (auto-include)"
+    assert "Arcane Signet" not in {e.name for e in result.mainboard}
+    # The staple counts in its category and the band max still holds.
+    assert result.counts["ramp"] <= bands_fixture()["ramp"].max
+
+
+def test_signet_forced_for_listed_mono_exception_commander() -> None:
+    pool, recs = build_inputs()
+    add_staple_cards(pool)
+    urza = make_card(
+        "Urza, Lord High Artificer",
+        type_line="Legendary Creature — Human Artificer",
+    )
+    pool.by_name[urza["name"]] = urza
+    result = build_with(
+        pool, recs, commander="Urza, Lord High Artificer", staples=staples_fixture()
+    )
+    entry = next(e for e in result.mainboard if e.name == "Arcane Signet")
+    assert entry.reason == "staple (auto-include)"
+    assert "Sol Ring" in {e.name for e in result.mainboard}
+
+
+def test_banlist_beats_auto_include() -> None:
+    pool, recs = build_inputs()
+    add_staple_cards(pool)
+    result = build_with(pool, recs, staples=staples_fixture(), banned={"Sol Ring"})
+    all_names = {e.name for e in result.mainboard} | {e.name for e in result.maybeboard}
+    assert "Sol Ring" not in all_names
+
+
+def test_staples_none_and_empty_config_are_identical() -> None:
+    pool, recs = build_inputs()
+    base = build(pool, recs)  # staples omitted: legacy call signature
+    empty = build_with(pool, recs, staples=StaplesConfig())
+    assert [(e.name, e.count) for e in base.mainboard] == [
+        (e.name, e.count) for e in empty.mainboard
+    ]
+    assert base.objective_value == empty.objective_value
+
+
+def test_negative_synergy_no_longer_lowers_score() -> None:
+    pool, recs = build_inputs()
+    staple = make_card("Generic Staple")
+    pool.by_name[staple["name"]] = staple
+    recs = recs + [Rec(name="Generic Staple", synergy=-0.15, inclusion=1.5)]
+    result = build(pool, recs)
+    entry = next(e for e in result.mainboard if e.name == "Generic Staple")
+    assert entry.score == pytest.approx(1.5)  # max(-0.15, 0) + 1.5
+
+
+def test_objective_tiebreak_prefers_cheaper_cmc() -> None:
+    pool, recs = build_inputs()
+    pricey = make_card("Aaa Pricey Tie", cmc=5.0)
+    budget = make_card("Zzz Budget Tie", cmc=1.0)
+    pool.by_name[pricey["name"]] = pricey
+    pool.by_name[budget["name"]] = budget
+    recs = recs + [
+        Rec(name="Aaa Pricey Tie", synergy=3.0, inclusion=0.5),
+        Rec(name="Zzz Budget Tie", synergy=3.0, inclusion=0.5),
+    ]
+    bands = bands_fixture()
+    bands["synergy"] = QuotaBand(min=0, max=1)  # room for exactly one of the pair
+    # Wide lands ceiling: basics keep the 99 feasible with every ceiling hard.
+    bands["lands"] = QuotaBand(min=10, max=90)
+    result = build(pool, recs, bands=bands)
+    assert result.relaxation_stage == "none"  # ceilings stayed hard
+    names = {e.name for e in result.mainboard}
+    assert "Zzz Budget Tie" in names
+    assert "Aaa Pricey Tie" not in names
+
+
+def test_weak_nonbasic_land_excluded_in_favor_of_basics() -> None:
+    pool, recs = build_inputs()
+    weak = make_card("Weak Tapland", mana_cost="", cmc=0.0, type_line="Land")
+    pool.by_name[weak["name"]] = weak
+    TAGS["Weak Tapland"] = {"lands"}
+    recs = recs + [Rec(name="Weak Tapland", synergy=-1.0, inclusion=0.04)]
+    result = build(pool, recs)
+    names = {e.name for e in result.mainboard}
+    assert "Weak Tapland" not in names  # score 0.04 < floor 0.05: x == 0
+    assert "Utility Land" in names  # good non-basics still enter

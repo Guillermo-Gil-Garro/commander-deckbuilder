@@ -16,6 +16,7 @@ from selector.greedy import (
     SelectorError,
     build_deck_greedy,
 )
+from selector.staples import StaplesConfig
 
 
 @dataclass
@@ -278,6 +279,210 @@ def test_missing_commander_raises() -> None:
             banned_names=set(),
             watchlist_names=set(),
         )
+
+
+# ── staples y correcciones de sesgo del score (COMPARATIVA_EDHREC_B4) ───────
+
+
+def staples_fixture() -> StaplesConfig:
+    return StaplesConfig.model_validate(
+        {
+            "auto_includes": [
+                {"name": "Sol Ring", "condition": "always"},
+                {
+                    "name": "Arcane Signet",
+                    "condition": "multicolor_or_listed_mono",
+                    "mono_exceptions": ["Urza, Lord High Artificer"],
+                },
+            ],
+        }
+    )
+
+
+def add_staple_cards(pool: PoolIndex) -> None:
+    for name, cmc in (("Sol Ring", 1.0), ("Arcane Signet", 2.0)):
+        card = make_card(
+            name, mana_cost=f"{{{int(cmc)}}}", cmc=cmc, type_line="Artifact",
+            color_identity=[],
+        )
+        pool.by_name[card["name"]] = card
+        TAGS[name] = {"ramp"}
+
+
+def build_with(
+    pool: PoolIndex,
+    recs: list[Rec],
+    *,
+    commander: str = "Boss Goblin",
+    staples: StaplesConfig | None = None,
+    banned: set[str] = frozenset(),
+    weights: ScoreWeights = ScoreWeights(),
+    bands: dict[str, QuotaBand] | None = None,
+) -> GreedyResult:
+    return build_deck_greedy(
+        commander,
+        pool=pool,
+        recommendations=recs,
+        bands=bands if bands is not None else bands_fixture(),
+        tagger=tagger,
+        banned_names=banned,
+        watchlist_names=set(),
+        weights=weights,
+        staples=staples,
+    )
+
+
+def test_sol_ring_always_present_signet_not_in_plain_mono() -> None:
+    pool, recs, _ = build_inputs()
+    add_staple_cards(pool)
+    result = build_with(pool, recs, staples=staples_fixture())
+    entry = next(e for e in result.mainboard if e.name == "Sol Ring")
+    assert entry.reason == "staple (auto-include)"
+    assert entry.slot == "ramp"
+    # Mono-red without artifact-theme exception: no Arcane Signet.
+    assert "Arcane Signet" not in {e.name for e in result.mainboard}
+    # The staple counts toward its quota category like any other card.
+    ramp_members = [e for e in result.mainboard if "ramp" in e.categories]
+    assert result.counts["ramp"] == len(ramp_members)
+    assert result.counts["ramp"] <= bands_fixture()["ramp"].max
+
+
+def test_signet_enters_multicolor_deck() -> None:
+    pool, recs, _ = build_inputs()
+    add_staple_cards(pool)
+    boss = make_card(
+        "Two Color Boss",
+        type_line="Legendary Creature — Elemental",
+        color_identity=["R", "G"],
+    )
+    pool.by_name[boss["name"]] = boss
+    result = build_with(
+        pool, recs, commander="Two Color Boss", staples=staples_fixture()
+    )
+    entry = next(e for e in result.mainboard if e.name == "Arcane Signet")
+    assert entry.reason == "staple (auto-include)"
+    assert "Sol Ring" in {e.name for e in result.mainboard}
+
+
+def test_signet_enters_listed_mono_exception_commander() -> None:
+    pool, recs, _ = build_inputs()
+    add_staple_cards(pool)
+    urza = make_card(
+        "Urza, Lord High Artificer",
+        type_line="Legendary Creature — Human Artificer",
+    )
+    pool.by_name[urza["name"]] = urza
+    result = build_with(
+        pool, recs, commander="Urza, Lord High Artificer", staples=staples_fixture()
+    )
+    entry = next(e for e in result.mainboard if e.name == "Arcane Signet")
+    assert entry.reason == "staple (auto-include)"
+
+
+def test_banlist_beats_auto_include() -> None:
+    pool, recs, _ = build_inputs()
+    add_staple_cards(pool)
+    result = build_with(
+        pool, recs, staples=staples_fixture(), banned={"Sol Ring"}
+    )
+    all_names = {e.name for e in result.mainboard} | {e.name for e in result.maybeboard}
+    assert "Sol Ring" not in all_names
+
+
+def test_auto_include_missing_from_pool_raises() -> None:
+    pool, recs, _ = build_inputs()
+    config = StaplesConfig.model_validate(
+        {"auto_includes": [{"name": "Ghost Card", "condition": "always"}]}
+    )
+    with pytest.raises(SelectorError, match="Ghost Card"):
+        build_with(pool, recs, staples=config)
+
+
+def test_staples_none_and_empty_config_are_identical() -> None:
+    pool, recs, _ = build_inputs()
+    base = build(pool, recs)  # staples omitted: legacy call signature
+    pool2, recs2, _ = build_inputs()
+    empty = build_with(pool2, recs2, staples=StaplesConfig())
+    assert [(e.name, e.count) for e in base.mainboard] == [
+        (e.name, e.count) for e in empty.mainboard
+    ]
+    assert [e.name for e in base.maybeboard] == [e.name for e in empty.maybeboard]
+
+
+def test_preferred_boost_applies_only_on_color_match() -> None:
+    pool, recs, _ = build_inputs()
+    matching = StaplesConfig.model_validate(
+        {"preferred": [{"name": "Synergy 119", "colors_any": ["R"], "boost": 5.0}]}
+    )
+    result = build_with(pool, recs, staples=matching)
+    entry = next(e for e in result.mainboard if e.name == "Synergy 119")
+    assert entry.score == pytest.approx((0.8 - 0.119) + 0.5 + 5.0)
+
+    pool2, recs2, _ = build_inputs()
+    off_color = StaplesConfig.model_validate(
+        {"preferred": [{"name": "Synergy 119", "colors_any": ["U"], "boost": 5.0}]}
+    )
+    result2 = build_with(pool2, recs2, staples=off_color)
+    assert "Synergy 119" not in {e.name for e in result2.mainboard}
+
+
+def test_score_weights_clamp_negative_synergy() -> None:
+    # Informe B4: Sol Ring synergy -0.15, inclusion 0.60 -> antes 0.45, ahora 0.60.
+    assert ScoreWeights().score(-0.15, 0.60) == pytest.approx(0.60)
+    assert ScoreWeights(clamp_negative_synergy=False).score(-0.15, 0.60) == pytest.approx(0.45)
+    assert ScoreWeights().score(0.40, 0.50) == pytest.approx(0.90)
+
+
+def test_negative_synergy_no_longer_lowers_deck_score() -> None:
+    pool, recs, _ = build_inputs()
+    staple = make_card("Generic Staple")
+    pool.by_name[staple["name"]] = staple
+    recs = recs + [Rec(name="Generic Staple", synergy=-0.15, inclusion=1.5)]
+    result = build(pool, recs)
+    entry = next(e for e in result.mainboard if e.name == "Generic Staple")
+    assert entry.score == pytest.approx(1.5)
+
+    legacy = build_with(
+        pool, recs, weights=ScoreWeights(clamp_negative_synergy=False)
+    )
+    legacy_entry = next(e for e in legacy.mainboard if e.name == "Generic Staple")
+    assert legacy_entry.score == pytest.approx(1.35)
+
+
+def test_filler_tiebreak_prefers_cheaper_cmc() -> None:
+    pool, recs, _ = build_inputs()
+    pricey = make_card("Aaa Pricey Tie", cmc=5.0)
+    budget = make_card("Zzz Budget Tie", cmc=1.0)
+    pool.by_name[pricey["name"]] = pricey
+    pool.by_name[budget["name"]] = budget
+    recs = recs + [
+        Rec(name="Aaa Pricey Tie", synergy=3.0, inclusion=0.5),
+        Rec(name="Zzz Budget Tie", synergy=3.0, inclusion=0.5),
+    ]
+    bands = bands_fixture()
+    bands["synergy"] = QuotaBand(min=0, max=1)  # room for exactly one of the pair
+    result = build(pool, recs, bands=bands)
+    names = {e.name for e in result.mainboard}
+    # Equal score: CMC decides (cheaper first), beating the alphabetical order.
+    assert "Zzz Budget Tie" in names
+    assert "Aaa Pricey Tie" not in names
+
+
+def test_weak_nonbasic_land_never_displaces_basics() -> None:
+    pool, recs, _ = build_inputs()
+    weak = make_card("Weak Tapland", mana_cost="", cmc=0.0, type_line="Land")
+    pool.by_name[weak["name"]] = weak
+    TAGS["Weak Tapland"] = {"lands"}
+    recs = recs + [Rec(name="Weak Tapland", synergy=-1.0, inclusion=0.04)]
+    result = build(pool, recs)
+    names = {e.name for e in result.mainboard}
+    assert "Weak Tapland" not in names  # score 0.04 < floor 0.05: a basic enters
+    assert "Utility Land" in names  # good non-basics still enter
+
+    permissive = build_with(
+        pool, recs, weights=ScoreWeights(land_score_floor=0.0)
+    )
+    assert "Weak Tapland" in {e.name for e in permissive.mainboard}
 
 
 def test_otag_tagger_from_tmp_cache(tmp_path) -> None:

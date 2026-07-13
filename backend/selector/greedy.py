@@ -5,23 +5,30 @@ bands and a pluggable tagger (``Callable[[str], set[str]]``), builds a
 99-card mainboard plus maybeboard:
 
 1. filter candidates (color identity, banlist, watchlist, in-pool);
-2. score = ``synergy_weight * synergy + inclusion_weight * inclusion``;
-3. quota phase: fill each spell category to its ``min`` with the
+2. score = ``synergy_weight * max(synergy, 0) + inclusion_weight *
+   inclusion`` plus the flat boost of a matching preferred staple
+   (negative EDHREC synergy is a staple signature, not a quality signal —
+   see ``COMPARATIVA_EDHREC_B4``; the clamp is a ``ScoreWeights`` dial);
+3. staples: auto-includes from ``staples.yaml`` (if given) are placed
+   first — they count toward their quota categories and are never
+   displaced by quota or filler picks; the banlist always wins over them;
+4. quota phase: fill each spell category to its ``min`` with the
    highest-scored candidates of that category, in ``FILL_ORDER``
    (scarcest categories first so plentiful ones cannot crowd them out);
    a multi-category card counts toward every category it is tagged with;
-4. filler phase: fill the remaining spell slots by score without pushing
+5. filler phase: fill the remaining spell slots by score without pushing
    any category over its ``max`` (synergy ceiling included); untagged
    non-land cards belong to the ``synergy`` bucket;
-5. lands: the effective minimum is ``max(band.min, Karsten floor)`` of the
+6. lands: the effective minimum is ``max(band.min, Karsten floor)`` of the
    deck under construction (recomputed to a fixpoint as filler shrinks);
-   land slots take the best-scored recommended lands first and basics
-   complete the rest, distributed proportionally to the deck's pure
-   colored pips. If spell candidates run out before 99, the leftover
-   slots also become basic lands (the deck is always exactly 99).
+   land slots take the best-scored recommended lands first — skipping
+   non-basics below ``ScoreWeights.land_score_floor``, which lose to
+   basics — and basics complete the rest, distributed proportionally to
+   the deck's pure colored pips. If spell candidates run out before 99,
+   the leftover slots also become basic lands (the deck is always 99).
 
-Determinism: every ordering uses ``(-score, name)``; ties break
-alphabetically by card name.
+Determinism: every ordering uses ``(-score, cmc, name)``; ties break by
+ascending mana value (the cheaper card wins) and then alphabetically.
 """
 
 from __future__ import annotations
@@ -34,6 +41,7 @@ from quotas.config import QuotaBand
 from quotas.color_sources import card_color_pips
 from quotas.lands import curve_bucket, expected_curve_mv, land_count
 from quotas.validator import CategoryStatus, validate_deck
+from selector.staples import StaplesConfig, boost_for, preferred_boosts, resolve_auto_includes
 
 logger = logging.getLogger(__name__)
 
@@ -73,10 +81,24 @@ class RecommendationLike(Protocol):
 
 @dataclass(frozen=True)
 class ScoreWeights:
-    """Weights for the (deliberately simple) score = w_s*synergy + w_i*inclusion."""
+    """Score dials: ``score = w_s * max(synergy, 0) + w_i * inclusion``.
+
+    ``clamp_negative_synergy`` fixes the anti-staple bias found in
+    ``COMPARATIVA_EDHREC_B4``: EDHREC synergy is negative for staples by
+    construction, so it must not subtract (set to ``False`` to restore the
+    raw linear score). ``land_score_floor`` is the filler land quality gate:
+    a non-basic land scoring below it never beats a basic land.
+    """
 
     synergy: float = 1.0
     inclusion: float = 1.0
+    clamp_negative_synergy: bool = True
+    land_score_floor: float = 0.05
+
+    def score(self, synergy: float, inclusion: float) -> float:
+        """Combined card score under these weights."""
+        effective = max(synergy, 0.0) if self.clamp_negative_synergy else synergy
+        return self.synergy * effective + self.inclusion * inclusion
 
 
 @dataclass(frozen=True)
@@ -174,7 +196,9 @@ def _name_variants(name: str) -> set[str]:
 
 
 def _sorted_candidates(candidates: Iterable[_Candidate]) -> list[_Candidate]:
-    return sorted(candidates, key=lambda c: (-c.score, c.name))
+    # CMC before name: at equal score the cheaper card enters first (curve
+    # bias fix, COMPARATIVA_EDHREC_B4), then alphabetical for determinism.
+    return sorted(candidates, key=lambda c: (-c.score, c.cmc, c.name))
 
 
 def _fits(
@@ -267,6 +291,7 @@ def build_deck_greedy(
     banned_names: frozenset[str] | set[str],
     watchlist_names: frozenset[str] | set[str],
     weights: ScoreWeights = ScoreWeights(),
+    staples: StaplesConfig | None = None,
 ) -> GreedyResult:
     """Build a 99-card mainboard + maybeboard for a commander. See module doc."""
     commander_card = pool.resolve(commander_name)
@@ -277,6 +302,10 @@ def build_deck_greedy(
     lands_band = bands.get(LANDS_CATEGORY)
     if lands_band is None:
         raise SelectorError("bands must include a 'lands' band")
+
+    boosts: Mapping[str, float] = (
+        preferred_boosts(staples, commander_identity) if staples is not None else {}
+    )
 
     # ── candidate filtering ──────────────────────────────────────────────
     candidates: dict[str, _Candidate] = {}
@@ -299,7 +328,7 @@ def build_deck_greedy(
             categories = {SYNERGY_CATEGORY}
         candidates[full_name] = _Candidate(
             name=full_name,
-            score=weights.synergy * rec.synergy + weights.inclusion * rec.inclusion,
+            score=weights.score(rec.synergy, rec.inclusion) + boost_for(boosts, full_name),
             categories=frozenset(categories),
             cmc=float(card.get("cmc") or 0.0),
             mana_cost=card.get("mana_cost") or "",
@@ -312,6 +341,70 @@ def build_deck_greedy(
             len(unresolved),
         )
 
+    # ── phase 0: auto-include staples (forced, never displaced) ──────────
+    picked: dict[str, DeckEntry] = {}
+    counts: dict[str, int] = {}
+    auto_land_count = 0
+    if staples is not None:
+        auto_names = resolve_auto_includes(
+            staples, commander_identity, commander_full_name, banned_names
+        )
+        for staple_name in auto_names:
+            card = pool.resolve(staple_name)
+            if card is None:
+                raise SelectorError(
+                    f"auto-include staple not found in pool: {staple_name!r}"
+                )
+            full_name = card["name"]
+            if full_name == commander_full_name or full_name in picked:
+                continue
+            if _name_variants(full_name) & set(watchlist_names):
+                # Watchlist contract: never auto-recommended, staples included.
+                logger.info(
+                    "%s: auto-include %s is on the watchlist, skipped",
+                    commander_name, full_name,
+                )
+                continue
+            if not set(card.get("color_identity", [])) <= commander_identity:
+                logger.info(
+                    "%s: auto-include %s outside commander color identity, skipped",
+                    commander_name, full_name,
+                )
+                continue
+            candidate = candidates.get(full_name)
+            if candidate is None:
+                categories = tagger(full_name) & set(bands) - {SYNERGY_CATEGORY}
+                if not categories:
+                    categories = {SYNERGY_CATEGORY}
+                candidate = _Candidate(
+                    name=full_name,
+                    # No EDHREC recommendation: only a preferred boost, if any.
+                    score=boost_for(boosts, full_name),
+                    categories=frozenset(categories),
+                    cmc=float(card.get("cmc") or 0.0),
+                    mana_cost=card.get("mana_cost") or "",
+                    is_basic="Basic" in card.get("type_line", ""),
+                )
+                candidates[full_name] = candidate
+            slot = (
+                LANDS_CATEGORY
+                if candidate.is_land
+                else next(
+                    (cat for cat in FILL_ORDER if cat in candidate.categories),
+                    SYNERGY_CATEGORY,
+                )
+            )
+            picked[full_name] = DeckEntry(
+                name=full_name,
+                categories=tuple(sorted(candidate.categories)),
+                score=candidate.score,
+                reason="staple (auto-include)",
+                slot=slot,
+            )
+            _add_counts(counts, candidate.categories)
+            if candidate.is_land:
+                auto_land_count += 1
+
     ordered = _sorted_candidates(candidates.values())
     spell_candidates = [c for c in ordered if not c.is_land]
     # Basics never compete as recommended lands: they only enter via the
@@ -319,8 +412,6 @@ def build_deck_greedy(
     land_candidates = [c for c in ordered if c.is_land and not c.is_basic]
 
     # ── phase 1: fill spell category minimums ────────────────────────────
-    picked: dict[str, DeckEntry] = {}
-    counts: dict[str, int] = {}
     for category in FILL_ORDER:
         band = bands.get(category)
         if band is None:
@@ -348,7 +439,9 @@ def build_deck_greedy(
                 counts.get(category, 0),
                 band.min,
             )
-    core_spells = [candidates[name] for name in picked]
+    # Auto-included lands live in ``picked`` too: keep them out of the spell
+    # accounting (they belong to the lands target, not to spell slots).
+    core_spells = [candidates[name] for name in picked if not candidates[name].is_land]
     core_counts = dict(counts)
 
     # ── phase 2 + Karsten fixpoint: filler spells vs. lands target ───────
@@ -405,11 +498,15 @@ def build_deck_greedy(
     karsten_floor = _karsten_floor(nonland_final, counts)
 
     # ── lands: recommended lands first, basics complete the rest ─────────
-    lands_placed = 0
+    lands_placed = auto_land_count
     for candidate in land_candidates:
         if lands_placed >= lands_target:
             break
         if candidate.name in picked:
+            continue
+        if candidate.score < weights.land_score_floor:
+            # Land quality gate (COMPARATIVA_EDHREC_B4): a weak tapland never
+            # beats a basic, and basics always remain available below.
             continue
         # A land tagged with other categories (e.g. cycling lands tagged as
         # draw) must not blow those maxes; the lands quota itself is governed

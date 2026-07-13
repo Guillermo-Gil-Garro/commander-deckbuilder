@@ -23,6 +23,7 @@ from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
 from selector.cp_sat import build_deck_cpsat  # noqa: E402
 from selector.greedy import build_deck_greedy, load_pool  # noqa: E402
+from selector.staples import load_staples  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 from run_greedy import BANLIST_PATH, COMMANDERS, POOL_PATH, load_banlist  # noqa: E402
@@ -61,12 +62,14 @@ def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
     banned, watchlist = load_banlist(BANLIST_PATH)
+    staples = load_staples()
     tagger = tagger_from_store(load_tags(), pool.cards())
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     builders = {"greedy": build_deck_greedy, "cpsat": build_deck_cpsat}
     for commander in COMMANDERS:
-        data = fetch_commander(commander)
+        # Guille decision 2026-07-14: bracket-4 ("optimized") pages only.
+        data = fetch_commander(commander, variant="optimized")
         bands = resolve_bands(config, commander)
         for method, builder in builders.items():
             result = builder(
@@ -77,6 +80,7 @@ def main() -> None:
                 tagger=tagger,
                 banned_names=banned,
                 watchlist_names=watchlist,
+                staples=staples,
             )
             out_dir = OUT_DIR if method == "greedy" else OUT_DIR.parent / "archidekt_cpsat"
             out_dir.mkdir(parents=True, exist_ok=True)
