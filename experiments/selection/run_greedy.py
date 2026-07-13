@@ -36,7 +36,7 @@ DECKS_DIR = Path(__file__).resolve().parent / "decks"
 
 COMMANDERS = (
     "Krenko, Mob Boss",
-    "Atraxa, Praetors' Voice",
+    "Omnath, Locus of Creation",
     "Meren of Clan Nel Toth",
     "Niv-Mizzet, Parun",
     "Sythis, Harvest's Hand",

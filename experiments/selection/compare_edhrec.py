@@ -58,7 +58,7 @@ REQUEST_SLEEP_S = 0.7
 
 COMMANDERS = (
     "Krenko, Mob Boss",
-    "Atraxa, Praetors' Voice",
+    "Omnath, Locus of Creation",
     "Meren of Clan Nel Toth",
     "Niv-Mizzet, Parun",
     "Sythis, Harvest's Hand",

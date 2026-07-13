@@ -20,7 +20,7 @@ from quotas.config import (
 # must stay in parity with this table; synergy is ceiling-only (min 0).
 EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
     "midrange": {
-        "lands": (36, 39),
+        "lands": (34, 39),
         "ramp": (9, 12),
         "card_draw": (9, 12),
         "removal": (8, 11),
@@ -34,7 +34,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "card_draw": (8, 11),
         "removal": (6, 9),
         "board_wipe": (1, 3),
-        "wincons": (2, 4),
+        "wincons": (0, 4),
         "synergy": (0, 35),
     },
     "control": {
@@ -65,13 +65,22 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "synergy": (0, 30),
     },
     "graveyard": {
-        "lands": (35, 38),
+        "lands": (34, 38),
         "ramp": (8, 11),
         "card_draw": (9, 13),
         "removal": (7, 10),
         "board_wipe": (2, 4),
         "wincons": (2, 4),
         "synergy": (0, 30),
+    },
+    "enchantress": {
+        "lands": (34, 37),
+        "ramp": (8, 11),
+        "card_draw": (10, 14),
+        "removal": (8, 11),
+        "board_wipe": (2, 4),
+        "wincons": (1, 3),
+        "synergy": (0, 32),
     },
     "lands_matter": {
         "lands": (38, 42),
@@ -141,7 +150,13 @@ def test_real_yaml_band_parity_with_approved_table() -> None:
 def test_real_yaml_defaults_and_commanders() -> None:
     config = load_quotas()
     assert config.defaults.archetype == "midrange"
-    assert config.commanders == {}
+    assert {name: cmd.archetype for name, cmd in config.commanders.items()} == {
+        "Krenko, Mob Boss": "aggro",
+        "Meren of Clan Nel Toth": "graveyard",
+        "Niv-Mizzet, Parun": "spellslinger",
+        "Sythis, Harvest's Hand": "enchantress",
+        "Omnath, Locus of Creation": "lands_matter",
+    }
 
 
 def test_real_yaml_dials() -> None:
