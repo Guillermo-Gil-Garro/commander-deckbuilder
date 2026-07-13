@@ -3390,39 +3390,789 @@
 {"oracle_id": "4f819ba4-52ef-4fdd-8e4c-5ae3b2f44db5", "name": "Ramunap Excavator", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "9d2d6479-531c-4ce1-b52b-00e36fa63b64", "name": "Rancor", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "cada3481-cc2b-4412-b9b5-0436af53aad2", "name": "Ranger-Captain of Eos", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2a86b70b-34ca-45df-8aa1-c3fb2da72dc3", "name": "Ranging Raptors", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b8619990-9dc2-4fcc-bc7e-457b77cd2a8e", "name": "Rankle, Master of Pranks", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "06692cd9-ac2f-4a32-8fd1-043ba3c0fe71", "name": "Rapid Hybridization", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "84c9d8b8-8dd9-41fc-a2b6-af1ffb9090f9", "name": "Rattleclaw Mystic", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "04e5e84f-8fd4-43ab-8f9d-5b24646f7ae5", "name": "Raucous Theater", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c7fa1dda-9312-4ec8-82cd-a1ba7bc33497", "name": "Raugrin Triome", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f75ac0a3-8795-48b4-91fd-4717900ef5b7", "name": "Raven Eagle", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d3d61a6a-7870-44df-92e5-513dac2c2c3e", "name": "Ravenform", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7b459306-149b-4f43-abc1-2dd70c748c0e", "name": "Ravenous Chupacabra", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8f0738ce-1f07-422c-9895-8ac3c65f9054", "name": "Ravenous Rotbelly", "labels": ["removal", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9cfac390-4638-4654-8b50-65c0f0886b18", "name": "Ravenous Tyrannosaurus", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0012bc78-e69d-4a67-a302-e5fe0dfd4407", "name": "Ravnica at War", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0ab0be8e-d6be-411b-827f-584bb5d03766", "name": "Razaketh's Rite", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "136c9ecb-59b4-4ef6-bcb2-7b8d3df3ee75", "name": "Razaketh, the Foulblooded", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "5da954fa-9001-4557-825c-1462035d21ed", "name": "Razorgrass Ambush // Razorgrass Field", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "a78f981a-bf8a-42a4-b171-d655cc2cc1a2", "name": "Razorkin Needlehead", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6cb37ac1-dd11-4a8c-bca5-ef44d828059f", "name": "Razortide Bridge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "94f6c407-e665-4032-be13-a01e40c1f306", "name": "Razorverge Thicket", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5bf4d8d9-a2b2-4dba-ac05-9d4470a89db2", "name": "Read the Bones", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "569da5d3-6af2-4021-a464-b30ebaaf6fa0", "name": "Reality Heist", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "afad2e76-4b53-4884-8f96-ba68b0808990", "name": "Reality Scramble", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "70dc830e-d05b-4fc7-88dd-879e140b3fbf", "name": "Reality Shift", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bb9ce416-eef1-49e8-89a0-2b6837505070", "name": "Realm of Koh", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "77398866-eebb-4091-b566-7726f8194a59", "name": "Realmbreaker, the Invasion Tree", "labels": ["ramp", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e21c8fc6-d4ef-42b6-b11e-d9c931da1387", "name": "Realms Uncharted", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b81eaa2f-0554-41c6-bdf6-d1cb73b8f56f", "name": "Realmwalker", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a044474a-cd72-4e9d-bd8d-a08f2de9cdc0", "name": "Reanimate", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d3a50d73-3a1f-43aa-ab97-c6c0031bb734", "name": "Reaper from the Abyss", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9dbc3530-b278-4c8d-b2cc-a09dfac9d5e5", "name": "Reassembling Skeleton", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f5822e53-ddec-4c77-bcf4-091e35c1e731", "name": "Rebuff the Wicked", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a621ae15-122a-4e11-bfcf-11dfc09784c0", "name": "Reckless Barbarian", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "928bf0d9-89be-462d-aeb7-74a65e95535c", "name": "Reckless Endeavor", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "180e1a7e-890d-477c-80a5-da8a5f2857b3", "name": "Reckless Fireweaver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "584cf0fd-112a-4ca6-9c0e-1f3228a7d325", "name": "Reckless Impulse", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6c8a8a7a-ee4f-4005-b6a2-fc418e396748", "name": "Reckless One", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "797155cd-faf4-4321-8629-c8c352392748", "name": "Reclaim", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "032ec6e2-6cc3-4a97-9cc7-3233f5e11904", "name": "Reclamation Sage", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "32599d7c-243b-447b-9d5d-e8e29830ac61", "name": "Reconnaissance", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "11bf211c-95a3-4e7f-bd08-13f979d54e73", "name": "Reconnaissance Mission", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d521a329-a53a-4962-810a-2abed80df260", "name": "Recruiter of the Guard", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bb329a5c-b9f9-4973-a53f-090024146325", "name": "Red Elemental Blast", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a14a838a-49f4-45e3-9ec0-3c803af45a68", "name": "Red Hulk", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "21c77cdb-9ba1-4621-b096-7eb94c076cef", "name": "Red Sun's Twilight", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c62b5c22-e058-436f-9575-a01cb2112829", "name": "Redirect Lightning", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "792c4d38-41e6-49eb-bd4e-de0a5ac8330f", "name": "Redoubled Stormsinger", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "51f55021-04e0-49bf-8f1f-de2a578c95fc", "name": "Reed Richards, Smartest Man", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e3ad5cbc-4245-4e1e-8204-509381fa0c1c", "name": "Reef Worm", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "67f43ac6-2a58-4b53-b5d7-0330e2a252e2", "name": "Reflecting Pool", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c3fdfb94-2d10-4743-864c-a59fdd57d8b7", "name": "Reflections of Littjara", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ece854f8-8c60-4f30-894f-2286d3dd61b9", "name": "Reforge the Soul", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "eb1dfa29-7371-4cb6-bfa2-16f7820b69be", "name": "Refute", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "797c2b1c-c373-4735-b397-f561559c7c61", "name": "Regal Behemoth", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e264ffe3-0252-49d6-b990-dbb3654325a5", "name": "Regal Force", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "83a76601-ef59-4888-af70-5088dd1f504c", "name": "Regal Imperiosaur", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3a68915d-3e8b-4ede-bdd9-6c138ca63220", "name": "Regal Sliver", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0673f4e0-66ff-458c-b4ba-eb067e560cce", "name": "Regisaur Alpha", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e6e4a8bd-5c40-4654-8de1-0da9afed90fd", "name": "Regrowth", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "35ae7b25-6d0f-49f8-a40d-dd2cf88e6f44", "name": "Reidane, God of the Worthy // Valkmira, Protector's Shield", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7dcb95a9-c114-4333-8b45-4380f92d9695", "name": "Reiver Demon", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d1620449-930a-4895-a143-fd2a0a3c8b17", "name": "Rejuvenating Springs", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dc1c0e8c-d0c1-445c-968f-7dec91e5d5fc", "name": "Relentless Assault", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7404c078-228b-4296-bf1f-62f57bf832d9", "name": "Relentless Dead", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "14d9bb24-df7b-4f41-aeca-aad639b280db", "name": "Relic Golem", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4d9554de-c005-41ab-a941-39328ebff9de", "name": "Relic of Legends", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6a9c3401-570c-41cb-a605-75dfa57d6ab7", "name": "Relic of Progenitus", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b3a81bb1-cbd5-41a0-8dd4-faea06593f84", "name": "Relic of Sauron", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c23e5b80-08d2-4e24-9908-fe2aa4f30f6f", "name": "Reliquary Tower", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d71cd08e-3e84-41ff-b9db-9e343c0af6b4", "name": "Remand", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "02d0b0fd-ff73-4e26-be44-d85c743d51e4", "name": "Remembrance", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "24aebda0-315f-4d2f-8bd9-00bbaf5bd76a", "name": "Remote Isle", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6761b077-7a89-42c9-93ab-675fe4231564", "name": "Renata, Called to the Hunt", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3966bd03-a98e-43b6-a0c0-10d4d81c173c", "name": "Render Silent", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0324941f-484c-4656-8d1c-66e919c2bc7c", "name": "Rending Volley", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7fbcd256-c132-406f-a490-df9709835504", "name": "Renegade Tactics", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bea3ff6e-7649-4e51-b2ad-763f9ac2d4b8", "name": "Renewed Solidarity", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "24b8177f-5697-4465-9305-cb84307972ae", "name": "Repay in Kind", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9a664735-6e38-407f-9d2f-a6d279cd6309", "name": "Repeated Reverberation", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "523ae937-5535-490d-96ea-07f331b5e5ad", "name": "Replenish", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f0449cbd-855c-4c20-a1f5-f76a395d8d39", "name": "Reprieve", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "611bfaa6-b098-48d9-9e49-1e7dc8687f15", "name": "Repulsive Mutation", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1787ac2f-762d-4f3a-b7e5-12db6d3d470d", "name": "Repurposing Bay", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "09669283-eb14-46a2-b37a-51d7a52da891", "name": "Requisition Raid", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "814e321d-16fd-4f7b-a8d8-2b089be76f2c", "name": "Resculpt", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71d6aa12-4888-458d-9dc8-9954b247a246", "name": "Resentful Revelation", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "42a3855d-25ab-45b3-9e5d-9a0f3da35a05", "name": "Reshape", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "edc15ea8-d321-4884-bdcf-ae6198aab78b", "name": "Reshape the Earth", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ca2aee09-398d-4eaa-acbb-98663216185b", "name": "Resolute Watchdog", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9263287d-f782-4318-9ab8-e2e5f8107f5e", "name": "Resonating Lute", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2ac93092-1a57-4cf7-8f03-1dca86d5c476", "name": "Resplendent Angel", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "f8bf5df2-b783-4796-b2c6-eb4dd4167d62", "name": "Resplendent Griffin", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "1fb4c1c1-b10c-463f-a97d-eca9f978e371", "name": "Resplendent Marshal", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ae93854b-c808-44cb-b0be-7d1035c597d7", "name": "Response // Resurgence", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "087f9ad7-e74f-40e2-8102-1ed2925d0418", "name": "Rest in Peace", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "91320daf-f69c-4350-b0fc-4bb37a6904b1", "name": "Restless Anchorage", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b3c7b46f-c9ab-40ca-b50b-a4e0d0bd9be8", "name": "Restless Bivouac", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8b3726f1-20b8-42ec-8f9b-b361515c3f05", "name": "Restless Fortress", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "df20f85b-5f81-4ee4-8487-55d90109ac36", "name": "Restless Reef", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4c0f4a63-586a-4dde-9621-b0dd9118b2e5", "name": "Restless Ridgeline", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0ca4e80e-c19c-4b74-b531-c5a4dc5a8ba9", "name": "Restless Spire", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "696e7ddb-bdc7-40ee-bc5c-59e98f4a7401", "name": "Restless Vents", "labels": ["lands", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0935faa2-fb90-48db-8a92-906ba0f374c7", "name": "Restless Vinestalk", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dfbd3afc-9905-4cff-a4f4-df08a4d0a7fa", "name": "Restoration Angel", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ddbe0d17-5cac-417c-afc0-e4aebae83205", "name": "Restoration Magic", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f7b2606c-42b8-46d6-bcaa-8d4506b348eb", "name": "Restorative Technique", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cf3165bf-1d59-4e63-8650-bbda119e6335", "name": "Restore", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b36286fa-4007-4276-af9c-d8f0da9e94d1", "name": "Restricted Office // Lecture Hall", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0fcfef04-a954-4423-82b0-c70dc64a8fbc", "name": "Resurgent Belief", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b693c24f-07d9-40fa-aa4a-8f7ba61f3452", "name": "Retether", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a97f2f2a-5a8c-4f8a-99d1-83ebc4b0bdba", "name": "Retraced Image", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2707f9f4-2b80-47ac-af0a-99fc53af94bf", "name": "Retraction Helix", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c450f6b7-bb2a-4b8c-aec7-d27555137b63", "name": "Retreat to Coralhelm", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cc0cda37-9fea-48c6-897a-45f6b84e1eae", "name": "Retreat to Emeria", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "73cbb4f0-90d6-4228-9341-791e3e9c4b48", "name": "Retreat to Hagra", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3f8e5ff1-af89-427e-924c-19a44f9a3788", "name": "Retreat to Kazandu", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "61f2083b-3018-43a4-8852-8e6d2a97d5d6", "name": "Retribution of the Meek", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b0bd6135-4257-4f71-bdfe-71fb3f7a36a5", "name": "Return Upon the Tide", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3937a96c-3be1-465d-98b6-1db67d2215e6", "name": "Return from Extinction", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a38f7ce1-6ccc-4fd3-9e02-631e8933c1f8", "name": "Return of the Mole Man", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2b76f9e9-cd28-4eaf-8674-215c34263f96", "name": "Return of the Wildspeaker", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "30377bd5-99ab-4888-9ea7-e5a069b527e8", "name": "Return the Favor", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "3029df1d-d02a-4fed-8ab4-000a2096f823", "name": "Return to Dust", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "777b8ec4-a783-4297-96b7-4f200d0eb734", "name": "Return to Nature", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0d4ee553-f206-4e70-a7b2-a3670440aee7", "name": "Return to the Ranks", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ad5ff61f-79d6-4dd9-b4fe-17f7a0055c44", "name": "Reunion of the House", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "8345eb05-c04e-4c1d-9776-5ab7d91a7842", "name": "Rev, Tithe Extractor", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "cc3fcd26-c088-4335-9a35-0e11019e3d5b", "name": "Revel in Riches", "labels": ["ramp", "wincons"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dd96f145-73eb-4a6d-bcfd-5d6313fac1f9", "name": "Revenge of Ravens", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a1f55890-31c5-4ed4-a2cd-7a4a9f05f8ca", "name": "Reverberate", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8dd6d060-d023-48a6-85cb-7a5521b6257b", "name": "Revitalizing Repast // Old-Growth Grove", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "836ecd67-6487-4f3d-9e08-013746be829a", "name": "Revival // Revenge", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "289e1a7c-b301-4395-baf8-e9a1c6d38aab", "name": "Revoke Existence", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bb27bfdf-fe8d-45bd-ad62-8118dce06eda", "name": "Rewind", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "08d1a5d1-141d-48e3-ac22-c2529191cb13", "name": "Reya Dawnbringer", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b9a7c722-6b24-4383-ac6e-2a30f7834269", "name": "Rhonas's Monument", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2abe9303-d498-4aad-b6b2-8b5064bd2ffd", "name": "Rhox Faithmender", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7613c50b-4568-4340-b64a-ab427aaffd51", "name": "Rhys the Exiled", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "53236dd7-845a-444c-96d5-f41ed7325d8f", "name": "Rhystic Study", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "acfa77fd-3610-4f12-9c3c-bd860ce91700", "name": "Rhythm of the Wild", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "df23a4a5-eddd-4b0e-9f7e-a3733ce49c0d", "name": "Riddlekeeper", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e3b9c9e3-5a35-4dd2-ab17-d1b6a140b185", "name": "Riddlesmith", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6f981e70-5828-49ac-8a72-cf1cc09be991", "name": "Rielle, the Everwise", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "891d2690-7144-4f87-b6ef-96f2469780a9", "name": "Righteous Valkyrie", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1f42a809-bbfc-4225-9c31-f7d0fa8fa17a", "name": "Rigo, Streetwise Mentor", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "bad84deb-3f2c-46fd-9dcb-4e3ba9732769", "name": "Rime Chill", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "c33e99c6-189e-4dcf-8b6a-64937dbad361", "name": "Rimefire Torque", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "983739cd-0b36-40d9-9a03-7b6aa7ffd0df", "name": "Rimewood Falls", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d37e595f-afe7-4ad9-87db-b9ceb3f435e8", "name": "Ring of the Lucii", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bbf9494c-c4bb-4d36-98fe-8387846b342e", "name": "Rings of Brighthearth", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "be4f47e9-1bd2-4aa9-bc85-3f203ad21639", "name": "Rionya, Fire Dancer", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "80bb9ce4-1f3c-42ca-b75f-9a6b2f42073b", "name": "Ripjaw Raptor", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "45bcebd0-5e93-4433-b92f-b4c161d04bd6", "name": "Ripples of Potential", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2acf8e34-9215-4a72-a24f-09d3bdd0083a", "name": "Ripples of Undeath", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "444d50dd-a44a-42db-bbf6-d0978e3bd6a3", "name": "Riptide Laboratory", "labels": ["lands", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cb7e076c-a695-4c79-9f20-498370c81380", "name": "Riptide Turtle", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "59925461-99f5-4217-8343-49c9b1ce24c1", "name": "Rise and Shine", "labels": ["wincons", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "390b862a-2a85-44bd-832c-f5bbd3eb4ea0", "name": "Rise from the Tides", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e5223a09-f732-4747-8914-e6546ab0ef4c", "name": "Rise of the Dark Realms", "labels": ["wincons"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0998768a-1632-4da1-8310-352582501c4b", "name": "Rise of the Dread Marn", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "982f70af-077f-40df-b2fe-7c80ebcc7712", "name": "Rise of the Eldrazi", "labels": ["card_draw", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3c86541c-3601-4a38-8872-39705e41303a", "name": "Rise of the Witch-king", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2ae71e86-4400-4a30-9077-4d57a43e7395", "name": "Risen Reef", "labels": ["ramp", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "97407cd0-2bd2-4074-94d3-4ec3d243fa78", "name": "Rishkar's Expertise", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "761021ce-4559-464e-aa03-85c2fe78e267", "name": "Rishkar, Peema Renegade", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "434a20f8-3f87-4004-9155-0f196fc2257e", "name": "Rising of the Day", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8a2e53f9-8100-488f-8504-b59e9bd1cc29", "name": "Rite of Flame", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "af94fd87-ea37-49eb-b5e6-0b1846f23859", "name": "Rite of Harmony", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "99957aa7-b654-41b5-9b96-7bce47545d25", "name": "Rite of Oblivion", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fb60739e-1dc3-481d-a056-ad72e665c680", "name": "Rite of Replication", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5097f4e6-50af-4641-909f-db44abf0ce32", "name": "Rite of the Dragoncaller", "labels": ["wincons", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7080fb43-5d93-41f5-87d3-bc1801805ea0", "name": "Rites of Flourishing", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f89de40f-52d3-44b1-8faa-6ddaa32880d0", "name": "Rith, Liberated Primeval", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ecff46b9-fcc9-4895-8b6f-c697fd15d01a", "name": "Rivaz of the Claw", "labels": ["ramp", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2550099d-b3e2-4eb6-9f36-0fc412828ca6", "name": "Rivendell", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ef5c93ae-91e0-4edb-b8a3-1171a3694bb8", "name": "River Kelpie", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8a83d284-75a0-4901-b7d9-c4b7586ee327", "name": "River of Tears", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c52cfb41-18f3-4e73-b5e7-d75baf74e578", "name": "River's Rebuke", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71c714a2-baa9-4082-bc8e-ceadbea231e0", "name": "Riverchurn Monument", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4924b3a4-a218-4783-8a4d-82361fdecc78", "name": "Riverglide Pathway // Lavaglide Pathway", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "510a6ac5-f098-4145-ac07-771b1b6f7cdf", "name": "Riverpyre Verge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71f3168d-9eeb-4570-8437-a3ffc39667e9", "name": "Riveteers Ascendancy", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5548ff43-e5f6-4a63-8562-a2b1de06d6f5", "name": "Riveteers Overlook", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a1bee68d-135b-4e30-8830-48a3315d13a9", "name": "Rix Maadi, Dungeon Palace", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3640c29b-1534-4952-b297-619ade948431", "name": "Roaming Throne", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a0753b28-e693-4f5b-a4e4-846e933058d3", "name": "Roar of Resistance", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "5db9121d-934a-44f1-b178-b389c6595af7", "name": "Rocket-Powered Goblin Glider", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "185c70c1-8403-4ae5-b45d-3679d4ee092a", "name": "Rockfall Vale", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "584cee10-f18c-4633-95cc-f2e7a11841ac", "name": "Rograkh, Son of Rohgahh", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f29dc596-2121-4421-8463-15f6c2e8b9b3", "name": "Rogue's Passage", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7e0d2965-bbcd-4214-b1b6-c0d2601ce078", "name": "Roil Elemental", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6badc583-fabb-4d63-b70c-e7380acafc23", "name": "Roiling Dragonstorm", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "65d63518-3261-40b5-87b8-19c152b29ee3", "name": "Roiling Regrowth", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a6c3aa17-8338-4daa-889e-d36dc715e546", "name": "Rolling Hamsphere", "labels": ["removal", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7ce533d0-8b6e-46d8-b21e-a2932bdffb67", "name": "Rolling Stones", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "8ceb1acf-5ff3-4f1a-af04-9f07ad454526", "name": "Ronin, Shadow Stalker", "labels": ["ramp", "removal"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "6835bf6d-7197-481b-ac26-276ce363b4ad", "name": "Rooftop Storm", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2f4abc5e-5aad-455e-b1ec-137d7ac4a10c", "name": "Root Maze", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cb752313-dc7f-47fc-9077-9e3298e8f5fb", "name": "Root Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9516c4c1-d72d-434f-97e1-6a862434a169", "name": "Rootbound Crag", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "101f06f8-7980-41d1-98fa-3cb959380737", "name": "Rootcoil Creeper", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "442d06e6-8cf6-4980-b2bf-73cfb4d3a468", "name": "Rootpath Purifier", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8f6af612-a4a1-4165-ae4d-ff6353cbaf8d", "name": "Roots of Wisdom", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "36117e99-a2bc-46f9-8e17-bd2e2a9c31f4", "name": "Rot Hulk", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "515c522f-51d5-4f6d-b9b1-ea3c7f6a378e", "name": "Rousing Refrain", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0af6f3ce-59e8-4797-aa1b-dbdb5288fe3d", "name": "Rowan's Talent", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0c367958-729e-416d-988b-098e90e7a1fd", "name": "Ruby Medallion", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5d1b0eee-3a7a-4f22-a40d-7658a368962a", "name": "Ruby, Daring Tracker", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6c922206-6e68-4dcd-9559-88da1074f2c4", "name": "Rugged Highlands", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8e7641e1-e814-4d5a-9cb3-71ad2f4ceee8", "name": "Rugged Prairie", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8afc00d4-a1c6-4329-af2c-a7f58a0c33e7", "name": "Ruin Crab", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "169705c3-32c1-4628-b108-c37ca5f27e24", "name": "Ruin Ghost", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4f945baa-40a9-4494-b2f9-f1926f3fec84", "name": "Ruinous Intrusion", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a6f38908-aa4f-4f99-a28e-85d11dab52e4", "name": "Ruinous Ultimatum", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7140f396-1bfa-4b28-ba28-fa15eba74652", "name": "Ruins of Oran-Rief", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "53e88e64-6f82-4154-a66e-6aeb0154b368", "name": "Rule of Law", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "290faa28-450e-4797-9a8f-642d8af3f82a", "name": "Run Away Together", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "1e080c7d-102c-4d28-bcb9-62b36d400d13", "name": "Rundvelt Hordemaster", "labels": ["synergy"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "14aefe99-fb60-4f1c-a71f-7ffbe94c8b13", "name": "Rune-Scarred Demon", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "74d31e99-ab48-483a-a62e-5b424b27d017", "name": "Rune-Sealed Wall", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2efea460-c3e1-4578-a587-134e13bdf264", "name": "Runechanter's Pike", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "48e8ae59-a234-498e-9dae-bac8d1424ea5", "name": "Runic Armasaur", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "82b6a283-9897-4ce1-8de3-e7579cc9b75b", "name": "Ruthless Lawbringer", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4e58ad76-37c7-4531-b207-6890b39a2679", "name": "Ruthless Technomancer", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "61f68cf6-e083-4264-89b4-cc17749b2a8b", "name": "Ruthless Winnower", "labels": ["removal", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "65385311-1158-4e94-892a-683997706ca8", "name": "Sabotender", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "45181cb8-2090-4471-ba90-e5a8f04d525f", "name": "Sacred Foundry", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "068b3692-411b-44d4-a7e9-005262760cfc", "name": "Sacrifice", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f53da056-97be-41ad-8cfc-0d92e17dcd7b", "name": "Sage of Fables", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "852621bf-9ab7-4027-89fb-b438e4080684", "name": "Sage of the Falls", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5f3fe679-aff1-41b3-8d75-c78c2c0636f0", "name": "Saheeli Rai", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ab655810-f67e-4576-9174-35b16f5e3235", "name": "Saheeli, Sublime Artificer", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5aa76c5d-8046-42ce-b61d-cc9b4806c11a", "name": "Saheeli, the Sun's Brilliance", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "52241b9c-7a69-4176-9234-8bdab09d8e64", "name": "Sai, Master Thopterist", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8ecdaf4b-4442-42da-9714-4257a83faf50", "name": "Sakashima of a Thousand Faces", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a7243d25-22a2-4df5-adaf-1f40f5330ec1", "name": "Sakashima the Impostor", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e3afc704-220f-498f-9eaa-0821b17dc24c", "name": "Sakura-Tribe Elder", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0c319f45-cb0f-4641-acd8-145768acb3fc", "name": "Sakura-Tribe Scout", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a8c44bd9-6470-47d7-934f-77c76a44a984", "name": "Sanar, Unfinished Genius // Wild Idea", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "713bcfb6-e5ea-411e-b4b3-52e5eed5cdf1", "name": "Sanctuary Warden", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7e0cdba8-45e0-4fe5-b440-2d8fcf4d6b2b", "name": "Sanctum Prelate", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "afb71560-0fc9-4ea5-9d52-d93c17d72519", "name": "Sanctum Seeker", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "acfe7ec0-0606-4d5e-b1fa-25f0c7aeec47", "name": "Sanctum Weaver", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c7d9ff27-f1fc-42e4-a47b-d2e6d68e4035", "name": "Sanctum of Eternity", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "72cb5dcd-9b24-435c-921a-3766108374c4", "name": "Sanctum of Ugin", "labels": ["lands", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c2cc67bf-59c5-4e06-93a3-dcaa1bf276ba", "name": "Sands of Delirium", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "544dbabd-cbfc-40da-a5ba-2fea9cddb453", "name": "Sandsteppe Citadel", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "920445ab-0ac2-4de7-bc1c-f5e58eb4424c", "name": "Sangromancer", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "73089a39-a2f6-4aa2-a058-e6551475153d", "name": "Sanguine Bond", "labels": ["wincons", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "35553c2a-0150-49e4-81da-f356c6a17253", "name": "Sanguine Statuette", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8bcbae66-1854-480e-a449-33e5389610ab", "name": "Sapling Nursery", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f1ef5698-14bd-42bf-aae5-2870699e4186", "name": "Sapphire Medallion", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e4e6e796-39ce-4a63-8c61-c7c956d75d78", "name": "Saprazzan Skerry", "labels": ["lands", "ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1d37b453-f10c-42f2-8390-626a8a8eb27c", "name": "Sarkhan Unbroken", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "67dbc5dd-6d05-43e7-83f7-70e10eb54807", "name": "Sarkhan the Masterless", "labels": ["removal", "synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "c4f7cdb7-aef9-4ab8-995b-4e5180d47214", "name": "Sarkhan's Triumph", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "074cbe14-a0c8-4772-955a-b4052333d6ce", "name": "Sarkhan, Fireblood", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bbcae463-ba05-4cfe-9c25-13f2e64698c7", "name": "Sarkhan, Soul Aflame", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "aa321138-b1a7-4b8e-a2ca-b9ce65704e92", "name": "Satyr Enchanter", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ead4c01a-e2ae-49c9-95d9-651d81005907", "name": "Satyr Wayfinder", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f5295bfe-7e73-44ad-9cfd-200e31c5d52b", "name": "Sauron, Dino Devotee", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "89d1cd45-8148-4396-a9b8-e0f495e94b5b", "name": "Savage Beating", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6e21ebdf-b97c-494e-a1d5-19db1b7d3016", "name": "Savage Land Dinosaur", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a3292406-3f49-42d6-a547-e43dd5797f84", "name": "Savage Lands", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8dd5b7d5-3d92-40e2-9572-bf70ae591bed", "name": "Savage Order", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2ecda58d-9aa9-4857-bdc5-b6b7b70a79c0", "name": "Savage Stomp", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f743d85f-754e-4e70-9907-af54acb9e8d4", "name": "Savage Ventmaw", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "00625242-9348-4ef4-b975-f2ac82fee21d", "name": "Savai Triome", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "703243f0-8cb3-420f-958f-5fd4bde30293", "name": "Savannah", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "90edaf33-d0ab-47e0-8f6a-6fba38286e6e", "name": "Saw It Coming", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "eea18c55-8695-4ba1-9b38-3e7638692f5f", "name": "Saw in Half", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2f9107c5-991a-4c20-9b77-2e2fb4b9dc53", "name": "Sawhorn Nemesis", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cb027150-848c-4a66-88ad-e20222304dd8", "name": "Scalding Tarn", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2fd025ef-14f5-4621-831d-dd12b7c604dd", "name": "Scale Up", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "13b96709-0e88-476b-9485-956e682bb818", "name": "Scaled Nurturer", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9da65d66-71f0-4e17-a1f9-6da6cd1cfa8a", "name": "Scalelord Reckoner", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c235015e-a7a9-4f8d-bf4a-cf68b3847f83", "name": "Scapeshift", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3c87ea85-ca29-45a7-b5b2-758c62898b0a", "name": "Scattered Groves", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5ece7d03-9ee7-4953-a06e-9d8e41874903", "name": "Scavenger Grounds", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7e97a242-0bac-4f18-9228-e98ecca36254", "name": "Scavenger Regent // Exude Toxin", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1ff25f67-36a7-4cfa-a2b1-2135b5b6fb67", "name": "Scavenging Ooze", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ba11a517-1dbd-4797-9f5e-46ce0f6c77c0", "name": "Scene of the Crime", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "44443716-8356-40cd-a879-35264b29108c", "name": "Scheming Silvertongue // Sign in Blood", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6dfb50d7-359b-4644-90e3-7ecdacee7c12", "name": "Scheming Symmetry", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "75fddffb-68f4-4b65-bf3b-4e2ada62a522", "name": "Scion of Calamity", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fd547632-a29a-4dad-a9da-155882391815", "name": "Scion of Draco", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5818b31e-2e86-4230-937e-478e14534f91", "name": "Scion of Opulence", "labels": ["ramp", "card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b4031540-584b-4c8a-9e4e-d68ae5cdec5b", "name": "Scion of the Ur-Dragon", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f808b510-907a-4c3c-aea1-efb825c8e13e", "name": "Scorched Geyser", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6ee68855-c8c5-422b-88da-163c09a96416", "name": "Scorched Ruins", "labels": ["lands", "ramp"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "93107139-b743-4d62-b0ac-9997202e0562", "name": "Scorn-Blade Berserker", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "3fb9f0d9-6514-4005-b65a-7929f7c4df06", "name": "Scour All Possibilities", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "da422b3e-1092-47ad-97d6-a7a3ef060a53", "name": "Scour for Scrap", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "241a50c5-f65f-4847-89c7-5c0ef6025dc1", "name": "Scour from Existence", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d37f858e-03c8-4594-9b92-cd03699a1591", "name": "Scoured Barrens", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "57308fc8-8915-4211-a5fd-9363caea9ab9", "name": "Scourge of Fleets", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0a147009-a57c-4ac1-ab81-d8bd8b737631", "name": "Scourge of Valkas", "labels": ["removal", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "06496a05-7f1a-402c-9594-304cd82bfefd", "name": "Scourge of the Throne", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4538ec2c-867e-412b-b6e3-a57f8e29ba84", "name": "Scrabbling Claws", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "164f3f85-21fc-40b7-9871-4f303ba98428", "name": "Scrap Trawler", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1d60c80d-9a95-4051-bbf7-02ca51ee1be2", "name": "Scrawling Crawler", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "648bd03d-247e-4d6f-87a9-12a67688cbf5", "name": "Scroll Rack", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9f762b9f-7525-4ff8-bc1d-fbab66fd4013", "name": "Scrollshift", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c8d95ca8-7d12-4072-aeaf-e20f248c7e39", "name": "Scrubland", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d1961110-575b-4a1b-9cee-db0e1f0fdbc1", "name": "Scryb Ranger", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6c85271c-c711-49b0-a72e-9e576c33714d", "name": "Sculpting Steel", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "aa854d50-444c-49d9-bfb1-5476b33c1c0b", "name": "Scute Swarm", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "929117cd-caa6-402b-9d7b-1f684d75695c", "name": "Scythecat Cub", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8c653a0d-e35a-4596-bed6-b5156192955b", "name": "Scytheclaw Raptor", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4a8d41fe-e04d-484b-a7d1-19be311e6ca7", "name": "Sea Gate Restoration // Sea Gate, Reborn", "labels": ["lands", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "91f34686-cb96-49c0-b4a7-49dd1fd076e2", "name": "Sea Gate Wreckage", "labels": ["lands", "card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "f17954dd-c8e0-4983-b81e-5440cca41afc", "name": "Sea Scryer", "labels": ["ramp"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "672e190d-8ea0-4a2e-b74f-5d35304631e4", "name": "Sea of Clouds", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9e7a240d-dc33-47ac-9f17-77fab4c1c340", "name": "Seachrome Coast", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f9f719cb-7778-4109-bbd3-4504ee1b5f49", "name": "Seafloor Oracle", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "59e1899f-a9e8-48aa-b3fb-0b7d9fd6859c", "name": "Seahunter", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "72c4c682-df97-4408-997b-e849f54aba39", "name": "Seal from Existence", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a75dbe70-7e3e-446f-9a76-9fbb414f2e7c", "name": "Seal of Cleansing", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71d54ba3-91fe-4a14-8b99-c284b4c75013", "name": "Seal of Doom", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f14dbb39-c9f9-4f64-b22a-38dba28f5b1e", "name": "Seal of Primordium", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f0801029-bcf7-4bdb-84bf-e88dcaa9dc03", "name": "Seal of Removal", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f74c4d96-bc4a-4d32-9519-a753d192144e", "name": "Search for Azcanta // Azcanta, the Sunken Ruin", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fab29bc7-1f0a-4df4-b8f1-c008ce5583d2", "name": "Search for Glory", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9cdc9f99-c6fa-40cd-90b0-e47d43a8cc3c", "name": "Search for Tomorrow", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "86ec0b56-497f-481c-a03a-c4e64e8e7404", "name": "Searslicer Goblin", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2ae77795-6a80-498b-bf69-6fd612f601e4", "name": "Seaside Citadel", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3ea060d8-449c-4a5e-8883-b45bd7707b5b", "name": "Season of Gathering", "labels": ["card_draw", "board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "31b5d0ad-3a4d-4f43-b0a9-c9f7a362680f", "name": "Season of Loss", "labels": ["card_draw", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4b473a42-a0c5-43d5-93f9-c599e963a06b", "name": "Season of Weaving", "labels": ["card_draw", "board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "39451b4d-cd7a-40da-b457-cb51b609173f", "name": "Seat of the Synod", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "79ba18fd-f184-43c1-86df-56ee18ce806c", "name": "Secluded Courtyard", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8dec6fcf-1254-4b1b-ba23-7a3e492a7241", "name": "Secluded Steppe", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "61a6341e-0d36-44b6-8026-9c87c8ef61cb", "name": "Second Harvest", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "34b90d3e-f48c-41ff-b3e4-5cab7a9cd597", "name": "Secret Rendezvous", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f42fa525-dd17-448a-b0c3-29b90db2e30e", "name": "Secret Salvage", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "632e2979-d88a-482e-9bb8-57b683c5310f", "name": "Secret Tunnel", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b9720c63-5aa7-4fb8-8d71-8f55d8b1337b", "name": "Secrets of the Dead", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c0dda0d0-1fae-4777-ba86-9fe7990bf3a8", "name": "Secrets of the Golden City", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b2347910-d6c6-4681-8316-7ef27056485c", "name": "Secure the Wastes", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "027b0223-173f-4f8b-a38c-59bab391f472", "name": "Sedge Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "48054407-b5e1-431c-ad03-c12a31d0d9a8", "name": "Sedris, the Traitor King", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4f9942ee-d3fd-4c01-93eb-870d642ebd83", "name": "See Beyond", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "463865bc-087e-477b-9e86-84e77f1ad931", "name": "Seedborn Muse", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "278ea996-3094-4a76-b6e1-db1d002e5502", "name": "Seedcradle Witch", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7537b482-7626-4b65-8b67-53b99baf1872", "name": "Seek the Horizon", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9929d7ba-cdc5-4099-a0ee-3a15073336f3", "name": "Seer's Sundial", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2d8635bd-ed96-4bb1-8718-6962a0eee3d5", "name": "Seething Landscape", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "64bf8929-f5f2-4d50-8667-13b1d007bcfc", "name": "Seething Song", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "50372c54-359c-4ee6-9e21-1e40ba53652d", "name": "Segovian Angel", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "04d0d20f-720e-4cb6-a3ad-ea2b57bb7efa", "name": "Seizan, Perverter of Truth", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2a6abd59-e448-46f1-9af8-bb9040645971", "name": "Seize the Day", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "58f83528-9110-4895-b5ea-51b90af30a8d", "name": "Seize the Spoils", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "73b3e242-075d-4c4d-9b09-6fef1633c348", "name": "Sejiri Refuge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "d54e4e37-042b-44a5-918d-757308545d4d", "name": "Sejiri Shelter // Sejiri Glacier", "labels": ["lands"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "9f95027a-5f04-48b4-99a0-8913be3a520a", "name": "Selective Obliteration", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "75b235d3-595a-4859-be45-9559d8445db5", "name": "Selesnya Guildgate", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "00ef1c55-dea1-4564-bd57-66de86cba4df", "name": "Selesnya Sanctuary", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1436dd81-496e-42a5-b210-fb5b9cdf073f", "name": "Selesnya Signet", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "98bf6311-bc9b-4bf8-ac83-c041973b86d0", "name": "Self-Destruct", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ce19b337-9266-471d-bec3-49eb7f0e62ac", "name": "Selfless Safewright", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "20c9fb06-3941-456f-ba02-4fbde9deb1e2", "name": "Selfless Samurai", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71d785a9-ddc8-472e-a778-a551b444a4bd", "name": "Selfless Spirit", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9d2aea05-f55c-4355-950f-bfdc4e985e80", "name": "Selvala's Stampede", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1d725121-e50c-42f0-9128-56802f07c89e", "name": "Selvala, Heart of the Wilds", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bbd0c406-c995-46e0-898d-375fdbede203", "name": "Semblance Anvil", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3aeba3c2-5517-4870-8802-29b0fa70ffae", "name": "Semester's End", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "42a7daf1-59a9-4e85-a664-47061758e748", "name": "Sensation Gorger", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "13575cf9-65c1-4861-b21e-eb2155e07766", "name": "Sensei's Divining Top", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1d0f1186-be6c-45c3-9703-f0c1e13892fb", "name": "Sentinel Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a5bbfe32-2fb9-48a0-bc8a-e9899aac1fda", "name": "Sentinel of the Nameless City", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bf2dc318-7b51-451e-ac4d-0f1b756dc860", "name": "Senu, Keen-Eyed Protector", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ac8952c9-bd30-48cd-b964-7e6271f9cbc8", "name": "Sephara, Sky's Blade", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "94ac2990-58a5-43d4-bdac-ec2f6daf0b51", "name": "Sephiroth's Intervention", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "70113003-be5e-406a-9aec-cb480468c36d", "name": "Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "480454a0-fb10-432b-a963-8b0c0ffc6680", "name": "Sepulchral Primordial", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0b504dc6-61cc-4a72-907c-145fa4c72466", "name": "Seraph Sanctuary", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "f4f751c0-02dc-45a2-a4b0-980592509944", "name": "Serenity", "labels": ["board_wipe"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "d31c6043-e005-4efe-9aa7-d82cb122eebe", "name": "Serpent of Yawning Depths", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5d451958-25f3-4e70-8be2-c832f60f39e9", "name": "Serpent's Soul-Jar", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "27ad3e00-6ffb-48f7-8469-8868d066d1e2", "name": "Serra Ascendant", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c363725f-15cf-4955-aaf1-536b1f8daaed", "name": "Serra Avatar", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b91b65b3-b35c-460e-a49b-333000a9a519", "name": "Serra Avenger", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ecd8d7f4-7b11-4097-afc0-ef3c81edd90c", "name": "Serra Paragon", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8b0e2382-dd91-42e6-aba3-5e8a15418a49", "name": "Serra the Benevolent", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "49cdd05c-feeb-4c24-9d88-069f5d2e08c3", "name": "Serra's Blessing", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7a56c6e1-0509-4783-9b29-cf3163977166", "name": "Serra's Emissary", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c50cd7e7-8d53-44af-ac96-3e104587bdb3", "name": "Serra's Guardian", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "34187c71-6033-4058-aadc-2bc266f762be", "name": "Serra's Sanctum", "labels": ["lands", "ramp"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "4e734493-9cb8-4409-8a30-cc15d519a27e", "name": "Serum Powder", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "56956afd-db53-4542-816b-490c8b0bbcf7", "name": "Serum Visions", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "76a6ddc2-f894-4331-89a9-87ca16efd0c0", "name": "Servo Exhibition", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "38513660-260f-4663-b199-6473fa004a3b", "name": "Setessan Champion", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2a2ea189-b663-4f4a-bb23-ff7a4af25f71", "name": "Settle the Wreckage", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1b9f9f5b-8712-4f00-90cb-1b7b9970eccc", "name": "Sevinne's Reclamation", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c7f1a49a-cc22-432f-bf3e-50ba61982b87", "name": "Sewer Nemesis", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "25c83d45-581f-48ba-b6bb-feb66e8a65c7", "name": "Sewer-veillance Cam", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3dd2f3de-98cc-4263-bd16-b5803e48e892", "name": "Shadow Alley Denizen", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7ecc506e-bed0-4ae2-9d2f-5143ef63f62c", "name": "Shadow Kin", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "46ddc2e1-386f-4aaf-b37b-37b1708e0d9c", "name": "Shadow Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4d81db0d-2f56-42ac-92ce-249a34d262d4", "name": "Shadow in the Warp", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f343b6f9-41c3-419b-a57c-a7b08603ef5c", "name": "Shadow of the Goblin", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0c12abcc-6ada-43b3-8750-9cb6ce2b0785", "name": "Shadow the Hedgehog", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cf42a7e3-71ee-40b8-a6ca-0368c746e128", "name": "Shadow-Rite Priest", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "15687ee3-3cdb-4a8f-a726-46b73bceb792", "name": "Shadowblood Ridge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "595a15f0-77f3-4544-8acc-10630e12cc14", "name": "Shadowborn Apostle", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8b27326f-e7b8-4a4d-b589-df459246d19a", "name": "Shadowspear", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "216a2a92-9ca3-4ca3-8af7-686c13b04290", "name": "Shadowy Backstreet", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9843d8a6-bcbf-40c2-8c41-316e97db9c62", "name": "Shallow Grave", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "39c7d2cc-4fd1-4f1a-be1a-a6ae56d2356d", "name": "Shaman of the Pack", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d1d171de-1c6d-4fb9-817a-9c689c709f3d", "name": "Shamanic Revelation", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e5e6229a-3422-4afd-9a87-86daa2d31d3a", "name": "Shambling Ghast", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4725abd4-06bc-464a-bc5b-c9e0f71ec079", "name": "Shambling Vent", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "700ef9c8-698b-45f7-a1fd-dec74e553224", "name": "Shang-Chi, Master of Kung Fu", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "eedd5a17-d0fe-4a13-8f2c-f343bfa43f92", "name": "Shard of the Nightbringer", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "d39af66c-4997-48b8-a704-f21d93247d7d", "name": "Share the Spoils", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "a27445db-33f2-4571-98b5-83206b797484", "name": "Shared Animosity", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9e0fd3bf-f47a-4f06-8ff1-73f6bf5d1e03", "name": "Shared Roots", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c2c9dbd0-2062-4ee1-b32e-8eeacd95589c", "name": "Shared Summons", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8c0520fa-276b-4d21-b4a9-dce1fce59f6b", "name": "Shark Typhoon", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e339c6cb-c75d-4dd4-8c1a-78f844983242", "name": "Shattered Angel", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7fbad3f2-66f6-4e3a-b9e0-1ddbcd94d42a", "name": "Shattered Landscape", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9853d789-b048-4cba-a64d-db2694ca9173", "name": "Shattered Perception", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c854ecb0-cc60-4c48-a9aa-7f2348a7a8c6", "name": "Shattered Sanctum", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "78301998-fd9b-4cd5-afad-dbcb43cac2a7", "name": "Shatterskull Smashing // Shatterskull, the Hammer Pass", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f748b2fb-6c2a-400a-8e96-fa4e4a1dfe80", "name": "Shelldock Isle", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "db8d8643-3d0b-4f20-bf53-f4cd26a0e8df", "name": "Sheltered Thicket", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d13fc657-c6fc-4394-bc70-691050550226", "name": "Sheltered by Ghosts", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4554ce06-4992-4689-8a40-558a1545b968", "name": "Sheltering Ancient", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5b932be0-4dac-41b9-9c59-f79e4cecc31a", "name": "Sheltering Landscape", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "217062f5-96f1-454c-9507-17f34ef37070", "name": "Sheoldred's Edict", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9218b56d-aaec-482f-99e9-d95d227bfe25", "name": "Sheoldred, Whispering One", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "34f34409-326d-4994-a0ea-1a69aa278f03", "name": "Sheoldred, the Apocalypse", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "af18e496-fef9-4869-867b-bdac653cafd0", "name": "Shepherd of Rot", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "df9ec9b0-be22-4136-923b-11a71ca4b6c2", "name": "Shield Sphere", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9b598025-80a3-4144-be9a-863165161594", "name": "Shield of the Oversoul", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4976f08c-6f8e-42e4-9584-f04793518ddb", "name": "Shield-Wall Sentinel", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "79085dea-8daa-41c0-a975-61e3e6da2e26", "name": "Shielded by Faith", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6a262f53-2eea-45d0-8189-9222d66f1b52", "name": "Shifting Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7c2a4fe5-43e8-4e20-bef2-0278d18afc4b", "name": "Shifting Woodland", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cbad3570-5417-42e6-b3ef-f42194098314", "name": "Shigeki, Jukai Visionary", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71ac4d8c-5b58-4ea8-996b-f0289717c4bb", "name": "Shilgengar, Sire of Famine", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e110ee80-37af-4989-a5fb-95d51dc7f102", "name": "Shimmer Myr", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c63402b2-1f8c-4004-82d8-48ea26bfe3fc", "name": "Shimmerwilds Growth", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c9fc13d6-bd10-47bc-b2b6-7f67a1f3371e", "name": "Shineshadow Snarl", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "255b937f-c9c9-4ae9-815e-17418eba0602", "name": "Shinka, the Bloodsoaked Keep", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "aae76e5c-f5e0-4d18-b465-e6a829be908a", "name": "Shiny Impetus", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dda7a088-61e3-4c47-b9e0-529fc047f77e", "name": "Shipbreaker Kraken", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5f42b67f-87fd-4f98-a0e8-0c8313f4bbc8", "name": "Shipwreck Marsh", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "619173f4-0403-49cd-9659-2fedd5028a90", "name": "Shire Terrace", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b7daa74c-6142-4107-9355-be98af6ccf13", "name": "Shivan Devastator", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0fe16212-66c3-4e45-a641-7391e9b2e304", "name": "Shivan Reef", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "008f2698-1721-45a3-8353-10f2f400dc8f", "name": "Shizo, Death's Storehouse", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a9d288b8-cdc1-4e55-a0c9-d6edfc95e65d", "name": "Shock", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e2962883-6daf-4a84-af73-917afc73092c", "name": "Shorikai, Genesis Engine", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2a8e14be-6f93-428d-a204-e2399dc93797", "name": "Shrieking Drake", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "717bbb9d-0a5b-4979-a24b-9d54aac7657a", "name": "Shriekmaw", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8ea46945-d5ab-4209-b473-4769e7b8b962", "name": "Shrine of the Forsaken Gods", "labels": ["lands", "ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a8c047fc-20a9-4c62-b8a6-9ead56d60ad0", "name": "Shuri, Wakandan Inventor", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "331b6834-6bb4-40fa-b80b-22d67b34734f", "name": "Sidar Kondo of Jamuraa", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "de8ccd32-f537-4a11-8dc4-e48836a0b139", "name": "Sidewinder Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3fad7072-21e3-446e-a28f-615038c8bfea", "name": "Sidisi, Brood Tyrant", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3406db41-6b95-48fc-b58e-4476220fd34d", "name": "Sidisi, Undead Vizier", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ddc7f59a-bbb1-4ba1-82c8-6813fd191940", "name": "Siege-Gang Commander", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9e9d538b-a9e5-4d59-b7c1-208fe18110e3", "name": "Siege-Gang Lieutenant", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "688e5e19-8f28-45c4-ace4-a38144f494f1", "name": "Sifter of Skulls", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4f5f2792-0cc4-4caa-b798-2ee9597f2524", "name": "Sigarda's Aid", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71a3d0ce-052b-41eb-a70f-0c716149a55f", "name": "Sigarda's Splendor", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "147d8a1f-fe82-4078-a281-29a2eed4c750", "name": "Sigarda's Vanguard", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4f868b9b-42f4-4f74-bce2-3f9c063a572c", "name": "Sight of the Scalelords", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b9447f25-f285-4b62-8976-4a49363dfdd7", "name": "Sigil of Valor", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3b9b5b22-5a7d-4e37-a870-ca0f0efa4f36", "name": "Sigil of the Empty Throne", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c6207f6a-a624-4754-88f5-dbe700c841ff", "name": "Sign in Blood", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "724f3d2f-0513-4efd-961f-56a7ea7b5731", "name": "Signal Pest", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8aed54cb-d1bb-45ad-adbe-38e55d84ff31", "name": "Silence", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1cdf30de-d88c-421a-80df-4917bbd2f09e", "name": "Silent Arbiter", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fd45063f-c83c-431c-9104-f139c497ec0d", "name": "Silent Clearing", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6aea681e-88d2-48df-a717-3ce0bc95205b", "name": "Silent Hallcreeper", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6dbeeb49-55c6-4ceb-94dd-3e4110dff8c0", "name": "Silkguard", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b26c91d9-87de-45f7-a24c-bbe0cef3a35c", "name": "Silumgar, the Drifting Death", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b0182ca0-f353-4012-9121-6f4ac9f7a046", "name": "Silundi Vision // Silundi Isle", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "66e8f7f8-3a6d-46ba-837c-b9713ddf7f40", "name": "Silver Myr", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3ce1f550-d044-4cb1-991b-e98449f74507", "name": "Silver Surfer, Cosmic Voyager", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b1a0ae56-77aa-43ad-9aa8-dc1ab779e9d9", "name": "Silverback Elder", "labels": ["ramp", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "081bfd50-a436-463b-9d2c-5bc8a32b387c", "name": "Silverbluff Bridge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b3aa5889-0d98-4a8c-a8b1-ada1e9b169e1", "name": "Silverclad Ferocidons", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cb66c5ec-e7a4-4bd2-b825-6c9b846ba40d", "name": "Silvergill Adept", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "44e0ffa3-8915-4c1f-8f1a-4aeea1365f07", "name": "Simian Spirit Guide", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "57c1a98e-c4fb-4144-9e3e-d0fe6789ba26", "name": "Simic Ascendancy", "labels": ["wincons", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c767aa2e-0a95-401f-8e36-d90a87648eab", "name": "Simic Charm", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "046f5783-cc7b-416a-8cf6-2bcef9c2cc1a", "name": "Simic Growth Chamber", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e8705df9-6439-4930-91b6-229f818559af", "name": "Simic Guildgate", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "44503105-3e13-408d-a44f-37d503c61d72", "name": "Simic Signet", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e5c48c6d-a7bf-45b3-b48c-dc884d49c5f7", "name": "Simic Sky Swallower", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "eb7a1f21-a66d-415b-8520-710b44890bb6", "name": "Simulacrum Synthesizer", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ffff90c3-63c4-4dee-a21d-6b2b113f4f80", "name": "Sinew Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7df43670-c948-464d-9bb9-db672e755f0c", "name": "Singer of Swift Rivers", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "822ef47e-3f1b-40a6-8c5c-fea3d7deba5b", "name": "Single Combat", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e1976b6c-7e43-4f4a-b082-f95495a1b260", "name": "Singularity Rupture", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "36a7d1a6-4eb8-4ddc-942c-00fd2acbf2ee", "name": "Sinister Waltz", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bcc6eece-75ea-494c-b33a-d4477d504e0b", "name": "Sink into Stupor // Soporific Springs", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "89e17ccf-cde7-428d-bd64-47e2f79b40d7", "name": "Siona, Captain of the Pyleas", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a15547d0-bbcb-41ee-a9ae-8325a9e7fe1f", "name": "Sire of Seven Deaths", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ed6607f4-20ab-4d3f-a8af-bcc148423336", "name": "Sire of Stagnation", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "59c7496b-19a2-478b-b28f-6f153c2458ae", "name": "Siren Stormtamer", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8f5822ae-651f-410e-9316-5522eeb52d72", "name": "Sisay's Ring", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5cf86603-cc47-4644-890a-0997c694817f", "name": "Sivitri, Dragon Master", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dbcbdf37-c40f-4068-b4a7-a849cab1056c", "name": "Six", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "92bac34e-2045-4331-842f-185711c1ac56", "name": "Skarrg, the Rage Pits", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "47c67df1-52f5-459f-b83e-6b971be9b294", "name": "Skemfar Avenger", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "70965b80-c8ad-4718-ae20-12a4d8228898", "name": "Skemfar Elderhall", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "496ecb73-f508-4ac7-b101-23e03404580f", "name": "Skemfar Shadowsage", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "ba95f24d-42da-48ce-bcf1-1b7c4b3c45b5", "name": "Skirge Familiar", "labels": ["ramp"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "c18013e4-0b99-44e3-a2b2-027ace68723a", "name": "Skirk Prospector", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ac141679-6ada-49a8-b225-d1a20c3838db", "name": "Skittering Cicada", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cf890abd-b282-4dbb-ac86-9e7caec1c1b8", "name": "Skittering Invasion", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "20053847-6623-493c-8cdb-a69cda3b1577", "name": "Skrelv, Defector Mite", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "39b51f62-8421-42d1-86d3-74fd6e6f31a2", "name": "Skull Prophet", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "65986c1b-8e51-4604-b685-d82fa7d1263a", "name": "Skullclamp", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2224b6e0-c5ff-45d0-84e3-83758c5fc99f", "name": "Sky Diamond", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "09726c3d-f700-4bf4-a9e7-326fe41b0a4a", "name": "Skybox Ferry", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "d90af00a-d322-4265-9954-7b1e80702e18", "name": "Skyclave Apparition", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "76f335d0-7f71-4b1a-b60d-73de954cbe2c", "name": "Skycloud Expanse", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8ade0824-9fd0-417d-94dd-ac399e35b582", "name": "Skyhunter Strike Force", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9180f77f-c288-4a24-a35d-a16270b3d737", "name": "Skyknight Vanguard", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "5951f734-05d3-41ad-94ee-19bd310077d2", "name": "Skyship Buccaneer", "labels": ["card_draw"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "376c9d3f-21d3-4251-bb6a-026fa9e1b0e1", "name": "Skyshroud Claim", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e040a8e6-b90c-42d1-a1b1-771d954c61ab", "name": "Slagwoods Bridge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "20b60c93-124b-42c8-93fb-63bbd1888658", "name": "Slagwurm Armor", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ba7f1b09-5727-484d-a502-3dcf4d618c56", "name": "Slash the Ranks", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7a3569a0-a55f-40c9-9588-92db35e26567", "name": "Slaughter the Strong", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "07190a8b-2a59-45b3-9fbf-505161698a9c", "name": "Slave of Bolas", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2de7367b-a5a4-43f4-8f8f-b931ea28150d", "name": "Slayers' Stronghold", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9b93ff69-f195-4d72-8e1d-574c3e53bca8", "name": "Sleep", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "05a039ad-1689-4d13-b393-6c1219583b5d", "name": "Sleight of Hand", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b53597f4-1a0f-4fa8-9c17-29178cdc4d2b", "name": "Slime Against Humanity", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "753d98d3-d534-42c1-b728-a4f14c7f29ec", "name": "Slinn Voda, the Rising Deep", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "82506e51-3fe1-446f-83c9-69e67583cefc", "name": "Slip Out the Back", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2516949d-75bb-4aea-a41d-0298bb129471", "name": "Slip Through Space", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "58bfd9a1-67ce-41d0-be38-f05addd1dd9e", "name": "Slippery Karst", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0d59f010-9669-4ad2-9ae9-cd88b85f282c", "name": "Sliver Gravemother", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e7286688-ffbe-4d25-ad55-27990f005368", "name": "Sliver Hive", "labels": ["lands", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e4fe33e7-b952-4152-8c83-81d948756d2f", "name": "Sliver Hivelord", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "47657df2-0e58-46c8-87e2-cc752708a612", "name": "Sliver Legion", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "762d864b-69bc-43ac-af2f-e18186010169", "name": "Sliver Overlord", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b8376cca-ea96-478a-8e98-c4482031300a", "name": "Sliver Queen", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2802fc92-49a0-43c8-bc10-24882eeee3f1", "name": "Sludge Monster", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d04bce9a-822b-4a52-8826-b503ef5f5b2e", "name": "Slumbering Trudge", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c9739382-9fe0-4d24-b58e-1e45a88491b6", "name": "Smell Fear", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9228f04c-506f-4453-a335-e66876b8ce8d", "name": "Smile at Death", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "be09e83f-6486-4f42-8d2e-416cb95173f9", "name": "Smoldering Crater", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "390f1b56-264e-4336-83be-dc1fe79bfdcf", "name": "Smoldering Marsh", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "153376c9-dffd-458c-8ce3-a4c8269bc4e9", "name": "Smothering Tithe", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "17b29350-4f37-4552-8192-4856b15345f9", "name": "Smuggler's Share", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "605f719d-01f8-406c-9d4c-3f4992c6a69f", "name": "Smuggler's Surprise", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1e6a24be-8281-41c1-a5ba-b68f0ef1d7b8", "name": "Snakeskin Veil", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ac914d98-221e-426c-8a50-342896b15f9e", "name": "Snap", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e88de17c-086d-4e2a-b5b2-2f9f57ca7c0f", "name": "Snapback", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2bb2eda7-3b38-4c56-870f-c3218a1056f5", "name": "Snapcaster Mage", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e495033b-f727-41e3-b7fc-7f5fa8abdd87", "name": "Snapping Voidcraw", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e7aee670-e6ac-4b3a-b3d1-7b7013db8f3d", "name": "Sneak Attack", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5f0d3be8-e63e-4ade-ae58-6b0c14f2ce6d", "name": "Snow-Covered Forest", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5b2460a5-6ae5-4cad-ba94-1a9e98e6e4c0", "name": "Snow-Covered Island", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ca9f660b-e07d-4f42-a46e-abd0ca72510c", "name": "Snow-Covered Mountain", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ac8cc74d-e43b-4118-bba0-dfa8b9c04d45", "name": "Snow-Covered Plains", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d8239a86-7184-4005-ba1e-2dddcd756c47", "name": "Snow-Covered Swamp", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "46a07b53-ff58-4bd6-80dd-ded2eb0e29a3", "name": "Snow-Covered Wastes", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "749c2c8e-9588-4e83-b07f-3c37eb63338b", "name": "Snowfield Sinkhole", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "324824cb-f938-401c-b9b5-d8908b431ef0", "name": "Snuff Out", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0070db93-142b-4d04-afd3-836792dc134b", "name": "Sodden Verdure", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c5ee72d5-3a9e-4fe5-8802-3286ee612055", "name": "Sokenzan, Crucible of Defiance", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f4a9d567-513b-487e-afed-c6e6513a7862", "name": "Sokrates, Athenian Teacher", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6ad8011d-3471-4369-9d68-b264cc027487", "name": "Sol Ring", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "867f0cdf-cf75-40f0-bf1e-ccb92e55e9a3", "name": "Sol Talisman", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e3174070-542f-429e-9149-b572f6614537", "name": "Soldevi Adnate", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "00c0543c-2a1f-4425-8283-4062d74a1637", "name": "Solemn Simulacrum", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f0b4331b-ddd3-4f11-ba16-67c651c8954c", "name": "Solemnity", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7b094a2b-2b69-4a9b-9829-c1aabc53f75e", "name": "Solidarity", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3319b2df-7354-44b5-afa1-b9bc4a577254", "name": "Solidarity of Heroes", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d41ab41d-07c8-4f6d-be5e-7aec9f5f6365", "name": "Solitary Confinement", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dcb9c2a7-ae54-4ddc-a567-640bf4bf4366", "name": "Solitude", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f02682f0-26c0-4032-9df3-273b6a45d0a8", "name": "Solve the Equation", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f249db15-09fa-4a1c-9461-9ae803c219b6", "name": "Somberwald Sage", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "75b73eb2-dafd-43db-9e96-7e1995d9849f", "name": "Song of Creation", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5f4d0c87-7d59-41d5-9910-86765a0c144b", "name": "Song of Totentanz", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7c3944fa-7c86-4979-85a9-86196aa94594", "name": "Song of the Dryads", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "39419d29-47e7-4d71-953b-96a2e14ae964", "name": "Songs of the Damned", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cd68cc31-12fd-48ff-b37b-bccfe4172974", "name": "Sonic Screwdriver", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "19ba0f2d-4de3-49a0-be7d-da0aa220cd8a", "name": "Sorcerer Class", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a986d83d-22f1-45c3-bc2d-f5b210c539fb", "name": "Sorcerous Squall", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c151e8b7-4b28-4f03-8a81-9bf623f893d7", "name": "Sorin Markov", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fbffaf9f-40e7-4113-a037-533b733cebce", "name": "Sorin the Mirthless", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fee680c6-afe2-4321-9d8a-8f81a612a53b", "name": "Sorin, Imperious Bloodlord", "labels": ["removal", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5c780dda-ee76-482a-a610-53c321c4fdec", "name": "Sorin, Lord of Innistrad", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1f1f1ae7-dd00-4825-832e-3a049cf8ce73", "name": "Sorin, Solemn Visitor", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cffb615c-2de0-4c65-9d0b-08a649ba0695", "name": "Sorin, Vengeful Bloodlord", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "760ede92-a826-4144-9de8-84ba9b8743d1", "name": "Sothera, the Supervoid", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "338747e8-bed8-4e60-8b19-5c2b80799477", "name": "Soul Immolation", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2cfd5c18-47d0-4549-aacc-2428db21df2f", "name": "Soul Partition", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "615927c2-3fb0-4e64-a1a7-55fb56de1423", "name": "Soul Shatter", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "52bd4331-67b6-4eb8-9566-e00359889fc6", "name": "Soul Snare", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f3fad295-1af2-4ecc-8546-b121ad6be27b", "name": "Soul Warden", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "add500e1-8eeb-45d7-a10d-2fae2cc69233", "name": "Soul of New Phyrexia", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6b9194dd-2296-4879-ac5e-f89b18431df6", "name": "Soul of the Harvest", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "045a9d3d-c20d-427f-a77b-0bffc6f55526", "name": "Soul's Attendant", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "62d7ed6e-c386-477e-b155-982c3790f842", "name": "Soul's Fire", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "50fd4cf3-c347-4eb9-ab15-a9b0c5ea8b0f", "name": "Soul's Majesty", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1b5e6560-ff2e-4475-96cb-63f64c8a86db", "name": "Soul-Guide Lantern", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "7866ab01-22f3-4d87-bdb0-c0ae0e91ffc9", "name": "Soulless Jailer", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "c6aadaf0-eb47-4228-95e2-48e3ff7b6e2f", "name": "Sower of Discord", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "63a19c7c-49d7-4b75-aac8-d0ff36c45fb8", "name": "Sowing Mycospawn", "labels": ["ramp", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "241117a0-8305-48bb-9cb9-9b01e86e08f7", "name": "Space-Time Anomaly", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3123ec89-8e95-4761-ba17-747ec667509f", "name": "Spara's Headquarters", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8dcb35e5-ae44-455f-86e3-4a77d496ff34", "name": "Spark Double", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "84c912e8-6a92-47f7-88b6-e777bd0bb424", "name": "Sparkcaster", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "7346337e-ac12-4dd2-826d-77ec0013e74f", "name": "Spatial Contortion", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3641ceef-4f26-4647-ac12-c958524d68ca", "name": "Spawn-Gang Commander", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "256a7f54-0e8e-4d22-a0f7-ff2830e8884e", "name": "Spawnbed Protector", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "49e43de3-460b-4562-aef6-da43bd56debc", "name": "Spawning Bed", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ea7b0704-7715-4f8a-b32f-d2d2f3b36054", "name": "Spawning Pit", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e4bacf1b-0a45-4c73-857d-dffadb7e6fa5", "name": "Speaker of the Heavens", "labels": ["wincons", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "33a4e73d-d93a-4b6f-88ff-cd53f20d178c", "name": "Spectacle Summit", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "eed5e0cc-8f88-4779-bf10-6a823c72df7f", "name": "Spectacular Spider-Man", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "cf6d10ed-85c3-48f2-8ba0-2960e03b408b", "name": "Spectator Seating", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bb9bb65e-504f-4edd-8d47-d0efa03e7d17", "name": "Spectral Deluge", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d64b0848-0193-4025-ba62-63ecd8fb9f50", "name": "Spell Pierce", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "83133f51-bfbd-4db5-9be0-f660e3b66435", "name": "Spellbook", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "47a785ed-8095-4685-8daa-02c4e2b0ffcd", "name": "Spellseeker", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e0aa6ce0-ca31-433b-ac6c-32b8675cdb71", "name": "Spellskite", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0da4988f-47ca-4786-ac33-edbc9cfd6785", "name": "Spelltithe Enforcer", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "2962fe4c-bf48-454b-8a6b-0f8253352ae8", "name": "Spelunking", "labels": ["ramp"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "f4770345-f15e-4e31-b6ef-4c2608df9644", "name": "Sphere Grid", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "09c96077-3804-4f12-a613-5bebc5e0413f", "name": "Sphere of Resistance", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "92f6c063-a740-4c3c-a60a-569fd298854d", "name": "Sphere of Safety", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a5270cf7-1eb3-4907-9f47-d787f61940d3", "name": "Sphinx Mindbreaker", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "71d83fca-e40e-4d0e-956d-d0d6da9cc472", "name": "Sphinx's Revelation", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "158db438-52ba-4c30-b7bf-d1c4f76da917", "name": "Sphinx's Tutelage", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ad73e5eb-197c-45a3-9d20-a406ba126c79", "name": "Spidersilk Armor", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "81036c9f-fe0a-45a7-bcd5-0d344f31055a", "name": "Spikefield Hazard // Spikefield Cave", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "02f062f5-8012-4440-ac12-49fc49822106", "name": "Spine of Ish Sah", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "690c7f8e-fea2-4920-afa7-02ff120701a1", "name": "Spinerock Knoll", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "45fe016e-1a09-410c-bbe3-4663ba06c5b7", "name": "Spire Garden", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "eb0d8093-5f93-4b25-9384-08f9731bfb28", "name": "Spirebluff Canal", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "81a51328-b995-4f3b-90bc-a20ae21dd254", "name": "Spirit Mantle", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "68979160-b5ce-4787-8a1e-1f40e614c3b0", "name": "Spirit Water Revival", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1463795b-ec0c-44d6-ae1a-55f78d9843ec", "name": "Spirit of the Labyrinth", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9c5f0d91-9d86-4e66-94fd-4af93ad01838", "name": "Spirited Companion", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f63278e0-3c67-421d-87ce-67725e5e74df", "name": "Spit Flame", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fde2653f-5270-4b8f-9642-0835dbb076c2", "name": "Spiteful Banditry", "labels": ["ramp", "board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c4d2c804-1448-4639-b41b-0a86bac083b9", "name": "Spiteful Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "922cf963-2b1b-43ad-819e-6e49133e6aae", "name": "Spiteful Visions", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7215ca87-bbff-4c14-a1f5-de5ddd97c875", "name": "Spitfire Lagac", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a30dee74-86e3-4888-980e-b22437fbbb66", "name": "Spitting Image", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0d0c4c91-683a-4563-a0b0-39f3c04f6307", "name": "Splash Lasher", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "29b537f5-4d9f-40ed-b38b-e8faa2b5af7d", "name": "Splash Portal", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "13fe5e46-77a6-45d8-ac0b-c3d740eccf86", "name": "Splendid Reclamation", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2df3187b-4b91-4de9-9b26-d48a30700cec", "name": "Splinter Twin", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "41fbdaa2-7a7a-44d5-a8f4-77624350eedd", "name": "Splinter, Hamato Yoshi", "labels": ["synergy"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "2e82520a-9da3-49ae-b5c8-37e7ac8853fe", "name": "Split Up", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "26516566-c837-428d-bc81-582c74da2c28", "name": "Spoils of Blood", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "97db6c39-e690-49b6-93a6-e51b8dfad10b", "name": "Spore Frog", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1be56a3d-a6c0-4b65-ae71-3d90ceefc6c0", "name": "Sporemound", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "af32757c-9d3c-4f6c-a6fa-d5729a440382", "name": "Spreading Seas", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "788a4896-3414-40bf-b391-d2efea2fb5f9", "name": "Springbloom Druid", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8a3ad2ef-8bcb-40c0-85de-f03328c2b644", "name": "Springheart Nantuko", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bdeb440d-a714-40e8-9038-f651e6ae45fb", "name": "Springleaf Drum", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a9d8ab76-70a4-475e-b87e-4737c090553a", "name": "Sprite Dragon", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "04cc9177-1ffc-4ac8-a64d-7995b4f33d23", "name": "Spry and Mighty", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "69ddca4b-5cc0-45f3-b2e6-a047c8d601be", "name": "Spymaster's Vault", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "620d0572-6d22-43e2-83a9-000e605c8a2b", "name": "Squandered Resources", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "124a5dd7-c4f8-479c-9eb0-669aca01d045", "name": "Squee, Dubious Monarch", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "481fb71a-11b9-462e-a4da-ca35ffd1bd22", "name": "Squee, the Immortal", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d7888719-647d-4022-a211-822fa09f0791", "name": "Staff of Domination", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f99f4b52-21ae-47a2-8ae6-b0aa7386723a", "name": "Staff of Titania", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c3fda16e-fd56-434e-91ac-561ae0482f43", "name": "Staff of the Death Magus", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0c4e2c90-c17b-42cc-b4d7-cf75970fbe90", "name": "Staff of the Storyteller", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "09071f5f-c9cb-43a9-b41d-faf6caf3beff", "name": "Staggering Insight", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "0dc6a90e-c517-445e-9a93-29b3119fb4dc", "name": "Stallion of Ashmouth", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "55aafc25-76c5-4621-941b-754bd8f13e64", "name": "Stalwart Shield-Bearers", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fb03befb-b4e4-4ae9-908d-a16d5b03b054", "name": "Star Athlete", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "48220e6c-5752-46e0-9b7f-f0eef274d929", "name": "Star of Extinction", "labels": ["board_wipe"], "rubric_version": "v2", "source": "human"}
 {"oracle_id": "7024532b-f99b-43a7-b0ed-5b3e7ec7592b", "name": "Starfall Invocation", "labels": ["board_wipe"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "2975590d-6a5b-41e5-8a3b-e9325e71226a", "name": "Starfield Mystic", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "42fa99ab-d35f-4439-ab00-fe99bad626ac", "name": "Starfield Shepherd", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4add809e-9caa-45ae-bb0d-4760a360b8e2", "name": "Starfield Vocalist", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "922d603e-6623-4455-b91f-fad76f94045a", "name": "Starfield of Nyx", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "7c07970d-063a-44a1-9761-b80aafa90dac", "name": "Stark Industries Executive", "labels": ["ramp"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "e7b92789-47a9-430a-ad57-be7b6c3d63cb", "name": "Starnheim Aspirant", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "01317d6c-8c11-40e1-8f7b-d36050973ada", "name": "Starnheim Courser", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "495ebe60-f0e5-4f0f-9d99-b2c64c95dbf4", "name": "Starnheim Unleashed", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8d72ddb3-ef6e-4847-b6d4-5d85b1dd5802", "name": "Starscape Cleric", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d04e0975-f401-41b8-a9db-9bcf9cbbce66", "name": "Starting Town", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "99d42ae8-8cee-449b-812b-98a81a593077", "name": "Startled Awake // Persistent Nightmare", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "face2dc0-37ba-4efe-b900-b5521567c943", "name": "Starwinder", "labels": ["card_draw"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "a8cf1379-0195-4e11-b994-481ef1284245", "name": "Stasis", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "3f285781-ee03-4a58-a85e-a33f5efffc9d", "name": "Static Net", "labels": ["removal"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "0004ebd0-dfd6-4276-b4a6-de0003e94237", "name": "Static Orb", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b1bc8e58-ea4f-46a9-b833-d780cf6758b3", "name": "Static Prison", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "de403543-e61a-44fc-85e1-1e621d90ca8b", "name": "Steal the Show", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "17039058-822d-409f-938c-b727a366ba63", "name": "Steam Vents", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6e64f1e0-ddd6-4ee7-8797-086e234b02e8", "name": "Steel Hellkite", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "986ae327-f433-4c58-93dc-afc544b9bfcb", "name": "Steel Overseer", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7ff8940f-d798-41eb-b82e-a1eba2163fe7", "name": "Steel Seraph", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5ccb57e1-ca94-4b5a-8e5f-b8b5e692cfb9", "name": "Steel Wall", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "90d2e092-6eb8-4d13-bdad-19e7325a8b36", "name": "Steel of the Godhead", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "48c127f0-2857-4c36-97bc-1291b6fe4a82", "name": "Steely Resolve", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "88f5d146-420b-417c-bcf1-fe0e78312a74", "name": "Stensia Masquerade", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "48b43d53-9a8a-47a2-8610-a54d276d7be7", "name": "Step Between Worlds", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c4fa89c7-f00d-42ef-bd67-407a288cd054", "name": "Step Through", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2c275a85-5a15-46cd-a6e7-add63f9b853d", "name": "Sterling Grove", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b3b00911-ece7-4484-bc36-f211ce72b6cc", "name": "Stifle", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "ce76d17e-d536-46f0-98e2-3e1b1b4f61a4", "name": "Stimulus Package", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "973c49a1-8425-40b9-8bdc-2c2434222314", "name": "Sting, the Glinting Dagger", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "bc3d5911-3580-4132-9daf-2826495b5739", "name": "Stitch Together", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7fd61a18-6e4f-40c5-aa00-3d101ec1ec82", "name": "Stitcher's Supplier", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2251e34e-4ce8-4452-9dc6-d8cce8583996", "name": "Stock Up", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6dd5782d-2d1a-4d6b-8381-e15d0d5be24f", "name": "Stoic Rebuttal", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6807167a-e290-4259-940e-3cbbfa75d0a1", "name": "Stolen Strategy", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "16052b52-ade1-406f-a06b-ce7ea607fb63", "name": "Stomping Ground", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "73dad679-1edb-41c9-9d43-56dc93c3e9fe", "name": "Stone of Erech", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "78124cd1-2658-43f3-a339-0755d84154d2", "name": "Stonecoil Serpent", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "83db5c28-e172-4a4d-9324-ed5ade5255bc", "name": "Stoneforge Masterwork", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6d1d53e3-60ee-40a1-89a5-0648760cd83f", "name": "Stoneskin", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a494fcee-6885-434c-aad5-6f83640c4472", "name": "Stonespeaker Crystal", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "12c63a45-7eb2-4262-b571-3358182f5610", "name": "Stony Silence", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0d6202c7-b19c-429a-85c4-332024381dd7", "name": "Stonybrook Banneret", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "03136fe1-17e2-4b1c-860a-dc6373c8fdb5", "name": "Storage Matrix", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "30aa362b-7ab1-486e-9802-1171e0dc2416", "name": "Storm Herd", "labels": ["wincons", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a145ff8c-5812-4bcb-bd16-9839dc25121d", "name": "Storm-Kiln Artist", "labels": ["ramp", "synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "4722105b-0085-4bb8-bca1-9de0d3eb5600", "name": "Stormcarved Coast", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b2252471-01ca-4d58-aa99-4ab0aa5eae12", "name": "Stormcatch Mentor", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0d3bebc6-662a-4cd4-ad1e-aeed0c5e04f6", "name": "Stormfist Crusader", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "131a7475-0b9e-46eb-9ade-fef1b9820184", "name": "Stormtide Leviathan", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0127c13f-7b0f-44c3-8b35-97f306c5f239", "name": "Strategic Betrayal", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e5b29094-0bb4-4c18-ad47-dce4d4379a4f", "name": "Stream of Thought", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f52759f9-7aa5-4493-8fe3-7be9ec340dde", "name": "Street Urchin", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3cc745d2-5021-43ff-ace8-35011011e62a", "name": "Strefan, Maurer Progenitor", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "1a8c996d-ca93-4c17-ace5-66ecd6b99317", "name": "Strength of the Harvest // Haven of the Harvest", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b967870d-9773-4ad5-bf06-c3be5465dab9", "name": "Strict Proctor", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c34c17c7-3827-49a2-be25-67f44fdfe150", "name": "Strike It Rich", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6a15599d-8b00-4e0f-ac0c-d05f07c1e50d", "name": "Striking Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cf751552-156f-4f81-ac94-9814dce099f9", "name": "Strionic Resonator", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d21a89eb-7c5b-459a-acc7-12b20b13bf79", "name": "Strip Mine", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "7ca3aa03-e62d-464a-9111-e754abe17f76", "name": "Strix Serenade", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2ed0c6fc-b8b4-47da-a04b-1d995bdeecb0", "name": "Strixhaven Stadium", "labels": ["ramp", "wincons"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "9a107e48-3d50-4941-95b1-10f2b29a4245", "name": "Stroke of Midnight", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "599c3fd6-3309-4b5d-adec-9c4062848ad5", "name": "Stromkirk Captain", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "3adc3af3-5086-4d61-b38c-c1dddeaeebe6", "name": "Stubborn Denial", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "7aae7c7b-0b31-4b48-a8d3-81c913f604cf", "name": "Study Break", "labels": [], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "eb7b1284-0b2c-4b6a-a389-b2b932838083", "name": "Stump Stomp // Burnwillow Clearing", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f27d52e6-aab9-4f95-ae46-33d1173bf4fe", "name": "Submerged Boneyard", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d49a7525-eca5-48e1-b94b-d618a706fd02", "name": "Subterranean Cavern", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "dce202c7-fe8e-462a-858e-7a5a69bd5b6b", "name": "Sudden Spoiling", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "edf46ef0-159d-4f0b-ae14-14e0c8446382", "name": "Suffer the Past", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "6a6c5e17-6465-4a1f-9d63-8a3ce2edc522", "name": "Sulfur Falls", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "77cf536e-246e-4c18-8e04-c904fcad3f40", "name": "Sulfurous Mire", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f5c38c01-4a40-469f-91a0-7479daf4e8e7", "name": "Sulfurous Springs", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "06e92ab3-c781-4f32-9ada-09a388047067", "name": "Sultai Ascendancy", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e5df4597-1647-4ac2-bdb3-a517598d1431", "name": "Summer Bloom", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fe9f6825-597b-4d80-ab7c-f4ee4e824b6f", "name": "Summon: Bahamut", "labels": ["card_draw", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b38d1811-64d7-4a35-a86c-3291eecd8391", "name": "Summon: Leviathan", "labels": ["card_draw", "board_wipe", "synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "032f59c3-9f47-4db3-a43c-065a99ed7efe", "name": "Summon: Primal Odin", "labels": ["removal", "wincons"], "rubric_version": "v2", "source": "human"}
+{"oracle_id": "782dcbc4-5a11-42f5-b8d9-4572e36d45b3", "name": "Summoner's Pact", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b2e950fb-cb7e-40a0-a311-5bbdd0477b29", "name": "Sun Titan", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "f97fd068-b83a-4621-bf8c-cc96e880ce90", "name": "Sunbaked Canyon", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a202276b-1f1b-4277-95ee-26877a204f5e", "name": "Sunbillow Verge", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8b34d1df-4024-497d-bd28-a7caa8c3fa24", "name": "Sunblast Angel", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c95309e9-5c2f-4518-b2fd-825d3d0a4ae0", "name": "Sundering Eruption // Volcanic Fissure", "labels": ["lands", "removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "79d46e09-2548-440f-9c02-3c3dc39a0cd1", "name": "Sundial of the Infinite", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "5ad0b405-cca4-475e-985c-4d7e3599d87e", "name": "Sundown Pass", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "fb3f5097-0da0-458c-8508-60823567e2da", "name": "Sunfall", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "2f618a4a-8b76-4c87-baa7-fb6a17f6f51c", "name": "Sunfrill Imitator", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0a28dff0-2bd6-4105-b73a-b6c4735833fd", "name": "Sungrass Prairie", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a9f8344c-1705-4254-81d6-aa05e0c69c29", "name": "Sunhome, Fortress of the Legion", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "cd2c90ac-2b04-461c-92f3-939871b6b6a3", "name": "Sunken Hollow", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c098c507-5154-423a-a70b-f6dfd4959cf6", "name": "Sunken Palace", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e6415ffb-8b7a-41c3-bedf-0d4112b7b795", "name": "Sunken Ruins", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "a5e5a259-5fa7-4b01-93cb-a2b4aaf80927", "name": "Sunlit Marsh", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "402ec768-76fb-474e-ae74-babc90d833c4", "name": "Sunpetal Grove", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "615603bb-3899-4419-9444-e4b64c94a438", "name": "Sunscape Familiar", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "c8ff464f-0059-4055-a2f2-556fe6db8fbf", "name": "Sunscorch Regent", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "256b8c23-589e-429d-9e6e-433d55079eb4", "name": "Sunscorched Desert", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "8d2b2675-19df-4f40-9e8e-196ec097b91c", "name": "Sunscorched Divide", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "d82929f2-57ad-45be-a834-984437046026", "name": "Super Intelligence", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "88923ca1-a793-42f0-b9f8-ed9ff9c1185d", "name": "Super Speed", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "e1b577ad-1488-43b5-83d9-e40bd60c74be", "name": "Super Strength", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "7bb5c5af-6943-4958-a666-0c322d5b9f33", "name": "Swat", "labels": ["removal"], "rubric_version": "v2", "source": "human"}
 {"oracle_id": "318f7f70-e374-40ef-8afb-3389c10461d8", "name": "Syncopate", "labels": ["removal"], "rubric_version": "v2", "source": "human"}
 {"oracle_id": "f0d8bde1-76db-4bd2-ae90-3e3a3418de0b", "name": "Szat's Will", "labels": ["board_wipe"], "rubric_version": "v2", "source": "human"}
