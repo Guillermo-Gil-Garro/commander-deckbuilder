@@ -1,0 +1,130 @@
+# Krenko, Mob Boss — selector CP-SAT (prototipo Fase 3)
+# Construido en 0.03s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
+# Objetivo: 52.0256 (score bruto 52.0308, penalizaciones escaladas 5132)
+# Fixing color (fuentes/objetivo): R: 37/38 (déficit 1)
+
+## Resumen de cuotas
+categoría      n  banda      estado
+lands         36  [36-39]    in_range  (suelo Karsten: 34, mínimo efectivo: 36)
+ramp          12  [ 9-12]    in_range
+card_draw     11  [ 9-12]    in_range
+removal       11  [ 8-11]    in_range
+board_wipe     3  [ 3- 5]    in_range
+wincons        3  [ 2- 4]    in_range
+synergy       28  [ 0-28]    in_range
+
+# Nota: una carta multicategoría cuenta en todas sus categorías,
+# por eso la suma de conteos puede superar 99.
+
+## Mainboard (99)
+
+### lands (36)
+1x Castle Embereth                            score 0.62  [lands]  cp-sat, score 0.62
+1x Path of Ancestry                           score 0.52  [lands]  cp-sat, score 0.52
+1x Three Tree City                            score 0.51  [lands/ramp]  cp-sat, score 0.51
+1x Den of the Bugbear                         score 0.48  [lands]  cp-sat, score 0.48
+1x Cavern of Souls                            score 0.34  [lands]  cp-sat, score 0.34
+1x Arena of Glory                             score 0.30  [lands]  cp-sat, score 0.30
+1x Forgotten Cave                             score 0.25  [card_draw/lands]  cp-sat, score 0.25
+1x Goblin Burrows                             score 0.25  [lands]  cp-sat, score 0.25
+1x Command Tower                              score 0.11  [lands]  cp-sat, score 0.11
+1x War Room                                   score 0.09  [card_draw/lands]  cp-sat, score 0.09
+1x Reliquary Tower                            score 0.08  [lands]  cp-sat, score 0.08
+1x Smoldering Crater                          score 0.08  [card_draw/lands]  cp-sat, score 0.08
+1x Command Beacon                             score 0.05  [lands]  cp-sat, score 0.05
+1x Buried Ruin                                score 0.04  [lands]  cp-sat, score 0.04
+1x Great Furnace                              score 0.02  [lands]  cp-sat, score 0.02
+21x Mountain                                   score  --   [lands]  básica x21 (asignada por el solver)
+
+### ramp (11)
+1x Skirk Prospector                           score 1.54  [ramp]  cp-sat, score 1.54
+1x Brightstone Ritual                         score 1.23  [ramp]  cp-sat, score 1.23
+1x Battle Hymn                                score 0.89  [ramp]  cp-sat, score 0.89
+1x Sol Ring                                   score 0.86  [ramp]  cp-sat, score 0.86
+1x Howlsquad Heavy                            score 0.81  [ramp]  cp-sat, score 0.81
+1x Treasure Nabber                            score 0.51  [ramp]  cp-sat, score 0.51
+1x Patriar's Seal                             score 0.49  [ramp]  cp-sat, score 0.49
+1x Arcane Signet                              score 0.44  [ramp]  cp-sat, score 0.44
+1x Ashnod's Altar                             score 0.41  [ramp]  cp-sat, score 0.41
+1x Heraldic Banner                            score 0.37  [ramp]  cp-sat, score 0.37
+1x Patchwork Banner                           score 0.35  [ramp]  cp-sat, score 0.35
+
+### card_draw (7)
+1x Skullclamp                                 score 1.05  [card_draw]  cp-sat, score 1.05
+1x Staff of Domination                        score 0.49  [card_draw]  cp-sat, score 0.49
+1x Hazoret's Monument                         score 0.41  [card_draw]  cp-sat, score 0.41
+1x Vanquisher's Banner                        score 0.36  [card_draw]  cp-sat, score 0.36
+1x Faithless Looting                          score 0.31  [card_draw]  cp-sat, score 0.31
+1x Thrill of Possibility                      score 0.26  [card_draw]  cp-sat, score 0.26
+1x Idol of Oblivion                           score 0.18  [card_draw]  cp-sat, score 0.18
+
+### removal (11)
+1x Goblin Bombardment                         score 1.32  [removal]  cp-sat, score 1.32
+1x Pashalik Mons                              score 1.23  [removal]  cp-sat, score 1.23
+1x Hobgoblin Bandit Lord                      score 1.17  [removal]  cp-sat, score 1.17
+1x Siege-Gang Commander                       score 1.15  [removal]  cp-sat, score 1.15
+1x Goblin Trashmaster                         score 1.13  [removal]  cp-sat, score 1.13
+1x Massive Raid                               score 0.67  [removal]  cp-sat, score 0.67
+1x Gempalm Incinerator                        score 0.66  [card_draw/removal]  cp-sat, score 0.66
+1x Goblin Grenade                             score 0.63  [removal]  cp-sat, score 0.63
+1x Boggart Shenanigans                        score 0.56  [removal]  cp-sat, score 0.56
+1x Volley Veteran                             score 0.48  [removal]  cp-sat, score 0.48
+1x Thornbite Staff                            score 0.47  [removal]  cp-sat, score 0.47
+
+### board_wipe (3)
+1x Goblin Chainwhirler                        score 0.25  [board_wipe]  cp-sat, score 0.25
+1x Blasphemous Act                            score 0.20  [board_wipe]  cp-sat, score 0.20
+1x Chain Reaction                             score 0.02  [board_wipe]  cp-sat, score 0.02
+
+### wincons (3)
+1x Collective Inferno                         score 0.20  [wincons]  cp-sat, score 0.20
+1x Relentless Assault                         score 0.19  [wincons]  cp-sat, score 0.19
+1x City on Fire                               score 0.15  [wincons]  cp-sat, score 0.15
+
+### synergy (28)
+1x Goblin Warchief                            score 1.59  [synergy]  cp-sat, score 1.59
+1x Goblin Matron                              score 1.51  [synergy]  cp-sat, score 1.51
+1x Impact Tremors                             score 1.45  [synergy]  cp-sat, score 1.45
+1x Goblin Chieftain                           score 1.42  [synergy]  cp-sat, score 1.42
+1x Goblin King                                score 1.18  [synergy]  cp-sat, score 1.18
+1x Krenko, Tin Street Kingpin                 score 1.13  [synergy]  cp-sat, score 1.13
+1x Conspicuous Snoop                          score 1.12  [synergy]  cp-sat, score 1.12
+1x Krenko's Command                           score 1.07  [synergy]  cp-sat, score 1.07
+1x Goblin Recruiter                           score 1.06  [synergy]  cp-sat, score 1.06
+1x Goblin Chirurgeon                          score 1.03  [synergy]  cp-sat, score 1.03
+1x Goblin War Strike                          score 1.03  [synergy]  cp-sat, score 1.03
+1x Goblin Ringleader                          score 0.97  [synergy]  cp-sat, score 0.97
+1x Dragon Fodder                              score 0.96  [synergy]  cp-sat, score 0.96
+1x Muxus, Goblin Grandee                      score 0.93  [synergy]  cp-sat, score 0.93
+1x Shared Animosity                           score 0.92  [synergy]  cp-sat, score 0.92
+1x Rundvelt Hordemaster                       score 0.82  [synergy]  cp-sat, score 0.82
+1x Goblin Instigator                          score 0.81  [synergy]  cp-sat, score 0.81
+1x Hordeling Outburst                         score 0.80  [synergy]  cp-sat, score 0.80
+1x Legion Warboss                             score 0.78  [synergy]  cp-sat, score 0.78
+1x General Kreat, the Boltbringer             score 0.77  [synergy]  cp-sat, score 0.77
+1x Goblin Lackey                              score 0.74  [synergy]  cp-sat, score 0.74
+1x Warren Instigator                          score 0.73  [synergy]  cp-sat, score 0.73
+1x Purphoros, God of the Forge                score 0.72  [synergy]  cp-sat, score 0.72
+1x Battle Cry Goblin                          score 0.69  [synergy]  cp-sat, score 0.69
+1x Swiftfoot Boots                            score 0.68  [synergy]  cp-sat, score 0.68
+1x Goblin Piledriver                          score 0.65  [synergy]  cp-sat, score 0.65
+1x Kiki-Jiki, Mirror Breaker                  score 0.65  [synergy]  cp-sat, score 0.65
+1x Beetleback Chief                           score 0.65  [synergy]  cp-sat, score 0.65
+
+## Maybeboard (15)
+1x Hexing Squelcher                           score 0.65  [synergy]  fuera: cuota llena en synergy
+1x Lightning Greaves                          score 0.64  [synergy]  fuera: cuota llena en synergy
+1x Mogg War Marshal                           score 0.62  [synergy]  fuera: cuota llena en synergy
+1x Sting, the Glinting Dagger                 score 0.61  [synergy]  fuera: cuota llena en synergy
+1x Thousand-Year Elixir                       score 0.59  [synergy]  fuera: cuota llena en synergy
+1x Goro-Goro, Disciple of Ryusei              score 0.54  [synergy]  fuera: cuota llena en synergy
+1x Empty the Warrens                          score 0.54  [synergy]  fuera: cuota llena en synergy
+1x Grenzo, Havoc Raiser                       score 0.53  [synergy]  fuera: cuota llena en synergy
+1x Raid Bombardment                           score 0.52  [synergy]  fuera: cuota llena en synergy
+1x Searslicer Goblin                          score 0.52  [synergy]  fuera: cuota llena en synergy
+1x Quest for the Goblin Lord                  score 0.51  [synergy]  fuera: cuota llena en synergy
+1x Marvin, Murderous Mimic                    score 0.51  [synergy]  fuera: cuota llena en synergy
+1x Goblin Motivator                           score 0.50  [synergy]  fuera: cuota llena en synergy
+1x Coat of Arms                               score 0.50  [synergy]  fuera: cuota llena en synergy
+1x Siege-Gang Lieutenant                      score 0.46  [removal]  fuera: cuota llena en removal
