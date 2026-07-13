@@ -22,7 +22,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ⬜ 🔶 Informe comparativo en DECISIONS.md → Guille decide
 
 ## Fase 3 — Experimentos de selección
-- ⬜ Greedy por categorías
+- ✅ Greedy por categorías (`backend/selector/greedy.py`, 2026-07-13; tagger provisional otags intercambiable, 5 mazos de prueba en `experiments/selection/decks/`, ~2ms/mazo, maybeboard incluido) — 🔶 pendiente evaluación a ojo de Guille
 - ⬜ CP-SAT (OR-Tools)
 - ⬜ 🔶 Comparativa (calidad la evalúa Guille) + maybeboard
 

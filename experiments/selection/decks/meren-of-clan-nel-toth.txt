@@ -1,0 +1,147 @@
+# Meren of Clan Nel Toth — selector greedy (prototipo Fase 3)
+# Construido en 0.00s | mainboard: 99 cartas
+
+## Resumen de cuotas
+categoría      n  banda      estado
+lands         36  [36-39]    in_range  (suelo Karsten: 34, objetivo: 36)
+ramp          12  [ 9-12]    in_range
+card_draw     12  [ 9-12]    in_range
+removal       11  [ 8-11]    in_range
+board_wipe     5  [ 3- 5]    in_range
+wincons        1  [ 2- 4]    below
+synergy       28  [ 0-28]    in_range
+
+# Nota: una carta multicategoría cuenta en todas sus categorías,
+# por eso la suma de conteos puede superar 99.
+
+## Mainboard (99)
+
+### lands (36)
+1x Command Tower                              score 0.93  [lands]  tierra recomendada, score 0.93
+1x High Market                                score 0.82  [lands]  tierra recomendada, score 0.82
+1x Woodland Cemetery                          score 0.70  [lands]  tierra recomendada, score 0.70
+1x Tainted Wood                               score 0.65  [lands]  tierra recomendada, score 0.65
+1x Llanowar Wastes                            score 0.62  [lands]  tierra recomendada, score 0.62
+1x Overgrown Tomb                             score 0.62  [lands]  tierra recomendada, score 0.62
+1x Undergrowth Stadium                        score 0.47  [lands]  tierra recomendada, score 0.47
+1x Golgari Rot Farm                           score 0.45  [lands]  tierra recomendada, score 0.45
+1x Bojuka Bog                                 score 0.45  [lands]  tierra recomendada, score 0.45
+1x Verdant Catacombs                          score 0.42  [lands]  tierra recomendada, score 0.42
+1x Urborg, Tomb of Yawgmoth                   score 0.41  [lands]  tierra recomendada, score 0.41
+1x Twilight Mire                              score 0.39  [lands]  tierra recomendada, score 0.39
+1x Temple of Malady                           score 0.38  [lands]  tierra recomendada, score 0.38
+1x Underground Mortuary                       score 0.34  [lands]  tierra recomendada, score 0.34
+1x Deathcap Glade                             score 0.31  [lands]  tierra recomendada, score 0.31
+1x Necroblossom Snarl                         score 0.28  [lands]  tierra recomendada, score 0.28
+1x Darkbore Pathway // Slitherbore Pathway    score 0.27  [lands]  tierra recomendada, score 0.27
+1x Evolving Wilds                             score 0.25  [lands]  tierra recomendada, score 0.25
+1x Blooming Marsh                             score 0.23  [lands]  tierra recomendada, score 0.23
+1x Yavimaya, Cradle of Growth                 score 0.23  [lands]  tierra recomendada, score 0.23
+1x Jungle Hollow                              score 0.23  [lands]  tierra recomendada, score 0.23
+1x Takenuma, Abandoned Mire                   score 0.21  [lands]  tierra recomendada, score 0.21
+1x Dryad Arbor                                score 0.21  [lands]  tierra recomendada, score 0.21
+1x Terramorphic Expanse                       score 0.19  [lands]  tierra recomendada, score 0.19
+1x Wastewood Verge                            score 0.18  [lands]  tierra recomendada, score 0.18
+1x Golgari Guildgate                          score 0.17  [lands]  tierra recomendada, score 0.17
+1x Shifting Woodland                          score 0.16  [lands]  tierra recomendada, score 0.16
+1x Exotic Orchard                             score 0.16  [lands]  tierra recomendada, score 0.16
+1x Bayou                                      score 0.15  [lands]  tierra recomendada, score 0.15
+1x Westvale Abbey // Ormendahl, Profane Prince score 0.14  [lands]  tierra recomendada, score 0.14
+1x Vernal Fen                                 score 0.13  [lands]  tierra recomendada, score 0.13
+1x Command Beacon                             score 0.13  [lands]  tierra recomendada, score 0.13
+1x Windswept Heath                            score 0.11  [lands]  tierra recomendada, score 0.11
+1x Polluted Delta                             score 0.11  [lands]  tierra recomendada, score 0.11
+1x Bloodstained Mire                          score 0.11  [lands]  tierra recomendada, score 0.11
+1x Marsh Flats                                score 0.10  [lands]  tierra recomendada, score 0.10
+
+### ramp (11)
+1x Sakura-Tribe Elder                         score 1.37  [ramp]  ramp (cuota), score 1.37
+1x Sol Ring                                   score 0.92  [ramp]  ramp (cuota), score 0.92
+1x Ashnod's Altar                             score 0.82  [ramp]  ramp (cuota), score 0.82
+1x Solemn Simulacrum                          score 0.66  [card_draw/ramp]  ramp (cuota), score 0.66
+1x Wight of the Reliquary                     score 0.63  [ramp]  ramp (cuota), score 0.63
+1x Wood Elves                                 score 0.63  [ramp]  ramp (cuota), score 0.63
+1x Birds of Paradise                          score 0.53  [ramp]  ramp (cuota), score 0.53
+1x Llanowar Elves                             score 0.53  [ramp]  ramp (cuota), score 0.53
+1x Arcane Signet                              score 0.53  [ramp]  ramp (cuota), score 0.53
+1x Warren Soultrader                          score 0.45  [ramp]  relleno por score 0.45
+1x Phyrexian Altar                            score 0.43  [ramp]  relleno por score 0.43
+
+### card_draw (10)
+1x Grim Haruspex                              score 0.95  [card_draw]  card_draw (cuota), score 0.95
+1x Skullclamp                                 score 0.87  [card_draw]  card_draw (cuota), score 0.87
+1x Braids, Arisen Nightmare                   score 0.87  [card_draw]  card_draw (cuota), score 0.87
+1x Yawgmoth, Thran Physician                  score 0.56  [card_draw/removal]  card_draw (cuota), score 0.56
+1x Village Rites                              score 0.51  [card_draw]  card_draw (cuota), score 0.51
+1x Midnight Reaper                            score 0.48  [card_draw]  card_draw (cuota), score 0.48
+1x Insidious Fungus                           score 0.43  [card_draw/ramp/removal]  card_draw (cuota), score 0.43
+1x Moldervine Reclamation                     score 0.39  [card_draw]  relleno por score 0.39
+1x Morbid Opportunist                         score 0.39  [card_draw]  relleno por score 0.39
+1x Disciple of Bolas                          score 0.26  [card_draw]  relleno por score 0.26
+
+### removal (8)
+1x Plaguecrafter                              score 1.19  [removal]  removal (cuota), score 1.19
+1x Accursed Marauder                          score 1.00  [removal]  removal (cuota), score 1.00
+1x Cankerbloom                                score 0.83  [removal]  removal (cuota), score 0.83
+1x Fleshbag Marauder                          score 0.81  [removal]  removal (cuota), score 0.81
+1x Haywire Mite                               score 0.81  [removal]  removal (cuota), score 0.81
+1x Ravenous Chupacabra                        score 0.75  [removal]  removal (cuota), score 0.75
+1x Reclamation Sage                           score 0.71  [removal]  removal (cuota), score 0.71
+1x Sheoldred, Whispering One                  score 0.68  [removal]  relleno por score 0.68
+
+### board_wipe (5)
+1x Massacre Wurm                              score 0.73  [board_wipe]  board_wipe (cuota), score 0.73
+1x Living Death                               score 0.65  [board_wipe]  board_wipe (cuota), score 0.65
+1x Toxic Deluge                               score 0.46  [board_wipe]  board_wipe (cuota), score 0.46
+1x Damnation                                  score 0.21  [board_wipe]  relleno por score 0.21
+1x The Meathook Massacre                      score 0.16  [board_wipe]  relleno por score 0.16
+
+### wincons (1)
+1x Vraska, Golgari Queen                      score 0.09  [card_draw/removal/wincons]  wincons (cuota), score 0.09
+
+### synergy (28)
+1x Spore Frog                                 score 1.46  [synergy]  relleno por score 1.46
+1x Eternal Witness                            score 1.28  [synergy]  relleno por score 1.28
+1x Viscera Seer                               score 1.18  [synergy]  relleno por score 1.18
+1x Victimize                                  score 1.17  [synergy]  relleno por score 1.17
+1x Buried Alive                               score 1.14  [synergy]  relleno por score 1.14
+1x Gray Merchant of Asphodel                  score 1.13  [synergy]  relleno por score 1.13
+1x Protean Hulk                               score 0.89  [synergy]  relleno por score 0.89
+1x Blood Artist                               score 0.87  [synergy]  relleno por score 0.87
+1x Carrion Feeder                             score 0.86  [synergy]  relleno por score 0.86
+1x Reanimate                                  score 0.84  [synergy]  relleno por score 0.84
+1x Zulaport Cutthroat                         score 0.83  [synergy]  relleno por score 0.83
+1x Syr Konrad, the Grim                       score 0.77  [synergy]  relleno por score 0.77
+1x Entomb                                     score 0.76  [synergy]  relleno por score 0.76
+1x Animate Dead                               score 0.62  [synergy]  relleno por score 0.62
+1x Birthing Pod                               score 0.58  [synergy]  relleno por score 0.58
+1x Twilight Diviner                           score 0.58  [synergy]  relleno por score 0.58
+1x Satyr Wayfinder                            score 0.55  [synergy]  relleno por score 0.55
+1x Altar of Dementia                          score 0.52  [synergy]  relleno por score 0.52
+1x Kokusho, the Evening Star                  score 0.49  [synergy]  relleno por score 0.49
+1x Junji, the Midnight Sky                    score 0.48  [synergy]  relleno por score 0.48
+1x Fauna Shaman                               score 0.46  [synergy]  relleno por score 0.46
+1x Diabolic Intent                            score 0.45  [synergy]  relleno por score 0.45
+1x Lightning Greaves                          score 0.43  [synergy]  relleno por score 0.43
+1x Grisly Salvage                             score 0.43  [synergy]  relleno por score 0.43
+1x Jarad, Golgari Lich Lord                   score 0.42  [synergy]  relleno por score 0.42
+1x Fiend Artisan                              score 0.42  [synergy]  relleno por score 0.42
+1x Sidisi, Undead Vizier                      score 0.41  [synergy]  relleno por score 0.41
+1x Umbral Collar Zealot                       score 0.40  [synergy]  relleno por score 0.40
+
+## Maybeboard (15)
+1x Phyrexian Tower                            score 0.68  [lands/ramp]  fuera por score 0.68
+1x Mikaeus, the Unhallowed                    score 0.68  [removal]  fuera: cuota llena en removal
+1x Shriekmaw                                  score 0.67  [removal]  fuera: cuota llena en removal
+1x Grave Pact                                 score 0.60  [removal]  fuera: cuota llena en removal
+1x Butcher of Malakir                         score 0.60  [removal]  fuera: cuota llena en removal
+1x Assassin's Trophy                          score 0.56  [removal]  fuera: cuota llena en removal
+1x Caustic Caterpillar                        score 0.53  [removal]  fuera: cuota llena en removal
+1x Demon's Disciple                           score 0.47  [removal]  fuera: cuota llena en removal
+1x Dictate of Erebos                          score 0.45  [removal]  fuera: cuota llena en removal
+1x Merciless Executioner                      score 0.44  [removal]  fuera: cuota llena en removal
+1x Deathrite Shaman                           score 0.42  [ramp]  fuera: cuota llena en ramp
+1x Grim Backwoods                             score 0.41  [card_draw/lands]  fuera por score 0.41
+1x Dauthi Voidwalker                          score 0.40  [synergy]  fuera: cuota llena en synergy
+1x Stitcher's Supplier                        score 0.38  [synergy]  fuera: cuota llena en synergy
+1x Elvish Mystic                              score 0.37  [ramp]  fuera: cuota llena en ramp
