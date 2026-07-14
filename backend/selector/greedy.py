@@ -31,6 +31,16 @@ bands and a pluggable tagger (``Callable[[str], set[str]]``), builds a
 
 Determinism: every ordering uses ``(-score, cmc, name)``; ties break by
 ascending mana value (the cheaper card wins) and then alphabetically.
+
+Cold start (Guille decision 2026-07-14): recommendations coming from the
+EDHREC "New Cards" cardlist that did NOT make the mainboard are surfaced in
+a dedicated ``new_cards`` section (cap ``NEW_CARDS_CAP``, ordered by score
+desc) so the player sees recently printed cards whose EDHREC inclusion/
+synergy has not caught up yet. It is independent from the maybeboard: the
+maybeboard stays the best-N leftovers regardless of novelty, so a new card
+may appear in both sections (or only in ``new_cards`` if its score is too
+low for the maybeboard). Exclusions are the same as the maybeboard's:
+banned, watchlist and ``never`` cards can never appear.
 """
 
 from __future__ import annotations
@@ -58,6 +68,12 @@ logger = logging.getLogger(__name__)
 DECK_SIZE = 99
 MAYBEBOARD_SIZE = 15
 
+# Cold-start section: EDHREC cardlist header that flags recently printed
+# cards, cap of the section and the (fixed) display reason.
+NEW_CARDS_HEADER = "New Cards"
+NEW_CARDS_CAP = 10
+NEW_CARDS_REASON = "carta nueva (EDHREC New Cards)"
+
 LANDS_CATEGORY = "lands"
 SYNERGY_CATEGORY = "synergy"
 
@@ -82,7 +98,13 @@ class SelectorError(Exception):
 
 
 class RecommendationLike(Protocol):
-    """Minimum surface the selector needs from a recommendation."""
+    """Minimum surface the selector needs from a recommendation.
+
+    ``categories`` (the EDHREC cardlist headers, as in
+    ``EdhrecRecommendation``) is read via ``getattr`` when present — it only
+    feeds the cold-start ``new_cards`` section, so plain recommendations
+    without it keep working.
+    """
 
     name: str
     synergy: float
@@ -133,6 +155,8 @@ class GreedyResult:
     karsten_floor: int
     lands_target: int
     unresolved: list[str] = field(default_factory=list)
+    # Cold-start section, independent from the maybeboard (see module doc).
+    new_cards: list[DeckEntry] = field(default_factory=list)
 
     @property
     def total_cards(self) -> int:
@@ -192,10 +216,47 @@ class _Candidate:
     cmc: float
     mana_cost: str
     is_basic: bool = False
+    is_new: bool = False  # appeared in the EDHREC "New Cards" cardlist
 
     @property
     def is_land(self) -> bool:
         return LANDS_CATEGORY in self.categories
+
+
+def _is_new_rec(rec: RecommendationLike) -> bool:
+    """Whether the recommendation came from the EDHREC "New Cards" cardlist."""
+    return NEW_CARDS_HEADER in (getattr(rec, "categories", None) or ())
+
+
+def _new_cards_section(
+    ordered: Sequence[_Candidate], picked: Mapping[str, DeckEntry]
+) -> list[DeckEntry]:
+    """Cold-start section: "New Cards" recommendations left out of the 99.
+
+    ``ordered`` is already score-desc sorted and pre-filtered (banned,
+    watchlist, ``never`` and off-identity cards never reach it), so this is
+    just the top-``NEW_CARDS_CAP`` new cards not already in the mainboard.
+    Independent from the maybeboard: overlap is possible and intended.
+    """
+    section: list[DeckEntry] = []
+    for candidate in ordered:
+        if len(section) >= NEW_CARDS_CAP:
+            break
+        if not candidate.is_new or candidate.name in picked or candidate.is_basic:
+            continue
+        section.append(
+            DeckEntry(
+                name=candidate.name,
+                categories=tuple(sorted(candidate.categories)),
+                score=candidate.score,
+                reason=NEW_CARDS_REASON,
+                slot=next(
+                    (cat for cat in (LANDS_CATEGORY, *FILL_ORDER) if cat in candidate.categories),
+                    SYNERGY_CATEGORY,
+                ),
+            )
+        )
+    return section
 
 
 def _name_variants(name: str) -> set[str]:
@@ -370,6 +431,7 @@ def build_deck_greedy(
             cmc=float(card.get("cmc") or 0.0),
             mana_cost=card.get("mana_cost") or "",
             is_basic="Basic" in card.get("type_line", ""),
+            is_new=_is_new_rec(rec),
         )
     if unresolved:
         logger.info(
@@ -643,4 +705,5 @@ def build_deck_greedy(
         karsten_floor=karsten_floor,
         lands_target=lands_target,
         unresolved=unresolved,
+        new_cards=_new_cards_section(ordered, picked),
     )

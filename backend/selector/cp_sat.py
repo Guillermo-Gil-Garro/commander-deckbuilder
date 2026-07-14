@@ -45,8 +45,10 @@ Constraints and penalties:
   ``(-score, cmc, name)``.
 
 The result mirrors ``GreedyResult`` (mainboard ``DeckEntry`` rows with score
-and reason, counts, validator statuses, maybeboard) plus solver metadata
-(status, solve time, relaxation stage, objective, penalty breakdown).
+and reason, counts, validator statuses, maybeboard, cold-start ``new_cards``
+section — see ``selector.greedy`` module doc for its relation to the
+maybeboard) plus solver metadata (status, solve time, relaxation stage,
+objective, penalty breakdown).
 """
 
 from __future__ import annotations
@@ -85,8 +87,10 @@ from selector.greedy import (
     SelectorError,
     _Candidate,
     _curve,
+    _is_new_rec,
     _karsten_floor,
     _name_variants,
+    _new_cards_section,
     _sorted_candidates,
 )
 from selector.deck_rules import (
@@ -166,6 +170,8 @@ class CpSatResult:
     raw_score_sum: float  # Σ score of the selected non-basics (no penalties)
     penalties: dict[str, Any] = field(default_factory=dict)
     unresolved: list[str] = field(default_factory=list)
+    # Cold-start section, independent from the maybeboard (see greedy module doc).
+    new_cards: list[DeckEntry] = field(default_factory=list)
 
     @property
     def total_cards(self) -> int:
@@ -471,6 +477,7 @@ def build_deck_cpsat(
             categories=frozenset(categories),
             cmc=float(card.get("cmc") or 0.0),
             mana_cost=card.get("mana_cost") or "",
+            is_new=_is_new_rec(rec),
         )
     if unresolved:
         logger.info(
@@ -768,4 +775,5 @@ def build_deck_cpsat(
         raw_score_sum=raw_score_sum,
         penalties=penalties,
         unresolved=unresolved,
+        new_cards=_new_cards_section(ordered, picked),
     )

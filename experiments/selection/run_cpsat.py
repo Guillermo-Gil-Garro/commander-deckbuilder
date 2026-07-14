@@ -114,6 +114,15 @@ def format_deck(result: CpSatResult, bands, build_seconds: float) -> str:
         lines.append(
             f"1x {entry.name:<42} score {entry.score:.2f}  [{cats}]  {entry.reason}"
         )
+    lines.append("")
+    lines.append(f"## Cartas nuevas (arranque en frío) ({len(result.new_cards)})")
+    lines.append("# Lista 'New Cards' de EDHREC que no entró al mainboard; el score")
+    lines.append("# EDHREC tarda meses en reflejarlas — el jugador ve y decide.")
+    for entry in result.new_cards:
+        cats = "/".join(entry.categories)
+        lines.append(
+            f"1x {entry.name:<42} score {entry.score:.2f}  [{cats}]  {entry.reason}"
+        )
     if result.unresolved:
         lines.append("")
         lines.append(

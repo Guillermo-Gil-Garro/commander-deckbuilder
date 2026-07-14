@@ -24,6 +24,8 @@ class Rec:
     name: str
     synergy: float
     inclusion: float
+    # EDHREC cardlist headers; only "New Cards" matters to the selector.
+    categories: tuple[str, ...] = ()
 
 
 def make_card(
@@ -503,6 +505,85 @@ def test_weak_nonbasic_land_never_displaces_basics() -> None:
         pool, recs, weights=ScoreWeights(land_score_floor=0.0)
     )
     assert "Weak Tapland" in {e.name for e in permissive.mainboard}
+
+
+# ── cartas nuevas (arranque en frío, lista "New Cards" de EDHREC) ──
+
+
+def new_rec(name: str, synergy: float = 0.01) -> Rec:
+    return Rec(
+        name=name, synergy=synergy, inclusion=0.5,
+        categories=("New Cards", "Creatures"),
+    )
+
+
+def add_fresh(pool: PoolIndex, n: int = 1, prefix: str = "Fresh") -> list[Rec]:
+    recs = []
+    for i in range(n):
+        name = f"{prefix} {i:02d}" if n > 1 else prefix
+        card = make_card(name)
+        pool.by_name[card["name"]] = card
+        recs.append(new_rec(name, synergy=0.05 - i * 0.001))
+    return recs
+
+
+def test_new_card_outside_mainboard_appears_in_new_cards() -> None:
+    pool, recs, _ = build_inputs()
+    result = build(pool, recs + add_fresh(pool))
+    assert "Fresh" not in {e.name for e in result.mainboard}
+    entry = next(e for e in result.new_cards if e.name == "Fresh")
+    assert entry.reason == "carta nueva (EDHREC New Cards)"
+    assert entry.score == pytest.approx(0.55)
+    # Sección independiente: score demasiado bajo para el maybeboard normal.
+    assert "Fresh" not in {e.name for e in result.maybeboard}
+
+
+def test_new_cards_section_does_not_change_maybeboard() -> None:
+    pool, recs, _ = build_inputs()
+    base = build(pool, recs)
+    pool2, recs2, _ = build_inputs()
+    result = build(pool2, recs2 + add_fresh(pool2))
+    assert [e.name for e in base.maybeboard] == [e.name for e in result.maybeboard]
+
+
+def test_banned_and_watchlist_new_cards_excluded_from_new_cards() -> None:
+    pool, recs, _ = build_inputs()
+    recs = recs + add_fresh(pool, n=3)
+    result = build(pool, recs, banned={"Fresh 00"}, watchlist={"Fresh 01"})
+    names = {e.name for e in result.new_cards}
+    assert not {"Fresh 00", "Fresh 01"} & names
+    assert "Fresh 02" in names
+
+
+def test_never_rule_new_card_excluded_from_new_cards() -> None:
+    pool, recs, _ = build_inputs()
+    recs = recs + add_fresh(pool, n=2)
+    never = RulesConfig.model_validate({"never": [{"name": "Fresh 00"}]})
+    result = build_with(pool, recs, rules=never)
+    names = {e.name for e in result.new_cards}
+    assert "Fresh 00" not in names
+    assert "Fresh 01" in names
+
+
+def test_new_card_in_mainboard_not_duplicated_in_new_cards() -> None:
+    pool, recs, _ = build_inputs()
+    hot = make_card("Hot New Staple")
+    pool.by_name[hot["name"]] = hot
+    result = build(pool, recs + [new_rec("Hot New Staple", synergy=9.9)])
+    assert "Hot New Staple" in {e.name for e in result.mainboard}
+    assert "Hot New Staple" not in {e.name for e in result.new_cards}
+
+
+def test_new_cards_cap_ten_score_order_and_determinism() -> None:
+    pool, recs, _ = build_inputs()
+    recs = recs + add_fresh(pool, n=12)
+    result = build(pool, recs)
+    # Cap 10, orden por score desc: entran los 10 mejores Fresh.
+    assert [e.name for e in result.new_cards] == [f"Fresh {i:02d}" for i in range(10)]
+    scores = [e.score for e in result.new_cards]
+    assert scores == sorted(scores, reverse=True)
+    again = build(pool, recs)
+    assert [e.name for e in again.new_cards] == [e.name for e in result.new_cards]
 
 
 def test_otag_tagger_from_tmp_cache(tmp_path) -> None:

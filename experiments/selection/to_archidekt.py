@@ -58,6 +58,16 @@ def format_archidekt(result) -> str:
     lines.append("# Sideboard")
     for entry in result.maybeboard:
         lines.append(f"1x {entry.name}")
+    # Cold-start section at the end of the sideboard: the import format has no
+    # sideboard categories, so a comment line (Archidekt ignores lines starting
+    # with "#") separates them. Cards already in the maybeboard are not
+    # repeated (a duplicated sideboard line would break the import).
+    maybe_names = {entry.name for entry in result.maybeboard}
+    fresh = [e for e in result.new_cards if e.name not in maybe_names]
+    if fresh:
+        lines.append("# --- cartas nuevas ---")
+        for entry in fresh:
+            lines.append(f"1x {entry.name}")
     lines.append("")
     return "\n".join(lines)
 
