@@ -26,6 +26,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (8, 13),
         "board_wipe": (3, 5),
         "wincons": (2, 4),
+        "protection": (1, 3),
         "synergy": (0, 28),
     },
     "aggro": {
@@ -35,6 +36,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (6, 11),
         "board_wipe": (1, 3),
         "wincons": (0, 4),
+        "protection": (1, 3),
         "synergy": (0, 35),
     },
     "control": {
@@ -44,6 +46,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (10, 16),
         "board_wipe": (4, 6),
         "wincons": (1, 3),
+        "protection": (2, 4),
         "synergy": (0, 20),
     },
     "spellslinger": {
@@ -53,6 +56,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (8, 14),
         "board_wipe": (2, 4),
         "wincons": (2, 4),
+        "protection": (2, 4),
         "synergy": (0, 30),
     },
     "voltron": {
@@ -62,6 +66,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (7, 12),
         "board_wipe": (1, 3),
         "wincons": (0, 2),
+        "protection": (3, 6),
         "synergy": (0, 30),
     },
     "graveyard": {
@@ -71,6 +76,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (7, 12),
         "board_wipe": (2, 4),
         "wincons": (2, 4),
+        "protection": (1, 3),
         "synergy": (0, 30),
     },
     "enchantress": {
@@ -80,6 +86,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (8, 13),
         "board_wipe": (2, 4),
         "wincons": (1, 3),
+        "protection": (2, 4),
         "synergy": (0, 32),
     },
     "lands_matter": {
@@ -89,6 +96,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "removal": (6, 11),
         "board_wipe": (2, 4),
         "wincons": (2, 4),
+        "protection": (1, 3),
         "synergy": (0, 18),
     },
 }
@@ -115,6 +123,7 @@ def minimal_payload() -> dict[str, Any]:
                 "removal": [8, 11],
                 "board_wipe": [3, 5],
                 "wincons": [2, 4],
+                "protection": [1, 3],
                 "synergy": 28,
             }
         },
@@ -172,6 +181,7 @@ def test_real_yaml_dials() -> None:
     for spec in config.dials.values():
         assert spec.low and spec.high
     assert "wincons" not in config.dials
+    assert "protection" not in config.dials
 
 
 # --- loader error paths -----------------------------------------------------------

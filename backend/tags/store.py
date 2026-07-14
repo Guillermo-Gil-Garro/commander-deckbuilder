@@ -27,10 +27,20 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_STORE_PATH = REPO_ROOT / "data" / "tags" / "llm_tags.jsonl"
 DEFAULT_POOL_PATH = REPO_ROOT / "data" / "processed" / "cards.jsonl"
 
-RUBRIC_VERSION = "v2"
+RUBRIC_VERSION = "v3"
 
-# Canonical label vocabulary and order (matches the Fase 2 experiment).
-CATEGORIES = ("lands", "ramp", "card_draw", "removal", "board_wipe", "wincons", "synergy")
+# Canonical label vocabulary and order (quotas.config.CATEGORIES parity).
+# "protection" added by rubric v3 (2026-07-14).
+CATEGORIES = (
+    "lands",
+    "ramp",
+    "card_draw",
+    "removal",
+    "board_wipe",
+    "wincons",
+    "protection",
+    "synergy",
+)
 SOURCES = ("llm", "human")
 
 FACE_SEPARATOR = " // "
@@ -196,6 +206,58 @@ def merge_batch(
         batch_path, store_path, added, skipped,
     )
     return added, skipped
+
+
+def add_label(
+    oracle_id: str,
+    label: str,
+    rubric_version: str,
+    store_path: Path | str = DEFAULT_STORE_PATH,
+) -> TagEntry:
+    """Add one label to an EXISTING store entry, keeping its other labels.
+
+    Explicit update path for rubric extensions (e.g. v3 ``protection``): the
+    regular ``merge_batch`` rejects label conflicts on purpose, so re-labeling
+    an already-stored card goes through here. The entry keeps its name and
+    source; its ``rubric_version`` is stamped with the given one (the label
+    only exists under that rubric).
+
+    Raises ``TagStoreError`` if the oracle_id is not in the store or the
+    label is not in ``CATEGORIES``. Idempotent: if the entry already has the
+    label, the store is left untouched and the entry is returned as-is.
+    Returns the (possibly updated) entry.
+    """
+    if label not in CATEGORIES:
+        raise TagStoreError(
+            f"unknown label {label!r} (vocabulary: {list(CATEGORIES)})"
+        )
+    if not isinstance(rubric_version, str) or not rubric_version:
+        raise TagStoreError("'rubric_version' must be a non-empty string")
+    store_path = Path(store_path)
+    store = load_tags(store_path)
+    entry = store.get(oracle_id)
+    if entry is None:
+        raise TagStoreError(
+            f"oracle_id {oracle_id!r} not in store {store_path}: add_label only "
+            f"updates existing entries (use merge_batch for new cards)"
+        )
+    if label in entry.labels:
+        logger.debug("%s already has label %r: no-op", entry.name, label)
+        return entry
+    updated = TagEntry(
+        oracle_id=entry.oracle_id,
+        name=entry.name,
+        labels=tuple(c for c in CATEGORIES if c in (*entry.labels, label)),
+        rubric_version=rubric_version,
+        source=entry.source,
+    )
+    store[oracle_id] = updated
+    _write_store(store, store_path)
+    logger.info(
+        "Added label %r to %s (%s): labels now %s",
+        label, updated.name, oracle_id, list(updated.labels),
+    )
+    return updated
 
 
 def _iter_pool_cards(pool_path: Path) -> Iterable[dict[str, Any]]:

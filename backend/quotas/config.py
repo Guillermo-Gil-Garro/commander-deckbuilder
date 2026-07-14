@@ -35,6 +35,7 @@ CATEGORIES: tuple[str, ...] = (
     "removal",
     "board_wipe",
     "wincons",
+    "protection",  # added 2026-07-14 (Guille): initial bands, calibrate with data
     "synergy",
 )
 # Ceiling-only categories: min is fixed at 0 and the YAML uses a bare integer.
@@ -104,6 +105,7 @@ class ArchetypeQuotas(BaseModel):
     removal: QuotaBand
     board_wipe: QuotaBand
     wincons: QuotaBand
+    protection: QuotaBand
     synergy: QuotaBand
 
     @model_validator(mode="before")

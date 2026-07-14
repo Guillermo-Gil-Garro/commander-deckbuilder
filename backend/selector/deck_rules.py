@@ -60,6 +60,7 @@ FORCEABLE_QUOTA_CATEGORIES: tuple[str, ...] = (
     "removal",
     "board_wipe",
     "wincons",
+    "protection",
     "synergy",
 )
 

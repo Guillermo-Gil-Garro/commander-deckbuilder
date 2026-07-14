@@ -1,14 +1,19 @@
 # Rúbrica de producción — etiquetado funcional LLM
 
-**Versión: v2** (2026-07-13). Sucede a la rúbrica del experimento
-(`experiments/tagging/methods/llm_rubric.md`, v1 implícita). Cambios de v2:
-criterio MDFC unificado con el ground truth (aprobado por Guille), refuerzo de
-wincons implícitas, y resolución normativa de los casos frontera que
-`llm_notes.md` dejó anotados como dudosos. Las etiquetas generadas con esta
-rúbrica llevan `rubric_version: "v2"` en `data/tags/llm_tags.jsonl`.
+**Versión: v3** (2026-07-14). Cambios de v3: nueva categoría `protection`
+(decisión de Guille 2026-07-14; recomendada por el informe
+`experiments/selection/COMPARATIVA_EDHREC_B4.md`). El resto de categorías no
+cambia respecto a v2. Las etiquetas generadas con esta rúbrica llevan
+`rubric_version: "v3"` en `data/tags/llm_tags.jsonl`; las entradas `v2`
+existentes siguen siendo válidas (solo les falta evaluar `protection`).
+
+Historial: v2 (2026-07-13) unificó el criterio MDFC con el ground truth
+(aprobado por Guille), reforzó las wincons implícitas y resolvió los casos
+frontera de `llm_notes.md`. v1 implícita:
+`experiments/tagging/methods/llm_rubric.md`.
 
 Vocabulario cerrado: `lands`, `ramp`, `card_draw`, `removal`, `board_wipe`,
-`wincons`, `synergy`. Multi-etiqueta permitida; lista vacía = none.
+`wincons`, `protection`, `synergy`. Multi-etiqueta permitida; lista vacía = none.
 Principio rector: la etiqueta refleja para qué mete un jugador la carta en el
 mazo; no se etiquetan efectos marginales.
 
@@ -123,6 +128,35 @@ mazo; no se etiquetan efectos marginales.
 - No: "you lose the game" como coste (Glorious End, Chance for Glory) ni cartas
   que evitan perder (Angel's Grace, Lich's Tomb, Everybody Lives!).
 
+## protection **[v3, nueva categoría]**
+
+Para qué la mete un jugador: mantener con vida sus amenazas (típicamente el
+comandante) o a sí mismo frente a removal/wipes ajenos.
+
+- Sí: conceder hexproof, shroud, indestructible, protección de color/todo,
+  ward o phasing a TUS permanentes o a ti como jugador, sea puntual
+  (Heroic Intervention, Tyvar's Stand), repetible (Mother of Runes,
+  Giver of Runes) o estático (Asceticism, Shalai, Voice of Plenty,
+  Sylvan Safekeeper).
+- Sí: free spells de protección (Flawless Maneuver, Deflecting Swat,
+  Teferi's Protection) — son el patrón de referencia de la categoría.
+- Sí: redirecciones de objetivo que salvan tus cartas (Deflecting Swat,
+  Bolt Bend, Ricochet Trap).
+- Sí: equipo cuya función es proteger al portador: ciclo Greaves/Boots
+  (Lightning Greaves, Swiftfoot Boots) y equivalentes (Champion's Helm,
+  Mithril Coat).
+- Sí: efectos "phase out" defensivos sobre lo tuyo (Teferi's Time Twist,
+  Slip Out the Back).
+- No: counterspells — siguen siendo `removal`, aunque protejan de facto.
+- No: fogs ni prevención de daño genérica (regla transversal 6 intacta).
+- No: la indestructibilidad/hexproof INNATA de la propia carta (Darksteel
+  Colossus no es protection: no protege a nada más).
+- No: conceder esas habilidades a criaturas AJENAS o simétricamente sin
+  control (donaciones tipo Vow no son protection).
+- Multi-etiqueta con lo existente como siempre: si además el paquete es
+  inequívoco, añade `synergy` (p. ej. protección estrictamente tribal);
+  Lightning Greaves en un mazo cualquiera es solo protection.
+
 ## synergy
 
 - Sí: lords y anthems tribales (+X/+X a un tipo: Lord of the Accursed,
@@ -151,7 +185,9 @@ mazo; no se etiquetan efectos marginales.
 4. Habilidad de maná con drawback fuerte sigue siendo ramp (Witch Engine).
 5. Tutores no son categoría; solo etiquetan si lo tutelado define paquete
    (Sarkhan's Triumph = synergy) o si ponen tierras al campo (= ramp).
-6. Fog/protección/extra turns/group hug sin categoría → none.
+6. Fog/extra turns/group hug sin categoría → none. **[v3]** La protección a
+   lo propio ya NO es none: ver `protection`; fogs y prevención de daño
+   genérica siguen sin categoría.
 7. `none` = lista de labels vacía y va siempre sola.
 
 ## Formato de salida de una etiquetadora de lote
@@ -164,5 +200,5 @@ Para cada carta del lote (`batches/batch_NNN.jsonl`), una línea JSONL:
 
 - `labels` solo con valores del vocabulario; `[]` para none.
 - No inventes campos; `source` y `rubric_version` los pone el merge
-  (`tags.store.merge_batch`) con sus defaults (`llm`, `v2`).
+  (`tags.store.merge_batch`) con sus defaults (`llm`, `v3`).
 - No re-etiquetes cartas fuera de tu lote.

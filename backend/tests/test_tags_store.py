@@ -6,6 +6,7 @@ import pytest
 from tags.audit import build_audit_report, run_audit
 from tags.store import (
     TagStoreError,
+    add_label,
     load_tags,
     merge_batch,
     tagger_from_store,
@@ -73,6 +74,52 @@ def test_labels_are_stored_in_canonical_order(tmp_path: Path) -> None:
     store_path = tmp_path / "s.jsonl"
     merge_batch(_write_jsonl(tmp_path / "b.jsonl", rows), store_path)
     assert load_tags(store_path)["oid-y"].labels == ("lands", "ramp", "synergy")
+
+
+# ---------------------------------------------------------------- add_label
+
+
+def test_add_label_appends_in_canonical_order_and_stamps_rubric(tmp_path: Path) -> None:
+    store_path = tmp_path / "llm_tags.jsonl"
+    merge_batch(_write_jsonl(tmp_path / "batch.jsonl", BATCH), store_path)
+
+    updated = add_label("oid-bolt", "protection", "v3", store_path)
+    assert updated.labels == ("removal", "protection")
+    assert updated.rubric_version == "v3"
+
+    reloaded = load_tags(store_path)["oid-bolt"]
+    assert reloaded.labels == ("removal", "protection")
+    assert reloaded.rubric_version == "v3"
+    assert reloaded.source == "llm"
+    # Untouched entries keep their labels and rubric_version.
+    assert load_tags(store_path)["oid-fog"].labels == ()
+
+
+def test_add_label_is_idempotent(tmp_path: Path) -> None:
+    store_path = tmp_path / "llm_tags.jsonl"
+    merge_batch(_write_jsonl(tmp_path / "batch.jsonl", BATCH), store_path)
+    add_label("oid-fog", "protection", "v3", store_path)
+    before = store_path.read_text(encoding="utf-8")
+
+    entry = add_label("oid-fog", "protection", "v3", store_path)
+    assert entry.labels == ("protection",)
+    assert store_path.read_text(encoding="utf-8") == before
+
+
+def test_add_label_missing_oracle_id_is_an_error(tmp_path: Path) -> None:
+    store_path = tmp_path / "llm_tags.jsonl"
+    merge_batch(_write_jsonl(tmp_path / "batch.jsonl", BATCH), store_path)
+    with pytest.raises(TagStoreError, match="not in store"):
+        add_label("oid-ghost", "protection", "v3", store_path)
+    # The failed call must not have rewritten the store.
+    assert "oid-ghost" not in load_tags(store_path)
+
+
+def test_add_label_rejects_unknown_label(tmp_path: Path) -> None:
+    store_path = tmp_path / "llm_tags.jsonl"
+    merge_batch(_write_jsonl(tmp_path / "batch.jsonl", BATCH), store_path)
+    with pytest.raises(TagStoreError, match="unknown label"):
+        add_label("oid-bolt", "stax", "v3", store_path)
 
 
 # ---------------------------------------------------------------- tagger
