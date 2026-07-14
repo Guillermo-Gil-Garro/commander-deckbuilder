@@ -1,12 +1,12 @@
 # Sythis, Harvest's Hand — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.02s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
-# Objetivo: 80.2547 (score bruto 80.4185, penalizaciones escaladas 163796)
+# Objetivo: 80.2364 (score bruto 80.4002, penalizaciones escaladas 163796)
 # Fixing color (fuentes/objetivo): G: 21/35 (déficit 14), W: 22/29 (déficit 7)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         34  [34-37]    in_range  (suelo Karsten: 33, mínimo efectivo: 34)
+lands         34  [34-37]    in_range  (suelo Karsten: 32, mínimo efectivo: 34)
 ramp          13  [ 8-13]    in_range
 card_draw     10  [10-14]    in_range
 removal       13  [ 8-13]    in_range
@@ -98,7 +98,7 @@ synergy       26  [ 0-32]    in_range
 1x Winds of Rath                              score 0.28  [board_wipe]  cp-sat, score 0.28
 
 ### wincons (1)
-1x Approach of the Second Sun                 score 0.37  [wincons]  cp-sat, score 0.37
+1x Aetherflux Reservoir                       score 0.35  [wincons]  cp-sat, score 0.35
 
 ### synergy (30)
 1x Sterling Grove                             score 1.75  [protection]  cp-sat, score 1.75

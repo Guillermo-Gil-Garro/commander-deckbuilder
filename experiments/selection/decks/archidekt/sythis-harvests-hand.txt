@@ -1,7 +1,7 @@
 1x Sythis, Harvest's Hand [Commander]
 1x Sol Ring [Ramp]
 1x Arcane Signet [Ramp]
-1x Approach of the Second Sun [Wincons]
+1x Aetherflux Reservoir [Wincons]
 1x Farewell [Board Wipe]
 1x Winds of Rath [Board Wipe]
 1x Darksteel Mutation [Removal]

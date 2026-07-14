@@ -1,7 +1,7 @@
 # Krenko, Mob Boss — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.04s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 66.1784 (score bruto 66.3480, penalizaciones escaladas 169637)
+# Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
+# Objetivo: 66.0734 (score bruto 66.2431, penalizaciones escaladas 169637)
 # Fixing color (fuentes/objetivo): R: 20/38 (déficit 18)
 
 ## Resumen de cuotas
@@ -37,7 +37,6 @@ synergy       35  [ 0-35]    in_range
 1x Buried Ruin                                score 0.12  [lands]  cp-sat, score 0.12
 1x Valakut Awakening // Valakut Stoneforge    score 0.12  [card_draw/lands]  cp-sat, score 0.12
 1x Great Furnace                              score 0.12  [lands]  cp-sat, score 0.12
-1x Command Tower                              score 0.10  [lands]  cp-sat, score 0.10
 1x Urza's Saga                                score 0.10  [lands]  cp-sat, score 0.10
 1x Bloodstained Mire                          score 0.10  [lands]  cp-sat, score 0.10
 1x Amonkhet Raceway                           score 0.10  [lands]  cp-sat, score 0.10
@@ -52,7 +51,7 @@ synergy       35  [ 0-35]    in_range
 1x Inventors' Fair                            score 0.05  [lands]  cp-sat, score 0.05
 1x Shinka, the Bloodsoaked Keep               score 0.05  [lands]  cp-sat, score 0.05
 1x Smoldering Crater                          score 0.05  [lands]  cp-sat, score 0.05
-2x Mountain                                   score  --   [lands]  básica x2 (asignada por el solver)
+3x Mountain                                   score  --   [lands]  básica x3 (asignada por el solver)
 
 ### ramp (8)
 1x Skirk Prospector                           score 1.64  [ramp]  cp-sat, score 1.64

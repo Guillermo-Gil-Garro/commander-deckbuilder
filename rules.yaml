@@ -106,6 +106,16 @@ always:
 # NEVER — nunca auto-recomendadas (ni mainboard ni maybeboard) si matchean.
 # ---------------------------------------------------------------------------
 never:
+  # Nota de ámbito (2026-07-14): el "solo no-tierras" del fichero aplica a los
+  # `always` (no se fuerza manabase desde aquí). Un `never` sobre una tierra
+  # es legítimo: solo bloquea su auto-recomendación.
+  - name: Command Tower
+    when:
+      color_identity_size: "<=1"
+    reason: >
+      En monocolor (e incoloro) no aporta nada sobre una básica y roba slot
+      de tierra utility. Decisión de Guille 2026-07-14.
+
   - name: Arcane Signet
     # [ADAPTACIÓN] "<=1" en vez del "1" del spec: en identidad incolora el
     # Signet no produce maná (misma razón que en monocolor sin temática).

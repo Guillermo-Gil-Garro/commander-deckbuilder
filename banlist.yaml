@@ -124,6 +124,9 @@ cards:
   - name: Drannith Magistrate
     status: banned
     reason: "Apaga la command zone de toda la mesa."
+  - name: Approach of the Second Sun
+    status: banned
+    reason: "Victoria alternativa sin interacción de juego; mismo espíritu que el ban a Thassa's Oracle (2026-07-14)."
   - name: Opposition Agent
     status: banned
     reason: >

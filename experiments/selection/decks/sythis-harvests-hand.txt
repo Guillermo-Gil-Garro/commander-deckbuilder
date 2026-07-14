@@ -97,7 +97,7 @@ synergy       24  [ 0-32]    in_range
 1x Winds of Rath                              score 0.28  [board_wipe]  board_wipe (cuota), score 0.28
 
 ### wincons (1)
-1x Approach of the Second Sun                 score 0.37  [wincons]  wincons (cuota), score 0.37
+1x Aetherflux Reservoir                       score 0.35  [wincons]  wincons (cuota), score 0.35
 
 ### synergy (28)
 1x Sterling Grove                             score 1.75  [protection]  relleno por score 1.75

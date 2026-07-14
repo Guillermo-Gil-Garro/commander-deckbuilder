@@ -34,7 +34,6 @@ synergy       35  [ 0-35]    in_range
 1x Buried Ruin                                score 0.12  [lands]  tierra recomendada, score 0.12
 1x Valakut Awakening // Valakut Stoneforge    score 0.12  [card_draw/lands]  tierra recomendada, score 0.12
 1x Great Furnace                              score 0.12  [lands]  tierra recomendada, score 0.12
-1x Command Tower                              score 0.10  [lands]  tierra recomendada, score 0.10
 1x Urza's Saga                                score 0.10  [lands]  tierra recomendada, score 0.10
 1x Bloodstained Mire                          score 0.10  [lands]  tierra recomendada, score 0.10
 1x Amonkhet Raceway                           score 0.10  [lands]  tierra recomendada, score 0.10
@@ -49,7 +48,7 @@ synergy       35  [ 0-35]    in_range
 1x Inventors' Fair                            score 0.05  [lands]  tierra recomendada, score 0.05
 1x Shinka, the Bloodsoaked Keep               score 0.05  [lands]  tierra recomendada, score 0.05
 1x Smoldering Crater                          score 0.05  [lands]  tierra recomendada, score 0.05
-3x Mountain                                   score  --   [lands]  básica x3 (proporcional a pips del mazo)
+4x Mountain                                   score  --   [lands]  básica x4 (proporcional a pips del mazo)
 
 ### ramp (7)
 1x Skirk Prospector                           score 1.64  [ramp]  ramp (cuota), score 1.64

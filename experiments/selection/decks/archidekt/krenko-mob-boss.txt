@@ -80,7 +80,6 @@
 1x Buried Ruin [Lands]
 1x Valakut Awakening // Valakut Stoneforge [Lands]
 1x Great Furnace [Lands]
-1x Command Tower [Lands]
 1x Urza's Saga [Lands]
 1x Bloodstained Mire [Lands]
 1x Amonkhet Raceway [Lands]
@@ -95,7 +94,7 @@
 1x Inventors' Fair [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-3x Mountain [Lands]
+4x Mountain [Lands]
 
 # Sideboard
 1x Swiftfoot Boots
