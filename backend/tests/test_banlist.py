@@ -136,8 +136,8 @@ def test_real_banlist_loads_and_resolves(real_index: NameIndex) -> None:
     banlist = load_banlist()
     resolved = resolve_banlist(banlist, real_index)
 
-    # Rules snapshot (11) minus no overlapping exceptions + 10 manual cards.
-    assert len(resolved.banned) == 21
+    # Rules snapshot (11) minus no overlapping exceptions + 13 manual cards.
+    assert len(resolved.banned) == 24
     assert len(resolved.banned_as_commander) == 3
     assert len(resolved.watchlist) == 4
     assert len(resolved.explicitly_legal) == 15
@@ -174,6 +174,9 @@ def test_real_banlist_alt_win_reason_group(real_index: NameIndex) -> None:
         "Thassa's Oracle",
         "Laboratory Maniac",
         "Jace, Wielder of Mysteries",
+        "Doctor Doom, Unrivaled",
+        "Demonic Consultation",
+        "Tainted Pact",
     }
 
     resolved = resolve_banlist(banlist, real_index)

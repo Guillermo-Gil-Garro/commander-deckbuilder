@@ -104,6 +104,23 @@ cards:
       victoria instantánea; banear solo Thassa's Oracle dejaba la línea
       idéntica abierta.
     reason_group: alt_win_empty_library
+  - name: Doctor Doom, Unrivaled
+    status: banned
+    reason: >
+      Mismo alt-win de biblioteca vacía que Oracle/Lab Man/Jace; se cierra el
+      patrón entero (único superviviente detectado en el escaneo 2026-07-14).
+    reason_group: alt_win_empty_library
+  - name: Demonic Consultation
+    status: banned
+    reason: >
+      Vaciador de biblioteca: enabler directo de la línea alt-win y búsqueda
+      genérica brutal incluso sin ella. La regla de tutores no la captura
+      (no es tutor a mano).
+    reason_group: alt_win_empty_library
+  - name: Tainted Pact
+    status: banned
+    reason: "Ídem Demonic Consultation."
+    reason_group: alt_win_empty_library
   - name: Drannith Magistrate
     status: banned
     reason: "Apaga la command zone de toda la mesa."
