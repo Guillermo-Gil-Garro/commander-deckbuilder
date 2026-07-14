@@ -1,12 +1,12 @@
 # Sythis, Harvest's Hand — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.02s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
-# Objetivo: 79.0404 (score bruto 79.2042, penalizaciones escaladas 163796)
+# Objetivo: 78.9316 (score bruto 79.0954, penalizaciones escaladas 163796)
 # Fixing color (fuentes/objetivo): G: 21/35 (déficit 14), W: 22/29 (déficit 7)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         34  [34-37]    in_range  (suelo Karsten: 33, mínimo efectivo: 34)
+lands         34  [34-37]    in_range  (suelo Karsten: 32, mínimo efectivo: 34)
 ramp          13  [ 8-13]    in_range
 card_draw     10  [10-14]    in_range
 removal       13  [ 8-13]    in_range
@@ -78,7 +78,7 @@ synergy       30  [ 0-32]    in_range
 1x Satyr Enchanter                            score 1.06  [card_draw]  cp-sat, score 1.06
 1x Sylvan Library                             score 0.95  [card_draw]  cp-sat, score 0.95
 1x Courser of Kruphix                         score 0.42  [card_draw]  cp-sat, score 0.42
-1x Trouble in Pairs                           score 0.21  [card_draw]  cp-sat, score 0.21
+1x Kor Spiritdancer                           score 0.10  [card_draw]  cp-sat, score 0.10
 
 ### removal (11)
 1x Darksteel Mutation                         score 1.29  [removal]  cp-sat, score 1.29

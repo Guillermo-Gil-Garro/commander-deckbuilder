@@ -2,9 +2,9 @@
 1x Sol Ring [Ramp]
 1x Arcane Signet [Ramp]
 1x Deadly Rollick [Removal]
+1x Toxic Deluge [Board Wipe]
 1x Finale of Devastation [Wincons]
 1x Rise of the Dark Realms [Wincons]
-1x Toxic Deluge [Board Wipe]
 1x Living Death [Board Wipe]
 1x Plaguecrafter [Removal]
 1x Accursed Marauder [Removal]
@@ -111,7 +111,7 @@
 1x Shriekmaw
 1x Pitiless Plunderer
 1x Wight of the Reliquary
-1x Opposition Agent
 1x Survival of the Fittest
 1x Lightning Greaves
 1x Cabal Coffers
+1x Green Sun's Zenith

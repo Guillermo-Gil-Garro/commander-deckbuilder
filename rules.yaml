@@ -37,11 +37,11 @@ meta:
   # Presupuesto de slots forzados: nº máximo de always que pueden matchear a
   # un MISMO comandante legal. El validador (deck_rules.validate_forced_slot_budget)
   # FALLA si algún comandante lo supera.
-  # ⚠️ revisar [ADAPTACIÓN]: el spec decía 12, pero los seeds de abajo suman
-  # 13-14 en mazos de 4-5 colores no-aggro (Omnath 13; Ur-Dragon, Ulalek y
-  # First Sliver 14). Con 12 esos mazos no se pueden construir. Se fija 14 a
-  # la espera de decisión de Guille: recortar seeds o consolidar 14.
-  forced_slot_budget: 14
+  # ⚠️ revisar [ADAPTACIÓN]: el spec decía 12, pero los seeds suman más en
+  # mazos de 4-5 colores no-aggro. Con Cyclonic Rift y Toxic Deluge añadidos
+  # (decisión Guille 2026-07-14) los 5c llegan a 16. Pendiente de consolidar
+  # o recortar seeds (candidatas si se recorta: Erode, Force of Will).
+  forced_slot_budget: 16
   notes: >
     Sustituye a staples.yaml. Cada always consume el slot de su
     quota_category (no va por encima de las 99); un never no se
@@ -130,9 +130,18 @@ always:
     quota_category: removal
     when: { color_identity_contains: [U] }
 
+  # ── azul (2026-07-14, decisión de Guille: "verdaderamente auto-include") ──
+  - name: Cyclonic Rift
+    quota_category: removal
+    when: { color_identity_contains: [U] }
+
   # ── negro ────────────────────────────────────────────────────────────────
   - name: Deadly Rollick
     quota_category: removal
+    when: { color_identity_contains: [B] }
+
+  - name: Toxic Deluge
+    quota_category: board_wipe
     when: { color_identity_contains: [B] }
 
   # ── rojo ─────────────────────────────────────────────────────────────────
@@ -173,13 +182,35 @@ never:
 
 # ---------------------------------------------------------------------------
 # PREFER — staples "permitidas" por color: bonus plano de score, jamás
-# fuerzan su entrada. Migrado tal cual desde staples.yaml (hoy vacío;
-# Guille lo rellenará desde otra sesión). Formato:
+# fuerzan su entrada. Formato:
 #   - name: Solemn Simulacrum
 #     colors_any: []        # vacío = cualquier mazo
 #     boost: 0.3            # opcional (default 0.3)
+# Ciclos Signet/Talismán (decisión Guille 2026-07-14): boost 0.2 por pareja
+# de colores. Nota: en la práctica solo aparecen como candidatas en páginas
+# EDHREC de comandantes de sus colores, así que colors_any por pareja basta.
 # ---------------------------------------------------------------------------
-preferred: []
+preferred:
+  - { name: Azorius Signet, colors_any: [W, U], boost: 0.2 }
+  - { name: Dimir Signet, colors_any: [U, B], boost: 0.2 }
+  - { name: Rakdos Signet, colors_any: [B, R], boost: 0.2 }
+  - { name: Gruul Signet, colors_any: [R, G], boost: 0.2 }
+  - { name: Selesnya Signet, colors_any: [G, W], boost: 0.2 }
+  - { name: Orzhov Signet, colors_any: [W, B], boost: 0.2 }
+  - { name: Izzet Signet, colors_any: [U, R], boost: 0.2 }
+  - { name: Golgari Signet, colors_any: [B, G], boost: 0.2 }
+  - { name: Boros Signet, colors_any: [R, W], boost: 0.2 }
+  - { name: Simic Signet, colors_any: [G, U], boost: 0.2 }
+  - { name: Talisman of Progress, colors_any: [W, U], boost: 0.2 }
+  - { name: Talisman of Dominance, colors_any: [U, B], boost: 0.2 }
+  - { name: Talisman of Indulgence, colors_any: [B, R], boost: 0.2 }
+  - { name: Talisman of Impulse, colors_any: [R, G], boost: 0.2 }
+  - { name: Talisman of Unity, colors_any: [G, W], boost: 0.2 }
+  - { name: Talisman of Hierarchy, colors_any: [W, B], boost: 0.2 }
+  - { name: Talisman of Creativity, colors_any: [U, R], boost: 0.2 }
+  - { name: Talisman of Resilience, colors_any: [B, G], boost: 0.2 }
+  - { name: Talisman of Conviction, colors_any: [R, W], boost: 0.2 }
+  - { name: Talisman of Curiosity, colors_any: [G, U], boost: 0.2 }
 
 # ---------------------------------------------------------------------------
 # Gobernanza — espejo del nomination_rule de banlist.yaml (mismo proceso).

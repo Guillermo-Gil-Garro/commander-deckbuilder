@@ -1,5 +1,5 @@
 # Meren of Clan Nel Toth — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.02s | mainboard: 99 cartas
+# Construido en 0.03s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
 # Objetivo: 71.4987 (score bruto 71.6338, penalizaciones escaladas 135138)
 # Fixing color (fuentes/objetivo): B: 27/32 (déficit 5), G: 25/38 (déficit 13)
@@ -92,7 +92,7 @@ synergy       30  [ 0-30]    in_range
 1x Deadly Rollick                             score 0.29  [removal]  always (rules.yaml)
 
 ### board_wipe (4)
-1x Toxic Deluge                               score 0.82  [board_wipe]  cp-sat, score 0.82
+1x Toxic Deluge                               score 0.82  [board_wipe]  always (rules.yaml)
 1x Living Death                               score 0.70  [board_wipe]  cp-sat, score 0.70
 1x Massacre Wurm                              score 0.53  [board_wipe]  cp-sat, score 0.53
 1x Culling Ritual                             score 0.49  [board_wipe]  cp-sat, score 0.49
@@ -141,10 +141,10 @@ synergy       30  [ 0-30]    in_range
 1x Shriekmaw                                  score 0.45  [removal]  fuera: cuota llena en removal
 1x Pitiless Plunderer                         score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Wight of the Reliquary                     score 0.44  [ramp]  fuera: cuota llena en ramp
-1x Opposition Agent                           score 0.43  [synergy]  fuera: cuota llena en synergy
 1x Survival of the Fittest                    score 0.42  [synergy]  fuera: cuota llena en synergy
 1x Lightning Greaves                          score 0.42  [synergy]  fuera: cuota llena en synergy
 1x Cabal Coffers                              score 0.42  [lands/ramp]  fuera por score 0.42
 1x Green Sun's Zenith                         score 0.41  [synergy]  fuera: cuota llena en synergy
 1x Orcish Bowmasters                          score 0.41  [removal]  fuera: cuota llena en removal
 1x Umbral Collar Zealot                       score 0.40  [synergy]  fuera: cuota llena en synergy
+1x Gravecrawler                               score 0.40  [synergy]  fuera: cuota llena en synergy

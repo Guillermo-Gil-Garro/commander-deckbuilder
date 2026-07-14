@@ -108,10 +108,10 @@
 1x Shriekmaw
 1x Pitiless Plunderer
 1x Wight of the Reliquary
-1x Opposition Agent
 1x Survival of the Fittest
 1x Lightning Greaves
 1x Cabal Coffers
 1x Green Sun's Zenith
 1x Orcish Bowmasters
 1x Umbral Collar Zealot
+1x Gravecrawler

@@ -1,7 +1,7 @@
 # Niv-Mizzet, Parun — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.02s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
-# Objetivo: 53.4584 (score bruto 53.4584, penalizaciones escaladas 0)
+# Objetivo: 53.8584 (score bruto 53.8584, penalizaciones escaladas 0)
 # Fixing color (fuentes/objetivo): R: 35/35, U: 36/32
 
 ## Resumen de cuotas
@@ -56,10 +56,10 @@ synergy       24  [ 0-30]    in_range
 1x Polluted Delta                             score 0.20  [lands]  cp-sat, score 0.20
 
 ### ramp (13)
+1x Izzet Signet                               score 1.05  [ramp]  cp-sat, score 1.05
+1x Talisman of Creativity                     score 0.99  [ramp]  cp-sat, score 0.99
 1x Arcane Signet                              score 0.93  [ramp]  always (rules.yaml)
 1x Sol Ring                                   score 0.89  [ramp]  always (rules.yaml)
-1x Izzet Signet                               score 0.85  [ramp]  cp-sat, score 0.85
-1x Talisman of Creativity                     score 0.79  [ramp]  cp-sat, score 0.79
 1x Storm-Kiln Artist                          score 0.67  [ramp]  cp-sat, score 0.67
 1x Baral, Chief of Compliance                 score 0.59  [ramp]  cp-sat, score 0.59
 1x Goblin Electromancer                       score 0.55  [ramp]  cp-sat, score 0.55
@@ -84,8 +84,9 @@ synergy       24  [ 0-30]    in_range
 1x Expressive Iteration                       score 0.32  [card_draw]  cp-sat, score 0.32
 1x Thrill of Possibility                      score 0.31  [card_draw]  cp-sat, score 0.31
 
-### removal (12)
+### removal (13)
 1x Counterspell                               score 1.08  [removal]  always (rules.yaml)
+1x Cyclonic Rift                              score 0.94  [board_wipe/removal]  always (rules.yaml)
 1x Niv-Mizzet, the Firemind                   score 0.72  [card_draw/removal]  cp-sat, score 0.72
 1x Arcane Denial                              score 0.70  [removal]  cp-sat, score 0.70
 1x Fierce Guardianship                        score 0.70  [removal]  always (rules.yaml)
@@ -98,8 +99,7 @@ synergy       24  [ 0-30]    in_range
 1x Mana Drain                                 score 0.58  [removal]  always (rules.yaml)
 1x Chaos Warp                                 score 0.39  [removal]  always (rules.yaml)
 
-### board_wipe (2)
-1x Cyclonic Rift                              score 0.94  [board_wipe/removal]  cp-sat, score 0.94
+### board_wipe (1)
 1x Blasphemous Act                            score 0.69  [board_wipe]  always (rules.yaml)
 
 ### wincons (2)

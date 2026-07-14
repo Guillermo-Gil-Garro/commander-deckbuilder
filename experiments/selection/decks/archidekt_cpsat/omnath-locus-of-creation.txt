@@ -22,7 +22,7 @@
 1x Breeding Pool [Lands]
 1x Avenger of Zendikar [Synergy]
 1x Temple Garden [Lands]
-1x Cyclonic Rift [Board Wipe]
+1x Cyclonic Rift [Removal]
 1x Tireless Provisioner [Ramp]
 1x Oracle of Mul Daya [Ramp]
 1x Felidar Retreat [Synergy]

@@ -124,6 +124,16 @@ cards:
   - name: Drannith Magistrate
     status: banned
     reason: "Apaga la command zone de toda la mesa."
+  - name: Opposition Agent
+    status: banned
+    reason: >
+      Doble motivo (2026-07-14): patrón tax pasivo que castiga jugar (primo de
+      Drannith) Y sobrevaloración estructural en nuestro meta — los datos de
+      EDHREC la puntúan para metas con tutores; con los nuestros baneados su
+      valor real aquí es menor y el sistema la incluiría de más.
+  - name: Archivist of Oghma
+    status: banned
+    reason: "Mismo doble motivo que Opposition Agent (Esper Sentinel pequeño + sobrevalorada en nuestro meta sin tutores)."
   - name: Grim Tutor
     status: banned
     reason: >
@@ -162,6 +172,10 @@ watchlist:
   - name: Tergrid, God of Fright
     scope: in_the_99
     reason: "Con paquete de descarte sigue siendo un 80% de miserable aun sin ser comandante."
+  - name: Trouble in Pairs
+    reason: "Patrón Rhystic blanco moderno; menos canteo que el trío baneado — vigilada, no auto-recomendada (2026-07-14)."
+  - name: Underworld Breach
+    reason: "Enabler de finales no-juego vía storm; en B4 con proxies cierra partidas de la nada (2026-07-14)."
 
 # ---------------------------------------------------------------------------
 # Explícitamente legales (para que conste en acta; evita reabrir debates)

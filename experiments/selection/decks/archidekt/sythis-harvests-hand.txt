@@ -28,7 +28,7 @@
 1x Satyr Enchanter [Card Draw]
 1x Sylvan Library [Card Draw]
 1x Courser of Kruphix [Card Draw]
-1x Trouble in Pairs [Card Draw]
+1x Kor Spiritdancer [Card Draw]
 1x Sterling Grove [Synergy]
 1x Destiny Spinner [Synergy]
 1x Heliod, Sun-Crowned [Synergy]

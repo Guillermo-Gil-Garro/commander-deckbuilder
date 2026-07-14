@@ -90,8 +90,9 @@ synergy       18  [ 0-18]    in_range
 1x Augur of Autumn                            score 0.27  [card_draw]  cp-sat, score 0.27
 1x Trade Routes                               score 0.21  [card_draw]  cp-sat, score 0.21
 
-### removal (10)
+### removal (11)
 1x Omnath, Locus of Rage                      score 1.12  [removal]  cp-sat, score 1.12
+1x Cyclonic Rift                              score 0.92  [board_wipe/removal]  always (rules.yaml)
 1x Omnath, Locus of the Roil                  score 0.78  [card_draw/removal]  cp-sat, score 0.78
 1x Swords to Plowshares                       score 0.75  [removal]  always (rules.yaml)
 1x Path to Exile                              score 0.59  [removal]  always (rules.yaml)
@@ -102,8 +103,7 @@ synergy       18  [ 0-18]    in_range
 1x Chaos Warp                                 score 0.09  [removal]  always (rules.yaml)
 1x Erode                                      score 0.00  [removal]  always (rules.yaml)
 
-### board_wipe (3)
-1x Cyclonic Rift                              score 0.92  [board_wipe/removal]  cp-sat, score 0.92
+### board_wipe (2)
 1x Farewell                                   score 0.29  [board_wipe]  cp-sat, score 0.29
 1x Blasphemous Act                            score 0.19  [board_wipe]  always (rules.yaml)
 

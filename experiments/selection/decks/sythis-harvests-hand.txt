@@ -76,7 +76,7 @@ synergy       28  [ 0-32]    in_range
 1x Satyr Enchanter                            score 1.06  [card_draw]  card_draw (cuota), score 1.06
 1x Sylvan Library                             score 0.95  [card_draw]  card_draw (cuota), score 0.95
 1x Courser of Kruphix                         score 0.42  [card_draw]  card_draw (cuota), score 0.42
-1x Trouble in Pairs                           score 0.21  [card_draw]  card_draw (cuota), score 0.21
+1x Kor Spiritdancer                           score 0.10  [card_draw]  card_draw (cuota), score 0.10
 
 ### removal (12)
 1x Darksteel Mutation                         score 1.29  [removal]  removal (cuota), score 1.29

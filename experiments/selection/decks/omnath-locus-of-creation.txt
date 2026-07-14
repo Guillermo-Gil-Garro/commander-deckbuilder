@@ -87,8 +87,9 @@ synergy       18  [ 0-18]    in_range
 1x Trade Routes                               score 0.21  [card_draw]  relleno por score 0.21
 1x Horn of Greed                              score 0.16  [card_draw]  relleno por score 0.16
 
-### removal (9)
+### removal (10)
 1x Omnath, Locus of Rage                      score 1.12  [removal]  relleno por score 1.12
+1x Cyclonic Rift                              score 0.92  [board_wipe/removal]  always (rules.yaml)
 1x Swords to Plowshares                       score 0.75  [removal]  always (rules.yaml)
 1x Path to Exile                              score 0.59  [removal]  always (rules.yaml)
 1x Fierce Guardianship                        score 0.58  [removal]  always (rules.yaml)
@@ -98,8 +99,7 @@ synergy       18  [ 0-18]    in_range
 1x Chaos Warp                                 score 0.09  [removal]  always (rules.yaml)
 1x Erode                                      score 0.00  [removal]  always (rules.yaml)
 
-### board_wipe (4)
-1x Cyclonic Rift                              score 0.92  [board_wipe/removal]  board_wipe (cuota), score 0.92
+### board_wipe (3)
 1x Farewell                                   score 0.29  [board_wipe]  relleno por score 0.29
 1x Dragonback Assault                         score 0.25  [board_wipe]  relleno por score 0.25
 1x Blasphemous Act                            score 0.19  [board_wipe]  always (rules.yaml)

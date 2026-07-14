@@ -95,7 +95,7 @@
 1x Prismatic Vista [Lands]
 1x Arcane Signet [Ramp]
 1x Temple of Plenty [Lands]
-1x Trouble in Pairs [Card Draw]
+1x Kor Spiritdancer [Card Draw]
 1x Flawless Maneuver [Synergy]
 1x Erode [Removal]
 
