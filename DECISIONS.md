@@ -45,6 +45,18 @@ señal gratuita, EDHREC solo para scores. Criterio MDFC unificado: las caras de 
 de una MDFC hechizo//tierra SÍ cuentan como `lands` (los ~5 desacuerdos del ground
 truth en lands quedan resueltos a favor del criterio de la rúbrica).
 
+## 2026-07-15 — Selector: CP-SAT (Fase 3 decidida)
+Guille decide CP-SAT como motor único tras la auditoría comparativa
+(`experiments/selection/AUDITORIA_SELECTORES.md`). Evidencia: 91-97/99 de solape
+entre selectores; la diferencia real es un único mecanismo (tierras multicategoría)
+que en greedy es un vicio arquitectónico (bloqueo por orden de fases; incumplió el
+min de protection en Meren) y en CP-SAT se corrige con una restricción y un peso.
+Arreglos aplicados al elegirlo: (1) los mins de cuotas de hechizos se cubren solo
+con no-tierras — las tierras multicategoría siguen entrando pero no "cuentan" para
+el mínimo; (2) recalibrado el peso del fixing de color, que no mordía; (3) razones
+por carta post-hoc en la salida. El greedy queda en el repo como baseline
+experimental, sin mantenimiento activo.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

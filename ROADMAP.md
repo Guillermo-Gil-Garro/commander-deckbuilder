@@ -24,7 +24,8 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 ## Fase 3 — Experimentos de selección
 - ✅ Greedy por categorías (`backend/selector/greedy.py`, 2026-07-13; tagger provisional otags intercambiable, 5 mazos de prueba en `experiments/selection/decks/`, ~2ms/mazo, maybeboard incluido) — 🔶 pendiente evaluación a ojo de Guille
 - ✅ CP-SAT (OR-Tools) — port simplificado del TFM (`backend/selector/cp_sat.py`, 2026-07-13; OPTIMAL <0.05s en los 5 mazos, relajación escalonada, Karsten/banlist/identidad nunca se relajan) — 🔶 pendiente comparativa a ojo vs greedy
-- ⬜ 🔶 Comparativa (calidad la evalúa Guille) + maybeboard
+- ✅ 🔶 Comparativa y decisión (2026-07-15): **CP-SAT motor único** con 3 arreglos (mins de hechizos no-tierra, fixing recalibrado, razones post-hoc); auditoría en `experiments/selection/AUDITORIA_SELECTORES.md`; greedy queda de baseline
+- ✅ Maybeboard (por score + sección de cartas nuevas de EDHREC para arranque en frío)
 
 ## Fase 4 — API
 - ⬜ Endpoints: buscar comandante, generar 99 + maybeboard, validar swap (<100ms), exportar decklist
