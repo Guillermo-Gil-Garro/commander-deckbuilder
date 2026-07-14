@@ -1,7 +1,7 @@
 # Sythis, Harvest's Hand — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.03s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 80.8697 (score bruto 81.0335, penalizaciones escaladas 163796)
+# Construido en 0.02s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
+# Objetivo: 80.2547 (score bruto 80.4185, penalizaciones escaladas 163796)
 # Fixing color (fuentes/objetivo): G: 21/35 (déficit 14), W: 22/29 (déficit 7)
 
 ## Resumen de cuotas
@@ -12,7 +12,7 @@ card_draw     10  [10-14]    in_range
 removal       13  [ 8-13]    in_range
 board_wipe     2  [ 2- 4]    in_range
 wincons        1  [ 1- 3]    in_range
-synergy       30  [ 0-32]    in_range
+synergy       26  [ 0-32]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -101,27 +101,25 @@ synergy       30  [ 0-32]    in_range
 1x Approach of the Second Sun                 score 0.37  [wincons]  cp-sat, score 0.37
 
 ### synergy (30)
-1x Sterling Grove                             score 1.75  [synergy]  cp-sat, score 1.75
+1x Sterling Grove                             score 1.75  [protection]  cp-sat, score 1.75
 1x Destiny Spinner                            score 1.61  [synergy]  cp-sat, score 1.61
 1x Heliod, Sun-Crowned                        score 1.21  [synergy]  cp-sat, score 1.21
 1x Blind Obedience                            score 1.19  [synergy]  cp-sat, score 1.19
 1x Idyllic Tutor                              score 1.17  [synergy]  cp-sat, score 1.17
 1x Sigil of the Empty Throne                  score 1.13  [synergy]  cp-sat, score 1.13
 1x Sphere of Safety                           score 1.07  [synergy]  cp-sat, score 1.07
-1x Alseid of Life's Bounty                    score 1.03  [synergy]  cp-sat, score 1.03
-1x Flickering Ward                            score 1.02  [synergy]  cp-sat, score 1.02
+1x Alseid of Life's Bounty                    score 1.03  [protection]  cp-sat, score 1.03
+1x Flickering Ward                            score 1.02  [protection]  cp-sat, score 1.02
 1x Ghostly Prison                             score 1.01  [synergy]  cp-sat, score 1.01
 1x Authority of the Consuls                   score 1.01  [synergy]  cp-sat, score 1.01
 1x Hallowed Haunting                          score 0.91  [synergy]  cp-sat, score 0.91
 1x Herald of the Pantheon                     score 0.87  [synergy]  cp-sat, score 0.87
 1x Archon of Sun's Grace                      score 0.84  [synergy]  cp-sat, score 0.84
-1x Solitary Confinement                       score 0.83  [synergy]  cp-sat, score 0.83
+1x Solitary Confinement                       score 0.83  [protection]  cp-sat, score 0.83
 1x Whip Silk                                  score 0.81  [synergy]  cp-sat, score 0.81
-1x Greater Auramancy                          score 0.80  [synergy]  cp-sat, score 0.80
 1x Eladamri's Call                            score 0.75  [synergy]  cp-sat, score 0.75
 1x Stony Silence                              score 0.75  [synergy]  cp-sat, score 0.75
 1x Ethereal Armor                             score 0.74  [synergy]  cp-sat, score 0.74
-1x Teferi's Protection                        score 0.72  [synergy]  cp-sat, score 0.72
 1x Crop Rotation                              score 0.68  [synergy]  cp-sat, score 0.68
 1x All That Glitters                          score 0.67  [synergy]  cp-sat, score 0.67
 1x Rest in Peace                              score 0.67  [synergy]  cp-sat, score 0.67
@@ -129,22 +127,31 @@ synergy       30  [ 0-32]    in_range
 1x Ancestral Mask                             score 0.64  [synergy]  cp-sat, score 0.64
 1x Moon-Blessed Cleric                        score 0.64  [synergy]  cp-sat, score 0.64
 1x Land Tax                                   score 0.61  [synergy]  cp-sat, score 0.61
-1x Heroic Intervention                        score 0.59  [synergy]  cp-sat, score 0.59
-1x Privileged Position                        score 0.55  [synergy]  cp-sat, score 0.55
+1x Gauntlets of Light                         score 0.54  [synergy]  cp-sat, score 0.54
+1x Calix, Guided by Fate                      score 0.54  [synergy]  cp-sat, score 0.54
+1x Grand Abolisher                            score 0.51  [synergy]  cp-sat, score 0.51
+1x Mirri's Guile                              score 0.46  [synergy]  cp-sat, score 0.46
 
 ## Maybeboard (15)
+1x Greater Auramancy                          score 0.80  [protection]  fuera: cuota llena en protection
+1x Teferi's Protection                        score 0.72  [protection]  fuera: cuota llena en protection
 1x Abundant Growth                            score 0.62  [ramp]  fuera: cuota llena en ramp
 1x Mirari's Wake                              score 0.61  [ramp]  fuera: cuota llena en ramp
-1x Gauntlets of Light                         score 0.54  [synergy]  fuera por score 0.54
-1x Calix, Guided by Fate                      score 0.54  [synergy]  fuera por score 0.54
+1x Heroic Intervention                        score 0.59  [protection]  fuera: cuota llena en protection
+1x Privileged Position                        score 0.55  [protection]  fuera: cuota llena en protection
 1x Starfield Mystic                           score 0.52  [ramp]  fuera: cuota llena en ramp
-1x Grand Abolisher                            score 0.51  [synergy]  fuera por score 0.51
 1x Karmic Justice                             score 0.48  [removal]  fuera: cuota llena en removal
 1x Overgrowth                                 score 0.47  [ramp]  fuera: cuota llena en ramp
 1x Swift Reconfiguration                      score 0.47  [removal]  fuera: cuota llena en removal
 1x Composer of Spring                         score 0.47  [ramp]  fuera: cuota llena en ramp
-1x Flawless Maneuver                          score 0.47  [synergy]  fuera por score 0.47
-1x Mirri's Guile                              score 0.46  [synergy]  fuera por score 0.46
+1x Flawless Maneuver                          score 0.47  [protection]  fuera: cuota llena en protection
 1x Concordant Crossroads                      score 0.44  [synergy]  fuera por score 0.44
 1x Birds of Paradise                          score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Weaver of Harmony                          score 0.42  [synergy]  fuera por score 0.42
+
+## Cartas nuevas (arranque en frío) (3)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Jennifer Walters // The Sensational She-Hulk score 0.16  [removal]  carta nueva (EDHREC New Cards)
+1x Gathering Place                            score 0.05  [lands]  carta nueva (EDHREC New Cards)
+1x Shang-Chi, Master of Kung Fu               score 0.02  [ramp]  carta nueva (EDHREC New Cards)

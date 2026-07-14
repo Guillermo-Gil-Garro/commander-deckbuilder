@@ -12,7 +12,7 @@ card_draw     14  [10-14]    in_range
 removal       14  [ 8-14]    in_range
 board_wipe     2  [ 2- 4]    in_range
 wincons        2  [ 2- 4]    in_range
-synergy       24  [ 0-30]    in_range
+synergy       22  [ 0-30]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -51,7 +51,7 @@ synergy       24  [ 0-30]    in_range
 1x Evolving Wilds                             score 0.24  [lands]  cp-sat, score 0.24
 1x Flooded Strand                             score 0.23  [lands]  cp-sat, score 0.23
 1x Reflecting Pool                            score 0.23  [lands]  cp-sat, score 0.23
-1x Hydroelectric Specimen // Hydroelectric Laboratory score 0.21  [lands]  cp-sat, score 0.21
+1x Hydroelectric Specimen // Hydroelectric Laboratory score 0.21  [lands/protection]  cp-sat, score 0.21
 1x Mana Confluence                            score 0.21  [lands]  cp-sat, score 0.21
 1x Polluted Delta                             score 0.20  [lands]  cp-sat, score 0.20
 
@@ -107,7 +107,7 @@ synergy       24  [ 0-30]    in_range
 1x Rite of the Dragoncaller                   score 0.06  [wincons]  cp-sat, score 0.06
 
 ### synergy (24)
-1x Deflecting Swat                            score 0.95  [synergy]  cp-sat, score 0.95
+1x Deflecting Swat                            score 0.95  [protection]  cp-sat, score 0.95
 1x Ponder                                     score 0.95  [synergy]  cp-sat, score 0.95
 1x Preordain                                  score 0.85  [synergy]  cp-sat, score 0.85
 1x Opt                                        score 0.84  [synergy]  cp-sat, score 0.84
@@ -128,7 +128,7 @@ synergy       24  [ 0-30]    in_range
 1x Isochron Scepter                           score 0.32  [synergy]  cp-sat, score 0.32
 1x Veyran, Voice of Duality                   score 0.30  [synergy]  cp-sat, score 0.30
 1x Spellskite                                 score 0.30  [synergy]  cp-sat, score 0.30
-1x Misdirection                               score 0.26  [synergy]  cp-sat, score 0.26
+1x Misdirection                               score 0.26  [protection]  cp-sat, score 0.26
 1x Electrostatic Field                        score 0.26  [synergy]  cp-sat, score 0.26
 1x Solve the Equation                         score 0.26  [synergy]  cp-sat, score 0.26
 
@@ -148,3 +148,12 @@ synergy       24  [ 0-30]    in_range
 1x Midnight Clock                             score 0.28  [card_draw/ramp]  fuera: cuota llena en card_draw/ramp
 1x Sink into Stupor // Soporific Springs      score 0.27  [lands/removal]  fuera por score 0.27
 1x Spell Pierce                               score 0.27  [removal]  fuera: cuota llena en removal
+
+## Cartas nuevas (arranque en frío) (5)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Scarlet Witch, Chaotic Avenger             score 0.02  [card_draw]  carta nueva (EDHREC New Cards)
+1x The Scarlet Witch                          score 0.02  [synergy]  carta nueva (EDHREC New Cards)
+1x Loki, God of Mischief                      score 0.02  [card_draw]  carta nueva (EDHREC New Cards)
+1x The Vision and Scarlet Witch               score 0.01  [ramp]  carta nueva (EDHREC New Cards)
+1x Molecule Man                               score 0.01  [synergy]  carta nueva (EDHREC New Cards)

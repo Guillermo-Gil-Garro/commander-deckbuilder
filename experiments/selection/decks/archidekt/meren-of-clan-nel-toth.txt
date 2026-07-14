@@ -115,3 +115,8 @@
 1x Lightning Greaves
 1x Cabal Coffers
 1x Green Sun's Zenith
+# --- cartas nuevas ---
+1x Black Widow, Daring Operative
+1x Grim Reaper's Scythe
+1x Undead Hand Ninja
+1x Earth's Mightiest Heroes

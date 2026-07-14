@@ -142,6 +142,14 @@ synergy       27  [ 0-30]    in_range
 1x Pitiless Plunderer                         score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Wight of the Reliquary                     score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Survival of the Fittest                    score 0.42  [synergy]  fuera por score 0.42
-1x Lightning Greaves                          score 0.42  [synergy]  fuera por score 0.42
+1x Lightning Greaves                          score 0.42  [protection]  fuera por score 0.42
 1x Cabal Coffers                              score 0.42  [lands/ramp]  fuera por score 0.42
 1x Green Sun's Zenith                         score 0.41  [synergy]  fuera por score 0.41
+
+## Cartas nuevas (arranque en frío) (4)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Black Widow, Daring Operative              score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Grim Reaper's Scythe                       score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Undead Hand Ninja                          score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Earth's Mightiest Heroes                   score 0.01  [synergy]  carta nueva (EDHREC New Cards)

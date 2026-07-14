@@ -3,11 +3,11 @@
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         38  [38-42]    in_range  (suelo Karsten: 34, objetivo: 38)
+lands         38  [38-42]    in_range  (suelo Karsten: 35, objetivo: 38)
 ramp          18  [12-18]    in_range
-card_draw     12  [ 9-12]    in_range
+card_draw     10  [ 9-12]    in_range
 removal       11  [ 6-11]    in_range
-board_wipe     4  [ 2- 4]    in_range
+board_wipe     3  [ 2- 4]    in_range
 wincons        3  [ 2- 4]    in_range
 synergy       18  [ 0-18]    in_range
 
@@ -74,7 +74,7 @@ synergy       18  [ 0-18]    in_range
 1x Kodama of the East Tree                    score 0.64  [ramp]  relleno por score 0.64
 1x Arcane Signet                              score 0.44  [ramp]  always (rules.yaml)
 
-### card_draw (11)
+### card_draw (9)
 1x Tatyova, Benthic Druid                     score 1.29  [card_draw]  card_draw (cuota), score 1.29
 1x Omnath, Locus of the Roil                  score 0.78  [card_draw/removal]  card_draw (cuota), score 0.78
 1x Sylvan Library                             score 0.64  [card_draw]  card_draw (cuota), score 0.64
@@ -84,8 +84,6 @@ synergy       18  [ 0-18]    in_range
 1x Cultivator Colossus                        score 0.30  [card_draw/ramp]  card_draw (cuota), score 0.30
 1x Courser of Kruphix                         score 0.30  [card_draw]  card_draw (cuota), score 0.30
 1x Augur of Autumn                            score 0.27  [card_draw]  relleno por score 0.27
-1x Trade Routes                               score 0.21  [card_draw]  relleno por score 0.21
-1x Horn of Greed                              score 0.16  [card_draw]  relleno por score 0.16
 
 ### removal (9)
 1x Swords to Plowshares                       score 1.15  [removal]  removal (cuota), score 1.15
@@ -98,18 +96,17 @@ synergy       18  [ 0-18]    in_range
 1x Chaos Warp                                 score 0.49  [removal]  relleno por score 0.49
 1x Beast Within                               score 0.45  [removal]  relleno por score 0.45
 
-### board_wipe (4)
+### board_wipe (3)
 1x Cyclonic Rift                              score 1.32  [board_wipe/removal]  board_wipe (cuota), score 1.32
 1x Farewell                                   score 0.29  [board_wipe]  board_wipe (cuota), score 0.29
 1x Dragonback Assault                         score 0.25  [board_wipe]  relleno por score 0.25
-1x Blasphemous Act                            score 0.19  [board_wipe]  relleno por score 0.19
 
 ### wincons (3)
 1x Moraug, Fury of Akoum                      score 0.63  [wincons]  wincons (cuota), score 0.63
 1x Finale of Devastation                      score 0.39  [wincons]  wincons (cuota), score 0.39
 1x Craterhoof Behemoth                        score 0.30  [wincons]  relleno por score 0.30
 
-### synergy (18)
+### synergy (21)
 1x Ancient Greenwarden                        score 1.29  [synergy]  relleno por score 1.29
 1x Scute Swarm                                score 1.25  [synergy]  relleno por score 1.25
 1x Crop Rotation                              score 1.16  [synergy]  relleno por score 1.16
@@ -118,16 +115,19 @@ synergy       18  [ 0-18]    in_range
 1x Avenger of Zendikar                        score 0.97  [synergy]  relleno por score 0.97
 1x Felidar Retreat                            score 0.89  [synergy]  relleno por score 0.89
 1x Scapeshift                                 score 0.75  [synergy]  relleno por score 0.75
-1x Deflecting Swat                            score 0.72  [synergy]  relleno por score 0.72
+1x Deflecting Swat                            score 0.72  [protection]  relleno por score 0.72
 1x Rampaging Baloths                          score 0.70  [synergy]  relleno por score 0.70
 1x Elesh Norn, Mother of Machines             score 0.66  [synergy]  relleno por score 0.66
 1x Traveling Chocobo                          score 0.63  [synergy]  relleno por score 0.63
-1x Teferi's Protection                        score 0.61  [synergy]  relleno por score 0.61
+1x Teferi's Protection                        score 0.61  [protection]  relleno por score 0.61
 1x Tannuk, Memorial Ensign                    score 0.57  [synergy]  relleno por score 0.57
 1x Conduit of Worlds                          score 0.57  [synergy]  relleno por score 0.57
-1x Heroic Intervention                        score 0.56  [synergy]  relleno por score 0.56
+1x Heroic Intervention                        score 0.56  [protection]  relleno por score 0.56
 1x Retreat to Coralhelm                       score 0.55  [synergy]  relleno por score 0.55
-1x Flawless Maneuver                          score 0.50  [synergy]  relleno por score 0.50
+1x Springheart Nantuko                        score 0.49  [synergy]  relleno por score 0.49
+1x Roil Elemental                             score 0.48  [synergy]  relleno por score 0.48
+1x Mossborn Hydra                             score 0.45  [synergy]  relleno por score 0.45
+1x Eternal Witness                            score 0.42  [synergy]  relleno por score 0.42
 
 ## Maybeboard (15)
 1x Boseiju, Who Endures                       score 0.60  [lands/removal]  fuera por score 0.60
@@ -136,12 +136,20 @@ synergy       18  [ 0-18]    in_range
 1x Harrow                                     score 0.58  [ramp]  fuera: cuota llena en ramp
 1x Icetill Explorer                           score 0.57  [ramp]  fuera: cuota llena en ramp
 1x Splendid Reclamation                       score 0.51  [ramp]  fuera: cuota llena en ramp
-1x Springheart Nantuko                        score 0.49  [synergy]  fuera: cuota llena en synergy
+1x Flawless Maneuver                          score 0.50  [protection]  fuera: cuota llena en protection
 1x Titania, Protector of Argoth               score 0.48  [ramp]  fuera: cuota llena en ramp
-1x Roil Elemental                             score 0.48  [synergy]  fuera: cuota llena en synergy
 1x Strip Mine                                 score 0.46  [lands/removal]  fuera por score 0.46
-1x Mossborn Hydra                             score 0.45  [synergy]  fuera: cuota llena en synergy
 1x Cultivate                                  score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Burgeoning                                 score 0.43  [ramp]  fuera: cuota llena en ramp
 1x Awaken the Woods                           score 0.42  [ramp]  fuera: cuota llena en ramp
-1x Eternal Witness                            score 0.42  [synergy]  fuera: cuota llena en synergy
+1x Kodama's Reach                             score 0.42  [ramp]  fuera: cuota llena en ramp
+1x Birds of Paradise                          score 0.40  [ramp]  fuera: cuota llena en ramp
+1x Sakura-Tribe Elder                         score 0.39  [ramp]  fuera: cuota llena en ramp
+
+## Cartas nuevas (arranque en frío) (4)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Mole Man, Moloid Master                    score 0.23  [synergy]  carta nueva (EDHREC New Cards)
+1x Multiversal Recruitment                    score 0.03  [synergy]  carta nueva (EDHREC New Cards)
+1x Quinjet Technician                         score 0.02  [ramp]  carta nueva (EDHREC New Cards)
+1x Silver Surfer, Cosmic Voyager              score 0.01  [synergy]  carta nueva (EDHREC New Cards)

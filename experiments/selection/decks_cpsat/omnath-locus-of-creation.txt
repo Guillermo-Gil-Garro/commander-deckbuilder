@@ -1,16 +1,16 @@
 # Omnath, Locus of Creation — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.03s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
-# Objetivo: 70.3391 (score bruto 70.9396, penalizaciones escaladas 600490)
-# Fixing color (fuentes/objetivo): G: 18/38 (déficit 20), R: 14/32 (déficit 18), U: 15/32 (déficit 17), W: 14/24 (déficit 10)
+# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
+# Objetivo: 70.8962 (score bruto 71.5512, penalizaciones escaladas 654980)
+# Fixing color (fuentes/objetivo): G: 16/38 (déficit 22), R: 14/32 (déficit 18), U: 14/32 (déficit 18), W: 13/24 (déficit 11)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         41  [38-42]    in_range  (suelo Karsten: 35, mínimo efectivo: 38)
+lands         39  [38-42]    in_range  (suelo Karsten: 35, mínimo efectivo: 38)
 ramp          18  [12-18]    in_range
 card_draw      9  [ 9-12]    in_range
 removal       11  [ 6-11]    in_range
-board_wipe     3  [ 2- 4]    in_range
+board_wipe     2  [ 2- 4]    in_range
 wincons        3  [ 2- 4]    in_range
 synergy       18  [ 0-18]    in_range
 
@@ -19,7 +19,7 @@ synergy       18  [ 0-18]    in_range
 
 ## Mainboard (99)
 
-### lands (41)
+### lands (39)
 1x Misty Rainforest                           score 1.10  [lands]  cp-sat, score 1.10
 1x Windswept Heath                            score 1.09  [lands]  cp-sat, score 1.09
 1x Wooded Foothills                           score 1.08  [lands]  cp-sat, score 1.08
@@ -59,8 +59,6 @@ synergy       18  [ 0-18]    in_range
 1x Vesuva                                     score 0.27  [lands]  cp-sat, score 0.27
 1x Bala Ged Recovery // Bala Ged Sanctuary    score 0.25  [lands]  cp-sat, score 0.25
 1x Taiga                                      score 0.25  [lands]  cp-sat, score 0.25
-1x Savannah                                   score 0.24  [lands]  cp-sat, score 0.24
-1x Tropical Island                            score 0.24  [lands]  cp-sat, score 0.24
 
 ### ramp (18)
 1x Lotus Cobra                                score 1.39  [ramp]  cp-sat, score 1.39
@@ -102,17 +100,16 @@ synergy       18  [ 0-18]    in_range
 1x Force of Will                              score 0.55  [removal]  cp-sat, score 0.55
 1x Chaos Warp                                 score 0.49  [removal]  cp-sat, score 0.49
 
-### board_wipe (3)
+### board_wipe (2)
 1x Cyclonic Rift                              score 1.32  [board_wipe/removal]  cp-sat, score 1.32
 1x Farewell                                   score 0.29  [board_wipe]  cp-sat, score 0.29
-1x Dragonback Assault                         score 0.25  [board_wipe]  cp-sat, score 0.25
 
 ### wincons (3)
 1x Moraug, Fury of Akoum                      score 0.63  [wincons]  cp-sat, score 0.63
 1x Finale of Devastation                      score 0.39  [wincons]  cp-sat, score 0.39
 1x Craterhoof Behemoth                        score 0.30  [wincons]  cp-sat, score 0.30
 
-### synergy (18)
+### synergy (21)
 1x Ancient Greenwarden                        score 1.29  [synergy]  cp-sat, score 1.29
 1x Scute Swarm                                score 1.25  [synergy]  cp-sat, score 1.25
 1x Crop Rotation                              score 1.16  [synergy]  cp-sat, score 1.16
@@ -121,30 +118,41 @@ synergy       18  [ 0-18]    in_range
 1x Avenger of Zendikar                        score 0.97  [synergy]  cp-sat, score 0.97
 1x Felidar Retreat                            score 0.89  [synergy]  cp-sat, score 0.89
 1x Scapeshift                                 score 0.75  [synergy]  cp-sat, score 0.75
-1x Deflecting Swat                            score 0.72  [synergy]  cp-sat, score 0.72
+1x Deflecting Swat                            score 0.72  [protection]  cp-sat, score 0.72
 1x Rampaging Baloths                          score 0.70  [synergy]  cp-sat, score 0.70
 1x Elesh Norn, Mother of Machines             score 0.66  [synergy]  cp-sat, score 0.66
 1x Traveling Chocobo                          score 0.63  [synergy]  cp-sat, score 0.63
-1x Teferi's Protection                        score 0.61  [synergy]  cp-sat, score 0.61
+1x Teferi's Protection                        score 0.61  [protection]  cp-sat, score 0.61
 1x Tannuk, Memorial Ensign                    score 0.57  [synergy]  cp-sat, score 0.57
 1x Conduit of Worlds                          score 0.57  [synergy]  cp-sat, score 0.57
-1x Heroic Intervention                        score 0.56  [synergy]  cp-sat, score 0.56
+1x Heroic Intervention                        score 0.56  [protection]  cp-sat, score 0.56
 1x Retreat to Coralhelm                       score 0.55  [synergy]  cp-sat, score 0.55
-1x Flawless Maneuver                          score 0.50  [synergy]  cp-sat, score 0.50
+1x Springheart Nantuko                        score 0.49  [synergy]  cp-sat, score 0.49
+1x Roil Elemental                             score 0.48  [synergy]  cp-sat, score 0.48
+1x Mossborn Hydra                             score 0.45  [synergy]  cp-sat, score 0.45
+1x Eternal Witness                            score 0.42  [synergy]  cp-sat, score 0.42
 
 ## Maybeboard (15)
 1x Harrow                                     score 0.58  [ramp]  fuera: cuota llena en ramp
 1x Icetill Explorer                           score 0.57  [ramp]  fuera: cuota llena en ramp
 1x Splendid Reclamation                       score 0.51  [ramp]  fuera: cuota llena en ramp
-1x Springheart Nantuko                        score 0.49  [synergy]  fuera: cuota llena en synergy
+1x Flawless Maneuver                          score 0.50  [protection]  fuera: cuota llena en protection
 1x Titania, Protector of Argoth               score 0.48  [ramp]  fuera: cuota llena en ramp
-1x Roil Elemental                             score 0.48  [synergy]  fuera: cuota llena en synergy
 1x Strip Mine                                 score 0.46  [lands/removal]  fuera por score 0.46
 1x Beast Within                               score 0.45  [removal]  fuera: cuota llena en removal
-1x Mossborn Hydra                             score 0.45  [synergy]  fuera: cuota llena en synergy
 1x Cultivate                                  score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Burgeoning                                 score 0.43  [ramp]  fuera: cuota llena en ramp
 1x Awaken the Woods                           score 0.42  [ramp]  fuera: cuota llena en ramp
-1x Eternal Witness                            score 0.42  [synergy]  fuera: cuota llena en synergy
 1x Kodama's Reach                             score 0.42  [ramp]  fuera: cuota llena en ramp
 1x Birds of Paradise                          score 0.40  [ramp]  fuera: cuota llena en ramp
+1x Sakura-Tribe Elder                         score 0.39  [ramp]  fuera: cuota llena en ramp
+1x Eladamri's Call                            score 0.39  [synergy]  fuera: cuota llena en synergy
+1x Growth Spiral                              score 0.39  [ramp]  fuera: cuota llena en ramp
+
+## Cartas nuevas (arranque en frío) (4)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Mole Man, Moloid Master                    score 0.23  [synergy]  carta nueva (EDHREC New Cards)
+1x Multiversal Recruitment                    score 0.03  [synergy]  carta nueva (EDHREC New Cards)
+1x Quinjet Technician                         score 0.02  [ramp]  carta nueva (EDHREC New Cards)
+1x Silver Surfer, Cosmic Voyager              score 0.01  [synergy]  carta nueva (EDHREC New Cards)

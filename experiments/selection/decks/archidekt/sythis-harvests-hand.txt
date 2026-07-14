@@ -47,13 +47,11 @@
 1x Seal of Primordium [Removal]
 1x Solitary Confinement [Synergy]
 1x Whip Silk [Synergy]
-1x Greater Auramancy [Synergy]
 1x Burgeoning [Ramp]
 1x Carpet of Flowers [Ramp]
 1x Eladamri's Call [Synergy]
 1x Stony Silence [Synergy]
 1x Ethereal Armor [Synergy]
-1x Teferi's Protection [Synergy]
 1x Crop Rotation [Synergy]
 1x All That Glitters [Synergy]
 1x Rest in Peace [Synergy]
@@ -64,6 +62,8 @@
 1x Abundant Growth [Ramp]
 1x Mirari's Wake [Ramp]
 1x Land Tax [Synergy]
+1x Gauntlets of Light [Synergy]
+1x Calix, Guided by Fate [Synergy]
 1x Hall of Heliod's Generosity [Lands]
 1x Temple Garden [Lands]
 1x Windswept Heath [Lands]
@@ -101,10 +101,10 @@
 
 # Sideboard
 1x Serra's Sanctum
+1x Greater Auramancy
+1x Teferi's Protection
 1x Heroic Intervention
 1x Privileged Position
-1x Gauntlets of Light
-1x Calix, Guided by Fate
 1x Nykthos, Shrine to Nyx
 1x Starfield Mystic
 1x Grand Abolisher
@@ -115,3 +115,7 @@
 1x Flawless Maneuver
 1x Mirri's Guile
 1x Concordant Crossroads
+# --- cartas nuevas ---
+1x Jennifer Walters // The Sensational She-Hulk
+1x Gathering Place
+1x Shang-Chi, Master of Kung Fu

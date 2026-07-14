@@ -40,7 +40,6 @@
 1x Staff of Domination [Card Draw]
 1x Sting, the Glinting Dagger [Synergy]
 1x Three Tree City [Lands]
-1x Swiftfoot Boots [Synergy]
 1x Goblin Sharpshooter [Removal]
 1x Dragon Fodder [Synergy]
 1x Goblin Piledriver [Synergy]
@@ -53,9 +52,13 @@
 1x Treasure Nabber [Synergy]
 1x Moggcatcher [Synergy]
 1x Den of the Bugbear [Lands]
+1x Coat of Arms [Synergy]
 1x Cavern of Souls [Lands]
 1x Castle Embereth [Lands]
 1x Grenzo, Havoc Raiser [Card Draw]
+1x Boggart Shenanigans [Synergy]
+1x Hordeling Outburst [Synergy]
+1x Goblin Instigator [Synergy]
 1x Massive Raid [Removal]
 1x Gempalm Incinerator [Removal]
 1x Arena of Glory [Lands]
@@ -68,14 +71,12 @@
 1x Blasphemous Act [Board Wipe]
 1x Vanquisher's Banner [Card Draw]
 1x Ancient Tomb [Lands]
-1x Patchwork Banner [Ramp]
 1x Dark-Dweller Oracle [Card Draw]
 1x War Room [Lands]
-1x Thrill of Possibility [Card Draw]
 1x Goblin Burrows [Lands]
 1x Forgotten Cave [Lands]
-1x Wheel of Fortune [Card Draw]
 1x Hall of the Bandit Lord [Lands]
+1x Myriad Landscape [Lands]
 1x Command Beacon [Lands]
 1x Buried Ruin [Lands]
 1x Valakut Awakening // Valakut Stoneforge [Lands]
@@ -95,13 +96,10 @@
 1x Inventors' Fair [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-3x Mountain [Lands]
+2x Mountain [Lands]
 
 # Sideboard
-1x Coat of Arms
-1x Boggart Shenanigans
-1x Hordeling Outburst
-1x Goblin Instigator
+1x Swiftfoot Boots
 1x Battle Cry Goblin
 1x Jeska's Will
 1x Goblin Grenade
@@ -113,3 +111,12 @@
 1x Beetleback Chief
 1x Torch Courier
 1x Throne of the God-Pharaoh
+1x Rising of the Day
+1x Raid Bombardment
+1x Searslicer Goblin
+# --- cartas nuevas ---
+1x Hex Magic
+1x Super Speed
+1x Hawkeye's Bow
+1x Loki's Scepter
+1x Panther Robot

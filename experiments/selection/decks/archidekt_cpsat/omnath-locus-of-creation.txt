@@ -74,11 +74,14 @@
 1x Marsh Flats [Lands]
 1x Jetmir's Garden [Lands]
 1x Raugrin Triome [Lands]
-1x Flawless Maneuver [Synergy]
 1x Bloodstained Mire [Lands]
+1x Springheart Nantuko [Synergy]
 1x Chaos Warp [Removal]
+1x Roil Elemental [Synergy]
+1x Mossborn Hydra [Synergy]
 1x Arcane Signet [Ramp]
 1x Oboro, Palace in the Clouds [Lands]
+1x Eternal Witness [Synergy]
 1x Finale of Devastation [Wincons]
 1x Izzet Boilerworks [Lands]
 1x Tireless Tracker [Card Draw]
@@ -94,24 +97,26 @@
 1x Vesuva [Lands]
 1x Bala Ged Recovery // Bala Ged Sanctuary [Lands]
 1x Taiga [Lands]
-1x Dragonback Assault [Board Wipe]
-1x Savannah [Lands]
-1x Tropical Island [Lands]
 1x Trade Routes [Card Draw]
 
 # Sideboard
 1x Harrow
 1x Icetill Explorer
 1x Splendid Reclamation
-1x Springheart Nantuko
+1x Flawless Maneuver
 1x Titania, Protector of Argoth
-1x Roil Elemental
 1x Strip Mine
 1x Beast Within
-1x Mossborn Hydra
 1x Cultivate
 1x Burgeoning
 1x Awaken the Woods
-1x Eternal Witness
 1x Kodama's Reach
 1x Birds of Paradise
+1x Sakura-Tribe Elder
+1x Eladamri's Call
+1x Growth Spiral
+# --- cartas nuevas ---
+1x Mole Man, Moloid Master
+1x Multiversal Recruitment
+1x Quinjet Technician
+1x Silver Surfer, Cosmic Voyager

@@ -75,13 +75,14 @@
 1x Razaketh, the Foulblooded [Synergy]
 1x Ancient Tomb [Lands]
 1x Unmarked Grave [Synergy]
-1x Wood Elves [Ramp]
 1x Necromancy [Synergy]
 1x Twilight Diviner [Synergy]
 1x Syr Konrad, the Grim [Synergy]
 1x Takenuma, Abandoned Mire [Lands]
 1x Bojuka Bog [Lands]
 1x Bayou [Lands]
+1x Lightning Greaves [Synergy]
+1x Cabal Coffers [Lands]
 1x Blooming Marsh [Lands]
 1x Windswept Heath [Lands]
 1x Wooded Foothills [Lands]
@@ -92,7 +93,6 @@
 1x Marsh Flats [Lands]
 1x Misty Rainforest [Lands]
 1x Midnight Reaper [Card Draw]
-1x Agadeem's Awakening // Agadeem, the Undercrypt [Lands]
 1x Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel [Card Draw]
 1x Finale of Devastation [Wincons]
 1x Disciple of Freyalise // Garden of Freyalise [Lands]
@@ -104,14 +104,19 @@
 1x Ravenous Chupacabra
 1x Boseiju, Who Endures
 1x Dictate of Erebos
+1x Wood Elves
 1x Fyndhorn Elves
 1x Shriekmaw
 1x Pitiless Plunderer
 1x Wight of the Reliquary
 1x Survival of the Fittest
-1x Lightning Greaves
-1x Cabal Coffers
 1x Green Sun's Zenith
 1x Orcish Bowmasters
 1x Umbral Collar Zealot
 1x Gravecrawler
+1x Junji, the Midnight Sky
+# --- cartas nuevas ---
+1x Black Widow, Daring Operative
+1x Grim Reaper's Scythe
+1x Undead Hand Ninja
+1x Earth's Mightiest Heroes

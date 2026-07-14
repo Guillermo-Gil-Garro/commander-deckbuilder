@@ -48,14 +48,12 @@
 1x Seal of Primordium [Removal]
 1x Solitary Confinement [Synergy]
 1x Whip Silk [Synergy]
-1x Greater Auramancy [Synergy]
 1x Burgeoning [Ramp]
 1x Carpet of Flowers [Ramp]
 1x Eladamri's Call [Synergy]
 1x Stony Silence [Synergy]
 1x Ethereal Armor [Synergy]
 1x Sunpetal Grove [Lands]
-1x Teferi's Protection [Synergy]
 1x Yavimaya, Cradle of Growth [Lands]
 1x Horizon Canopy [Lands]
 1x Crop Rotation [Synergy]
@@ -70,13 +68,15 @@
 1x Canopy Vista [Lands]
 1x Strength of the Harvest // Haven of the Harvest [Lands]
 1x Land Tax [Synergy]
-1x Heroic Intervention [Synergy]
 1x Sol Ring [Ramp]
-1x Privileged Position [Synergy]
 1x Overgrown Farmland [Lands]
+1x Gauntlets of Light [Synergy]
+1x Calix, Guided by Fate [Synergy]
 1x Nykthos, Shrine to Nyx [Lands]
 1x Savannah [Lands]
+1x Grand Abolisher [Synergy]
 1x Hushwood Verge [Lands]
+1x Mirri's Guile [Synergy]
 1x Courser of Kruphix [Card Draw]
 1x Wooded Bastion [Lands]
 1x Wooded Foothills [Lands]
@@ -100,18 +100,22 @@
 1x Kor Spiritdancer [Card Draw]
 
 # Sideboard
+1x Greater Auramancy
+1x Teferi's Protection
 1x Abundant Growth
 1x Mirari's Wake
-1x Gauntlets of Light
-1x Calix, Guided by Fate
+1x Heroic Intervention
+1x Privileged Position
 1x Starfield Mystic
-1x Grand Abolisher
 1x Karmic Justice
 1x Overgrowth
 1x Swift Reconfiguration
 1x Composer of Spring
 1x Flawless Maneuver
-1x Mirri's Guile
 1x Concordant Crossroads
 1x Birds of Paradise
 1x Weaver of Harmony
+# --- cartas nuevas ---
+1x Jennifer Walters // The Sensational She-Hulk
+1x Gathering Place
+1x Shang-Chi, Master of Kung Fu

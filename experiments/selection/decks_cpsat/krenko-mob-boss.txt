@@ -1,14 +1,14 @@
 # Krenko, Mob Boss — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.05s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
-# Objetivo: 65.1687 (score bruto 65.3124, penalizaciones escaladas 143697)
-# Fixing color (fuentes/objetivo): R: 22/38 (déficit 16)
+# Construido en 0.04s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
+# Objetivo: 66.1784 (score bruto 66.3480, penalizaciones escaladas 169637)
+# Fixing color (fuentes/objetivo): R: 20/38 (déficit 18)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
 lands         34  [33-36]    in_range  (suelo Karsten: 34, mínimo efectivo: 34)
 ramp          12  [ 7-12]    in_range
-card_draw     11  [ 8-11]    in_range
+card_draw      9  [ 8-11]    in_range
 removal       11  [ 6-11]    in_range
 board_wipe     1  [ 1- 3]    in_range
 wincons        0  [ 0- 4]    in_range
@@ -32,6 +32,7 @@ synergy       35  [ 0-35]    in_range
 1x Goblin Burrows                             score 0.22  [lands]  cp-sat, score 0.22
 1x Forgotten Cave                             score 0.18  [lands]  cp-sat, score 0.18
 1x Hall of the Bandit Lord                    score 0.14  [lands]  cp-sat, score 0.14
+1x Myriad Landscape                           score 0.13  [lands/ramp]  cp-sat, score 0.13
 1x Command Beacon                             score 0.13  [lands]  cp-sat, score 0.13
 1x Buried Ruin                                score 0.12  [lands]  cp-sat, score 0.12
 1x Valakut Awakening // Valakut Stoneforge    score 0.12  [card_draw/lands]  cp-sat, score 0.12
@@ -51,9 +52,9 @@ synergy       35  [ 0-35]    in_range
 1x Inventors' Fair                            score 0.05  [lands]  cp-sat, score 0.05
 1x Shinka, the Bloodsoaked Keep               score 0.05  [lands]  cp-sat, score 0.05
 1x Smoldering Crater                          score 0.05  [lands]  cp-sat, score 0.05
-3x Mountain                                   score  --   [lands]  básica x3 (asignada por el solver)
+2x Mountain                                   score  --   [lands]  básica x2 (asignada por el solver)
 
-### ramp (9)
+### ramp (8)
 1x Skirk Prospector                           score 1.64  [ramp]  cp-sat, score 1.64
 1x Sol Ring                                   score 1.00  [ramp]  always (rules.yaml)
 1x Howlsquad Heavy                            score 0.93  [ramp]  cp-sat, score 0.93
@@ -62,9 +63,8 @@ synergy       35  [ 0-35]    in_range
 1x Mana Echoes                                score 0.51  [ramp]  cp-sat, score 0.51
 1x Patriar's Seal                             score 0.51  [ramp]  cp-sat, score 0.51
 1x Phyrexian Altar                            score 0.49  [ramp]  cp-sat, score 0.49
-1x Patchwork Banner                           score 0.28  [ramp]  cp-sat, score 0.28
 
-### card_draw (9)
+### card_draw (7)
 1x Skullclamp                                 score 1.30  [card_draw]  cp-sat, score 1.30
 1x Goblin Ringleader                          score 0.91  [card_draw]  cp-sat, score 0.91
 1x Staff of Domination                        score 0.77  [card_draw]  cp-sat, score 0.77
@@ -72,8 +72,6 @@ synergy       35  [ 0-35]    in_range
 1x Moria Marauder                             score 0.40  [card_draw]  cp-sat, score 0.40
 1x Vanquisher's Banner                        score 0.31  [card_draw]  cp-sat, score 0.31
 1x Dark-Dweller Oracle                        score 0.27  [card_draw]  cp-sat, score 0.27
-1x Thrill of Possibility                      score 0.23  [card_draw]  cp-sat, score 0.23
-1x Wheel of Fortune                           score 0.17  [card_draw]  cp-sat, score 0.17
 
 ### removal (11)
 1x Goblin Bombardment                         score 1.51  [removal]  cp-sat, score 1.51
@@ -91,7 +89,7 @@ synergy       35  [ 0-35]    in_range
 ### board_wipe (1)
 1x Blasphemous Act                            score 0.39  [board_wipe]  cp-sat, score 0.39
 
-### synergy (35)
+### synergy (38)
 1x Goblin Warchief                            score 1.69  [synergy]  cp-sat, score 1.69
 1x Goblin Matron                              score 1.66  [synergy]  cp-sat, score 1.66
 1x Goblin Chieftain                           score 1.59  [synergy]  cp-sat, score 1.59
@@ -111,14 +109,13 @@ synergy       35  [ 0-35]    in_range
 1x Shared Animosity                           score 0.96  [synergy]  cp-sat, score 0.96
 1x General Kreat, the Boltbringer             score 0.96  [synergy]  cp-sat, score 0.96
 1x Warren Instigator                          score 0.91  [synergy]  cp-sat, score 0.91
-1x Lightning Greaves                          score 0.90  [synergy]  cp-sat, score 0.90
+1x Lightning Greaves                          score 0.90  [protection]  cp-sat, score 0.90
 1x Krenko's Command                           score 0.88  [synergy]  cp-sat, score 0.88
-1x Hexing Squelcher                           score 0.88  [synergy]  cp-sat, score 0.88
+1x Hexing Squelcher                           score 0.88  [protection]  cp-sat, score 0.88
 1x Thousand-Year Elixir                       score 0.87  [synergy]  cp-sat, score 0.87
-1x Deflecting Swat                            score 0.81  [synergy]  cp-sat, score 0.81
+1x Deflecting Swat                            score 0.81  [protection]  cp-sat, score 0.81
 1x Rundvelt Hordemaster                       score 0.80  [synergy]  cp-sat, score 0.80
 1x Sting, the Glinting Dagger                 score 0.77  [synergy]  cp-sat, score 0.77
-1x Swiftfoot Boots                            score 0.72  [synergy]  cp-sat, score 0.72
 1x Dragon Fodder                              score 0.70  [synergy]  cp-sat, score 0.70
 1x Goblin Piledriver                          score 0.67  [synergy]  cp-sat, score 0.67
 1x Umbral Mantle                              score 0.65  [synergy]  cp-sat, score 0.65
@@ -127,12 +124,13 @@ synergy       35  [ 0-35]    in_range
 1x Goro-Goro, Disciple of Ryusei              score 0.63  [synergy]  cp-sat, score 0.63
 1x Treasure Nabber                            score 0.62  [synergy]  cp-sat, score 0.62
 1x Moggcatcher                                score 0.61  [synergy]  cp-sat, score 0.61
+1x Coat of Arms                               score 0.59  [synergy]  cp-sat, score 0.59
+1x Boggart Shenanigans                        score 0.57  [synergy]  cp-sat, score 0.57
+1x Hordeling Outburst                         score 0.57  [synergy]  cp-sat, score 0.57
+1x Goblin Instigator                          score 0.57  [synergy]  cp-sat, score 0.57
 
 ## Maybeboard (15)
-1x Coat of Arms                               score 0.59  [synergy]  fuera: cuota llena en synergy
-1x Boggart Shenanigans                        score 0.57  [synergy]  fuera: cuota llena en synergy
-1x Hordeling Outburst                         score 0.57  [synergy]  fuera: cuota llena en synergy
-1x Goblin Instigator                          score 0.57  [synergy]  fuera: cuota llena en synergy
+1x Swiftfoot Boots                            score 0.72  [protection]  fuera: cuota llena en protection
 1x Battle Cry Goblin                          score 0.51  [synergy]  fuera: cuota llena en synergy
 1x Jeska's Will                               score 0.48  [synergy]  fuera: cuota llena en synergy
 1x Goblin Grenade                             score 0.47  [removal]  fuera: cuota llena en removal
@@ -144,3 +142,15 @@ synergy       35  [ 0-35]    in_range
 1x Beetleback Chief                           score 0.43  [synergy]  fuera: cuota llena en synergy
 1x Torch Courier                              score 0.43  [synergy]  fuera: cuota llena en synergy
 1x Throne of the God-Pharaoh                  score 0.41  [synergy]  fuera: cuota llena en synergy
+1x Rising of the Day                          score 0.41  [synergy]  fuera: cuota llena en synergy
+1x Raid Bombardment                           score 0.39  [synergy]  fuera: cuota llena en synergy
+1x Searslicer Goblin                          score 0.39  [synergy]  fuera: cuota llena en synergy
+
+## Cartas nuevas (arranque en frío) (5)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Hex Magic                                  score 0.01  [card_draw]  carta nueva (EDHREC New Cards)
+1x Super Speed                                score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Hawkeye's Bow                              score 0.00  [synergy]  carta nueva (EDHREC New Cards)
+1x Loki's Scepter                             score 0.00  [ramp]  carta nueva (EDHREC New Cards)
+1x Panther Robot                              score 0.00  [synergy]  carta nueva (EDHREC New Cards)

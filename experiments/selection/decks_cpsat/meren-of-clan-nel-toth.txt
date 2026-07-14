@@ -1,7 +1,7 @@
 # Meren of Clan Nel Toth — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.03s | mainboard: 99 cartas
+# Construido en 0.02s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 72.2987 (score bruto 72.4338, penalizaciones escaladas 135138)
+# Objetivo: 72.3613 (score bruto 72.4964, penalizaciones escaladas 135138)
 # Fixing color (fuentes/objetivo): B: 27/32 (déficit 5), G: 25/38 (déficit 13)
 
 ## Resumen de cuotas
@@ -41,6 +41,7 @@ synergy       30  [ 0-30]    in_range
 1x Takenuma, Abandoned Mire                   score 0.46  [lands]  cp-sat, score 0.46
 1x Bojuka Bog                                 score 0.46  [lands]  cp-sat, score 0.46
 1x Bayou                                      score 0.42  [lands]  cp-sat, score 0.42
+1x Cabal Coffers                              score 0.42  [lands/ramp]  cp-sat, score 0.42
 1x Blooming Marsh                             score 0.41  [lands]  cp-sat, score 0.41
 1x Windswept Heath                            score 0.41  [lands]  cp-sat, score 0.41
 1x Wooded Foothills                           score 0.41  [lands]  cp-sat, score 0.41
@@ -50,12 +51,11 @@ synergy       30  [ 0-30]    in_range
 1x Bloodstained Mire                          score 0.38  [lands]  cp-sat, score 0.38
 1x Marsh Flats                                score 0.36  [lands]  cp-sat, score 0.36
 1x Misty Rainforest                           score 0.34  [lands]  cp-sat, score 0.34
-1x Agadeem's Awakening // Agadeem, the Undercrypt score 0.29  [lands]  cp-sat, score 0.29
 1x Disciple of Freyalise // Garden of Freyalise score 0.25  [card_draw/lands]  cp-sat, score 0.25
 1x Grim Backwoods                             score 0.19  [card_draw/lands]  cp-sat, score 0.19
 1x Westvale Abbey // Ormendahl, Profane Prince score 0.13  [lands/wincons]  cp-sat, score 0.13
 
-### ramp (12)
+### ramp (11)
 1x Sakura-Tribe Elder                         score 1.34  [ramp]  cp-sat, score 1.34
 1x Sol Ring                                   score 1.03  [ramp]  always (rules.yaml)
 1x Ashnod's Altar                             score 1.01  [ramp]  cp-sat, score 1.01
@@ -67,7 +67,6 @@ synergy       30  [ 0-30]    in_range
 1x Elves of Deep Shadow                       score 0.71  [ramp]  cp-sat, score 0.71
 1x Elvish Mystic                              score 0.60  [ramp]  cp-sat, score 0.60
 1x Arcane Signet                              score 0.51  [ramp]  always (rules.yaml)
-1x Wood Elves                                 score 0.48  [ramp]  cp-sat, score 0.48
 
 ### card_draw (6)
 1x Skullclamp                                 score 1.06  [card_draw]  cp-sat, score 1.06
@@ -100,7 +99,7 @@ synergy       30  [ 0-30]    in_range
 ### wincons (1)
 1x Finale of Devastation                      score 0.25  [wincons]  cp-sat, score 0.25
 
-### synergy (30)
+### synergy (31)
 1x Spore Frog                                 score 1.53  [synergy]  cp-sat, score 1.53
 1x Eternal Witness                            score 1.51  [synergy]  cp-sat, score 1.51
 1x Viscera Seer                               score 1.33  [synergy]  cp-sat, score 1.33
@@ -131,20 +130,29 @@ synergy       30  [ 0-30]    in_range
 1x Necromancy                                 score 0.47  [synergy]  cp-sat, score 0.47
 1x Twilight Diviner                           score 0.47  [synergy]  cp-sat, score 0.47
 1x Syr Konrad, the Grim                       score 0.47  [synergy]  cp-sat, score 0.47
+1x Lightning Greaves                          score 0.42  [protection]  cp-sat, score 0.42
 
 ## Maybeboard (15)
 1x Reclamation Sage                           score 0.56  [removal]  fuera: cuota llena en removal
 1x Ravenous Chupacabra                        score 0.53  [removal]  fuera: cuota llena en removal
 1x Boseiju, Who Endures                       score 0.50  [lands/removal]  fuera por score 0.50
 1x Dictate of Erebos                          score 0.50  [removal]  fuera: cuota llena en removal
+1x Wood Elves                                 score 0.48  [ramp]  fuera: cuota llena en ramp
 1x Fyndhorn Elves                             score 0.46  [ramp]  fuera: cuota llena en ramp
 1x Shriekmaw                                  score 0.45  [removal]  fuera: cuota llena en removal
 1x Pitiless Plunderer                         score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Wight of the Reliquary                     score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Survival of the Fittest                    score 0.42  [synergy]  fuera: cuota llena en synergy
-1x Lightning Greaves                          score 0.42  [synergy]  fuera: cuota llena en synergy
-1x Cabal Coffers                              score 0.42  [lands/ramp]  fuera por score 0.42
 1x Green Sun's Zenith                         score 0.41  [synergy]  fuera: cuota llena en synergy
 1x Orcish Bowmasters                          score 0.41  [removal]  fuera: cuota llena en removal
 1x Umbral Collar Zealot                       score 0.40  [synergy]  fuera: cuota llena en synergy
 1x Gravecrawler                               score 0.40  [synergy]  fuera: cuota llena en synergy
+1x Junji, the Midnight Sky                    score 0.39  [synergy]  fuera: cuota llena en synergy
+
+## Cartas nuevas (arranque en frío) (4)
+# Lista 'New Cards' de EDHREC que no entró al mainboard; el score
+# EDHREC tarda meses en reflejarlas — el jugador ve y decide.
+1x Black Widow, Daring Operative              score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Grim Reaper's Scythe                       score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Undead Hand Ninja                          score 0.01  [synergy]  carta nueva (EDHREC New Cards)
+1x Earth's Mightiest Heroes                   score 0.01  [synergy]  carta nueva (EDHREC New Cards)

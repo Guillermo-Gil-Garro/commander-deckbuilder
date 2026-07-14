@@ -49,7 +49,6 @@
 1x Deflecting Swat [Synergy]
 1x Rundvelt Hordemaster [Synergy]
 1x Sting, the Glinting Dagger [Synergy]
-1x Swiftfoot Boots [Synergy]
 1x Goblin Sharpshooter [Removal]
 1x Dragon Fodder [Synergy]
 1x Goblin Piledriver [Synergy]
@@ -59,10 +58,11 @@
 1x Goro-Goro, Disciple of Ryusei [Synergy]
 1x Treasure Nabber [Synergy]
 1x Moggcatcher [Synergy]
+1x Coat of Arms [Synergy]
+1x Boggart Shenanigans [Synergy]
+1x Hordeling Outburst [Synergy]
+1x Goblin Instigator [Synergy]
 1x Massive Raid [Removal]
-1x Phyrexian Altar [Ramp]
-1x Blasphemous Act [Board Wipe]
-1x Patchwork Banner [Ramp]
 1x Three Tree City [Lands]
 1x Den of the Bugbear [Lands]
 1x Cavern of Souls [Lands]
@@ -70,10 +70,12 @@
 1x Arena of Glory [Lands]
 1x Path of Ancestry [Lands]
 1x Nykthos, Shrine to Nyx [Lands]
+1x Ancient Tomb [Lands]
 1x War Room [Lands]
 1x Goblin Burrows [Lands]
 1x Forgotten Cave [Lands]
 1x Hall of the Bandit Lord [Lands]
+1x Myriad Landscape [Lands]
 1x Command Beacon [Lands]
 1x Buried Ruin [Lands]
 1x Valakut Awakening // Valakut Stoneforge [Lands]
@@ -93,15 +95,13 @@
 1x Inventors' Fair [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-5x Mountain [Lands]
+3x Mountain [Lands]
 
 # Sideboard
-1x Coat of Arms
-1x Boggart Shenanigans
-1x Hordeling Outburst
-1x Goblin Instigator
+1x Swiftfoot Boots
 1x Gempalm Incinerator
 1x Battle Cry Goblin
+1x Phyrexian Altar
 1x Jeska's Will
 1x Goblin Grenade
 1x Fervor
@@ -111,3 +111,11 @@
 1x Beetleback Chief
 1x Torch Courier
 1x Throne of the God-Pharaoh
+1x Rising of the Day
+1x Raid Bombardment
+# --- cartas nuevas ---
+1x Hex Magic
+1x Super Speed
+1x Hawkeye's Bow
+1x Loki's Scepter
+1x Panther Robot
