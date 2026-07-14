@@ -1,7 +1,7 @@
 # Niv-Mizzet, Parun — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.02s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
-# Objetivo: 53.8584 (score bruto 53.8584, penalizaciones escaladas 0)
+# Objetivo: 56.6584 (score bruto 56.6584, penalizaciones escaladas 0)
 # Fixing color (fuentes/objetivo): R: 35/35, U: 36/32
 
 ## Resumen de cuotas
@@ -84,29 +84,30 @@ synergy       24  [ 0-30]    in_range
 1x Expressive Iteration                       score 0.32  [card_draw]  cp-sat, score 0.32
 1x Thrill of Possibility                      score 0.31  [card_draw]  cp-sat, score 0.31
 
-### removal (13)
-1x Counterspell                               score 1.08  [removal]  always (rules.yaml)
-1x Cyclonic Rift                              score 0.94  [board_wipe/removal]  always (rules.yaml)
+### removal (12)
+1x Counterspell                               score 1.48  [removal]  cp-sat, score 1.48
+1x Fierce Guardianship                        score 1.10  [removal]  cp-sat, score 1.10
+1x Force of Will                              score 1.01  [removal]  cp-sat, score 1.01
+1x Mana Drain                                 score 0.98  [removal]  cp-sat, score 0.98
+1x Chaos Warp                                 score 0.79  [removal]  cp-sat, score 0.79
 1x Niv-Mizzet, the Firemind                   score 0.72  [card_draw/removal]  cp-sat, score 0.72
 1x Arcane Denial                              score 0.70  [removal]  cp-sat, score 0.70
-1x Fierce Guardianship                        score 0.70  [removal]  always (rules.yaml)
 1x An Offer You Can't Refuse                  score 0.65  [removal]  cp-sat, score 0.65
 1x Swan Song                                  score 0.65  [removal]  cp-sat, score 0.65
 1x Lightning Bolt                             score 0.64  [removal]  cp-sat, score 0.64
 1x Izzet Charm                                score 0.63  [removal]  cp-sat, score 0.63
 1x Pongify                                    score 0.61  [removal]  cp-sat, score 0.61
-1x Force of Will                              score 0.61  [removal]  always (rules.yaml)
-1x Mana Drain                                 score 0.58  [removal]  always (rules.yaml)
-1x Chaos Warp                                 score 0.39  [removal]  always (rules.yaml)
 
-### board_wipe (1)
-1x Blasphemous Act                            score 0.69  [board_wipe]  always (rules.yaml)
+### board_wipe (2)
+1x Cyclonic Rift                              score 1.34  [board_wipe/removal]  cp-sat, score 1.34
+1x Blasphemous Act                            score 0.69  [board_wipe]  cp-sat, score 0.69
 
 ### wincons (2)
 1x Grapeshot                                  score 0.13  [removal/wincons]  cp-sat, score 0.13
 1x Rite of the Dragoncaller                   score 0.06  [wincons]  cp-sat, score 0.06
 
 ### synergy (24)
+1x Deflecting Swat                            score 0.95  [synergy]  cp-sat, score 0.95
 1x Ponder                                     score 0.95  [synergy]  cp-sat, score 0.95
 1x Preordain                                  score 0.85  [synergy]  cp-sat, score 0.85
 1x Opt                                        score 0.84  [synergy]  cp-sat, score 0.84
@@ -115,7 +116,6 @@ synergy       24  [ 0-30]    in_range
 1x Guttersnipe                                score 0.69  [synergy]  cp-sat, score 0.69
 1x Gitaxian Probe                             score 0.65  [synergy]  cp-sat, score 0.65
 1x Harmonic Prodigy                           score 0.64  [synergy]  cp-sat, score 0.64
-1x Deflecting Swat                            score 0.55  [synergy]  always (rules.yaml)
 1x Narset, Parter of Veils                    score 0.51  [synergy]  cp-sat, score 0.51
 1x Consider                                   score 0.51  [synergy]  cp-sat, score 0.51
 1x Psychosis Crawler                          score 0.47  [synergy]  cp-sat, score 0.47

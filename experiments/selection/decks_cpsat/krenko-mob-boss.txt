@@ -1,7 +1,7 @@
 # Krenko, Mob Boss — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.04s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 64.3687 (score bruto 64.5124, penalizaciones escaladas 143697)
+# Construido en 0.05s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
+# Objetivo: 65.1687 (score bruto 65.3124, penalizaciones escaladas 143697)
 # Fixing color (fuentes/objetivo): R: 22/38 (déficit 16)
 
 ## Resumen de cuotas
@@ -82,9 +82,9 @@ synergy       35  [ 0-35]    in_range
 1x Hobgoblin Bandit Lord                      score 1.27  [removal]  cp-sat, score 1.27
 1x Goblin War Strike                          score 1.07  [removal]  cp-sat, score 1.07
 1x Siege-Gang Commander                       score 1.03  [removal]  cp-sat, score 1.03
+1x Chaos Warp                                 score 0.98  [removal]  cp-sat, score 0.98
 1x Thornbite Staff                            score 0.82  [removal]  cp-sat, score 0.82
 1x Goblin Sharpshooter                        score 0.71  [removal]  cp-sat, score 0.71
-1x Chaos Warp                                 score 0.58  [removal]  always (rules.yaml)
 1x Massive Raid                               score 0.55  [removal]  cp-sat, score 0.55
 1x Gempalm Incinerator                        score 0.53  [removal]  cp-sat, score 0.53
 
@@ -115,6 +115,7 @@ synergy       35  [ 0-35]    in_range
 1x Krenko's Command                           score 0.88  [synergy]  cp-sat, score 0.88
 1x Hexing Squelcher                           score 0.88  [synergy]  cp-sat, score 0.88
 1x Thousand-Year Elixir                       score 0.87  [synergy]  cp-sat, score 0.87
+1x Deflecting Swat                            score 0.81  [synergy]  cp-sat, score 0.81
 1x Rundvelt Hordemaster                       score 0.80  [synergy]  cp-sat, score 0.80
 1x Sting, the Glinting Dagger                 score 0.77  [synergy]  cp-sat, score 0.77
 1x Swiftfoot Boots                            score 0.72  [synergy]  cp-sat, score 0.72
@@ -126,7 +127,6 @@ synergy       35  [ 0-35]    in_range
 1x Goro-Goro, Disciple of Ryusei              score 0.63  [synergy]  cp-sat, score 0.63
 1x Treasure Nabber                            score 0.62  [synergy]  cp-sat, score 0.62
 1x Moggcatcher                                score 0.61  [synergy]  cp-sat, score 0.61
-1x Deflecting Swat                            score 0.41  [synergy]  always (rules.yaml)
 
 ## Maybeboard (15)
 1x Coat of Arms                               score 0.59  [synergy]  fuera: cuota llena en synergy

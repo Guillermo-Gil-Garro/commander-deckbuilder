@@ -21,7 +21,6 @@ synergy       28  [ 0-32]    in_range
 1x Temple Garden                              score 1.18  [lands]  tierra recomendada, score 1.18
 1x Windswept Heath                            score 1.02  [lands]  tierra recomendada, score 1.02
 1x Command Tower                              score 1.01  [lands]  tierra recomendada, score 1.01
-1x Serra's Sanctum                            score 0.94  [lands/ramp]  tierra recomendada, score 0.94
 1x Reliquary Tower                            score 0.93  [lands]  tierra recomendada, score 0.93
 1x Bountiful Promenade                        score 0.88  [lands]  tierra recomendada, score 0.88
 1x Brushland                                  score 0.85  [lands]  tierra recomendada, score 0.85
@@ -43,6 +42,7 @@ synergy       28  [ 0-32]    in_range
 1x Marsh Flats                                score 0.36  [lands]  tierra recomendada, score 0.36
 1x Verdant Catacombs                          score 0.36  [lands]  tierra recomendada, score 0.36
 1x Misty Rainforest                           score 0.36  [lands]  tierra recomendada, score 0.36
+1x Eiganjo, Seat of the Empire                score 0.35  [lands/removal]  tierra recomendada, score 0.35
 1x Arid Mesa                                  score 0.34  [lands]  tierra recomendada, score 0.34
 1x Valgavoth's Lair                           score 0.33  [lands]  tierra recomendada, score 0.33
 1x Razorverge Thicket                         score 0.32  [lands]  tierra recomendada, score 0.32
@@ -52,7 +52,7 @@ synergy       28  [ 0-32]    in_range
 1x Gemstone Caverns                           score 0.20  [lands]  tierra recomendada, score 0.20
 1x Shifting Woodland                          score 0.20  [lands]  tierra recomendada, score 0.20
 
-### ramp (12)
+### ramp (13)
 1x Sanctum Weaver                             score 1.80  [ramp]  ramp (cuota), score 1.80
 1x Utopia Sprawl                              score 1.43  [ramp]  ramp (cuota), score 1.43
 1x Wild Growth                                score 1.41  [ramp]  ramp (cuota), score 1.41
@@ -63,6 +63,7 @@ synergy       28  [ 0-32]    in_range
 1x Burgeoning                                 score 0.79  [ramp]  relleno por score 0.79
 1x Carpet of Flowers                          score 0.75  [ramp]  relleno por score 0.75
 1x Abundant Growth                            score 0.62  [ramp]  relleno por score 0.62
+1x Mirari's Wake                              score 0.61  [ramp]  relleno por score 0.61
 1x Sol Ring                                   score 0.56  [ramp]  always (rules.yaml)
 1x Arcane Signet                              score 0.25  [ramp]  always (rules.yaml)
 
@@ -78,19 +79,18 @@ synergy       28  [ 0-32]    in_range
 1x Courser of Kruphix                         score 0.42  [card_draw]  card_draw (cuota), score 0.42
 1x Kor Spiritdancer                           score 0.10  [card_draw]  card_draw (cuota), score 0.10
 
-### removal (12)
+### removal (11)
 1x Darksteel Mutation                         score 1.29  [removal]  removal (cuota), score 1.29
 1x Kenrith's Transformation                   score 1.26  [removal]  removal (cuota), score 1.26
+1x Swords to Plowshares                       score 1.19  [removal]  removal (cuota), score 1.19
 1x Aura of Silence                            score 0.99  [removal]  removal (cuota), score 0.99
 1x Seal of Cleansing                          score 0.99  [removal]  removal (cuota), score 0.99
 1x Walking Ballista                           score 0.96  [removal]  removal (cuota), score 0.96
-1x Grasp of Fate                              score 0.94  [removal]  relleno por score 0.94
+1x Grasp of Fate                              score 0.94  [removal]  removal (cuota), score 0.94
+1x Path to Exile                              score 0.88  [removal]  removal (cuota), score 0.88
 1x Aura Shards                                score 0.84  [removal]  relleno por score 0.84
 1x Seal of Primordium                         score 0.84  [removal]  relleno por score 0.84
-1x Swords to Plowshares                       score 0.79  [removal]  always (rules.yaml)
 1x Song of the Dryads                         score 0.65  [removal]  relleno por score 0.65
-1x Path to Exile                              score 0.48  [removal]  always (rules.yaml)
-1x Erode                                      score 0.00  [removal]  always (rules.yaml)
 
 ### board_wipe (2)
 1x Farewell                                   score 0.29  [board_wipe]  board_wipe (cuota), score 0.29
@@ -127,11 +127,10 @@ synergy       28  [ 0-32]    in_range
 1x Replenish                                  score 0.65  [synergy]  relleno por score 0.65
 1x Ancestral Mask                             score 0.64  [synergy]  relleno por score 0.64
 1x Moon-Blessed Cleric                        score 0.64  [synergy]  relleno por score 0.64
-1x Flawless Maneuver                          score 0.07  [synergy]  always (rules.yaml)
+1x Land Tax                                   score 0.61  [synergy]  relleno por score 0.61
 
 ## Maybeboard (15)
-1x Mirari's Wake                              score 0.61  [ramp]  fuera: cuota llena en ramp
-1x Land Tax                                   score 0.61  [synergy]  fuera por score 0.61
+1x Serra's Sanctum                            score 0.94  [lands/ramp]  fuera por score 0.94
 1x Heroic Intervention                        score 0.59  [synergy]  fuera por score 0.59
 1x Privileged Position                        score 0.55  [synergy]  fuera por score 0.55
 1x Gauntlets of Light                         score 0.54  [synergy]  fuera por score 0.54
@@ -143,5 +142,6 @@ synergy       28  [ 0-32]    in_range
 1x Overgrowth                                 score 0.47  [ramp]  fuera: cuota llena en ramp
 1x Swift Reconfiguration                      score 0.47  [removal]  fuera: cuota llena en removal
 1x Composer of Spring                         score 0.47  [ramp]  fuera: cuota llena en ramp
+1x Flawless Maneuver                          score 0.47  [synergy]  fuera por score 0.47
 1x Mirri's Guile                              score 0.46  [synergy]  fuera por score 0.46
 1x Concordant Crossroads                      score 0.44  [synergy]  fuera por score 0.44

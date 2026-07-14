@@ -80,10 +80,15 @@ def test_real_rules_yaml_loads_with_the_agreed_decision(real_rules) -> None:
     assert sol_ring.quota_category == "ramp"
     signet = by_name["Arcane Signet"]
     assert signet.when is not None and signet.when.any_of is not None
-    # Signet/Talisman cycles as prefer (Guille 2026-07-14): 20 entries, 0.2.
-    assert len(real_rules.preferred) == 20
-    assert all(p.boost == 0.2 and len(p.colors_any) == 2 for p in real_rules.preferred)
-    assert {"Cyclonic Rift", "Toxic Deluge"} <= set(by_name)  # true auto-includes
+    # Rediseño 2026-07-14 ("test del olvido"): solo Sol Ring y Arcane Signet
+    # son always; 12 staples de color a prefer 0.4 + 20 Signets/Talismanes 0.2.
+    assert set(by_name) == {"Sol Ring", "Arcane Signet"}
+    assert len(real_rules.preferred) == 32
+    boosts = {p.boost for p in real_rules.preferred}
+    assert boosts == {0.4, 0.2}
+    preferred_names = {p.name for p in real_rules.preferred}
+    assert {"Cyclonic Rift", "Toxic Deluge", "Force of Will"} <= preferred_names
+    assert "Erode" not in preferred_names and "Blasphemous Act" not in preferred_names
     assert real_rules.meta.status == "draft"
     assert real_rules.semantics is not None
     assert real_rules.semantics.precedence == ("ban", "never", "always", "prefer")
@@ -490,6 +495,7 @@ def test_budget_holds_for_all_55_featured_commanders(real_rules, real_pool) -> N
         )
         count = validate_forced_slot_budget(real_rules, context)
         max_count = max(max_count, count)
-    # The 5-color midrange commanders saturate the budget exactly (16, with
-    # Cyclonic Rift and Toxic Deluge added 2026-07-14).
-    assert max_count == real_rules.meta.forced_slot_budget
+    # Redesign 2026-07-14: only Sol Ring + Arcane Signet remain always, so
+    # every commander matches at most 2; budget 4 leaves nomination headroom.
+    assert max_count == 2
+    assert max_count <= real_rules.meta.forced_slot_budget

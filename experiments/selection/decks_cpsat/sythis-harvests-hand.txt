@@ -1,12 +1,12 @@
 # Sythis, Harvest's Hand — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.02s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
-# Objetivo: 78.9316 (score bruto 79.0954, penalizaciones escaladas 163796)
+# Construido en 0.03s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
+# Objetivo: 80.8697 (score bruto 81.0335, penalizaciones escaladas 163796)
 # Fixing color (fuentes/objetivo): G: 21/35 (déficit 14), W: 22/29 (déficit 7)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         34  [34-37]    in_range  (suelo Karsten: 32, mínimo efectivo: 34)
+lands         34  [34-37]    in_range  (suelo Karsten: 33, mínimo efectivo: 34)
 ramp          13  [ 8-13]    in_range
 card_draw     10  [10-14]    in_range
 removal       13  [ 8-13]    in_range
@@ -83,15 +83,15 @@ synergy       30  [ 0-32]    in_range
 ### removal (11)
 1x Darksteel Mutation                         score 1.29  [removal]  cp-sat, score 1.29
 1x Kenrith's Transformation                   score 1.26  [removal]  cp-sat, score 1.26
+1x Swords to Plowshares                       score 1.19  [removal]  cp-sat, score 1.19
 1x Aura of Silence                            score 0.99  [removal]  cp-sat, score 0.99
 1x Seal of Cleansing                          score 0.99  [removal]  cp-sat, score 0.99
 1x Walking Ballista                           score 0.96  [removal]  cp-sat, score 0.96
 1x Grasp of Fate                              score 0.94  [removal]  cp-sat, score 0.94
+1x Path to Exile                              score 0.88  [removal]  cp-sat, score 0.88
 1x Aura Shards                                score 0.84  [removal]  cp-sat, score 0.84
 1x Seal of Primordium                         score 0.84  [removal]  cp-sat, score 0.84
-1x Swords to Plowshares                       score 0.79  [removal]  always (rules.yaml)
-1x Path to Exile                              score 0.48  [removal]  always (rules.yaml)
-1x Erode                                      score 0.00  [removal]  always (rules.yaml)
+1x Song of the Dryads                         score 0.65  [removal]  cp-sat, score 0.65
 
 ### board_wipe (2)
 1x Farewell                                   score 0.29  [board_wipe]  cp-sat, score 0.29
@@ -130,13 +130,11 @@ synergy       30  [ 0-32]    in_range
 1x Moon-Blessed Cleric                        score 0.64  [synergy]  cp-sat, score 0.64
 1x Land Tax                                   score 0.61  [synergy]  cp-sat, score 0.61
 1x Heroic Intervention                        score 0.59  [synergy]  cp-sat, score 0.59
-1x Flawless Maneuver                          score 0.07  [synergy]  always (rules.yaml)
+1x Privileged Position                        score 0.55  [synergy]  cp-sat, score 0.55
 
 ## Maybeboard (15)
-1x Song of the Dryads                         score 0.65  [removal]  fuera: cuota llena en removal
 1x Abundant Growth                            score 0.62  [ramp]  fuera: cuota llena en ramp
 1x Mirari's Wake                              score 0.61  [ramp]  fuera: cuota llena en ramp
-1x Privileged Position                        score 0.55  [synergy]  fuera por score 0.55
 1x Gauntlets of Light                         score 0.54  [synergy]  fuera por score 0.54
 1x Calix, Guided by Fate                      score 0.54  [synergy]  fuera por score 0.54
 1x Starfield Mystic                           score 0.52  [ramp]  fuera: cuota llena en ramp
@@ -145,6 +143,8 @@ synergy       30  [ 0-32]    in_range
 1x Overgrowth                                 score 0.47  [ramp]  fuera: cuota llena en ramp
 1x Swift Reconfiguration                      score 0.47  [removal]  fuera: cuota llena en removal
 1x Composer of Spring                         score 0.47  [ramp]  fuera: cuota llena en ramp
+1x Flawless Maneuver                          score 0.47  [synergy]  fuera por score 0.47
 1x Mirri's Guile                              score 0.46  [synergy]  fuera por score 0.46
 1x Concordant Crossroads                      score 0.44  [synergy]  fuera por score 0.44
 1x Birds of Paradise                          score 0.44  [ramp]  fuera: cuota llena en ramp
+1x Weaver of Harmony                          score 0.42  [synergy]  fuera por score 0.42

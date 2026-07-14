@@ -1,7 +1,7 @@
 # Meren of Clan Nel Toth — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.03s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 71.4987 (score bruto 71.6338, penalizaciones escaladas 135138)
+# Objetivo: 72.2987 (score bruto 72.4338, penalizaciones escaladas 135138)
 # Fixing color (fuentes/objetivo): B: 27/32 (déficit 5), G: 25/38 (déficit 13)
 
 ## Resumen de cuotas
@@ -84,15 +84,15 @@ synergy       30  [ 0-30]    in_range
 1x Haywire Mite                               score 0.99  [removal]  cp-sat, score 0.99
 1x Assassin's Trophy                          score 0.88  [removal]  cp-sat, score 0.88
 1x Grave Pact                                 score 0.72  [removal]  cp-sat, score 0.72
+1x Deadly Rollick                             score 0.69  [removal]  cp-sat, score 0.69
 1x Cankerbloom                                score 0.66  [removal]  cp-sat, score 0.66
 1x Sheoldred, Whispering One                  score 0.65  [removal]  cp-sat, score 0.65
 1x Abrupt Decay                               score 0.59  [removal]  cp-sat, score 0.59
 1x Walking Ballista                           score 0.59  [removal]  cp-sat, score 0.59
 1x Fleshbag Marauder                          score 0.57  [removal]  cp-sat, score 0.57
-1x Deadly Rollick                             score 0.29  [removal]  always (rules.yaml)
 
 ### board_wipe (4)
-1x Toxic Deluge                               score 0.82  [board_wipe]  always (rules.yaml)
+1x Toxic Deluge                               score 1.22  [board_wipe]  cp-sat, score 1.22
 1x Living Death                               score 0.70  [board_wipe]  cp-sat, score 0.70
 1x Massacre Wurm                              score 0.53  [board_wipe]  cp-sat, score 0.53
 1x Culling Ritual                             score 0.49  [board_wipe]  cp-sat, score 0.49

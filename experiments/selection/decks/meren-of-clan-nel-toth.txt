@@ -83,15 +83,15 @@ synergy       27  [ 0-30]    in_range
 1x Haywire Mite                               score 0.99  [removal]  removal (cuota), score 0.99
 1x Assassin's Trophy                          score 0.88  [removal]  removal (cuota), score 0.88
 1x Grave Pact                                 score 0.72  [removal]  removal (cuota), score 0.72
+1x Deadly Rollick                             score 0.69  [removal]  removal (cuota), score 0.69
 1x Cankerbloom                                score 0.66  [removal]  relleno por score 0.66
 1x Sheoldred, Whispering One                  score 0.65  [removal]  relleno por score 0.65
 1x Abrupt Decay                               score 0.59  [removal]  relleno por score 0.59
 1x Walking Ballista                           score 0.59  [removal]  relleno por score 0.59
 1x Fleshbag Marauder                          score 0.57  [removal]  relleno por score 0.57
-1x Deadly Rollick                             score 0.29  [removal]  always (rules.yaml)
 
 ### board_wipe (4)
-1x Toxic Deluge                               score 0.82  [board_wipe]  always (rules.yaml)
+1x Toxic Deluge                               score 1.22  [board_wipe]  board_wipe (cuota), score 1.22
 1x Living Death                               score 0.70  [board_wipe]  board_wipe (cuota), score 0.70
 1x Massacre Wurm                              score 0.53  [board_wipe]  relleno por score 0.53
 1x Culling Ritual                             score 0.49  [board_wipe]  relleno por score 0.49

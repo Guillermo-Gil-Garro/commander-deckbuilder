@@ -37,11 +37,13 @@ meta:
   # Presupuesto de slots forzados: nº máximo de always que pueden matchear a
   # un MISMO comandante legal. El validador (deck_rules.validate_forced_slot_budget)
   # FALLA si algún comandante lo supera.
-  # ⚠️ revisar [ADAPTACIÓN]: el spec decía 12, pero los seeds suman más en
-  # mazos de 4-5 colores no-aggro. Con Cyclonic Rift y Toxic Deluge añadidos
-  # (decisión Guille 2026-07-14) los 5c llegan a 16. Pendiente de consolidar
-  # o recortar seeds (candidatas si se recorta: Erode, Force of Will).
-  forced_slot_budget: 16
+  # Rediseño 2026-07-14 ("test del olvido", acordado con Guille): always solo
+  # para cartas (1) incondicionales en su identidad, (2) cuya ausencia sería un
+  # olvido y no una elección, y (3) que escalen bien al sumar colores. Solo
+  # Sol Ring y Arcane Signet lo pasan; el resto de staples viven en `preferred`
+  # con boost fuerte (0.4) — aparecen por mérito subvencionado, no forzadas.
+  # Peor caso real hoy: 2 always por mazo; budget 4 deja hueco a nominaciones.
+  forced_slot_budget: 4
   notes: >
     Sustituye a staples.yaml. Cada always consume el slot de su
     quota_category (no va por encima de las 99); un never no se
@@ -93,75 +95,12 @@ always:
             - "Urza, Lord High Artificer"
             - "Emry, Lurker of the Loch"
 
-  # ── blanco ───────────────────────────────────────────────────────────────
-  - name: Swords to Plowshares
-    quota_category: removal
-    when: { color_identity_contains: [W] }
-
-  - name: Path to Exile
-    quota_category: removal
-    when: { color_identity_contains: [W] }
-
-  # Verificada 2026-07-14 contra el pool: la "Erode" del pool es un instant
-  # BLANCO de removal (criatura/planeswalker), no la carta azul antigua.
-  - name: Erode
-    quota_category: removal
-    when: { color_identity_contains: [W] }
-
-  - name: Flawless Maneuver
-    # pendiente: categoría protection (decisión de Guille futura)
-    quota_category: null
-    when: { color_identity_contains: [W] }
-
-  # ── azul ─────────────────────────────────────────────────────────────────
-  - name: Counterspell
-    quota_category: removal    # interaction -> removal (los counters cuentan ahí)
-    when: { color_identity_contains: [U] }
-
-  - name: Mana Drain
-    quota_category: removal
-    when: { color_identity_contains: [U] }
-
-  - name: Force of Will
-    quota_category: removal
-    when: { color_identity_contains: [U] }
-
-  - name: Fierce Guardianship
-    quota_category: removal
-    when: { color_identity_contains: [U] }
-
-  # ── azul (2026-07-14, decisión de Guille: "verdaderamente auto-include") ──
-  - name: Cyclonic Rift
-    quota_category: removal
-    when: { color_identity_contains: [U] }
-
-  # ── negro ────────────────────────────────────────────────────────────────
-  - name: Deadly Rollick
-    quota_category: removal
-    when: { color_identity_contains: [B] }
-
-  - name: Toxic Deluge
-    quota_category: board_wipe
-    when: { color_identity_contains: [B] }
-
-  # ── rojo ─────────────────────────────────────────────────────────────────
-  - name: Chaos Warp
-    quota_category: removal
-    when: { color_identity_contains: [R] }
-
-  - name: Deflecting Swat
-    # pendiente: categoría protection (decisión de Guille futura)
-    quota_category: null
-    when: { color_identity_contains: [R] }
-
-  # [ADAPTACIÓN] el spec excluía tokens/go_wide/aristocrats; nuestro arquetipo
-  # go-wide es `aggro` y aristocrats≈`graveyard` SÍ quiere wipes de daño,
-  # así que solo se excluye aggro.
-  - name: Blasphemous Act
-    quota_category: board_wipe
-    when:
-      color_identity_contains: [R]
-      archetype_not_in: [aggro]
+  # (Rediseño 2026-07-14: el resto de staples del seed original — Swords,
+  # Path, counters, free spells, Cyclonic Rift, Toxic Deluge, Chaos Warp,
+  # Deadly Rollick — bajaron a `preferred` 0.4: ninguna pasa el test del
+  # olvido en TODOS los mazos de su color. Erode y Blasphemous Act salieron
+  # del seed: la primera debe ganarse el slot por score; la segunda ya
+  # delataba con su excepción de arquetipo que no era un always.)
 
 # ---------------------------------------------------------------------------
 # NEVER — nunca auto-recomendadas (ni mainboard ni maybeboard) si matchean.
@@ -186,11 +125,26 @@ never:
 #   - name: Solemn Simulacrum
 #     colors_any: []        # vacío = cualquier mazo
 #     boost: 0.3            # opcional (default 0.3)
-# Ciclos Signet/Talismán (decisión Guille 2026-07-14): boost 0.2 por pareja
-# de colores. Nota: en la práctica solo aparecen como candidatas en páginas
-# EDHREC de comandantes de sus colores, así que colors_any por pareja basta.
+# Dos niveles (2026-07-14):
+#   0.4 — staples de color del seed original de always: casi siempre entran,
+#         pero un mazo con mejor uso del slot puede prescindir (caso Ur-Dragon:
+#         no arrastra todos los free spells si no protege un plan de campo).
+#   0.2 — ciclos Signet/Talismán por pareja de colores.
+# Nota: solo aparecen como candidatas en páginas EDHREC de sus colores.
 # ---------------------------------------------------------------------------
 preferred:
+  - { name: Swords to Plowshares, colors_any: [W], boost: 0.4 }
+  - { name: Path to Exile, colors_any: [W], boost: 0.4 }
+  - { name: Flawless Maneuver, colors_any: [W], boost: 0.4 }
+  - { name: Counterspell, colors_any: [U], boost: 0.4 }
+  - { name: Mana Drain, colors_any: [U], boost: 0.4 }
+  - { name: Force of Will, colors_any: [U], boost: 0.4 }
+  - { name: Fierce Guardianship, colors_any: [U], boost: 0.4 }
+  - { name: Cyclonic Rift, colors_any: [U], boost: 0.4 }
+  - { name: Deadly Rollick, colors_any: [B], boost: 0.4 }
+  - { name: Toxic Deluge, colors_any: [B], boost: 0.4 }
+  - { name: Chaos Warp, colors_any: [R], boost: 0.4 }
+  - { name: Deflecting Swat, colors_any: [R], boost: 0.4 }
   - { name: Azorius Signet, colors_any: [W, U], boost: 0.2 }
   - { name: Dimir Signet, colors_any: [U, B], boost: 0.2 }
   - { name: Rakdos Signet, colors_any: [B, R], boost: 0.2 }

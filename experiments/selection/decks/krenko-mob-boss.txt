@@ -75,11 +75,11 @@ synergy       35  [ 0-35]    in_range
 1x Pashalik Mons                              score 1.41  [removal]  removal (cuota), score 1.41
 1x Goblin Trashmaster                         score 1.27  [removal]  removal (cuota), score 1.27
 1x Hobgoblin Bandit Lord                      score 1.27  [removal]  removal (cuota), score 1.27
-1x Goblin War Strike                          score 1.07  [removal]  relleno por score 1.07
+1x Goblin War Strike                          score 1.07  [removal]  removal (cuota), score 1.07
 1x Siege-Gang Commander                       score 1.03  [removal]  relleno por score 1.03
+1x Chaos Warp                                 score 0.98  [removal]  relleno por score 0.98
 1x Thornbite Staff                            score 0.82  [removal]  relleno por score 0.82
 1x Goblin Sharpshooter                        score 0.71  [removal]  relleno por score 0.71
-1x Chaos Warp                                 score 0.58  [removal]  always (rules.yaml)
 1x Massive Raid                               score 0.55  [removal]  relleno por score 0.55
 
 ### board_wipe (2)
@@ -110,6 +110,7 @@ synergy       35  [ 0-35]    in_range
 1x Krenko's Command                           score 0.88  [synergy]  relleno por score 0.88
 1x Hexing Squelcher                           score 0.88  [synergy]  relleno por score 0.88
 1x Thousand-Year Elixir                       score 0.87  [synergy]  relleno por score 0.87
+1x Deflecting Swat                            score 0.81  [synergy]  relleno por score 0.81
 1x Rundvelt Hordemaster                       score 0.80  [synergy]  relleno por score 0.80
 1x Sting, the Glinting Dagger                 score 0.77  [synergy]  relleno por score 0.77
 1x Swiftfoot Boots                            score 0.72  [synergy]  relleno por score 0.72
@@ -121,7 +122,6 @@ synergy       35  [ 0-35]    in_range
 1x Goro-Goro, Disciple of Ryusei              score 0.63  [synergy]  relleno por score 0.63
 1x Treasure Nabber                            score 0.62  [synergy]  relleno por score 0.62
 1x Moggcatcher                                score 0.61  [synergy]  relleno por score 0.61
-1x Deflecting Swat                            score 0.41  [synergy]  always (rules.yaml)
 
 ## Maybeboard (15)
 1x Coat of Arms                               score 0.59  [synergy]  fuera: cuota llena en synergy

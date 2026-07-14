@@ -14,6 +14,7 @@
 1x Mesa Enchantress [Card Draw]
 1x Heliod, Sun-Crowned [Synergy]
 1x Exploration [Ramp]
+1x Swords to Plowshares [Removal]
 1x Argothian Enchantress [Card Draw]
 1x Blind Obedience [Synergy]
 1x Fertile Ground [Ramp]
@@ -38,6 +39,7 @@
 1x Grasp of Fate [Removal]
 1x Reliquary Tower [Lands]
 1x Hallowed Haunting [Synergy]
+1x Path to Exile [Removal]
 1x Bountiful Promenade [Lands]
 1x Herald of the Pantheon [Synergy]
 1x Brushland [Lands]
@@ -47,7 +49,6 @@
 1x Solitary Confinement [Synergy]
 1x Whip Silk [Synergy]
 1x Greater Auramancy [Synergy]
-1x Swords to Plowshares [Removal]
 1x Burgeoning [Ramp]
 1x Carpet of Flowers [Ramp]
 1x Eladamri's Call [Synergy]
@@ -61,6 +62,7 @@
 1x Boseiju, Who Endures [Lands]
 1x All That Glitters [Synergy]
 1x Rest in Peace [Synergy]
+1x Song of the Dryads [Removal]
 1x Replenish [Synergy]
 1x Ancestral Mask [Synergy]
 1x Moon-Blessed Cleric [Synergy]
@@ -70,11 +72,11 @@
 1x Land Tax [Synergy]
 1x Heroic Intervention [Synergy]
 1x Sol Ring [Ramp]
+1x Privileged Position [Synergy]
 1x Overgrown Farmland [Lands]
 1x Nykthos, Shrine to Nyx [Lands]
 1x Savannah [Lands]
 1x Hushwood Verge [Lands]
-1x Path to Exile [Removal]
 1x Courser of Kruphix [Card Draw]
 1x Wooded Bastion [Lands]
 1x Wooded Foothills [Lands]
@@ -96,14 +98,10 @@
 1x Arcane Signet [Ramp]
 1x Temple of Plenty [Lands]
 1x Kor Spiritdancer [Card Draw]
-1x Flawless Maneuver [Synergy]
-1x Erode [Removal]
 
 # Sideboard
-1x Song of the Dryads
 1x Abundant Growth
 1x Mirari's Wake
-1x Privileged Position
 1x Gauntlets of Light
 1x Calix, Guided by Fate
 1x Starfield Mystic
@@ -112,6 +110,8 @@
 1x Overgrowth
 1x Swift Reconfiguration
 1x Composer of Spring
+1x Flawless Maneuver
 1x Mirri's Guile
 1x Concordant Crossroads
 1x Birds of Paradise
+1x Weaver of Harmony
