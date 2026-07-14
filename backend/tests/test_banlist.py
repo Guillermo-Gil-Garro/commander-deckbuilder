@@ -136,8 +136,8 @@ def test_real_banlist_loads_and_resolves(real_index: NameIndex) -> None:
     banlist = load_banlist()
     resolved = resolve_banlist(banlist, real_index)
 
-    # Rules snapshot (11) minus no overlapping exceptions + 8 manual cards.
-    assert len(resolved.banned) == 19
+    # Rules snapshot (11) minus no overlapping exceptions + 10 manual cards.
+    assert len(resolved.banned) == 21
     assert len(resolved.banned_as_commander) == 3
     assert len(resolved.watchlist) == 4
     assert len(resolved.explicitly_legal) == 15
@@ -161,3 +161,21 @@ def test_real_banlist_loads_and_resolves(real_index: NameIndex) -> None:
     assert tergrid.oracle_id in resolved.banned_as_commander
     assert resolved.watchlist[tergrid.oracle_id] == "in_the_99"
     assert tergrid.oracle_id not in resolved.banned
+
+
+def test_real_banlist_alt_win_reason_group(real_index: NameIndex) -> None:
+    banlist = load_banlist()
+    group = {
+        card.name
+        for card in banlist.cards
+        if card.reason_group == "alt_win_empty_library"
+    }
+    assert group == {
+        "Thassa's Oracle",
+        "Laboratory Maniac",
+        "Jace, Wielder of Mysteries",
+    }
+
+    resolved = resolve_banlist(banlist, real_index)
+    for name in group:
+        assert real_index.resolve(name).oracle_id in resolved.banned

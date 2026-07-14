@@ -89,6 +89,21 @@ cards:
   - name: Thassa's Oracle
     status: banned
     reason: "Final no-juego. WotC lo tiene en consideración de ban oficial."
+    reason_group: alt_win_empty_library
+  - name: Laboratory Maniac
+    status: banned
+    reason: >
+      Condición de victoria alternativa que convierte biblioteca vacía en
+      victoria instantánea; banear solo Thassa's Oracle dejaba la línea
+      idéntica abierta.
+    reason_group: alt_win_empty_library
+  - name: Jace, Wielder of Mysteries
+    status: banned
+    reason: >
+      Condición de victoria alternativa que convierte biblioteca vacía en
+      victoria instantánea; banear solo Thassa's Oracle dejaba la línea
+      idéntica abierta.
+    reason_group: alt_win_empty_library
   - name: Drannith Magistrate
     status: banned
     reason: "Apaga la command zone de toda la mesa."

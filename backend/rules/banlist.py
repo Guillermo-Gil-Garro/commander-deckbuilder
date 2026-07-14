@@ -72,6 +72,8 @@ class CardBan(BaseModel):
     name: str
     status: Literal["banned", "banned_pending_review"]
     reason: str
+    # Tag linking bans that close the same line (e.g. alt_win_empty_library).
+    reason_group: str | None = None
 
 
 class CommanderBan(BaseModel):
