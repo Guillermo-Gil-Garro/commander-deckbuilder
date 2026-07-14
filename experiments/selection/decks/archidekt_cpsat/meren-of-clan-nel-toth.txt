@@ -59,6 +59,7 @@
 1x Abrupt Decay [Removal]
 1x Walking Ballista [Removal]
 1x Fauna Shaman [Synergy]
+1x Fleshbag Marauder [Removal]
 1x Yavimaya, Cradle of Growth [Lands]
 1x Sidisi, Undead Vizier [Synergy]
 1x Darkbore Pathway // Slitherbore Pathway [Lands]
@@ -71,7 +72,9 @@
 1x Culling Ritual [Board Wipe]
 1x Tainted Wood [Lands]
 1x Razaketh, the Foulblooded [Synergy]
+1x Ancient Tomb [Lands]
 1x Unmarked Grave [Synergy]
+1x Wood Elves [Ramp]
 1x Necromancy [Synergy]
 1x Twilight Diviner [Synergy]
 1x Syr Konrad, the Grim [Synergy]
@@ -90,23 +93,17 @@
 1x Midnight Reaper [Card Draw]
 1x Agadeem's Awakening // Agadeem, the Undercrypt [Lands]
 1x Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel [Card Draw]
-1x Necroblossom Snarl [Lands]
-1x Golgari Rot Farm [Lands]
-1x Boggart Trawler // Boggart Bog [Lands]
+1x Deadly Rollick [Removal]
 1x Finale of Devastation [Wincons]
-1x City of Brass [Lands]
 1x Disciple of Freyalise // Garden of Freyalise [Lands]
-1x Guardian Project [Card Draw]
+1x Grim Backwoods [Lands]
 1x Westvale Abbey // Ormendahl, Profane Prince [Lands]
 
 # Sideboard
-1x Fleshbag Marauder
 1x Reclamation Sage
 1x Ravenous Chupacabra
 1x Boseiju, Who Endures
 1x Dictate of Erebos
-1x Ancient Tomb
-1x Wood Elves
 1x Fyndhorn Elves
 1x Shriekmaw
 1x Pitiless Plunderer
@@ -115,3 +112,6 @@
 1x Survival of the Fittest
 1x Lightning Greaves
 1x Cabal Coffers
+1x Green Sun's Zenith
+1x Orcish Bowmasters
+1x Umbral Collar Zealot

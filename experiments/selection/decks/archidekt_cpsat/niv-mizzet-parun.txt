@@ -37,11 +37,10 @@
 1x Izzet Charm [Removal]
 1x Scalding Tarn [Lands]
 1x Pongify [Removal]
-1x Laboratory Maniac [Wincons]
 1x Force of Will [Removal]
 1x Mystic Sanctuary [Lands]
 1x Baral, Chief of Compliance [Ramp]
-1x Vandalblast [Board Wipe]
+1x Mana Drain [Removal]
 1x Stormcarved Coast [Lands]
 1x Archmage Emeritus [Card Draw]
 1x Fiery Islet [Lands]
@@ -63,7 +62,9 @@
 1x Decanter of Endless Water [Ramp]
 1x Narset's Reversal [Synergy]
 1x Jeska's Will [Synergy]
+1x Chaos Warp [Removal]
 1x Winds of Change [Synergy]
+1x Thought Vessel [Ramp]
 1x Exotic Orchard [Lands]
 1x Valakut Awakening // Valakut Stoneforge [Lands]
 1x Thundering Falls [Lands]
@@ -73,24 +74,21 @@
 1x Lotus Petal [Synergy]
 1x Isochron Scepter [Synergy]
 1x Expressive Iteration [Card Draw]
+1x Thrill of Possibility [Card Draw]
 1x Veyran, Voice of Duality [Synergy]
-1x Jace, Wielder of Mysteries [Wincons]
 1x Spellskite [Synergy]
 1x Swiftwater Cliffs [Lands]
 1x Ojer Axonil, Deepest Might // Temple of Power [Lands]
 1x Cephalid Coliseum [Lands]
 1x Riverpyre Verge [Lands]
+1x Chrome Mox [Ramp]
 1x Misdirection [Synergy]
 1x Electrostatic Field [Synergy]
 1x Ferrous Lake [Lands]
 1x Solve the Equation [Synergy]
-1x Sensei's Divining Top [Synergy]
-1x Young Pyromancer [Synergy]
 1x Izzet Guildgate [Lands]
-1x Dragonologist [Synergy]
 1x Mistrise Village [Lands]
 1x City of Brass [Lands]
-1x Propaganda [Synergy]
 1x Volcanic Island [Lands]
 1x Evolving Wilds [Lands]
 1x Flooded Strand [Lands]
@@ -98,20 +96,22 @@
 1x Hydroelectric Specimen // Hydroelectric Laboratory [Lands]
 1x Mana Confluence [Lands]
 1x Polluted Delta [Lands]
+1x Grapeshot [Wincons]
+1x Rite of the Dragoncaller [Wincons]
 
 # Sideboard
+1x Vandalblast
 1x Negate
-1x Mana Drain
 1x Rapid Hybridization
 1x Force of Negation
 1x Snap
 1x Flame of Anor
 1x Abrade
-1x Chaos Warp
 1x Pact of Negation
-1x Thought Vessel
 1x Muddle the Mixture
 1x Dispel
 1x Flusterstorm
-1x Thrill of Possibility
 1x Otawara, Soaring City
+1x Midnight Clock
+1x Sink into Stupor // Soporific Springs
+1x Spell Pierce

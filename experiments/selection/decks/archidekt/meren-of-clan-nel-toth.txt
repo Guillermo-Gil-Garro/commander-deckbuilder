@@ -1,6 +1,7 @@
 1x Meren of Clan Nel Toth [Commander]
 1x Sol Ring [Ramp]
 1x Arcane Signet [Ramp]
+1x Deadly Rollick [Removal]
 1x Finale of Devastation [Wincons]
 1x Rise of the Dark Realms [Wincons]
 1x Toxic Deluge [Board Wipe]
@@ -11,7 +12,6 @@
 1x Haywire Mite [Removal]
 1x Assassin's Trophy [Removal]
 1x Grave Pact [Removal]
-1x Cankerbloom [Removal]
 1x Sakura-Tribe Elder [Ramp]
 1x Ashnod's Altar [Ramp]
 1x Birds of Paradise [Ramp]
@@ -48,12 +48,14 @@
 1x Elves of Deep Shadow [Ramp]
 1x Altar of Dementia [Synergy]
 1x Eldritch Evolution [Synergy]
+1x Cankerbloom [Removal]
 1x Sheoldred, Whispering One [Removal]
 1x Elvish Mystic [Ramp]
 1x Fiend Artisan [Synergy]
 1x Abrupt Decay [Removal]
 1x Walking Ballista [Removal]
 1x Fauna Shaman [Synergy]
+1x Fleshbag Marauder [Removal]
 1x Sidisi, Undead Vizier [Synergy]
 1x Kokusho, the Evening Star [Synergy]
 1x Massacre Wurm [Board Wipe]
@@ -61,8 +63,7 @@
 1x Culling Ritual [Board Wipe]
 1x Razaketh, the Foulblooded [Synergy]
 1x Unmarked Grave [Synergy]
-1x Necromancy [Synergy]
-1x Twilight Diviner [Synergy]
+1x Wood Elves [Ramp]
 1x Phyrexian Tower [Lands]
 1x Overgrown Tomb [Lands]
 1x Command Tower [Lands]
@@ -80,6 +81,7 @@
 1x Twilight Mire [Lands]
 1x Deathcap Glade [Lands]
 1x Tainted Wood [Lands]
+1x Ancient Tomb [Lands]
 1x Takenuma, Abandoned Mire [Lands]
 1x Bojuka Bog [Lands]
 1x Bayou [Lands]
@@ -96,17 +98,14 @@
 1x Necroblossom Snarl [Lands]
 1x Golgari Rot Farm [Lands]
 1x Boggart Trawler // Boggart Bog [Lands]
-1x City of Brass [Lands]
-1x Disciple of Freyalise // Garden of Freyalise [Lands]
 
 # Sideboard
-1x Fleshbag Marauder
 1x Reclamation Sage
 1x Ravenous Chupacabra
 1x Boseiju, Who Endures
 1x Dictate of Erebos
-1x Ancient Tomb
-1x Wood Elves
+1x Necromancy
+1x Twilight Diviner
 1x Syr Konrad, the Grim
 1x Fyndhorn Elves
 1x Shriekmaw
@@ -115,3 +114,4 @@
 1x Opposition Agent
 1x Survival of the Fittest
 1x Lightning Greaves
+1x Cabal Coffers

@@ -25,8 +25,12 @@ from pipeline.edhrec import fetch_commander, slugify_commander  # noqa: E402
 from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
 from selector.cp_sat import CpSatResult, build_deck_cpsat  # noqa: E402
+from selector.deck_rules import (  # noqa: E402
+    archetype_for,
+    load_rules,
+    validate_rules_names,
+)
 from selector.greedy import DECK_SIZE, load_pool  # noqa: E402
-from selector.staples import load_staples  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 # Reuse the greedy runner's constants and banlist parsing (read-only import).
@@ -126,7 +130,8 @@ def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
     banned, watchlist = load_banlist(BANLIST_PATH)
-    staples = load_staples()
+    rules = load_rules(valid_archetypes=set(config.archetypes))
+    validate_rules_names(rules, pool.resolve)
     tagger = tagger_from_store(load_tags(), pool.cards())
     DECKS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -150,7 +155,8 @@ def main() -> None:
             tagger=tagger,
             banned_names=banned,
             watchlist_names=watchlist,
-            staples=staples,
+            rules=rules,
+            archetype=archetype_for(config, commander),
             time_limit_s=TIME_LIMIT_S,
         )
         elapsed = time.perf_counter() - start

@@ -16,7 +16,7 @@ from selector.greedy import (
     SelectorError,
     build_deck_greedy,
 )
-from selector.staples import StaplesConfig
+from selector.deck_rules import RulesConfig
 
 
 @dataclass
@@ -281,25 +281,39 @@ def test_missing_commander_raises() -> None:
         )
 
 
-# ── staples y correcciones de sesgo del score (COMPARATIVA_EDHREC_B4) ───────
+# ── rules.yaml (always/never/prefer) y sesgo del score (COMPARATIVA_EDHREC_B4) ──
 
 
-def staples_fixture() -> StaplesConfig:
-    return StaplesConfig.model_validate(
+def rules_fixture() -> RulesConfig:
+    return RulesConfig.model_validate(
         {
-            "auto_includes": [
-                {"name": "Sol Ring", "condition": "always"},
+            "always": [
+                {"name": "Sol Ring", "quota_category": "ramp"},
                 {
                     "name": "Arcane Signet",
-                    "condition": "multicolor_or_listed_mono",
-                    "mono_exceptions": ["Urza, Lord High Artificer"],
+                    "quota_category": "ramp",
+                    "when": {
+                        "any_of": [
+                            {"color_identity_size": ">=2"},
+                            {"commander_in": ["Urza, Lord High Artificer"]},
+                        ]
+                    },
+                },
+            ],
+            "never": [
+                {
+                    "name": "Arcane Signet",
+                    "when": {
+                        "color_identity_size": "<=1",
+                        "commander_not_in": ["Urza, Lord High Artificer"],
+                    },
                 },
             ],
         }
     )
 
 
-def add_staple_cards(pool: PoolIndex) -> None:
+def add_rule_cards(pool: PoolIndex) -> None:
     for name, cmc in (("Sol Ring", 1.0), ("Arcane Signet", 2.0)):
         card = make_card(
             name, mana_cost=f"{{{int(cmc)}}}", cmc=cmc, type_line="Artifact",
@@ -314,7 +328,8 @@ def build_with(
     recs: list[Rec],
     *,
     commander: str = "Boss Goblin",
-    staples: StaplesConfig | None = None,
+    rules: RulesConfig | None = None,
+    archetype: str | None = "midrange",
     banned: set[str] = frozenset(),
     weights: ScoreWeights = ScoreWeights(),
     bands: dict[str, QuotaBand] | None = None,
@@ -328,20 +343,23 @@ def build_with(
         banned_names=banned,
         watchlist_names=set(),
         weights=weights,
-        staples=staples,
+        rules=rules,
+        archetype=archetype,
     )
 
 
-def test_sol_ring_always_present_signet_not_in_plain_mono() -> None:
+def test_sol_ring_always_present_signet_never_in_plain_mono() -> None:
     pool, recs, _ = build_inputs()
-    add_staple_cards(pool)
-    result = build_with(pool, recs, staples=staples_fixture())
+    add_rule_cards(pool)
+    result = build_with(pool, recs, rules=rules_fixture())
     entry = next(e for e in result.mainboard if e.name == "Sol Ring")
-    assert entry.reason == "staple (auto-include)"
+    assert entry.reason == "always (rules.yaml)"
     assert entry.slot == "ramp"
-    # Mono-red without artifact-theme exception: no Arcane Signet.
-    assert "Arcane Signet" not in {e.name for e in result.mainboard}
-    # The staple counts toward its quota category like any other card.
+    # Mono-red without artifact-theme exception: never rule keeps the Signet
+    # out of the mainboard AND the maybeboard.
+    all_names = {e.name for e in result.mainboard} | {e.name for e in result.maybeboard}
+    assert "Arcane Signet" not in all_names
+    # The forced card counts toward its quota category like any other card.
     ramp_members = [e for e in result.mainboard if "ramp" in e.categories]
     assert result.counts["ramp"] == len(ramp_members)
     assert result.counts["ramp"] <= bands_fixture()["ramp"].max
@@ -349,60 +367,62 @@ def test_sol_ring_always_present_signet_not_in_plain_mono() -> None:
 
 def test_signet_enters_multicolor_deck() -> None:
     pool, recs, _ = build_inputs()
-    add_staple_cards(pool)
+    add_rule_cards(pool)
     boss = make_card(
         "Two Color Boss",
         type_line="Legendary Creature — Elemental",
         color_identity=["R", "G"],
     )
     pool.by_name[boss["name"]] = boss
-    result = build_with(
-        pool, recs, commander="Two Color Boss", staples=staples_fixture()
-    )
+    result = build_with(pool, recs, commander="Two Color Boss", rules=rules_fixture())
     entry = next(e for e in result.mainboard if e.name == "Arcane Signet")
-    assert entry.reason == "staple (auto-include)"
+    assert entry.reason == "always (rules.yaml)"
     assert "Sol Ring" in {e.name for e in result.mainboard}
 
 
 def test_signet_enters_listed_mono_exception_commander() -> None:
     pool, recs, _ = build_inputs()
-    add_staple_cards(pool)
+    add_rule_cards(pool)
     urza = make_card(
         "Urza, Lord High Artificer",
         type_line="Legendary Creature — Human Artificer",
     )
     pool.by_name[urza["name"]] = urza
     result = build_with(
-        pool, recs, commander="Urza, Lord High Artificer", staples=staples_fixture()
+        pool, recs, commander="Urza, Lord High Artificer", rules=rules_fixture()
     )
     entry = next(e for e in result.mainboard if e.name == "Arcane Signet")
-    assert entry.reason == "staple (auto-include)"
+    assert entry.reason == "always (rules.yaml)"
 
 
-def test_banlist_beats_auto_include() -> None:
+def test_banlist_beats_always_rule() -> None:
     pool, recs, _ = build_inputs()
-    add_staple_cards(pool)
-    result = build_with(
-        pool, recs, staples=staples_fixture(), banned={"Sol Ring"}
-    )
+    add_rule_cards(pool)
+    result = build_with(pool, recs, rules=rules_fixture(), banned={"Sol Ring"})
     all_names = {e.name for e in result.mainboard} | {e.name for e in result.maybeboard}
     assert "Sol Ring" not in all_names
 
 
-def test_auto_include_missing_from_pool_raises() -> None:
+def test_always_card_missing_from_pool_raises() -> None:
     pool, recs, _ = build_inputs()
-    config = StaplesConfig.model_validate(
-        {"auto_includes": [{"name": "Ghost Card", "condition": "always"}]}
+    config = RulesConfig.model_validate(
+        {"always": [{"name": "Ghost Card", "quota_category": None}]}
     )
     with pytest.raises(SelectorError, match="Ghost Card"):
-        build_with(pool, recs, staples=config)
+        build_with(pool, recs, rules=config)
 
 
-def test_staples_none_and_empty_config_are_identical() -> None:
+def test_archetype_required_when_rules_given() -> None:
     pool, recs, _ = build_inputs()
-    base = build(pool, recs)  # staples omitted: legacy call signature
+    with pytest.raises(SelectorError, match="archetype is required"):
+        build_with(pool, recs, rules=rules_fixture(), archetype=None)
+
+
+def test_rules_none_and_empty_config_are_identical() -> None:
+    pool, recs, _ = build_inputs()
+    base = build(pool, recs)  # rules omitted: legacy call signature
     pool2, recs2, _ = build_inputs()
-    empty = build_with(pool2, recs2, staples=StaplesConfig())
+    empty = build_with(pool2, recs2, rules=RulesConfig())
     assert [(e.name, e.count) for e in base.mainboard] == [
         (e.name, e.count) for e in empty.mainboard
     ]
@@ -411,18 +431,18 @@ def test_staples_none_and_empty_config_are_identical() -> None:
 
 def test_preferred_boost_applies_only_on_color_match() -> None:
     pool, recs, _ = build_inputs()
-    matching = StaplesConfig.model_validate(
+    matching = RulesConfig.model_validate(
         {"preferred": [{"name": "Synergy 119", "colors_any": ["R"], "boost": 5.0}]}
     )
-    result = build_with(pool, recs, staples=matching)
+    result = build_with(pool, recs, rules=matching)
     entry = next(e for e in result.mainboard if e.name == "Synergy 119")
     assert entry.score == pytest.approx((0.8 - 0.119) + 0.5 + 5.0)
 
     pool2, recs2, _ = build_inputs()
-    off_color = StaplesConfig.model_validate(
+    off_color = RulesConfig.model_validate(
         {"preferred": [{"name": "Synergy 119", "colors_any": ["U"], "boost": 5.0}]}
     )
-    result2 = build_with(pool2, recs2, staples=off_color)
+    result2 = build_with(pool2, recs2, rules=off_color)
     assert "Synergy 119" not in {e.name for e in result2.mainboard}
 
 

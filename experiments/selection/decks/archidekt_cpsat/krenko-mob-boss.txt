@@ -51,20 +51,24 @@
 1x Treasure Nabber [Synergy]
 1x Moggcatcher [Synergy]
 1x Den of the Bugbear [Lands]
-1x Coat of Arms [Synergy]
 1x Cavern of Souls [Lands]
 1x Castle Embereth [Lands]
 1x Chaos Warp [Removal]
 1x Grenzo, Havoc Raiser [Card Draw]
-1x Arcane Signet [Ramp]
+1x Massive Raid [Removal]
+1x Gempalm Incinerator [Removal]
 1x Arena of Glory [Lands]
 1x Mana Echoes [Ramp]
 1x Patriar's Seal [Ramp]
 1x Phyrexian Altar [Ramp]
 1x Path of Ancestry [Lands]
+1x Deflecting Swat [Synergy]
 1x Moria Marauder [Card Draw]
+1x Nykthos, Shrine to Nyx [Lands]
 1x Blasphemous Act [Board Wipe]
 1x Vanquisher's Banner [Card Draw]
+1x Ancient Tomb [Lands]
+1x Patchwork Banner [Ramp]
 1x Dark-Dweller Oracle [Card Draw]
 1x War Room [Lands]
 1x Thrill of Possibility [Card Draw]
@@ -84,23 +88,20 @@
 1x Arid Mesa [Lands]
 1x Reliquary Tower [Lands]
 1x Rogue's Passage [Lands]
-1x Ruination [Board Wipe]
 1x Gemstone Caverns [Lands]
 1x Crystal Vein [Lands]
 1x Hanweir Battlements [Lands]
 1x Scalding Tarn [Lands]
-1x Chain Reaction [Board Wipe]
 1x Inventors' Fair [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-5x Mountain [Lands]
+3x Mountain [Lands]
 
 # Sideboard
+1x Coat of Arms
 1x Boggart Shenanigans
 1x Hordeling Outburst
 1x Goblin Instigator
-1x Massive Raid
-1x Gempalm Incinerator
 1x Battle Cry Goblin
 1x Jeska's Will
 1x Goblin Grenade
@@ -111,3 +112,4 @@
 1x Vandalblast
 1x Beetleback Chief
 1x Torch Courier
+1x Throne of the God-Pharaoh

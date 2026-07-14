@@ -1,17 +1,18 @@
 1x Krenko, Mob Boss [Commander]
 1x Sol Ring [Ramp]
+1x Chaos Warp [Removal]
+1x Deflecting Swat [Synergy]
 1x Vandalblast [Board Wipe]
 1x Goblin Bombardment [Removal]
 1x Pashalik Mons [Removal]
 1x Goblin Trashmaster [Removal]
 1x Hobgoblin Bandit Lord [Removal]
-1x Goblin War Strike [Removal]
 1x Skirk Prospector [Ramp]
 1x Howlsquad Heavy [Ramp]
 1x Ashnod's Altar [Ramp]
 1x Ruby Medallion [Ramp]
-1x Arcane Signet [Ramp]
 1x Mana Echoes [Ramp]
+1x Patriar's Seal [Ramp]
 1x Skullclamp [Card Draw]
 1x Goblin Ringleader [Card Draw]
 1x Staff of Domination [Card Draw]
@@ -32,6 +33,7 @@
 1x Goblin Chirurgeon [Synergy]
 1x Muxus, Goblin Grandee [Synergy]
 1x Krenko, Tin Street Kingpin [Synergy]
+1x Goblin War Strike [Removal]
 1x Kiki-Jiki, Mirror Breaker [Synergy]
 1x Purphoros, God of the Forge [Synergy]
 1x Siege-Gang Commander [Removal]
@@ -57,23 +59,24 @@
 1x Goro-Goro, Disciple of Ryusei [Synergy]
 1x Treasure Nabber [Synergy]
 1x Moggcatcher [Synergy]
-1x Coat of Arms [Synergy]
-1x Patriar's Seal [Ramp]
+1x Massive Raid [Removal]
 1x Phyrexian Altar [Ramp]
 1x Blasphemous Act [Board Wipe]
-1x Thrill of Possibility [Card Draw]
-1x Wheel of Fortune [Card Draw]
-1x Chronicle of Victory [Card Draw]
+1x Patchwork Banner [Ramp]
+1x Three Tree City [Lands]
 1x Den of the Bugbear [Lands]
 1x Cavern of Souls [Lands]
 1x Castle Embereth [Lands]
 1x Arena of Glory [Lands]
 1x Path of Ancestry [Lands]
+1x Nykthos, Shrine to Nyx [Lands]
+1x War Room [Lands]
 1x Goblin Burrows [Lands]
 1x Forgotten Cave [Lands]
 1x Hall of the Bandit Lord [Lands]
 1x Command Beacon [Lands]
 1x Buried Ruin [Lands]
+1x Valakut Awakening // Valakut Stoneforge [Lands]
 1x Great Furnace [Lands]
 1x Command Tower [Lands]
 1x Urza's Saga [Lands]
@@ -90,15 +93,13 @@
 1x Inventors' Fair [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-8x Mountain [Lands]
+5x Mountain [Lands]
 
 # Sideboard
-1x Three Tree City
-1x Chaos Warp
+1x Coat of Arms
 1x Boggart Shenanigans
 1x Hordeling Outburst
 1x Goblin Instigator
-1x Massive Raid
 1x Gempalm Incinerator
 1x Battle Cry Goblin
 1x Jeska's Will
@@ -108,3 +109,5 @@
 1x Mogg War Marshal
 1x Mass Hysteria
 1x Beetleback Chief
+1x Torch Courier
+1x Throne of the God-Pharaoh

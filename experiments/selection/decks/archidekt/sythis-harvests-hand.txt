@@ -1,6 +1,10 @@
 1x Sythis, Harvest's Hand [Commander]
 1x Sol Ring [Ramp]
 1x Arcane Signet [Ramp]
+1x Swords to Plowshares [Removal]
+1x Path to Exile [Removal]
+1x Erode [Removal]
+1x Flawless Maneuver [Synergy]
 1x Approach of the Second Sun [Wincons]
 1x Farewell [Board Wipe]
 1x Winds of Rath [Board Wipe]
@@ -9,9 +13,6 @@
 1x Aura of Silence [Removal]
 1x Seal of Cleansing [Removal]
 1x Walking Ballista [Removal]
-1x Grasp of Fate [Removal]
-1x Aura Shards [Removal]
-1x Seal of Primordium [Removal]
 1x Sanctum Weaver [Ramp]
 1x Utopia Sprawl [Ramp]
 1x Wild Growth [Ramp]
@@ -40,13 +41,15 @@
 1x Ghostly Prison [Synergy]
 1x Authority of the Consuls [Synergy]
 1x Dryad of the Ilysian Grove [Ramp]
+1x Grasp of Fate [Removal]
 1x Hallowed Haunting [Synergy]
 1x Herald of the Pantheon [Synergy]
+1x Aura Shards [Removal]
 1x Archon of Sun's Grace [Synergy]
+1x Seal of Primordium [Removal]
 1x Solitary Confinement [Synergy]
 1x Whip Silk [Synergy]
 1x Greater Auramancy [Synergy]
-1x Swords to Plowshares [Removal]
 1x Burgeoning [Ramp]
 1x Carpet of Flowers [Ramp]
 1x Eladamri's Call [Synergy]
@@ -60,14 +63,12 @@
 1x Replenish [Synergy]
 1x Ancestral Mask [Synergy]
 1x Moon-Blessed Cleric [Synergy]
-1x Land Tax [Synergy]
-1x Heroic Intervention [Synergy]
-1x Privileged Position [Synergy]
-1x Gauntlets of Light [Synergy]
+1x Abundant Growth [Ramp]
 1x Hall of Heliod's Generosity [Lands]
 1x Temple Garden [Lands]
 1x Windswept Heath [Lands]
 1x Command Tower [Lands]
+1x Serra's Sanctum [Lands]
 1x Reliquary Tower [Lands]
 1x Bountiful Promenade [Lands]
 1x Brushland [Lands]
@@ -97,21 +98,20 @@
 1x Temple of Plenty [Lands]
 1x Gemstone Caverns [Lands]
 1x Shifting Woodland [Lands]
-1x Mana Confluence [Lands]
 
 # Sideboard
-1x Serra's Sanctum
-1x Abundant Growth
 1x Mirari's Wake
+1x Land Tax
+1x Heroic Intervention
+1x Privileged Position
+1x Gauntlets of Light
 1x Calix, Guided by Fate
 1x Nykthos, Shrine to Nyx
 1x Starfield Mystic
 1x Grand Abolisher
-1x Path to Exile
 1x Karmic Justice
 1x Overgrowth
 1x Swift Reconfiguration
 1x Composer of Spring
 1x Mirri's Guile
 1x Concordant Crossroads
-1x Birds of Paradise

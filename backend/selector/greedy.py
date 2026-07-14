@@ -9,9 +9,11 @@ bands and a pluggable tagger (``Callable[[str], set[str]]``), builds a
    inclusion`` plus the flat boost of a matching preferred staple
    (negative EDHREC synergy is a staple signature, not a quality signal —
    see ``COMPARATIVA_EDHREC_B4``; the clamp is a ``ScoreWeights`` dial);
-3. staples: auto-includes from ``staples.yaml`` (if given) are placed
+3. rules: ``always`` cards from ``rules.yaml`` (if given) are placed
    first — they count toward their quota categories and are never
-   displaced by quota or filler picks; the banlist always wins over them;
+   displaced by quota or filler picks; the banlist always wins over them
+   (ban > never > always > prefer) and ``never`` cards are excluded from
+   both mainboard and maybeboard, like the watchlist;
 4. quota phase: fill each spell category to its ``min`` with the
    highest-scored candidates of that category, in ``FILL_ORDER``
    (scarcest categories first so plentiful ones cannot crowd them out);
@@ -34,14 +36,22 @@ ascending mana value (the cheaper card wins) and then alphabetically.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, Callable, Iterable, Mapping, Protocol, Sequence
 
 from quotas.config import QuotaBand
 from quotas.color_sources import card_color_pips
 from quotas.lands import curve_bucket, expected_curve_mv, land_count
 from quotas.validator import CategoryStatus, validate_deck
-from selector.staples import StaplesConfig, boost_for, preferred_boosts, resolve_auto_includes
+from selector.deck_rules import (
+    RuleContext,
+    RulesConfig,
+    boost_for,
+    preferred_boosts,
+    resolve_always,
+    resolve_never,
+    validate_forced_slot_budget,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -291,7 +301,8 @@ def build_deck_greedy(
     banned_names: frozenset[str] | set[str],
     watchlist_names: frozenset[str] | set[str],
     weights: ScoreWeights = ScoreWeights(),
-    staples: StaplesConfig | None = None,
+    rules: RulesConfig | None = None,
+    archetype: str | None = None,
 ) -> GreedyResult:
     """Build a 99-card mainboard + maybeboard for a commander. See module doc."""
     commander_card = pool.resolve(commander_name)
@@ -303,9 +314,31 @@ def build_deck_greedy(
     if lands_band is None:
         raise SelectorError("bands must include a 'lands' band")
 
-    boosts: Mapping[str, float] = (
-        preferred_boosts(staples, commander_identity) if staples is not None else {}
-    )
+    # ── deck rules context: never-exclusions, boosts, budget check ───────
+    rule_ctx: RuleContext | None = None
+    never_excluded: set[str] = set()
+    boosts: Mapping[str, float] = {}
+    if rules is not None:
+        if archetype is None:
+            raise SelectorError(
+                "archetype is required when rules are given (needed to "
+                "evaluate archetype_in / archetype_not_in predicates)"
+            )
+        rule_ctx = RuleContext(
+            commander_name=commander_full_name,
+            color_identity=frozenset(commander_identity),
+            archetype=archetype,
+        )
+        # Raises DeckRulesError if the always rules exceed the forced budget.
+        validate_forced_slot_budget(rules, rule_ctx, banned_names)
+        for never_name in resolve_never(rules, rule_ctx):
+            card = pool.resolve(never_name)
+            if card is None:
+                raise SelectorError(
+                    f"never rule card not found in pool: {never_name!r}"
+                )
+            never_excluded |= _name_variants(card["name"]) | {never_name}
+        boosts = preferred_boosts(rules, commander_identity)
 
     # ── candidate filtering ──────────────────────────────────────────────
     candidates: dict[str, _Candidate] = {}
@@ -319,7 +352,11 @@ def build_deck_greedy(
         if full_name == commander_full_name or full_name in candidates:
             continue
         variants = _name_variants(full_name) | {rec.name}
-        if variants & set(banned_names) or variants & set(watchlist_names):
+        if (
+            variants & set(banned_names)
+            or variants & set(watchlist_names)
+            or variants & never_excluded
+        ):
             continue
         if not set(card.get("color_identity", [])) <= commander_identity:
             continue
@@ -341,33 +378,31 @@ def build_deck_greedy(
             len(unresolved),
         )
 
-    # ── phase 0: auto-include staples (forced, never displaced) ──────────
+    # ── phase 0: always cards from rules.yaml (forced, never displaced) ──
     picked: dict[str, DeckEntry] = {}
     counts: dict[str, int] = {}
     auto_land_count = 0
-    if staples is not None:
-        auto_names = resolve_auto_includes(
-            staples, commander_identity, commander_full_name, banned_names
-        )
-        for staple_name in auto_names:
-            card = pool.resolve(staple_name)
+    if rules is not None:
+        assert rule_ctx is not None  # built above whenever rules is given
+        for rule in resolve_always(rules, rule_ctx, banned_names):
+            card = pool.resolve(rule.name)
             if card is None:
                 raise SelectorError(
-                    f"auto-include staple not found in pool: {staple_name!r}"
+                    f"always rule card not found in pool: {rule.name!r}"
                 )
             full_name = card["name"]
             if full_name == commander_full_name or full_name in picked:
                 continue
             if _name_variants(full_name) & set(watchlist_names):
-                # Watchlist contract: never auto-recommended, staples included.
+                # Watchlist contract: never auto-recommended, always included.
                 logger.info(
-                    "%s: auto-include %s is on the watchlist, skipped",
+                    "%s: always card %s is on the watchlist, skipped",
                     commander_name, full_name,
                 )
                 continue
             if not set(card.get("color_identity", [])) <= commander_identity:
                 logger.info(
-                    "%s: auto-include %s outside commander color identity, skipped",
+                    "%s: always card %s outside commander color identity, skipped",
                     commander_name, full_name,
                 )
                 continue
@@ -386,10 +421,22 @@ def build_deck_greedy(
                     is_basic="Basic" in card.get("type_line", ""),
                 )
                 candidates[full_name] = candidate
+            if (
+                rule.quota_category is not None
+                and rule.quota_category not in candidate.categories
+            ):
+                # The forced card consumes its declared quota slot: it counts
+                # there on top of (or instead of, for pure filler) its tags.
+                categories = (
+                    set(candidate.categories) - {SYNERGY_CATEGORY}
+                ) | {rule.quota_category}
+                candidate = replace(candidate, categories=frozenset(categories))
+                candidates[full_name] = candidate
             slot = (
                 LANDS_CATEGORY
                 if candidate.is_land
-                else next(
+                else rule.quota_category
+                or next(
                     (cat for cat in FILL_ORDER if cat in candidate.categories),
                     SYNERGY_CATEGORY,
                 )
@@ -398,7 +445,7 @@ def build_deck_greedy(
                 name=full_name,
                 categories=tuple(sorted(candidate.categories)),
                 score=candidate.score,
-                reason="staple (auto-include)",
+                reason="always (rules.yaml)",
                 slot=slot,
             )
             _add_counts(counts, candidate.categories)

@@ -24,8 +24,12 @@ sys.path.insert(0, str(REPO_ROOT / "backend"))
 from pipeline.edhrec import fetch_commander, slugify_commander  # noqa: E402
 from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
+from selector.deck_rules import (  # noqa: E402
+    archetype_for,
+    load_rules,
+    validate_rules_names,
+)
 from selector.greedy import DECK_SIZE, GreedyResult, load_pool  # noqa: E402
-from selector.staples import load_staples  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -141,7 +145,8 @@ def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
     banned, watchlist = load_banlist(BANLIST_PATH)
-    staples = load_staples()
+    rules = load_rules(valid_archetypes=set(config.archetypes))
+    validate_rules_names(rules, pool.resolve)
     tagger = tagger_from_store(load_tags(), pool.cards())
     DECKS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -161,7 +166,8 @@ def main() -> None:
             tagger=tagger,
             banned_names=banned,
             watchlist_names=watchlist,
-            staples=staples,
+            rules=rules,
+            archetype=archetype_for(config, commander),
         )
         elapsed = time.perf_counter() - start
         assert result.total_cards == DECK_SIZE

@@ -1,17 +1,17 @@
 1x Niv-Mizzet, Parun [Commander]
 1x Sol Ring [Ramp]
 1x Arcane Signet [Ramp]
-1x Laboratory Maniac [Wincons]
-1x Jace, Wielder of Mysteries [Wincons]
-1x Cyclonic Rift [Board Wipe]
-1x Blasphemous Act [Board Wipe]
 1x Counterspell [Removal]
-1x Niv-Mizzet, the Firemind [Removal]
-1x Arcane Denial [Removal]
+1x Mana Drain [Removal]
+1x Force of Will [Removal]
 1x Fierce Guardianship [Removal]
-1x An Offer You Can't Refuse [Removal]
-1x Swan Song [Removal]
-1x Lightning Bolt [Removal]
+1x Chaos Warp [Removal]
+1x Deflecting Swat [Synergy]
+1x Blasphemous Act [Board Wipe]
+1x Grapeshot [Wincons]
+1x Rite of the Dragoncaller [Wincons]
+1x Cyclonic Rift [Board Wipe]
+1x Niv-Mizzet, the Firemind [Removal]
 1x Izzet Signet [Ramp]
 1x Talisman of Creativity [Ramp]
 1x Storm-Kiln Artist [Ramp]
@@ -26,19 +26,20 @@
 1x Windfall [Card Draw]
 1x Archmage Emeritus [Card Draw]
 1x Teferi's Ageless Insight [Card Draw]
+1x Flame of Anor [Card Draw]
 1x Ponder [Synergy]
 1x Preordain [Synergy]
 1x Opt [Synergy]
 1x Frantic Search [Synergy]
 1x Faithless Looting [Synergy]
+1x Arcane Denial [Removal]
 1x Guttersnipe [Synergy]
+1x An Offer You Can't Refuse [Removal]
 1x Gitaxian Probe [Synergy]
+1x Swan Song [Removal]
 1x Harmonic Prodigy [Synergy]
+1x Lightning Bolt [Removal]
 1x Izzet Charm [Removal]
-1x Pongify [Removal]
-1x Force of Will [Removal]
-1x Vandalblast [Board Wipe]
-1x Deflecting Swat [Synergy]
 1x Narset, Parter of Veils [Synergy]
 1x Consider [Synergy]
 1x Vivi Ornitier [Ramp]
@@ -50,6 +51,7 @@
 1x Narset's Reversal [Synergy]
 1x Jeska's Will [Synergy]
 1x Winds of Change [Synergy]
+1x Thought Vessel [Ramp]
 1x Treasure Cruise [Card Draw]
 1x The Locust God [Card Draw]
 1x Lotus Petal [Synergy]
@@ -58,12 +60,10 @@
 1x Thrill of Possibility [Card Draw]
 1x Veyran, Voice of Duality [Synergy]
 1x Spellskite [Synergy]
+1x Chrome Mox [Ramp]
 1x Misdirection [Synergy]
 1x Electrostatic Field [Synergy]
 1x Solve the Equation [Synergy]
-1x Sensei's Divining Top [Synergy]
-1x Young Pyromancer [Synergy]
-1x Dragonologist [Synergy]
 1x Command Tower [Lands]
 1x Steam Vents [Lands]
 1x Sulfur Falls [Lands]
@@ -100,18 +100,18 @@
 1x Fabled Passage [Lands]
 
 # Sideboard
+1x Pongify
+1x Vandalblast
 1x Negate
-1x Mana Drain
 1x Rapid Hybridization
 1x Force of Negation
 1x Snap
-1x Flame of Anor
 1x Abrade
-1x Chaos Warp
 1x Pact of Negation
-1x Thought Vessel
 1x Valakut Awakening // Valakut Stoneforge
 1x Muddle the Mixture
 1x Dispel
 1x Flusterstorm
 1x Otawara, Soaring City
+1x Midnight Clock
+1x Sink into Stupor // Soporific Springs

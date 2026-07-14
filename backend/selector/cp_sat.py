@@ -28,11 +28,13 @@ Constraints and penalties:
   ``soft_category_floors`` (category minimums become penalised soft floors)
   → ``drop_ceilings`` (category/lands maximums dropped too) →
   ``base_size_and_lands`` (only 99 + lands ≥ Karsten/band floor). Banlist,
-  color identity, the Karsten floor and auto-include staples are never
+  color identity, the Karsten floor and forced always cards are never
   relaxed.
-- **Staples** (``staples.yaml``, optional): auto-includes are forced with a
-  hard ``x == 1`` at every stage (banlist wins: banned staples never reach
-  the model); preferred staples add their flat boost to the score.
+- **Rules** (``rules.yaml``, optional): ``always`` cards are forced with a
+  hard ``x == 1`` at every stage (precedence ban > never > always > prefer:
+  banned or never-matching cards never reach the model); ``never`` cards are
+  excluded from candidates entirely (mainboard and maybeboard, like the
+  watchlist); ``preferred`` cards add their flat boost to the score.
 - **Score corrections** (COMPARATIVA_EDHREC_B4): negative EDHREC synergy is
   clamped to 0 by default (``ScoreWeights``); non-basic lands scoring below
   ``ScoreWeights.land_score_floor`` are excluded (``x == 0`` — basics are
@@ -51,7 +53,7 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, Callable, Mapping, Sequence
 
 from ortools.sat.python import cp_model
@@ -87,7 +89,15 @@ from selector.greedy import (
     _name_variants,
     _sorted_candidates,
 )
-from selector.staples import StaplesConfig, boost_for, preferred_boosts, resolve_auto_includes
+from selector.deck_rules import (
+    RuleContext,
+    RulesConfig,
+    boost_for,
+    preferred_boosts,
+    resolve_always,
+    resolve_never,
+    validate_forced_slot_budget,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -291,7 +301,7 @@ def _assemble_model(
     lands_min: int,
     color_targets: Mapping[str, int],
     producers: Mapping[str, frozenset[str]],  # candidate name -> colors produced
-    forced: frozenset[str] = frozenset(),  # auto-include staples: x == 1
+    forced: frozenset[str] = frozenset(),  # always cards (rules.yaml): x == 1
     excluded: frozenset[str] = frozenset(),  # weak non-basic lands: x == 0
 ) -> tuple[cp_model.CpModel, dict[str, cp_model.IntVar], dict[str, cp_model.IntVar]]:
     """One CP-SAT model for a relaxation stage and a fixed lands lower bound."""
@@ -307,7 +317,7 @@ def _assemble_model(
         if coefficient:
             score_terms.append(coefficient * var)
 
-    # Auto-include staples and the land quality gate are as hard as the
+    # Forced always cards and the land quality gate are as hard as the
     # banlist: active at EVERY relaxation stage, never dropped.
     for name in sorted(forced):
         model.add(x[name] == 1)
@@ -387,7 +397,8 @@ def build_deck_cpsat(
     banned_names: frozenset[str] | set[str],
     watchlist_names: frozenset[str] | set[str],
     weights: ScoreWeights = ScoreWeights(),
-    staples: StaplesConfig | None = None,
+    rules: RulesConfig | None = None,
+    archetype: str | None = None,
     time_limit_s: float = DEFAULT_TIME_LIMIT_S,
     random_seed: int = DEFAULT_RANDOM_SEED,
 ) -> CpSatResult:
@@ -401,9 +412,31 @@ def build_deck_cpsat(
     if lands_band is None:
         raise SelectorError("bands must include a 'lands' band")
 
-    boosts: Mapping[str, float] = (
-        preferred_boosts(staples, commander_identity) if staples is not None else {}
-    )
+    # ── deck rules context (same rules as the greedy, kept in lockstep) ──
+    rule_ctx: RuleContext | None = None
+    never_excluded: set[str] = set()
+    boosts: Mapping[str, float] = {}
+    if rules is not None:
+        if archetype is None:
+            raise SelectorError(
+                "archetype is required when rules are given (needed to "
+                "evaluate archetype_in / archetype_not_in predicates)"
+            )
+        rule_ctx = RuleContext(
+            commander_name=commander_full_name,
+            color_identity=commander_identity,
+            archetype=archetype,
+        )
+        # Raises DeckRulesError if the always rules exceed the forced budget.
+        validate_forced_slot_budget(rules, rule_ctx, banned_names)
+        for never_name in resolve_never(rules, rule_ctx):
+            card = pool.resolve(never_name)
+            if card is None:
+                raise SelectorError(
+                    f"never rule card not found in pool: {never_name!r}"
+                )
+            never_excluded |= _name_variants(card["name"]) | {never_name}
+        boosts = preferred_boosts(rules, commander_identity)
 
     # ── candidate filtering (same rules as the greedy, kept in lockstep) ──
     candidates: dict[str, _Candidate] = {}
@@ -417,7 +450,11 @@ def build_deck_cpsat(
         if full_name == commander_full_name or full_name in candidates:
             continue
         variants = _name_variants(full_name) | {rec.name}
-        if variants & set(banned_names) or variants & set(watchlist_names):
+        if (
+            variants & set(banned_names)
+            or variants & set(watchlist_names)
+            or variants & never_excluded
+        ):
             continue
         if not set(card.get("color_identity", [])) <= commander_identity:
             continue
@@ -442,31 +479,30 @@ def build_deck_cpsat(
             len(unresolved),
         )
 
-    # ── auto-include staples (forced with x == 1; same rules as the greedy) ──
+    # ── always cards from rules.yaml (forced with x == 1; as in the greedy) ──
     forced_names: set[str] = set()
-    if staples is not None:
-        auto_names = resolve_auto_includes(
-            staples, commander_identity, commander_full_name, banned_names
-        )
-        for staple_name in auto_names:
-            card = pool.resolve(staple_name)
+    forced_slots: dict[str, str] = {}  # full name -> declared quota_category
+    if rules is not None:
+        assert rule_ctx is not None  # built above whenever rules is given
+        for rule in resolve_always(rules, rule_ctx, banned_names):
+            card = pool.resolve(rule.name)
             if card is None:
                 raise SelectorError(
-                    f"auto-include staple not found in pool: {staple_name!r}"
+                    f"always rule card not found in pool: {rule.name!r}"
                 )
             full_name = card["name"]
             if full_name == commander_full_name or "Basic" in card.get("type_line", ""):
                 continue
             if _name_variants(full_name) & set(watchlist_names):
-                # Watchlist contract: never auto-recommended, staples included.
+                # Watchlist contract: never auto-recommended, always included.
                 logger.info(
-                    "%s: auto-include %s is on the watchlist, skipped",
+                    "%s: always card %s is on the watchlist, skipped",
                     commander_name, full_name,
                 )
                 continue
             if not set(card.get("color_identity", [])) <= commander_identity:
                 logger.info(
-                    "%s: auto-include %s outside commander color identity, skipped",
+                    "%s: always card %s outside commander color identity, skipped",
                     commander_name, full_name,
                 )
                 continue
@@ -482,6 +518,20 @@ def build_deck_cpsat(
                     cmc=float(card.get("cmc") or 0.0),
                     mana_cost=card.get("mana_cost") or "",
                 )
+            if (
+                rule.quota_category is not None
+                and rule.quota_category not in candidates[full_name].categories
+            ):
+                # The forced card consumes its declared quota slot: it counts
+                # there on top of (or instead of, for pure filler) its tags.
+                categories = (
+                    set(candidates[full_name].categories) - {SYNERGY_CATEGORY}
+                ) | {rule.quota_category}
+                candidates[full_name] = replace(
+                    candidates[full_name], categories=frozenset(categories)
+                )
+            if rule.quota_category is not None:
+                forced_slots[full_name] = rule.quota_category
             forced_names.add(full_name)
 
     ordered = _sorted_candidates(candidates.values())
@@ -591,14 +641,15 @@ def build_deck_cpsat(
         slot = (
             LANDS_CATEGORY
             if cand.is_land
-            else next((c for c in FILL_ORDER if c in cand.categories), SYNERGY_CATEGORY)
+            else forced_slots.get(cand.name)
+            or next((c for c in FILL_ORDER if c in cand.categories), SYNERGY_CATEGORY)
         )
         picked[cand.name] = DeckEntry(
             name=cand.name,
             categories=tuple(sorted(cand.categories)),
             score=cand.score,
             reason=(
-                "staple (auto-include)"
+                "always (rules.yaml)"
                 if cand.name in forced
                 else f"cp-sat, score {cand.score:.2f}"
             ),

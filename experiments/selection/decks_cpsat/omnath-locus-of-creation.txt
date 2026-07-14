@@ -1,16 +1,16 @@
 # Omnath, Locus of Creation — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.03s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 66.2930 (score bruto 66.8935, penalizaciones escaladas 600490)
-# Fixing color (fuentes/objetivo): G: 18/38 (déficit 20), R: 14/32 (déficit 18), U: 15/32 (déficit 17), W: 14/24 (déficit 10)
+# Objetivo: 65.6666 (score bruto 66.2827, penalizaciones escaladas 616030)
+# Fixing color (fuentes/objetivo): G: 17/38 (déficit 21), R: 14/32 (déficit 18), U: 15/32 (déficit 17), W: 14/24 (déficit 10)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         42  [38-42]    in_range  (suelo Karsten: 35, mínimo efectivo: 38)
-ramp          16  [12-16]    in_range
-card_draw     11  [ 9-12]    in_range
-removal        9  [ 6- 9]    in_range
-board_wipe     4  [ 2- 4]    in_range
+lands         40  [38-42]    in_range  (suelo Karsten: 35, mínimo efectivo: 38)
+ramp          18  [12-18]    in_range
+card_draw      9  [ 9-12]    in_range
+removal       11  [ 6-11]    in_range
+board_wipe     3  [ 2- 4]    in_range
 wincons        3  [ 2- 4]    in_range
 synergy       18  [ 0-18]    in_range
 
@@ -19,7 +19,7 @@ synergy       18  [ 0-18]    in_range
 
 ## Mainboard (99)
 
-### lands (42)
+### lands (40)
 1x Misty Rainforest                           score 1.10  [lands]  cp-sat, score 1.10
 1x Windswept Heath                            score 1.09  [lands]  cp-sat, score 1.09
 1x Wooded Foothills                           score 1.08  [lands]  cp-sat, score 1.08
@@ -40,7 +40,6 @@ synergy       18  [ 0-18]    in_range
 1x Verdant Catacombs                          score 0.63  [lands]  cp-sat, score 0.63
 1x Yavimaya, Cradle of Growth                 score 0.62  [lands]  cp-sat, score 0.62
 1x Gruul Turf                                 score 0.60  [lands]  cp-sat, score 0.60
-1x Boseiju, Who Endures                       score 0.60  [lands/removal]  cp-sat, score 0.60
 1x Spara's Headquarters                       score 0.58  [lands]  cp-sat, score 0.58
 1x Prismatic Vista                            score 0.57  [lands]  cp-sat, score 0.57
 1x Selesnya Sanctuary                         score 0.56  [lands]  cp-sat, score 0.56
@@ -61,9 +60,8 @@ synergy       18  [ 0-18]    in_range
 1x Taiga                                      score 0.25  [lands]  cp-sat, score 0.25
 1x Savannah                                   score 0.24  [lands]  cp-sat, score 0.24
 1x Tropical Island                            score 0.24  [lands]  cp-sat, score 0.24
-1x Thespian's Stage                           score 0.23  [lands]  cp-sat, score 0.23
 
-### ramp (16)
+### ramp (18)
 1x Lotus Cobra                                score 1.39  [ramp]  cp-sat, score 1.39
 1x Azusa, Lost but Seeking                    score 1.37  [ramp]  cp-sat, score 1.37
 1x Exploration                                score 1.26  [ramp]  cp-sat, score 1.26
@@ -76,12 +74,14 @@ synergy       18  [ 0-18]    in_range
 1x Nature's Lore                              score 0.75  [ramp]  cp-sat, score 0.75
 1x Farseek                                    score 0.71  [ramp]  cp-sat, score 0.71
 1x Mina and Denn, Wildborn                    score 0.70  [ramp]  cp-sat, score 0.70
-1x Sol Ring                                   score 0.68  [ramp]  staple (auto-include)
+1x Sol Ring                                   score 0.68  [ramp]  always (rules.yaml)
 1x Nissa, Resurgent Animist                   score 0.65  [ramp]  cp-sat, score 0.65
 1x Kodama of the East Tree                    score 0.64  [ramp]  cp-sat, score 0.64
-1x Arcane Signet                              score 0.44  [ramp]  staple (auto-include)
+1x Loot, Exuberant Explorer                   score 0.59  [ramp]  cp-sat, score 0.59
+1x Risen Reef                                 score 0.59  [ramp]  cp-sat, score 0.59
+1x Arcane Signet                              score 0.44  [ramp]  always (rules.yaml)
 
-### card_draw (9)
+### card_draw (7)
 1x Tatyova, Benthic Druid                     score 1.29  [card_draw]  cp-sat, score 1.29
 1x Sylvan Library                             score 0.64  [card_draw]  cp-sat, score 0.64
 1x Valakut Exploration                        score 0.60  [card_draw]  cp-sat, score 0.60
@@ -89,23 +89,23 @@ synergy       18  [ 0-18]    in_range
 1x Courser of Kruphix                         score 0.30  [card_draw]  cp-sat, score 0.30
 1x Augur of Autumn                            score 0.27  [card_draw]  cp-sat, score 0.27
 1x Trade Routes                               score 0.21  [card_draw]  cp-sat, score 0.21
-1x Horn of Greed                              score 0.16  [card_draw]  cp-sat, score 0.16
-1x Escape to the Wilds                        score 0.14  [card_draw]  cp-sat, score 0.14
 
-### removal (7)
+### removal (10)
 1x Omnath, Locus of Rage                      score 1.12  [removal]  cp-sat, score 1.12
 1x Omnath, Locus of the Roil                  score 0.78  [card_draw/removal]  cp-sat, score 0.78
-1x Swords to Plowshares                       score 0.75  [removal]  cp-sat, score 0.75
-1x Path to Exile                              score 0.59  [removal]  cp-sat, score 0.59
-1x Fierce Guardianship                        score 0.58  [removal]  cp-sat, score 0.58
-1x Beast Within                               score 0.45  [removal]  cp-sat, score 0.45
-1x Counterspell                               score 0.44  [removal]  cp-sat, score 0.44
+1x Swords to Plowshares                       score 0.75  [removal]  always (rules.yaml)
+1x Path to Exile                              score 0.59  [removal]  always (rules.yaml)
+1x Fierce Guardianship                        score 0.58  [removal]  always (rules.yaml)
+1x Counterspell                               score 0.44  [removal]  always (rules.yaml)
+1x Mana Drain                                 score 0.35  [removal]  always (rules.yaml)
+1x Force of Will                              score 0.15  [removal]  always (rules.yaml)
+1x Chaos Warp                                 score 0.09  [removal]  always (rules.yaml)
+1x Erode                                      score 0.00  [removal]  always (rules.yaml)
 
-### board_wipe (4)
+### board_wipe (3)
 1x Cyclonic Rift                              score 0.92  [board_wipe/removal]  cp-sat, score 0.92
 1x Farewell                                   score 0.29  [board_wipe]  cp-sat, score 0.29
-1x Dragonback Assault                         score 0.25  [board_wipe]  cp-sat, score 0.25
-1x Blasphemous Act                            score 0.19  [board_wipe]  cp-sat, score 0.19
+1x Blasphemous Act                            score 0.19  [board_wipe]  always (rules.yaml)
 
 ### wincons (3)
 1x Moraug, Fury of Akoum                      score 0.63  [wincons]  cp-sat, score 0.63
@@ -129,22 +129,22 @@ synergy       18  [ 0-18]    in_range
 1x Conduit of Worlds                          score 0.57  [synergy]  cp-sat, score 0.57
 1x Heroic Intervention                        score 0.56  [synergy]  cp-sat, score 0.56
 1x Retreat to Coralhelm                       score 0.55  [synergy]  cp-sat, score 0.55
-1x Springheart Nantuko                        score 0.49  [synergy]  cp-sat, score 0.49
-1x Roil Elemental                             score 0.48  [synergy]  cp-sat, score 0.48
+1x Deflecting Swat                            score 0.32  [synergy]  always (rules.yaml)
+1x Flawless Maneuver                          score 0.10  [synergy]  always (rules.yaml)
 
 ## Maybeboard (15)
-1x Loot, Exuberant Explorer                   score 0.59  [ramp]  fuera: cuota llena en ramp
-1x Risen Reef                                 score 0.59  [ramp]  fuera: cuota llena en ramp
+1x Boseiju, Who Endures                       score 0.60  [lands/removal]  fuera por score 0.60
 1x Harrow                                     score 0.58  [ramp]  fuera: cuota llena en ramp
 1x Icetill Explorer                           score 0.57  [ramp]  fuera: cuota llena en ramp
 1x Splendid Reclamation                       score 0.51  [ramp]  fuera: cuota llena en ramp
+1x Springheart Nantuko                        score 0.49  [synergy]  fuera: cuota llena en synergy
 1x Titania, Protector of Argoth               score 0.48  [ramp]  fuera: cuota llena en ramp
-1x Strip Mine                                 score 0.46  [lands/removal]  fuera: cuota llena en lands/removal
+1x Roil Elemental                             score 0.48  [synergy]  fuera: cuota llena en synergy
+1x Strip Mine                                 score 0.46  [lands/removal]  fuera por score 0.46
+1x Beast Within                               score 0.45  [removal]  fuera: cuota llena en removal
 1x Mossborn Hydra                             score 0.45  [synergy]  fuera: cuota llena en synergy
 1x Cultivate                                  score 0.44  [ramp]  fuera: cuota llena en ramp
 1x Burgeoning                                 score 0.43  [ramp]  fuera: cuota llena en ramp
 1x Awaken the Woods                           score 0.42  [ramp]  fuera: cuota llena en ramp
 1x Eternal Witness                            score 0.42  [synergy]  fuera: cuota llena en synergy
 1x Kodama's Reach                             score 0.42  [ramp]  fuera: cuota llena en ramp
-1x Birds of Paradise                          score 0.40  [ramp]  fuera: cuota llena en ramp
-1x Sakura-Tribe Elder                         score 0.39  [ramp]  fuera: cuota llena en ramp

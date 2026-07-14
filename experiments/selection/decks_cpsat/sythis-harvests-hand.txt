@@ -1,18 +1,18 @@
 # Sythis, Harvest's Hand — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.02s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.01s de resolución, etapa de relajación: none
-# Objetivo: 79.5644 (score bruto 79.6963, penalizaciones escaladas 131895)
-# Fixing color (fuentes/objetivo): G: 23/35 (déficit 12), W: 23/29 (déficit 6)
+# Objetivo: 79.0404 (score bruto 79.2042, penalizaciones escaladas 163796)
+# Fixing color (fuentes/objetivo): G: 21/35 (déficit 14), W: 22/29 (déficit 7)
 
 ## Resumen de cuotas
 categoría      n  banda      estado
-lands         34  [34-37]    in_range  (suelo Karsten: 34, mínimo efectivo: 34)
-ramp          11  [ 8-11]    in_range
+lands         34  [34-37]    in_range  (suelo Karsten: 33, mínimo efectivo: 34)
+ramp          13  [ 8-13]    in_range
 card_draw     10  [10-14]    in_range
-removal       11  [ 8-11]    in_range
+removal       13  [ 8-13]    in_range
 board_wipe     2  [ 2- 4]    in_range
 wincons        1  [ 1- 3]    in_range
-synergy       32  [ 0-32]    in_range
+synergy       30  [ 0-32]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -36,6 +36,7 @@ synergy       32  [ 0-32]    in_range
 1x Canopy Vista                               score 0.63  [lands]  cp-sat, score 0.63
 1x Strength of the Harvest // Haven of the Harvest score 0.63  [lands]  cp-sat, score 0.63
 1x Overgrown Farmland                         score 0.55  [lands]  cp-sat, score 0.55
+1x Nykthos, Shrine to Nyx                     score 0.53  [lands/ramp]  cp-sat, score 0.53
 1x Savannah                                   score 0.53  [lands]  cp-sat, score 0.53
 1x Hushwood Verge                             score 0.49  [lands]  cp-sat, score 0.49
 1x Wooded Bastion                             score 0.42  [lands]  cp-sat, score 0.42
@@ -46,16 +47,15 @@ synergy       32  [ 0-32]    in_range
 1x Marsh Flats                                score 0.36  [lands]  cp-sat, score 0.36
 1x Verdant Catacombs                          score 0.36  [lands]  cp-sat, score 0.36
 1x Misty Rainforest                           score 0.36  [lands]  cp-sat, score 0.36
+1x Eiganjo, Seat of the Empire                score 0.35  [lands/removal]  cp-sat, score 0.35
 1x Arid Mesa                                  score 0.34  [lands]  cp-sat, score 0.34
 1x Valgavoth's Lair                           score 0.33  [lands]  cp-sat, score 0.33
 1x Razorverge Thicket                         score 0.32  [lands]  cp-sat, score 0.32
 1x Sungrass Prairie                           score 0.30  [lands]  cp-sat, score 0.30
 1x Prismatic Vista                            score 0.27  [lands]  cp-sat, score 0.27
 1x Temple of Plenty                           score 0.24  [lands]  cp-sat, score 0.24
-1x Gemstone Caverns                           score 0.20  [lands]  cp-sat, score 0.20
-1x Mana Confluence                            score 0.20  [lands]  cp-sat, score 0.20
 
-### ramp (10)
+### ramp (11)
 1x Sanctum Weaver                             score 1.80  [ramp]  cp-sat, score 1.80
 1x Utopia Sprawl                              score 1.43  [ramp]  cp-sat, score 1.43
 1x Wild Growth                                score 1.41  [ramp]  cp-sat, score 1.41
@@ -64,8 +64,9 @@ synergy       32  [ 0-32]    in_range
 1x Fertile Ground                             score 1.18  [ramp]  cp-sat, score 1.18
 1x Dryad of the Ilysian Grove                 score 0.96  [ramp]  cp-sat, score 0.96
 1x Burgeoning                                 score 0.79  [ramp]  cp-sat, score 0.79
-1x Sol Ring                                   score 0.56  [ramp]  staple (auto-include)
-1x Arcane Signet                              score 0.25  [ramp]  staple (auto-include)
+1x Carpet of Flowers                          score 0.75  [ramp]  cp-sat, score 0.75
+1x Sol Ring                                   score 0.56  [ramp]  always (rules.yaml)
+1x Arcane Signet                              score 0.25  [ramp]  always (rules.yaml)
 
 ### card_draw (10)
 1x Enchantress's Presence                     score 1.73  [card_draw]  cp-sat, score 1.73
@@ -79,7 +80,7 @@ synergy       32  [ 0-32]    in_range
 1x Courser of Kruphix                         score 0.42  [card_draw]  cp-sat, score 0.42
 1x Trouble in Pairs                           score 0.21  [card_draw]  cp-sat, score 0.21
 
-### removal (10)
+### removal (11)
 1x Darksteel Mutation                         score 1.29  [removal]  cp-sat, score 1.29
 1x Kenrith's Transformation                   score 1.26  [removal]  cp-sat, score 1.26
 1x Aura of Silence                            score 0.99  [removal]  cp-sat, score 0.99
@@ -88,8 +89,9 @@ synergy       32  [ 0-32]    in_range
 1x Grasp of Fate                              score 0.94  [removal]  cp-sat, score 0.94
 1x Aura Shards                                score 0.84  [removal]  cp-sat, score 0.84
 1x Seal of Primordium                         score 0.84  [removal]  cp-sat, score 0.84
-1x Swords to Plowshares                       score 0.79  [removal]  cp-sat, score 0.79
-1x Song of the Dryads                         score 0.65  [removal]  cp-sat, score 0.65
+1x Swords to Plowshares                       score 0.79  [removal]  always (rules.yaml)
+1x Path to Exile                              score 0.48  [removal]  always (rules.yaml)
+1x Erode                                      score 0.00  [removal]  always (rules.yaml)
 
 ### board_wipe (2)
 1x Farewell                                   score 0.29  [board_wipe]  cp-sat, score 0.29
@@ -98,7 +100,7 @@ synergy       32  [ 0-32]    in_range
 ### wincons (1)
 1x Approach of the Second Sun                 score 0.37  [wincons]  cp-sat, score 0.37
 
-### synergy (32)
+### synergy (30)
 1x Sterling Grove                             score 1.75  [synergy]  cp-sat, score 1.75
 1x Destiny Spinner                            score 1.61  [synergy]  cp-sat, score 1.61
 1x Heliod, Sun-Crowned                        score 1.21  [synergy]  cp-sat, score 1.21
@@ -128,23 +130,21 @@ synergy       32  [ 0-32]    in_range
 1x Moon-Blessed Cleric                        score 0.64  [synergy]  cp-sat, score 0.64
 1x Land Tax                                   score 0.61  [synergy]  cp-sat, score 0.61
 1x Heroic Intervention                        score 0.59  [synergy]  cp-sat, score 0.59
-1x Privileged Position                        score 0.55  [synergy]  cp-sat, score 0.55
-1x Gauntlets of Light                         score 0.54  [synergy]  cp-sat, score 0.54
-1x Calix, Guided by Fate                      score 0.54  [synergy]  cp-sat, score 0.54
+1x Flawless Maneuver                          score 0.07  [synergy]  always (rules.yaml)
 
 ## Maybeboard (15)
-1x Carpet of Flowers                          score 0.75  [ramp]  fuera: cuota llena en ramp
+1x Song of the Dryads                         score 0.65  [removal]  fuera: cuota llena en removal
 1x Abundant Growth                            score 0.62  [ramp]  fuera: cuota llena en ramp
 1x Mirari's Wake                              score 0.61  [ramp]  fuera: cuota llena en ramp
-1x Nykthos, Shrine to Nyx                     score 0.53  [lands/ramp]  fuera por score 0.53
+1x Privileged Position                        score 0.55  [synergy]  fuera por score 0.55
+1x Gauntlets of Light                         score 0.54  [synergy]  fuera por score 0.54
+1x Calix, Guided by Fate                      score 0.54  [synergy]  fuera por score 0.54
 1x Starfield Mystic                           score 0.52  [ramp]  fuera: cuota llena en ramp
-1x Grand Abolisher                            score 0.51  [synergy]  fuera: cuota llena en synergy
-1x Path to Exile                              score 0.48  [removal]  fuera: cuota llena en removal
+1x Grand Abolisher                            score 0.51  [synergy]  fuera por score 0.51
 1x Karmic Justice                             score 0.48  [removal]  fuera: cuota llena en removal
 1x Overgrowth                                 score 0.47  [ramp]  fuera: cuota llena en ramp
 1x Swift Reconfiguration                      score 0.47  [removal]  fuera: cuota llena en removal
 1x Composer of Spring                         score 0.47  [ramp]  fuera: cuota llena en ramp
-1x Mirri's Guile                              score 0.46  [synergy]  fuera: cuota llena en synergy
-1x Concordant Crossroads                      score 0.44  [synergy]  fuera: cuota llena en synergy
+1x Mirri's Guile                              score 0.46  [synergy]  fuera por score 0.46
+1x Concordant Crossroads                      score 0.44  [synergy]  fuera por score 0.44
 1x Birds of Paradise                          score 0.44  [ramp]  fuera: cuota llena en ramp
-1x Weaver of Harmony                          score 0.42  [synergy]  fuera: cuota llena en synergy

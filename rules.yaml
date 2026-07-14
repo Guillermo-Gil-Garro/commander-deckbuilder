@@ -1,0 +1,194 @@
+# rules.yaml — Reglas de composición del grupo: always / never / prefer.
+# SUSTITUYE a staples.yaml (superseded 2026-07-14): sus auto_includes viven
+# ahora como `always` y su lista `preferred` migra tal cual (hoy vacía).
+#
+# Editable a mano. Lo carga backend/selector/deck_rules.py (load_rules) y lo
+# consumen ambos selectores (greedy y CP-SAT).
+#
+# ÁMBITO: SOLO cartas no-tierra. Las tierras son territorio del módulo de
+# manabase (Karsten) y NUNCA se fuerzan desde aquí.
+#
+# Precedencia estricta: ban > never > always > prefer.
+#   - La banlist (banlist.yaml) SIEMPRE gana: una carta baneada jamás entra,
+#     aunque tenga regla always.
+#   - Si una carta matchea a la vez un never y un always, gana el never.
+#
+# Predicados `when` v1 — SOLO hechos conocidos ANTES de la selección:
+#   color_identity_contains: [W|U|B|R|G]   -> la identidad del comandante
+#                                             contiene TODOS los colores listados
+#   color_identity_size: 2 | ">=2" | "<=1" -> tamaño de la identidad (entero
+#                                             exacto o comparador como string)
+#   archetype_in / archetype_not_in: [...] -> arquetipo de cuotas del mazo
+#                                             (validado contra quotas.yaml)
+#   commander_in / commander_not_in: [...] -> nombre exacto del comandante
+#   any_of: [ {...}, {...} ]               -> OR de sub-bloques; el resto de
+#                                             claves de un bloque van en AND
+# Predicados sobre el mazo YA construido (creature_count, deck_*...) quedan
+# FUERA de v1: el loader los rechaza con error de schema.
+#
+# [ADAPTACIÓN] `commander_in` es extensión nuestra: no existe un arquetipo
+# "artifacts" en quotas.yaml, así que el caso "monocolor de temática de
+# artefactos" (Arcane Signet en Urza/Emry) se codifica listando comandantes.
+
+meta:
+  version: "1.0-draft"
+  status: draft            # pendiente de revisión del grupo
+  updated: "2026-07-14"
+  # Presupuesto de slots forzados: nº máximo de always que pueden matchear a
+  # un MISMO comandante legal. El validador (deck_rules.validate_forced_slot_budget)
+  # FALLA si algún comandante lo supera.
+  # ⚠️ revisar [ADAPTACIÓN]: el spec decía 12, pero los seeds de abajo suman
+  # 13-14 en mazos de 4-5 colores no-aggro (Omnath 13; Ur-Dragon, Ulalek y
+  # First Sliver 14). Con 12 esos mazos no se pueden construir. Se fija 14 a
+  # la espera de decisión de Guille: recortar seeds o consolidar 14.
+  forced_slot_budget: 14
+  notes: >
+    Sustituye a staples.yaml. Cada always consume el slot de su
+    quota_category (no va por encima de las 99); un never no se
+    auto-recomienda ni aparece en el maybeboard; un prefer solo suma bonus
+    de score.
+
+# Bloque documental: la app honra estas semánticas (selectores hoy; el
+# validador RED/AMBER llega en Fase 4).
+semantics:
+  precedence: [ban, never, always, prefer]
+  always: >
+    La carta DEBE estar en las 99 si su `when` matchea (sin `when` =
+    incondicional). Consume slot de su `quota_category` como cualquier otra
+    carta — nunca por encima de 99. `quota_category: null` = sin categoría de
+    cuota asignada en v1 (consume slot de relleno general).
+  never: >
+    Si su `when` matchea, la carta nunca es auto-recomendada: ni mainboard ni
+    maybeboard (mismo tratamiento que la watchlist de banlist.yaml).
+  prefer: >
+    Bonus plano de score cuando la identidad del mazo incluye alguno de los
+    colores de `colors_any` (lista vacía = todos los mazos). No es una
+    constraint: nunca fuerza la entrada.
+  user_override:
+    ban: "RED — no overrideable por el usuario."
+    remove_always: "AMBER — quitar un always a mano: el mazo sigue siendo válido y exportable."
+    add_never_manually: "AMBER — añadir a mano una carta never: válido."
+
+# ---------------------------------------------------------------------------
+# ALWAYS — entran sí o sí cuando su `when` matchea (y no están baneadas).
+# quota_category traducida del spec a nuestras categorías:
+#   spot_removal -> removal | interaction -> removal | board_wipe -> board_wipe
+#   ramp -> ramp | protection -> null (no existe categoría; pendiente:
+#   categoría protection, decisión de Guille futura).
+# ---------------------------------------------------------------------------
+always:
+  # ── incoloras ────────────────────────────────────────────────────────────
+  - name: Sol Ring
+    quota_category: ramp
+    # Sin `when`: en todos los mazos.
+
+  - name: Arcane Signet
+    quota_category: ramp
+    when:
+      any_of:
+        - color_identity_size: ">=2"
+        # [ADAPTACIÓN] monocolor de temática de artefactos, vía commander_in
+        # (no hay arquetipo "artifacts" en quotas.yaml).
+        - commander_in:
+            - "Urza, Lord High Artificer"
+            - "Emry, Lurker of the Loch"
+
+  # ── blanco ───────────────────────────────────────────────────────────────
+  - name: Swords to Plowshares
+    quota_category: removal
+    when: { color_identity_contains: [W] }
+
+  - name: Path to Exile
+    quota_category: removal
+    when: { color_identity_contains: [W] }
+
+  # Verificada 2026-07-14 contra el pool: la "Erode" del pool es un instant
+  # BLANCO de removal (criatura/planeswalker), no la carta azul antigua.
+  - name: Erode
+    quota_category: removal
+    when: { color_identity_contains: [W] }
+
+  - name: Flawless Maneuver
+    # pendiente: categoría protection (decisión de Guille futura)
+    quota_category: null
+    when: { color_identity_contains: [W] }
+
+  # ── azul ─────────────────────────────────────────────────────────────────
+  - name: Counterspell
+    quota_category: removal    # interaction -> removal (los counters cuentan ahí)
+    when: { color_identity_contains: [U] }
+
+  - name: Mana Drain
+    quota_category: removal
+    when: { color_identity_contains: [U] }
+
+  - name: Force of Will
+    quota_category: removal
+    when: { color_identity_contains: [U] }
+
+  - name: Fierce Guardianship
+    quota_category: removal
+    when: { color_identity_contains: [U] }
+
+  # ── negro ────────────────────────────────────────────────────────────────
+  - name: Deadly Rollick
+    quota_category: removal
+    when: { color_identity_contains: [B] }
+
+  # ── rojo ─────────────────────────────────────────────────────────────────
+  - name: Chaos Warp
+    quota_category: removal
+    when: { color_identity_contains: [R] }
+
+  - name: Deflecting Swat
+    # pendiente: categoría protection (decisión de Guille futura)
+    quota_category: null
+    when: { color_identity_contains: [R] }
+
+  # [ADAPTACIÓN] el spec excluía tokens/go_wide/aristocrats; nuestro arquetipo
+  # go-wide es `aggro` y aristocrats≈`graveyard` SÍ quiere wipes de daño,
+  # así que solo se excluye aggro.
+  - name: Blasphemous Act
+    quota_category: board_wipe
+    when:
+      color_identity_contains: [R]
+      archetype_not_in: [aggro]
+
+# ---------------------------------------------------------------------------
+# NEVER — nunca auto-recomendadas (ni mainboard ni maybeboard) si matchean.
+# ---------------------------------------------------------------------------
+never:
+  - name: Arcane Signet
+    # [ADAPTACIÓN] "<=1" en vez del "1" del spec: en identidad incolora el
+    # Signet no produce maná (misma razón que en monocolor sin temática).
+    when:
+      color_identity_size: "<=1"
+      commander_not_in:
+        - "Urza, Lord High Artificer"
+        - "Emry, Lurker of the Loch"
+    reason: >
+      En monocolor sin temática de artefactos (y en incoloro) hay rocas
+      estrictamente mejores; fuera de las excepciones listadas no debe
+      recomendarse.
+
+# ---------------------------------------------------------------------------
+# PREFER — staples "permitidas" por color: bonus plano de score, jamás
+# fuerzan su entrada. Migrado tal cual desde staples.yaml (hoy vacío;
+# Guille lo rellenará desde otra sesión). Formato:
+#   - name: Solemn Simulacrum
+#     colors_any: []        # vacío = cualquier mazo
+#     boost: 0.3            # opcional (default 0.3)
+# ---------------------------------------------------------------------------
+preferred: []
+
+# ---------------------------------------------------------------------------
+# Gobernanza — espejo del nomination_rule de banlist.yaml (mismo proceso).
+# ---------------------------------------------------------------------------
+nomination_rule:
+  who: "cualquier jugador, tras una partida"
+  cooldown: "voto en frío, mínimo 1 día después"
+  threshold: "mayoría simple"
+  effect: "alta/baja de la regla hasta la siguiente revisión trimestral"
+  logging: >
+    El historial de nominaciones se persiste: es señal directa para el
+    ajuste de cuotas del recomendador.
