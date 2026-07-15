@@ -28,6 +28,22 @@ def test_slugify_commander() -> None:
     assert slugify_commander("Double  Spaced   Name") == "double-spaced-name"
     assert slugify_commander("Curly’s Quote") == "curlys-quote"
     assert slugify_commander("Séance Ünstable") == "seance-unstable"
+
+
+def test_slugify_commander_uses_the_front_face() -> None:
+    """EDHREC pages a double-faced commander under its front face alone.
+
+    The pool stores the full "A // B" name, so slugging it whole asks for a
+    slug that does not exist and EDHREC answers 403.
+    """
+    assert (
+        slugify_commander("Etali, Primal Conqueror // Etali, Primal Sickness")
+        == "etali-primal-conqueror"
+    )
+    assert (
+        slugify_commander("Kefka, Court Mage // Kefka, Ruler of Ruin")
+        == "kefka-court-mage"
+    )
     assert slugify_commander("  Edges. And, Dots.  ") == "edges-and-dots"
 
 

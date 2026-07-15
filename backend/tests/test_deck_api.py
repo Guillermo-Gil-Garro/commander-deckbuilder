@@ -255,6 +255,30 @@ def test_a_relaxed_stage_warns_but_still_answers_200(krenko_deck: dict) -> None:
         assert all(w["severity"] == "amber" for w in krenko_deck["warnings"])
 
 
+def test_a_forced_relaxed_stage_answers_200_with_an_amber_warning(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Krenko always solves at stage ``none``, so the relaxed branch above is
+    never exercised by a real build. Force it: this is the path that shipped a
+    NameError because no test ever ran it.
+    """
+    real_build = service.build_deck_cpsat
+
+    def relaxed(*args: object, **kwargs: object) -> object:
+        result = real_build(*args, **kwargs)
+        object.__setattr__(result, "relaxation_stage", "soft_category_floors")
+        return result
+
+    monkeypatch.setattr(service, "build_deck_cpsat", relaxed)
+    response = client.post("/api/deck", json={"commander": COMMANDER})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["solver"]["stage"] == "soft_category_floors"
+    assert [w["code"] for w in body["warnings"]] == ["relaxed_stage"]
+    assert body["warnings"][0]["severity"] == "amber"
+
+
 def test_the_lands_never_go_below_the_karsten_floor(krenko_deck: dict) -> None:
     assert krenko_deck["counts"]["lands"] >= krenko_deck["karsten_floor"]
     assert krenko_deck["lands_target"] >= 0

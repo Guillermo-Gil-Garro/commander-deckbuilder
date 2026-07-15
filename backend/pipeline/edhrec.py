@@ -49,6 +49,10 @@ _TIMEOUT = httpx.Timeout(30.0)
 _APOSTROPHES_RE = re.compile(r"['’]")
 _NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
 
+# Duplicated from rules.resolve rather than imported: rules already depends on
+# pipeline, so importing it back would invert the layering for four characters.
+FACE_SEPARATOR = " // "
+
 
 class EdhrecError(RuntimeError):
     """Raised when EDHREC data cannot be fetched or parsed."""
@@ -83,8 +87,12 @@ def slugify_commander(name: str) -> str:
     """Normalize a commander name to its EDHREC URL slug.
 
     "Atraxa, Praetors' Voice" -> "atraxa-praetors-voice".
+
+    EDHREC pages a double-faced commander under its front face alone, while
+    the pool stores the full "A // B" name, so only the front face is slugged.
     """
-    normalized = unicodedata.normalize("NFKD", name)
+    front_face = name.split(FACE_SEPARATOR, 1)[0]
+    normalized = unicodedata.normalize("NFKD", front_face)
     ascii_name = normalized.encode("ascii", "ignore").decode("ascii").lower()
     without_apostrophes = _APOSTROPHES_RE.sub("", ascii_name)
     return _NON_ALNUM_RE.sub("-", without_apostrophes).strip("-")

@@ -225,10 +225,10 @@ def _deck_response(
     bands: Mapping[str, QuotaBand],
     result: CpSatResult,
 ) -> DeckResponse:
-    warnings: list[WarningView] = []
+    warnings: list[NoticeView] = []
     if result.relaxation_stage != "none":
         warnings.append(
-            WarningView(
+            NoticeView(
                 code=RELAXED_STAGE_CODE,
                 severity=AMBER,
                 message=relaxed_stage_message(result.relaxation_stage),
