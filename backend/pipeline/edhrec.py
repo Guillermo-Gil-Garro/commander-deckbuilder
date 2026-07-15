@@ -54,6 +54,15 @@ class EdhrecError(RuntimeError):
     """Raised when EDHREC data cannot be fetched or parsed."""
 
 
+class EdhrecNotFound(EdhrecError):
+    """The commander has no EDHREC page (the slug does not exist).
+
+    Distinguished from a transport failure so the API can answer 404 ("no
+    tenemos datos de ese comandante") instead of 502 ("EDHREC no responde"):
+    the first is the user's problem, the second is ours.
+    """
+
+
 class EdhrecRecommendation(BaseModel):
     name: str
     synergy: float
@@ -100,7 +109,7 @@ def _download_page(url: str, cache_path: Path) -> None:
     except httpx.HTTPStatusError as exc:
         # Missing pages surface as 403 (S3 AccessDenied) on json.edhrec.com.
         if exc.response.status_code in (403, 404):
-            raise EdhrecError(
+            raise EdhrecNotFound(
                 f"EDHREC page not found "
                 f"(HTTP {exc.response.status_code} at {url})"
             ) from exc

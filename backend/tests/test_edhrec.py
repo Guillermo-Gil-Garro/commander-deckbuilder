@@ -3,8 +3,11 @@ from pathlib import Path
 
 import pytest
 
+import httpx
+
 from pipeline.edhrec import (
     EdhrecError,
+    EdhrecNotFound,
     fetch_commander,
     parse_commander_page,
     slugify_commander,
@@ -159,6 +162,46 @@ def test_fetch_commander_downloads_and_caches(
 
     fetch_commander("Atraxa, Praetors' Voice")
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize("status_code", [403, 404])
+def test_fetch_commander_missing_page_raises_not_found(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, status_code: int
+) -> None:
+    import pipeline.edhrec as edhrec
+
+    monkeypatch.setattr(edhrec, "CACHE_DIR", tmp_path)
+
+    def _fake_get(url: str, **kwargs: object) -> httpx.Response:
+        request = httpx.Request("GET", url)
+        raise httpx.HTTPStatusError(
+            "missing",
+            request=request,
+            response=httpx.Response(status_code, request=request),
+        )
+
+    monkeypatch.setattr(edhrec.httpx, "get", _fake_get)
+
+    with pytest.raises(EdhrecNotFound):
+        fetch_commander("Nonexistent Commander")
+
+
+def test_fetch_commander_network_failure_is_not_not_found(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A transport error stays a plain EdhrecError: the page may well exist."""
+    import pipeline.edhrec as edhrec
+
+    monkeypatch.setattr(edhrec, "CACHE_DIR", tmp_path)
+
+    def _fake_get(url: str, **kwargs: object) -> httpx.Response:
+        raise httpx.ConnectError("no route to host")
+
+    monkeypatch.setattr(edhrec.httpx, "get", _fake_get)
+
+    with pytest.raises(EdhrecError) as excinfo:
+        fetch_commander("Krenko, Mob Boss")
+    assert not isinstance(excinfo.value, EdhrecNotFound)
 
 
 def test_fetch_commander_variant_uses_separate_url_and_cache(
