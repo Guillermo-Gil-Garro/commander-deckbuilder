@@ -3,7 +3,10 @@
 The CP-SAT selector takes 0.05–10 s per solve, so a card swap cannot re-solve
 and still answer in <100 ms. This module is the fast path: plain integer
 counting over ``CardFacts``, no solver, no I/O — a swap is
-``deck_counts`` + ``hard_violations`` over 99 rows.
+``deck_counts`` + ``hard_violations`` over 99 rows, and ranking hundreds of
+alternatives is ``counts_after_swap`` + ``hard_violations`` per candidate,
+which never touches the 99 again. ``selector.swap`` owns the policy rules
+(banlist, singleton, color identity) on top of these numeric ones.
 
 It replicates the ``none`` (strictest) stage of ``selector.cp_sat._assemble_model``.
 The two cannot share code literally (the solver builds ``LinearExpr`` over
@@ -66,13 +69,8 @@ from enum import Enum
 from typing import Mapping, Sequence
 
 from quotas.config import QuotaBand
-from selector.greedy import (
-    DECK_SIZE,
-    LANDS_CATEGORY,
-    SelectorError,
-    curve,
-    karsten_floor,
-)
+from quotas.lands import curve_bucket, expected_curve_mv, land_count
+from selector.greedy import DECK_SIZE, LANDS_CATEGORY, SelectorError
 
 
 class Severity(str, Enum):
@@ -125,15 +123,48 @@ class DeckCounts:
 
     ``by_category`` counts every member (feeds ceilings and the counts reported
     to the player); ``nonland_by_category`` counts non-lands only (feeds
-    floors). ``curve`` and ``karsten_floor`` are measured over the non-lands,
-    as in both selectors.
+    floors). ``nonland_curve`` is the raw bucket histogram of the non-lands.
+
+    Only integer counters are state; ``curve`` and ``karsten_floor`` derive
+    from them. Storing the histogram rather than the finished curve fractions
+    is what lets ``counts_after_swap`` rebuild a deck in O(categories): the
+    ranking path scores hundreds of candidates against the same 99 rows, and
+    recounting them per candidate is what the <100 ms budget cannot afford.
+
+    A counter never holds a zero: a category drops out of the mapping when its
+    last member leaves, so counts built by either route compare equal.
     """
 
     total: int
     by_category: Mapping[str, int]
     nonland_by_category: Mapping[str, int]
-    curve: Mapping[str, float]
-    karsten_floor: int
+    nonland_curve: Mapping[str, int]
+
+    @property
+    def nonland_total(self) -> int:
+        return sum(self.nonland_curve.values())
+
+    @property
+    def curve(self) -> Mapping[str, float]:
+        """Fraction of non-lands per curve bucket (``selector.greedy.curve``)."""
+        total = self.nonland_total
+        if total == 0:
+            return {}
+        return {bucket: n / total for bucket, n in self.nonland_curve.items()}
+
+    @property
+    def karsten_floor(self) -> int:
+        """The deck's own Karsten land floor.
+
+        The aggregated form of ``selector.greedy.karsten_floor``: identical
+        math over the histogram instead of a list of cards, because the swap
+        path has counts and not cards. ``tests/test_constraints.py`` pins the
+        two together — that test is the only thing keeping them from drifting.
+        """
+        ramp_plus_draw = self.by_category.get("ramp", 0) + self.by_category.get(
+            "card_draw", 0
+        )
+        return land_count(expected_curve_mv(self.curve), ramp_plus_draw)
 
 
 def deck_counts(cards: Sequence[tuple[CardFacts, int]]) -> DeckCounts:
@@ -141,7 +172,7 @@ def deck_counts(cards: Sequence[tuple[CardFacts, int]]) -> DeckCounts:
     total = 0
     by_category: dict[str, int] = {}
     nonland_by_category: dict[str, int] = {}
-    nonland: list[CardFacts] = []
+    nonland_curve: dict[str, int] = {}
     for facts, count in cards:
         if count <= 0:
             raise SelectorError(f"invalid card count {count} for {facts.name!r}")
@@ -153,14 +184,57 @@ def deck_counts(cards: Sequence[tuple[CardFacts, int]]) -> DeckCounts:
                     nonland_by_category.get(category, 0) + count
                 )
         if not facts.is_land:
-            nonland.extend([facts] * count)
+            bucket = curve_bucket(facts.cmc)
+            nonland_curve[bucket] = nonland_curve.get(bucket, 0) + count
     return DeckCounts(
         total=total,
         by_category=by_category,
         nonland_by_category=nonland_by_category,
-        curve=curve(nonland),
-        karsten_floor=karsten_floor(nonland, by_category),
+        nonland_curve=nonland_curve,
     )
+
+
+def counts_after_swap(
+    before: DeckCounts, out_card: CardFacts, in_card: CardFacts
+) -> DeckCounts:
+    """``before`` with one copy of ``out_card`` replaced by one copy of ``in_card``.
+
+    O(categories), not O(99): the shortcut that makes candidate ranking fit the
+    latency budget. ``tests/test_swap.py`` pins it to ``deck_counts`` over the
+    resulting rows — the guarantee that the shortcut does not lie.
+
+    ``total`` is carried over unchanged (one out, one in). Removing a card the
+    deck does not hold is a usage error and raises rather than counting past
+    zero; the swap layer rejects it up front by name.
+    """
+    by_category = dict(before.by_category)
+    nonland_by_category = dict(before.nonland_by_category)
+    nonland_curve = dict(before.nonland_curve)
+    for card, delta in ((out_card, -1), (in_card, 1)):
+        for category in card.categories:
+            _bump(by_category, category, delta, card)
+            if not card.is_land:
+                _bump(nonland_by_category, category, delta, card)
+        if not card.is_land:
+            _bump(nonland_curve, curve_bucket(card.cmc), delta, card)
+    return DeckCounts(
+        total=before.total,
+        by_category=by_category,
+        nonland_by_category=nonland_by_category,
+        nonland_curve=nonland_curve,
+    )
+
+
+def _bump(counter: dict[str, int], key: str, delta: int, card: CardFacts) -> None:
+    value = counter.get(key, 0) + delta
+    if value < 0:
+        raise SelectorError(
+            f"cannot remove {card.name!r}: the deck holds no {key!r} to remove"
+        )
+    if value == 0:
+        counter.pop(key, None)
+    else:
+        counter[key] = value
 
 
 def hard_violations(

@@ -11,7 +11,7 @@ from selector.constraints import (
     deck_counts,
     hard_violations,
 )
-from selector.greedy import DECK_SIZE, SelectorError
+from selector.greedy import DECK_SIZE, SelectorError, karsten_floor
 
 
 def facts(
@@ -121,6 +121,23 @@ def test_curve_and_karsten_floor_measured_over_nonlands_only() -> None:
 def test_zero_or_negative_count_is_an_explicit_error() -> None:
     with pytest.raises(SelectorError, match="invalid card count"):
         deck_counts([(basic(), 0)])
+
+
+def test_karsten_floor_property_matches_the_selector_helper() -> None:
+    # DeckCounts.karsten_floor is the aggregated form of greedy.karsten_floor
+    # (histogram vs list of cards). Nothing but this test keeps them in lockstep.
+    rows = deck()
+    counts = deck_counts(rows)
+    nonland = [card for card, n in rows for _ in range(n) if not card.is_land]
+    assert counts.karsten_floor == karsten_floor(nonland, counts.by_category)
+
+
+def test_counters_never_hold_a_zero() -> None:
+    # The invariant that lets counts_after_swap results compare equal to
+    # deck_counts ones: an empty category is absent, not present as 0.
+    counts = deck_counts([(facts("Spell", categories={"ramp"}), 1)])
+    assert 0 not in counts.by_category.values()
+    assert "removal" not in counts.by_category
 
 
 # ── hard_violations: the happy path ──────────────────────────────────────────

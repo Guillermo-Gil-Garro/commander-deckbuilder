@@ -23,3 +23,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["pipeline", "app", "quotas", "rules", "selector", "tags"]
+
+[tool.pytest.ini_options]
+markers = [
+    "perf: latency budget check (median-of-N timing, see tests/test_perf_swap.py)",
+]
