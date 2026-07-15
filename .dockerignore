@@ -1,0 +1,38 @@
+# Build context excludes. Keep in sync with the Dockerfile: everything the
+# image needs (backend/ packages, the root YAML config, data/tags/, and the
+# frontend sources that stage 1 builds) must survive these rules.
+
+.git
+.gitignore
+
+# Data: 182 MB of Scryfall/EDHREC cache and the 16 MB processed pool are
+# gitignored artifacts and are NOT part of the image (see the Dockerfile's
+# note on the degraded start). data/tags/ IS needed and stays.
+data/cache
+data/processed
+
+# Built inside the image by stage 1; a local copy is stale weight.
+frontend/node_modules
+frontend/dist
+
+# Python local junk
+**/__pycache__
+**/*.py[cod]
+.venv
+backend/.venv
+**/*.egg-info
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Not served by the app
+experiments
+docs
+backend/tests
+scripts
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode
+.idea
