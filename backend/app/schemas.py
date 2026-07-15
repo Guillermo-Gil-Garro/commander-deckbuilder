@@ -25,6 +25,13 @@ SWAP_CANDIDATES_LIMIT_DEFAULT = 20
 SWAP_CANDIDATES_LIMIT_MIN = 1
 SWAP_CANDIDATES_LIMIT_MAX = 50
 
+# Maybeboard bench depth, applied *per category* rather than to the whole
+# response: the bench is read one category at a time, and a global cap would
+# let `synergy` (by far the widest bucket) starve every other role.
+MAYBEBOARD_LIMIT_DEFAULT = 10
+MAYBEBOARD_LIMIT_MIN = 1
+MAYBEBOARD_LIMIT_MAX = 50
+
 
 class HealthResponse(BaseModel):
     """Startup diagnosis. ``degraded`` means the card pool never loaded."""
@@ -100,6 +107,28 @@ def commander_view(row: CommanderRow, archetype: str) -> CommanderView:
         color_identity=list(row.color_identity),
         archetype=archetype,
     )
+
+
+class StructureResponse(BaseModel):
+    """The quota bands a build would use, without building anything.
+
+    ``source`` says which layer of ``quotas.yaml`` produced them:
+    ``"commander"`` if the file individualises this commander (its own
+    archetype and/or per-category overrides), ``"archetype"`` if it fell back
+    to an archetype block.
+
+    There is deliberately **no** ``karsten_floor`` here: the land floor is a
+    function of a deck's non-land curve and its ramp+draw count, so it does
+    not exist until a deck does. See the endpoint docstring.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: CardView
+    dials: dict[str, str | None]
+    categories: dict[str, BandView]
+    archetype: str
+    source: Literal["commander", "archetype"]
 
 
 # --- deck build --------------------------------------------------------------
@@ -272,6 +301,46 @@ class SwapCandidatesResponse(BaseModel):
     current: CardView
     candidates: list[CandidateView]
     feasible_count: int
+    limit: int
+
+
+# --- maybeboard --------------------------------------------------------------
+
+
+class MaybeboardRequest(BaseModel):
+    """The bench for a deck in its current state. Same inputs as a swap.
+
+    Carries the live ``deck`` and not just a commander, because the whole
+    point is that the bench moves as the deck does: a card swapped in leaves
+    the maybeboard on the next call.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    dials: dict[str, str | None] = Field(default_factory=dict)
+    deck: list[DeckCardRef] = Field(min_length=1)
+    limit: int = MAYBEBOARD_LIMIT_DEFAULT
+
+    @field_validator("limit")
+    @classmethod
+    def _clamp_limit(cls, value: int) -> int:
+        # Per category, and clamped rather than rejected — same policy as the
+        # commander search and the swap candidate list.
+        return min(max(value, MAYBEBOARD_LIMIT_MIN), MAYBEBOARD_LIMIT_MAX)
+
+
+class MaybeboardResponse(BaseModel):
+    """The bench, grouped by the category each card is displayed under.
+
+    ``maybeboard`` maps a primary category to its best non-deck cards, best
+    first. A category with nothing left to offer is simply absent — an empty
+    list would say the same thing and make the client check twice.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    maybeboard: dict[str, list[CandidateView]]
     limit: int
 
 

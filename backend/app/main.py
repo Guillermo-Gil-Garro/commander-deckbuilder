@@ -22,9 +22,9 @@ import logging
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import AsyncIterator, Callable
+from typing import Annotated, AsyncIterator, Callable
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -32,13 +32,16 @@ from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.types import Scope
 
 from app import service
-from app.errors import POOL_UNAVAILABLE
+from app.errors import POOL_UNAVAILABLE, invalid_dial_param
 from app.schemas import (
     CommandersResponse,
     DeckRequest,
     DeckResponse,
     ExportRequest,
     HealthResponse,
+    MaybeboardRequest,
+    MaybeboardResponse,
+    StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
     SwapValidateRequest,
@@ -212,6 +215,58 @@ def search_commanders(
     return CommandersResponse(count=len(commanders), commanders=commanders)
 
 
+@app.get("/structure")
+def structure(
+    request: Request,
+    commander: str,
+    dial: Annotated[list[str] | None, Query()] = None,
+) -> StructureResponse:
+    """The quota bands a build would use for ``commander``. Nothing is built.
+
+    A preview of ``/build``'s first step: the same ``resolve_bands`` over
+    ``quotas.yaml``, with none of the cost (no solver, no EDHREC, no pool
+    scan). Use it to see what a dial does before paying for a deck.
+
+    ``commander`` is a query param because names carry commas and apostrophes.
+    Dials are repeatable ``dial=<category>:<position>`` pairs — e.g.
+    ``?commander=Krenko, Mob Boss&dial=ramp:high&dial=removal:low`` — chosen
+    over a JSON blob because Swagger renders them as a list of text boxes you
+    can actually fill in. ``position`` is ``low``, ``center`` or ``high``.
+
+    ``categories`` maps each category to its inclusive ``{lo, hi}`` band.
+    ``source`` is ``"commander"`` when ``quotas.yaml`` individualises this
+    commander, ``"archetype"`` when it falls back to the archetype block.
+
+    **These bands are not a deck's verdict.** There is deliberately no
+    ``karsten_floor``: the land floor is computed from a deck's non-land curve
+    and its ramp+draw count, so it does not exist before a deck does, and the
+    effective ``lands`` minimum at build time is ``max(lo, karsten_floor)`` —
+    which can be higher than the ``lo`` you read here. ``/build`` and
+    ``/sequential/validate`` report the real floor.
+
+    404 for an unknown commander, 422 for a malformed ``dial`` or a position
+    ``quotas.yaml`` does not define, 503 if the card pool never loaded.
+    """
+    state = _state(request)
+    return service.structure_for(state, commander, _parse_dials(dial))
+
+
+def _parse_dials(dials: list[str] | None) -> dict[str, str | None]:
+    """Parse repeated ``category:position`` query params into a dial mapping.
+
+    Only the syntax is checked here; whether the category has a dial and the
+    position exists is ``quotas.resolver``'s call, so the config stays the one
+    authority on what a dial means.
+    """
+    parsed: dict[str, str | None] = {}
+    for raw in dials or ():
+        category, separator, position = raw.partition(":")
+        if not separator or not category.strip() or not position.strip():
+            raise HTTPException(status_code=422, detail=invalid_dial_param(raw))
+        parsed[category.strip()] = position.strip()
+    return parsed
+
+
 @app.post("/build")
 async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     """Build a 99-card mainboard plus maybeboard for a commander.
@@ -224,7 +279,12 @@ async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     commander + dials on every request and is **never** accepted from the
     client (sending it is a 422). It is in the response as information only:
     the server does not trust it and neither should you. Each band is an
-    inclusive ``{lo, hi}``.
+    inclusive ``{lo, hi}``; ``/structure`` returns the same thing without
+    building anything.
+
+    ``maybeboard`` here is this build's bench, frozen at build time. Once the
+    player starts swapping it goes stale — ``POST /maybeboard`` recomputes it
+    for the deck's current state.
 
     A deck at a relaxed solver stage is a 200, not an error: read
     ``solver.stage`` and the amber ``relaxed_stage`` warning. Only an input no
@@ -267,6 +327,38 @@ async def swap_candidates(
     """
     state = _state(request)
     return await run_in_threadpool(service.swap_candidates_for, state, payload)
+
+
+@app.post("/maybeboard")
+async def maybeboard(request: Request, payload: MaybeboardRequest) -> MaybeboardResponse:
+    """The bench for a deck in its current state, grouped by category.
+
+    Unlike ``/build``'s ``maybeboard``, this one is **live**: it is derived
+    from the ``deck`` you send, so a card you swapped in has already left the
+    bench by the next call. Same inputs as ``/sequential/candidates`` and the
+    same guarantee — the solver is never re-run.
+
+    ``maybeboard`` maps each primary category to its best non-deck cards, best
+    first, ``limit`` per category (clamped to [1, 50], default 10, echoed
+    back). Per category and not overall, so ``synergy`` cannot starve the
+    other roles. A category with nothing left to offer is absent entirely.
+
+    Cards already in the deck, banned, ``never``, watchlisted and off-identity
+    ones are all filtered out.
+
+    **The bench is not a list of legal swaps.** Nothing here is checked for
+    feasibility, because a bench card only becomes a swap once you choose what
+    it replaces: ask ``/sequential/validate`` before trusting one. A card can
+    sit in the maybeboard and still be refused by every swap you try.
+
+    ``deck`` is not required to be a legal 99 — it is read only as "what to
+    leave out", which is well defined for any non-empty list.
+
+    404 for an unknown commander, 422 for a card outside the pool, 502 if
+    EDHREC is unreachable, 503 if the card pool never loaded.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.maybeboard_for, state, payload)
 
 
 @app.post("/sequential/validate")

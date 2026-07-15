@@ -30,6 +30,7 @@ __all__ = [
     "commander_not_found",
     "deck_size_mismatch",
     "edhrec_not_found",
+    "invalid_dial_param",
     "relaxed_stage_message",
     "violation_message",
 ]
@@ -51,6 +52,18 @@ DECK_BUILD_INFEASIBLE = (
     "No se puede construir un mazo de 99 cartas con este comandante ni "
     "relajando las cuotas. Revisa las cuotas y los diales."
 )
+
+
+def invalid_dial_param(raw: str) -> str:
+    """A ``dial`` query param that is not a ``category:position`` pair.
+
+    Syntax only: whether the category and position exist is ``quotas.yaml``'s
+    call and comes back as ``INVALID_DIALS``.
+    """
+    return (
+        f"El dial «{raw}» no tiene el formato «categoria:posicion» "
+        f"(por ejemplo «ramp:high»)."
+    )
 
 
 def commander_not_found(name: str) -> str:

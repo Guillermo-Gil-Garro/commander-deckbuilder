@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterable, Mapping, Sequence
 
 from app.errors import (
     DECK_BUILD_INFEASIBLE,
@@ -47,8 +47,11 @@ from app.schemas import (
     DeckRequest,
     DeckResponse,
     ExportRequest,
+    MaybeboardRequest,
+    MaybeboardResponse,
     NoticeView,
     SolverView,
+    StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
     SwapRequest,
@@ -87,7 +90,7 @@ from selector.greedy import (
     ScoreWeights,
     SelectorError,
 )
-from selector.swap import swap_candidates, swap_is_feasible
+from selector.swap import primary_category, swap_candidates, swap_is_feasible
 
 logger = logging.getLogger(__name__)
 
@@ -163,6 +166,39 @@ def bands_for(
     except QuotasError as exc:
         logger.info("Rejected dials %r for %r: %s", dict(dials), commander_name, exc)
         raise InvalidDials(INVALID_DIALS) from exc
+
+
+def structure_for(
+    state: AppState, commander_name: str, dials: Mapping[str, str | None]
+) -> StructureResponse:
+    """The bands a build would use for this commander, without building.
+
+    Pure config: ``resolve_bands`` over ``quotas.yaml``, exactly what
+    ``build_deck`` resolves before it calls the solver. No pool scan, no
+    EDHREC, no solver — so this is the cheap way to preview what a dial does.
+    """
+    row = resolve_commander(state, commander_name)
+    bands = bands_for(state, row.name, dials)
+    return StructureResponse(
+        commander=card_view(state.pool.by_name[row.name]),
+        dials=dict(dials),
+        categories={category: band_view(band) for category, band in bands.items()},
+        archetype=archetype_for(state.quotas, row.name),
+        source=_structure_source(state, row.name),
+    )
+
+
+def _structure_source(state: AppState, commander_name: str) -> str:
+    """Which layer of ``quotas.yaml`` these bands came from.
+
+    ``commander`` iff the file names this commander *and* says something about
+    it — an entry that pins neither an archetype nor an override changes
+    nothing, so reporting it as commander-specific would be a lie.
+    """
+    entry = state.quotas.commanders.get(commander_name)
+    if entry is not None and (entry.archetype is not None or entry.overrides):
+        return "commander"
+    return "archetype"
 
 
 def edhrec_data(state: AppState, commander_name: str) -> EdhrecCommanderData:
@@ -315,6 +351,79 @@ def swap_candidates_for(
         feasible_count=feasible_count,
         limit=request.limit,
     )
+
+
+def maybeboard_for(state: AppState, request: MaybeboardRequest) -> MaybeboardResponse:
+    """The bench for a deck in its current state, grouped by category.
+
+    Derived from ``{commander, dials, deck}`` exactly like the swap
+    candidates, and for the same reason: **the solver is never re-run**. That
+    is what makes the bench live — swap a card in and the next call has
+    already dropped it, without paying 0.05-10 s to re-solve.
+
+    The universe is the commander's EDHREC recommendations, scored as the
+    build scored them, minus the cards already in the deck, the banned /
+    ``never`` / watchlisted ones and anything outside the commander's colour
+    identity. Note what is *not* filtered: unlike ``swap_candidates_for``,
+    nothing here is checked for feasibility, because a bench card is not a
+    swap — it becomes one only when the player picks a card to take out, and
+    ``/sequential/validate`` is what answers that.
+
+    Blocking: reads EDHREC (memo, then disk, then network).
+    """
+    row = resolve_commander(state, request.commander)
+    bands = bands_for(state, row.name, request.dials)
+    deck_names = {_pool_card(state, ref.name)["name"] for ref in request.deck}
+    data = edhrec_data(state, row.name)
+
+    rule_ctx = RuleContext(
+        commander_name=row.name,
+        color_identity=frozenset(row.color_identity),
+        archetype=archetype_for(state.quotas, row.name),
+    )
+    # Canonicalized through the pool because rules.yaml may name a single face
+    # ("Fire") of a card the pool calls "Fire // Ice". `selector.swap` solves
+    # the same problem by expanding the candidate's name into its variants;
+    # collapsing the other side to canonical names is the same comparison, and
+    # keeps this layer off the selector's private helpers.
+    excluded = deck_names | _canonical(
+        state, resolve_never(state.rules, rule_ctx) | state.banned_names | state.watchlist_names
+    )
+    commander_identity = frozenset(row.color_identity)
+
+    grouped: dict[str, list[CandidateView]] = {}
+    for facts, score in _pool_candidates(state, row, bands, data):
+        if facts.name in excluded:
+            continue
+        if not facts.color_identity <= commander_identity:
+            continue
+        category = primary_category(facts)
+        grouped.setdefault(category, []).append(
+            CandidateView(
+                **card_view(state.pool.by_name[facts.name]).model_dump(),
+                score=score,
+                reason=candidate_reason(category, score),
+            )
+        )
+    return MaybeboardResponse(
+        maybeboard={
+            # Ties broken by name so a redraw never reshuffles the bench.
+            category: sorted(cards, key=lambda c: (-c.score, c.name))[: request.limit]
+            for category, cards in sorted(grouped.items())
+        },
+        limit=request.limit,
+    )
+
+
+def _canonical(state: AppState, names: Iterable[str]) -> frozenset[str]:
+    """The pool's canonical name for each name that resolves; others dropped.
+
+    A name that does not resolve cannot match a pool card anyway, so it can be
+    dropped rather than raise: ``banned_names`` and ``watchlist_names`` are
+    already canonical, and ``rules.yaml`` names are pool-validated at startup.
+    """
+    resolved = (state.pool.resolve(name) for name in names)
+    return frozenset(card["name"] for card in resolved if card is not None)
 
 
 def validate_swap(state: AppState, request: SwapValidateRequest) -> SwapValidateResponse:
