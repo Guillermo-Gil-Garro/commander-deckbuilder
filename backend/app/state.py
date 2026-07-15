@@ -40,7 +40,12 @@ from rules.banlist import (
     load_banlist,
     resolve_banlist,
 )
-from rules.featured import DEFAULT_FEATURED_PATH, FeaturedCommander, load_featured
+from rules.featured import (
+    DEFAULT_FEATURED_PATH,
+    FeaturedCommander,
+    FeaturedError,
+    load_featured,
+)
 from rules.resolve import DEFAULT_POOL_PATH, NameIndex, name_index_from_cards
 from selector.deck_rules import DEFAULT_RULES_PATH, RulesConfig, load_rules, validate_rules_names
 from selector.greedy import PoolIndex, SelectorError, load_pool
@@ -56,6 +61,13 @@ DEFAULT_SOLVER_TIME_LIMIT_S = 10.0
 # growing without limit while still absorbing repeat picks of the same
 # commander (the featured list is what most players click).
 EDHREC_MEMO_MAX = 64
+
+# Commander search. Below the minimum we return nothing rather than 30k rows;
+# the limit is clamped (not rejected) because a bad limit is not worth a 422.
+COMMANDER_SEARCH_MIN_CHARS = 2
+COMMANDER_SEARCH_LIMIT_DEFAULT = 20
+COMMANDER_SEARCH_LIMIT_MIN = 1
+COMMANDER_SEARCH_LIMIT_MAX = 50
 
 
 class EdhrecMemo:
@@ -139,6 +151,34 @@ class AppState:
     def commander_by_name(self, name: str) -> CommanderRow | None:
         """Case-insensitive exact lookup by canonical pool name."""
         return self._by_lower_name.get(name.lower())
+
+    def search_commanders(
+        self, query: str, limit: int = COMMANDER_SEARCH_LIMIT_DEFAULT
+    ) -> tuple[CommanderRow, ...]:
+        """Substring search over commander names, best matches first.
+
+        Prefix matches rank above mere substring matches ("Krenko" should not
+        be buried under "Fake Krenko Impersonator"), and each group keeps the
+        index's alphabetical order, so the result is fully deterministic.
+        Matching is case-insensitive and exact-substring: no fuzzy matching.
+
+        A query shorter than ``COMMANDER_SEARCH_MIN_CHARS`` returns nothing;
+        ``limit`` is clamped to ``[1, 50]``.
+        """
+        needle = query.strip().lower()
+        if len(needle) < COMMANDER_SEARCH_MIN_CHARS:
+            return ()
+        limit = min(max(limit, COMMANDER_SEARCH_LIMIT_MIN), COMMANDER_SEARCH_LIMIT_MAX)
+
+        prefix: list[CommanderRow] = []
+        contains: list[CommanderRow] = []
+        for row in self.commanders:  # already sorted by name
+            lowered = row.name.lower()
+            if lowered.startswith(needle):
+                prefix.append(row)
+            elif needle in lowered:
+                contains.append(row)
+        return tuple((prefix + contains)[:limit])
 
     @property
     def edhrec_memo(self) -> EdhrecMemo:
@@ -255,7 +295,7 @@ def build_app_state(
     if solver_time_limit_s is None:
         solver_time_limit_s = _solver_time_limit()
 
-    return AppState(
+    state = AppState(
         pool=pool,
         name_index=name_index,
         quotas=quotas,
@@ -268,3 +308,19 @@ def build_app_state(
         tags_count=len(tag_store),
         solver_time_limit_s=solver_time_limit_s,
     )
+
+    # load_featured rejects `banned_as_commander` but not `banned`, so a card
+    # could be featured on the landing page yet absent from search and refused
+    # by the deck endpoint. That contradiction between two versioned configs
+    # is a startup error, not something for a handler to paper over.
+    unselectable = [
+        commander.name
+        for commander in state.featured
+        if state.commander_by_name(commander.name) is None
+    ]
+    if unselectable:
+        raise FeaturedError(
+            f"featured commanders are not selectable (banned in the group "
+            f"banlist): {unselectable}"
+        )
+    return state

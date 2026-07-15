@@ -13,6 +13,7 @@ HTTP status codes. Anything that decides *what* a deck looks like lives in
 from __future__ import annotations
 
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import AsyncIterator
@@ -24,8 +25,19 @@ from starlette.responses import Response
 from starlette.types import Scope
 
 from app.errors import POOL_UNAVAILABLE
-from app.schemas import HealthResponse
-from app.state import AppState, build_app_state
+from app.schemas import CardView, HealthResponse, card_view, commander_view
+from app.state import COMMANDER_SEARCH_LIMIT_DEFAULT, AppState, build_app_state
+
+LOG_LEVEL_ENV = "DECKBUILDER_LOG_LEVEL"
+
+# uvicorn only configures its own loggers, so without this the startup summary
+# -- and, worse, the "degraded, no card pool" diagnosis -- would go nowhere.
+# A degraded Space that cannot say why is the failure this whole design exists
+# to avoid. main.py is the entrypoint, so owning logging setup belongs here.
+logging.basicConfig(
+    level=os.environ.get(LOG_LEVEL_ENV, "INFO").upper(),
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
 
 logger = logging.getLogger(__name__)
 
@@ -89,6 +101,39 @@ def health(request: Request) -> HealthResponse:
         banned=len(state.banned_names),
         tags=state.tags_count,
     )
+
+
+@app.get("/api/commanders/featured")
+def featured_commanders(request: Request) -> list[CardView]:
+    """The group's curated commanders, in ``featured_commanders.yaml`` order.
+
+    This is the landing-page list: a hand-picked starting point for players
+    who do not arrive with a commander already in mind. File order is the
+    group's ordering and is preserved verbatim — do not sort it.
+    """
+    state = _state(request)
+    # load_featured resolved these to canonical pool names, and startup proved
+    # each one is selectable, so both lookups are total.
+    return [card_view(state.pool.by_name[c.name]) for c in state.featured]
+
+
+@app.get("/api/commanders")
+def search_commanders(
+    request: Request, q: str, limit: int = COMMANDER_SEARCH_LIMIT_DEFAULT
+) -> list[CardView]:
+    """Search selectable commanders by name.
+
+    ``q`` is a query parameter, not a path segment, because commander names
+    carry commas and apostrophes ("Atraxa, Praetors' Voice"). Matching is
+    case-insensitive exact-substring, with prefix matches ranked first and
+    ties broken alphabetically; there is no fuzzy matching.
+
+    A ``q`` shorter than 2 characters returns an empty list rather than
+    thousands of rows. ``limit`` is clamped to ``[1, 50]``. Banned commanders
+    are absent from the index and can never appear here.
+    """
+    state = _state(request)
+    return [commander_view(row) for row in state.search_commanders(q, limit)]
 
 
 class SPAStaticFiles(StaticFiles):
