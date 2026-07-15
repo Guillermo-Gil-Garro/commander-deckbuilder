@@ -30,7 +30,7 @@ from selector.deck_rules import (  # noqa: E402
 from selector.greedy import build_deck_greedy, load_pool  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
-from run_greedy import BANLIST_PATH, COMMANDERS, POOL_PATH, load_banlist  # noqa: E402
+from run_greedy import COMMANDERS, POOL_PATH, resolved_banlist_names  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger("to_archidekt")
@@ -75,7 +75,7 @@ def format_archidekt(result) -> str:
 def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
-    banned, watchlist = load_banlist(BANLIST_PATH)
+    banned, watchlist = resolved_banlist_names(pool)
     rules = load_rules(valid_archetypes=set(config.archetypes))
     validate_rules_names(rules, pool.resolve)
     tagger = tagger_from_store(load_tags(), pool.cards())

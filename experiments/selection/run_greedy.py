@@ -16,20 +16,20 @@ import sys
 import time
 from pathlib import Path
 
-import yaml
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "backend"))
 
 from pipeline.edhrec import fetch_commander, slugify_commander  # noqa: E402
 from quotas.config import load_quotas  # noqa: E402
 from quotas.resolver import resolve_bands  # noqa: E402
+from rules.banlist import banlist_names, load_banlist, resolve_banlist  # noqa: E402
+from rules.resolve import name_index_from_cards  # noqa: E402
 from selector.deck_rules import (  # noqa: E402
     archetype_for,
     load_rules,
     validate_rules_names,
 )
-from selector.greedy import DECK_SIZE, GreedyResult, load_pool  # noqa: E402
+from selector.greedy import DECK_SIZE, GreedyResult, PoolIndex, load_pool  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -47,8 +47,6 @@ COMMANDERS = (
     "Sythis, Harvest's Hand",
 )
 
-BANNED_STATUSES = ("banned", "banned_pending_review")
-
 CATEGORY_ORDER = (
     "lands",
     "ramp",
@@ -60,28 +58,18 @@ CATEGORY_ORDER = (
 )
 
 
-def load_banlist(path: Path) -> tuple[set[str], set[str]]:
-    """(banned_names, watchlist_names) parsed directly from banlist.yaml.
+def resolved_banlist_names(
+    pool: PoolIndex, path: Path = BANLIST_PATH
+) -> tuple[frozenset[str], frozenset[str]]:
+    """(banned_names, watchlist_names) via the formal resolver in backend/rules.
 
-    Prototype-level resolution by exact NAME only: ``cards`` entries plus the
-    ``resolved_cards`` snapshots of programmatic rules (statuses banned /
-    banned_pending_review), minus rule exceptions. ``banned_as_commander``
-    stays legal in the 99. The formal resolver lives in backend/rules/ (other
-    work stream) — this is deliberately NOT that.
+    Replaces the old prototype parser that banned by the literal YAML name:
+    names are now canonicalised against the pool, so an unresolvable or
+    ambiguous banlist entry fails loudly instead of silently banning nothing.
     """
-    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-    banned: set[str] = set()
-    for entry in raw.get("cards", []):
-        if entry.get("status") in BANNED_STATUSES:
-            banned.add(entry["name"])
-    for rule in raw.get("rules", []):
-        if rule.get("status") not in BANNED_STATUSES:
-            continue
-        resolved = set(rule.get("resolved_cards", []))
-        exceptions = {exc["name"] for exc in rule.get("exceptions", [])}
-        banned |= resolved - exceptions
-    watchlist = {entry["name"] for entry in raw.get("watchlist", [])}
-    return banned, watchlist
+    cards = list(pool.cards())
+    resolved = resolve_banlist(load_banlist(path), name_index_from_cards(cards))
+    return banlist_names(resolved, cards)
 
 
 def format_deck(result: GreedyResult, bands, build_seconds: float) -> str:
@@ -151,7 +139,7 @@ def main() -> None:
 
     pool = load_pool(POOL_PATH)
     config = load_quotas()
-    banned, watchlist = load_banlist(BANLIST_PATH)
+    banned, watchlist = resolved_banlist_names(pool)
     rules = load_rules(valid_archetypes=set(config.archetypes))
     validate_rules_names(rules, pool.resolve)
     tagger = tagger_from_store(load_tags(), pool.cards())

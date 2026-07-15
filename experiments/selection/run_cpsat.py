@@ -33,8 +33,13 @@ from selector.deck_rules import (  # noqa: E402
 from selector.greedy import DECK_SIZE, load_pool  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
-# Reuse the greedy runner's constants and banlist parsing (read-only import).
-from run_greedy import BANLIST_PATH, CATEGORY_ORDER, COMMANDERS, POOL_PATH, load_banlist  # noqa: E402
+# Reuse the greedy runner's constants and banlist loading (read-only import).
+from run_greedy import (  # noqa: E402
+    CATEGORY_ORDER,
+    COMMANDERS,
+    POOL_PATH,
+    resolved_banlist_names,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger("run_cpsat")
@@ -142,7 +147,7 @@ def format_deck(result: CpSatResult, bands, build_seconds: float) -> str:
 def main() -> None:
     pool = load_pool(POOL_PATH)
     config = load_quotas()
-    banned, watchlist = load_banlist(BANLIST_PATH)
+    banned, watchlist = resolved_banlist_names(pool)
     rules = load_rules(valid_archetypes=set(config.archetypes))
     validate_rules_names(rules, pool.resolve)
     tagger = tagger_from_store(load_tags(), pool.cards())
