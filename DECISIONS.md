@@ -96,7 +96,7 @@ literalmente de las 99: el baneo del grupo se lee como "fuera del formato". Deci
 de Guille.
 
 **Política de fallo del arranque**: *artefacto de datos gitignorado → degrada; config
-versionada → falla duro*. Sin pool la app arranca y `/api/health` dice `degraded` (el
+versionada → falla duro*. Sin pool la app arranca y `/health` dice `degraded` (el
 Space debe poder explicarse, no morir en bucle). Pero sin tags **falla duro**, aunque
 parezca "un artefacto": el tagger vacío manda todo a `synergy` y el CP-SAT construye
 99 cartas que incumplen todas las cuotas *sin que nadie lo note*. Un mazo plausible y
@@ -109,6 +109,40 @@ de los selectores a oracle_ids: tocaría el greedy congelado y rompería los fix
 
 **INFEASIBLE no es error HTTP** (patrón TFM): un mazo en etapa relajada devuelve 200 +
 `solver.stage` + warning AMBER. Solo el input estructuralmente imposible da 422.
+
+## 2026-07-16 — La superficie de la API se alinea con la del TFM
+
+Guille abrió la API de Fase 4 y su reacción fue *"no se parece en nada al formato que
+tenía la del TFM"*. Tenía razón: se adoptaron los patrones **internos** del TFM
+(stateless, lifespan+AppState, swap sin re-resolver, handlers finos) pero se rediseñó
+la **superficie** — rutas, nombres y forma de las respuestas.
+
+**Fallo de proceso, anotado para no repetirlo**: los endpoints iban en el plan
+aprobado, en una tabla dentro de un documento denso, y las ausencias como "fuera de
+alcance". Aprobar un plan no es haber visto el diseño. Cuando existe una referencia
+que el usuario dice explícitamente que le gusta, la comparativa lado a lado va
+**antes** de escribir código, no después.
+
+Alineado: sin prefijo `/api` · `GET /commanders` → `{count, commanders}` con
+`archetype` · `GET /commanders/search` · `GET /structure` · `POST /build` ·
+`POST /sequential/candidates` (`current` en vez de `out`) · `POST /sequential/validate`
+· `POST /maybeboard` (agrupado por categoría, derivado del mazo actual: se actualiza
+según swapeas) · `POST /export`. Bandas `{lo, hi}` **solo en la capa HTTP**;
+`quotas.config.QuotaBand` sigue con `min`/`max` (lo usan los selectores y los tests).
+
+Consecuencia asumida de quitar el prefijo: una ruta inexistente devuelve el
+`index.html` del SPA con 200 en vez de un 404. Es el comportamiento del TFM.
+
+**No copiado del TFM, y por qué**: `/sequential/candidates` no devuelve `power`
+(el TFM separa `synergy`/`power` porque tiene dos scorers; nosotros uno — un `power`
+vacío sería fingir paridad). `/structure` no publica `karsten_floor`: el suelo Karsten
+es función de la curva del mazo, y antes de que exista un mazo no hay suelo — el TFM
+puede porque guarda una curva por comandante en su config y nosotros no. Publicarlo
+habría sido un número falso.
+
+**Pendiente de decisión de Guille tras usar la API**: `/sequential/start` con la lista
+de `decisions` (cartas dudosas por codo de score) — que es el "switcheo semiinteractivo"
+del charter y hoy no existe —, `/why-not`, `/audit` y `/cards/search`.
 
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.

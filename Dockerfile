@@ -41,7 +41,7 @@ COPY --from=frontend-build /build/frontend/dist frontend/dist
 
 # data/processed/cards.jsonl (16 MB) is gitignored and excluded from the build
 # context, so it is NOT in this image: the Space starts *degraded* on purpose —
-# /api/health reports {"status":"degraded","cards_loaded":0} and every deck
+# /health reports {"status":"degraded","cards_loaded":0} and every deck
 # endpoint answers 503 with an explicit message. That is the intended,
 # diagnosable failure until Fase 6 ships the pool. Create the layout and let
 # the pipeline (or an upload) fill it in.

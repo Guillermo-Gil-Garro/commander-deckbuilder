@@ -28,8 +28,9 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ✅ Maybeboard (por score + sección de cartas nuevas de EDHREC para arranque en frío)
 
 ## Fase 4 — API ✅ (completa 2026-07-15: 7 endpoints, 465 tests, swap end-to-end en 4,2ms)
-- ✅ `AppState` + lifespan: carga única del pool/tags/reglas, `request.app.state`, degradación explícita (sin pool → arranca, `/api/health` dice `degraded`, endpoints de mazo 503 en español)
-- ✅ Endpoints: `/api/health`, `/api/commanders?q=`, `/api/commanders/featured`, `POST /api/deck`, `POST /api/deck/swap/candidates`, `POST /api/deck/swap/validate`, `POST /api/deck/export`
+- ✅ `AppState` + lifespan: carga única del pool/tags/reglas, `request.app.state`, degradación explícita (sin pool → arranca, `/health` dice `degraded`, endpoints de mazo 503 en español)
+- ✅ Endpoints (superficie alineada con la del TFM 2026-07-16, sin prefijo `/api`): `GET /health`, `GET /commanders`, `GET /commanders/search?q=`, `GET /structure?commander=`, `POST /build`, `POST /sequential/candidates`, `POST /sequential/validate`, `POST /maybeboard`, `POST /export`
+- 🔶 **Pendiente de decisión de Guille tras usarla**: el TFM tenía `/sequential/start` con lista de `decisions` (cartas dudosas por codo de score) = el "switcheo semiinteractivo" del charter, más `/why-not`, `/audit` y `/cards/search`. Ninguno construido — Guille quiere manejar la API antes de decidir cuáles quiere
 - ✅ Swap sin re-resolver (`selector/swap.py` + `selector/constraints.py`): **mediana 4,2ms end-to-end** (requisito <100ms), 0,079ms la función pura; test de contrato que impide que el checker diverja del CP-SAT
 - ✅ Deudas saldadas: banlist unificada al resolver formal (los 5 mazos no cambian), `format_archidekt` → `backend/selector/export.py` (+ label `protection`), Dockerfile copia todos los paquetes + YAML + tags (⚠️ **build no probado**: no hay Docker en la máquina)
 - ✅ `scripts/precache_edhrec.py` (55 destacados; ⚠️ `data/cache/` gitignorado → **no llega al Space**, es optimización de dev)
