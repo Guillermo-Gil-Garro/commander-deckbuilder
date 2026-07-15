@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, Mapping
+from typing import Any, Iterable, Literal, Mapping
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
@@ -238,3 +238,51 @@ def resolve_banlist(banlist: Banlist, index: NameIndex) -> ResolvedBanlist:
         watchlist=watchlist,
         explicitly_legal=frozenset(explicitly_legal),
     )
+
+
+def banlist_names(
+    resolved: ResolvedBanlist, cards: Iterable[Mapping[str, Any]]
+) -> tuple[frozenset[str], frozenset[str]]:
+    """Canonical (banned_names, watchlist_names): the resolved oracle_ids
+    projected onto the pool's names — the bridge between the formal resolver
+    (oracle_ids) and the name-based contract of the selectors.
+
+    Only ``banned`` and ``watchlist`` are projected: the API consumes
+    ``banned_as_commander`` and ``explicitly_legal`` by oracle_id.
+
+    Names are the pool's canonical ``name`` field ("A // B" for multi-faced
+    cards); the selectors match faces themselves. ``cards.jsonl`` is oracle
+    cards (one entry per oracle_id), so the projection is a bijection.
+
+    v1 ignores the watchlist ``scope``: every watchlist entry lands in
+    ``watchlist_names`` regardless of where it was meant to apply. That is
+    exactly today's behaviour — no new semantics invented here.
+
+    Raises ``BanlistError`` if a resolved oracle_id is absent from ``cards``.
+    ``resolve_banlist`` resolved against this same pool, so a miss means the
+    two came from different pools — a caller bug, never silently ignored.
+    """
+    wanted = resolved.banned | frozenset(resolved.watchlist)
+    names: dict[str, str] = {}
+    for card in cards:
+        oracle_id = card.get("oracle_id")
+        if oracle_id in wanted and oracle_id not in names:
+            names[oracle_id] = card["name"]
+
+    missing = wanted - names.keys()
+    if missing:
+        raise BanlistError(
+            f"resolved banlist does not match the given cards: "
+            f"{len(missing)} oracle_id(s) absent from the pool "
+            f"({sorted(missing)}) — resolve_banlist and banlist_names must "
+            f"run against the same pool"
+        )
+
+    banned_names = frozenset(names[oracle_id] for oracle_id in resolved.banned)
+    watchlist_names = frozenset(names[oracle_id] for oracle_id in resolved.watchlist)
+    logger.debug(
+        "Projected banlist onto pool names: %d banned, %d watchlist",
+        len(banned_names),
+        len(watchlist_names),
+    )
+    return banned_names, watchlist_names

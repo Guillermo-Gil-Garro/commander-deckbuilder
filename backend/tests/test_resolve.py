@@ -3,7 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from rules.resolve import NameIndex, ResolutionError, build_name_index
+from rules.resolve import (
+    NameIndex,
+    ResolutionError,
+    build_name_index,
+    name_index_from_cards,
+)
 
 
 def _write_pool(path: Path, cards: list[dict]) -> Path:
@@ -85,3 +90,29 @@ def test_invalid_pool_entry_fails(tmp_path: Path) -> None:
     pool.write_text('{"name": "No Oracle Id"}\n', encoding="utf-8")
     with pytest.raises(ResolutionError, match="invalid pool entry"):
         build_name_index(pool)
+
+
+def test_invalid_pool_line_reports_path_and_line(tmp_path: Path) -> None:
+    pool = tmp_path / "pool.jsonl"
+    pool.write_text('{"name": "ok", "oracle_id": "o", '
+                    '"is_commander_eligible": false}\nnot json\n', encoding="utf-8")
+    with pytest.raises(ResolutionError, match=r"pool\.jsonl:2"):
+        build_name_index(pool)
+
+
+def test_name_index_from_cards_matches_build_name_index(tmp_path: Path) -> None:
+    from_path = build_name_index(_write_pool(tmp_path / "pool.jsonl", MINI_POOL))
+    from_cards = name_index_from_cards(MINI_POOL)
+    for name in ("Demonic Tutor", "Emeritus of Woe // Demonic Tutor",
+                 "Tergrid, God of Fright", "Tergrid's Lantern"):
+        assert from_cards.resolve(name) == from_path.resolve(name)
+    for name in ("Everything Twice", "Shared Face", "Nonexistent Card"):
+        with pytest.raises(ResolutionError):
+            from_cards.resolve(name)
+
+
+def test_name_index_from_cards_invalid_entry_fails() -> None:
+    with pytest.raises(ResolutionError, match="invalid pool entry #2"):
+        name_index_from_cards(
+            [_entry("Fine", "oid-fine"), {"name": "No Oracle Id"}]
+        )

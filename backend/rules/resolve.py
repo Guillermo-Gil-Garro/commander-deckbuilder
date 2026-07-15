@@ -16,6 +16,7 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Iterable, Iterator, Mapping
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,60 @@ class NameIndex:
         )
 
 
+def name_index_from_cards(cards: Iterable[Mapping[str, Any]]) -> NameIndex:
+    """Build a ``NameIndex`` from already-parsed pool cards.
+
+    Same index as ``build_name_index``, for callers that already hold the pool
+    in memory (the API startup loads it once via ``load_pool``) — re-reading
+    ``cards.jsonl`` just to index it parses 16 MB a second time.
+
+    Raises ``ResolutionError`` for an entry missing the fields the index needs;
+    the entry is identified by its 1-based position and its ``name`` (when
+    present), since the caller's iterable has no line numbers to report.
+    """
+    full_names: dict[str, list[ResolvedName]] = {}
+    face_names: dict[str, list[ResolvedName]] = {}
+    count = 0
+    for position, card in enumerate(cards, start=1):
+        try:
+            entry = ResolvedName(
+                oracle_id=card["oracle_id"],
+                canonical_name=card["name"],
+                is_commander_eligible=card["is_commander_eligible"],
+            )
+        except (KeyError, TypeError) as exc:
+            name = card.get("name") if isinstance(card, Mapping) else None
+            raise ResolutionError(
+                f"invalid pool entry #{position} ({name!r}): {exc}"
+            ) from exc
+        count += 1
+        full_names.setdefault(entry.canonical_name, []).append(entry)
+        if FACE_SEPARATOR in entry.canonical_name:
+            for face in entry.canonical_name.split(FACE_SEPARATOR):
+                face_names.setdefault(face, []).append(entry)
+
+    logger.debug(
+        "Built name index: %d cards, %d full names, %d face names",
+        count,
+        len(full_names),
+        len(face_names),
+    )
+    return NameIndex(full_names, face_names)
+
+
+def _iter_pool(pool_path: Path) -> Iterator[Mapping[str, Any]]:
+    with pool_path.open(encoding="utf-8") as fh:
+        for line_no, line in enumerate(fh, start=1):
+            if not line.strip():
+                continue
+            try:
+                yield json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ResolutionError(
+                    f"invalid pool entry at {pool_path}:{line_no}: {exc}"
+                ) from exc
+
+
 def build_name_index(pool_path: Path | str = DEFAULT_POOL_PATH) -> NameIndex:
     """Build a ``NameIndex`` from a ``cards.jsonl`` pool file.
 
@@ -88,36 +143,6 @@ def build_name_index(pool_path: Path | str = DEFAULT_POOL_PATH) -> NameIndex:
     pool_path = Path(pool_path)
     if not pool_path.is_file():
         raise ResolutionError(f"card pool not found: {pool_path}")
-
-    full_names: dict[str, list[ResolvedName]] = {}
-    face_names: dict[str, list[ResolvedName]] = {}
-    count = 0
-    with pool_path.open(encoding="utf-8") as fh:
-        for line_no, line in enumerate(fh, start=1):
-            if not line.strip():
-                continue
-            try:
-                data = json.loads(line)
-                entry = ResolvedName(
-                    oracle_id=data["oracle_id"],
-                    canonical_name=data["name"],
-                    is_commander_eligible=data["is_commander_eligible"],
-                )
-            except (json.JSONDecodeError, KeyError, TypeError) as exc:
-                raise ResolutionError(
-                    f"invalid pool entry at {pool_path}:{line_no}: {exc}"
-                ) from exc
-            count += 1
-            full_names.setdefault(entry.canonical_name, []).append(entry)
-            if FACE_SEPARATOR in entry.canonical_name:
-                for face in entry.canonical_name.split(FACE_SEPARATOR):
-                    face_names.setdefault(face, []).append(entry)
-
-    logger.debug(
-        "Built name index from %s: %d cards, %d full names, %d face names",
-        pool_path,
-        count,
-        len(full_names),
-        len(face_names),
-    )
-    return NameIndex(full_names, face_names)
+    index = name_index_from_cards(_iter_pool(pool_path))
+    logger.debug("Built name index from %s", pool_path)
+    return index

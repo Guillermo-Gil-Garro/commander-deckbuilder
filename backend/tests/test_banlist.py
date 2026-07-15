@@ -6,10 +6,17 @@ import pytest
 from rules.banlist import (
     Banlist,
     BanlistError,
+    ResolvedBanlist,
+    banlist_names,
     load_banlist,
     resolve_banlist,
 )
-from rules.resolve import DEFAULT_POOL_PATH, NameIndex, build_name_index
+from rules.resolve import (
+    DEFAULT_POOL_PATH,
+    NameIndex,
+    build_name_index,
+    name_index_from_cards,
+)
 
 META = {
     "version": "test",
@@ -124,7 +131,102 @@ def test_load_banlist_missing_file(tmp_path: Path) -> None:
         load_banlist(tmp_path / "missing.yaml")
 
 
+# --- Projection of the resolved banlist onto pool names -------------------
+
+
+def _cards(names: dict[str, str]) -> list[dict]:
+    return [
+        {"name": name, "oracle_id": oid, "is_commander_eligible": True}
+        for name, oid in names.items()
+    ]
+
+
+def test_banlist_names_projects_banned_and_watchlist() -> None:
+    cards = _cards({"Card A": "oid-a", "Card B": "oid-b", "Card C": "oid-c"})
+    index = name_index_from_cards(cards)
+    banlist = _banlist(
+        cards=[{"name": "Card A", "status": "banned", "reason": "test"}],
+        watchlist=[{"name": "Card B", "reason": "test"}],
+    )
+    banned, watchlist = banlist_names(resolve_banlist(banlist, index), cards)
+    assert banned == frozenset({"Card A"})
+    assert watchlist == frozenset({"Card B"})
+
+
+def test_banlist_names_returns_canonical_full_name_for_dfc() -> None:
+    # The banlist names a single face; the projection must yield the pool's
+    # canonical "A // B" name (the selectors match faces themselves).
+    cards = _cards({"Tergrid, God of Fright // Tergrid's Lantern": "oid-tergrid"})
+    index = name_index_from_cards(cards)
+    banlist = _banlist(
+        cards=[
+            {"name": "Tergrid, God of Fright", "status": "banned", "reason": "test"}
+        ]
+    )
+    banned, _ = banlist_names(resolve_banlist(banlist, index), cards)
+    assert banned == frozenset({"Tergrid, God of Fright // Tergrid's Lantern"})
+
+
+def test_banlist_names_ignores_watchlist_scope() -> None:
+    # v1: a scoped entry is projected like any other (today's behaviour).
+    cards = _cards({"Card A": "oid-a", "Card B": "oid-b"})
+    index = name_index_from_cards(cards)
+    banlist = _banlist(
+        watchlist=[
+            {"name": "Card A", "reason": "test", "scope": "in_the_99"},
+            {"name": "Card B", "reason": "test"},
+        ]
+    )
+    _, watchlist = banlist_names(resolve_banlist(banlist, index), cards)
+    assert watchlist == frozenset({"Card A", "Card B"})
+
+
+def test_banlist_names_skips_commander_bans_and_explicitly_legal() -> None:
+    cards = _cards({"Card A": "oid-a", "Card B": "oid-b"})
+    index = name_index_from_cards(cards)
+    banlist = _banlist(
+        commanders=[
+            {"name": "Card A", "status": "banned_as_commander", "reason": "test"}
+        ],
+        explicitly_legal=[{"name": "Card B", "note": "test"}],
+    )
+    banned, watchlist = banlist_names(resolve_banlist(banlist, index), cards)
+    assert banned == frozenset()
+    assert watchlist == frozenset()
+
+
+def test_banlist_names_fails_on_oracle_id_absent_from_cards() -> None:
+    # resolve_banlist and banlist_names ran against different pools.
+    resolved = ResolvedBanlist(
+        banned=frozenset({"oid-ghost"}),
+        banned_as_commander=frozenset(),
+        watchlist={},
+        explicitly_legal=frozenset(),
+    )
+    with pytest.raises(BanlistError, match="oid-ghost"):
+        banlist_names(resolved, _cards({"Card A": "oid-a"}))
+
+
+def test_real_banlist_names_project_one_to_one(real_index: NameIndex) -> None:
+    cards = list(_iter_real_pool())
+    resolved = resolve_banlist(load_banlist(), real_index)
+    banned, watchlist = banlist_names(resolved, cards)
+    # cards.jsonl is oracle cards: one entry per oracle_id -> bijection.
+    assert len(banned) == len(resolved.banned)
+    assert len(watchlist) == len(resolved.watchlist)
+    assert "Demonic Tutor" in banned
+    assert "Tergrid, God of Fright // Tergrid's Lantern" in watchlist
+
+
 # --- Integration: the REAL banlist resolves fully against the REAL pool ----
+
+
+def _iter_real_pool() -> list[dict]:
+    return [
+        json.loads(line)
+        for line in DEFAULT_POOL_PATH.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 @pytest.fixture(scope="module")
