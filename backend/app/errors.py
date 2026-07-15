@@ -37,7 +37,7 @@ __all__ = [
 # Service-level messages.
 POOL_UNAVAILABLE = (
     "El servicio no tiene cargado el pool de cartas. "
-    "Es un problema de despliegue, no de tu mazo: revisa /api/health."
+    "Es un problema de despliegue, no de tu mazo: revisa /health."
 )
 EDHREC_UNAVAILABLE = (
     "EDHREC no responde ahora mismo, así que no podemos recomendar cartas. "

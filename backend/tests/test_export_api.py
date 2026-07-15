@@ -1,4 +1,4 @@
-"""Tests for POST /api/deck/export: the decklist file endpoint.
+"""Tests for POST /export: the decklist file endpoint.
 
 ``tests/test_export.py`` owns the Archidekt format itself. What is tested here
 is the frontier: that the response is a file (text/plain + a filename), that
@@ -49,7 +49,7 @@ def payload(**overrides: object) -> dict:
 
 
 def test_the_export_is_a_downloadable_text_file(client: TestClient) -> None:
-    response = client.post("/api/deck/export", json=payload())
+    response = client.post("/export", json=payload())
 
     assert response.status_code == 200, response.text
     assert response.headers["content-type"] == "text/plain; charset=utf-8"
@@ -62,7 +62,7 @@ def test_the_export_is_a_downloadable_text_file(client: TestClient) -> None:
 def test_the_decklist_carries_the_commander_and_the_client_slots(
     client: TestClient,
 ) -> None:
-    body = client.post("/api/deck/export", json=payload()).text
+    body = client.post("/export", json=payload()).text
 
     assert "1x Krenko, Mob Boss [Commander]" in body
     # The slot the client sent, rendered through the single CATEGORY_LABELS.
@@ -72,7 +72,7 @@ def test_the_decklist_carries_the_commander_and_the_client_slots(
 
 
 def test_the_sideboard_sections_are_rendered(client: TestClient) -> None:
-    body = client.post("/api/deck/export", json=payload()).text
+    body = client.post("/export", json=payload()).text
 
     assert "# Sideboard" in body
     assert "1x Goblin Matron" in body
@@ -83,7 +83,7 @@ def test_the_sideboard_sections_are_rendered(client: TestClient) -> None:
 def test_an_unknown_slot_falls_back_to_its_raw_label(client: TestClient) -> None:
     """The slot is the client's grouping: never validated, never rejected."""
     body = client.post(
-        "/api/deck/export",
+        "/export",
         json=payload(deck=[{"name": "Sol Ring", "count": 1, "slot": "chaos"}]),
     ).text
 
@@ -93,7 +93,7 @@ def test_an_unknown_slot_falls_back_to_its_raw_label(client: TestClient) -> None
 def test_an_unknown_card_is_a_422(client: TestClient) -> None:
     """A name we cannot resolve would break the import silently on Archidekt."""
     response = client.post(
-        "/api/deck/export",
+        "/export",
         json=payload(deck=[{"name": "Fake McFakeface", "count": 1, "slot": "ramp"}]),
     )
 
@@ -103,7 +103,7 @@ def test_an_unknown_card_is_a_422(client: TestClient) -> None:
 
 def test_an_unknown_commander_is_a_404(client: TestClient) -> None:
     response = client.post(
-        "/api/deck/export", json=payload(commander="Fake McFakeface")
+        "/export", json=payload(commander="Fake McFakeface")
     )
 
     assert response.status_code == 404
@@ -112,7 +112,7 @@ def test_an_unknown_commander_is_a_404(client: TestClient) -> None:
 def test_a_face_name_is_exported_canonically(client: TestClient) -> None:
     """Archidekt wants the exact name; the pool's canonical one is that name."""
     body = client.post(
-        "/api/deck/export",
+        "/export",
         json=payload(deck=[{"name": "Bala Ged Recovery", "count": 1, "slot": "ramp"}]),
     ).text
 
@@ -120,21 +120,21 @@ def test_a_face_name_is_exported_canonically(client: TestClient) -> None:
 
 
 def test_an_unknown_format_is_a_422(client: TestClient) -> None:
-    response = client.post("/api/deck/export", json=payload(format="moxfield"))
+    response = client.post("/export", json=payload(format="moxfield"))
     assert response.status_code == 422
 
 
 def test_the_export_is_degraded_without_a_pool(degraded_client: TestClient) -> None:
-    assert degraded_client.post("/api/deck/export", json=payload()).status_code == 503
+    assert degraded_client.post("/export", json=payload()).status_code == 503
 
 
 def test_a_real_krenko_deck_round_trips_through_the_export(
     client: TestClient,
 ) -> None:
     """The actual Fase 5 flow: build, then export what came back."""
-    deck = client.post("/api/deck", json={"commander": COMMANDER}).json()
+    deck = client.post("/build", json={"commander": COMMANDER}).json()
     response = client.post(
-        "/api/deck/export",
+        "/export",
         json={
             "commander": COMMANDER,
             "deck": [

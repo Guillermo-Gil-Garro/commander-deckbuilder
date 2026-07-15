@@ -293,7 +293,7 @@ def swap_candidates_for(
     candidates, feasible_count = swap_candidates(
         deck=ctx.deck,
         out_card=ctx.out_card,
-        pool_candidates=_pool_candidates(state, ctx, data),
+        pool_candidates=_pool_candidates(state, ctx.row, ctx.bands, data),
         bands=ctx.bands,
         commander=ctx.commander,
         banned_names=state.banned_names,
@@ -303,7 +303,7 @@ def swap_candidates_for(
         limit=request.limit,
     )
     return SwapCandidatesResponse(
-        out=card_view(state.pool.by_name[ctx.out_card.name]),
+        current=card_view(state.pool.by_name[ctx.out_card.name]),
         candidates=[
             CandidateView(
                 **card_view(state.pool.by_name[candidate.name]).model_dump(),
@@ -418,17 +418,24 @@ def _facts(
 
 
 def _pool_candidates(
-    state: AppState, ctx: _SwapContext, data: EdhrecCommanderData
+    state: AppState,
+    row: CommanderRow,
+    bands: Mapping[str, QuotaBand],
+    data: EdhrecCommanderData,
 ) -> list[tuple[CardFacts, float]]:
     """The commander's EDHREC recommendations as ``(facts, score)``.
 
     Scored exactly as the build scored them, boosts included, so the ranking
-    the player sees here agrees with the deck they are editing. The policy
-    filtering (banned, never, watchlist, off-identity, already in the deck) is
-    ``swap_candidates``' job and is not duplicated here.
+    the player sees here agrees with the deck they are editing. Shared by the
+    swap candidates and the maybeboard, which is what keeps those two rankings
+    from drifting apart.
+
+    Only the universe is built here. Policy filtering (banned, never,
+    watchlist, off-identity, already in the deck) belongs to each caller —
+    ``swap_candidates`` does its own, and the maybeboard's differs.
     """
     weights = ScoreWeights()
-    boosts = preferred_boosts(state.rules, ctx.row.color_identity)
+    boosts = preferred_boosts(state.rules, row.color_identity)
     candidates: list[tuple[CardFacts, float]] = []
     seen: set[str] = set()
     for rec in data.recommendations:
@@ -438,12 +445,12 @@ def _pool_candidates(
         name = card["name"]
         # Basics are never candidates: they are the only legal duplicate and
         # enter a deck through the solver's per-color counters, not a swap.
-        if name in seen or name == ctx.row.name or "Basic" in (card.get("type_line") or ""):
+        if name in seen or name == row.name or "Basic" in (card.get("type_line") or ""):
             continue
         seen.add(name)
         candidates.append(
             (
-                _facts(state, card, ctx.bands),
+                _facts(state, card, bands),
                 weights.score(rec.synergy, rec.inclusion) + boost_for(boosts, name),
             )
         )

@@ -64,13 +64,41 @@ def card_view(card: Mapping[str, Any]) -> CardView:
     )
 
 
-def commander_view(row: CommanderRow) -> CardView:
-    """Project a pre-indexed commander row onto the same card shape."""
-    return CardView(
+class CommanderView(CardView):
+    """A commander as the pickers publish it: the card shape plus its archetype.
+
+    ``archetype`` is the quota archetype the deck would be built against
+    (``quotas.yaml``), resolved with the same layering ``resolve_bands`` uses.
+    It is a coarse descriptor for the picker's benefit, **not** a promise: it
+    says which bands the build starts from, never how the deck will play.
+    """
+
+    archetype: str
+
+
+class CommandersResponse(BaseModel):
+    """A list of commanders plus its size.
+
+    ``count`` is the length of ``commanders`` — the list is already whole, so
+    this is a convenience, never a total the list was trimmed from. For the
+    search endpoint that means ``count`` reflects what ``limit`` returned, and
+    says nothing about how many commanders matched.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    count: int
+    commanders: list[CommanderView]
+
+
+def commander_view(row: CommanderRow, archetype: str) -> CommanderView:
+    """Project a pre-indexed commander row onto the commander shape."""
+    return CommanderView(
         name=row.name,
         oracle_id=row.oracle_id,
         scryfall_id=row.scryfall_id,
         color_identity=list(row.color_identity),
+        archetype=archetype,
     )
 
 
@@ -78,12 +106,20 @@ def commander_view(row: CommanderRow) -> CardView:
 
 
 class BandView(BaseModel):
-    """One resolved ``[min, max]`` quota band, as published."""
+    """One resolved quota band, as published: inclusive ``[lo, hi]``.
+
+    ``lo``/``hi`` and not ``min``/``max``: this is the wire name, and it is the
+    one the TFM API published. The internal ``quotas.config.QuotaBand`` keeps
+    ``min``/``max`` — the selectors and the whole quota engine speak that
+    dialect — and ``band_view`` is the single place the two meet. Renaming the
+    domain model to match the wire would have touched the solver; translating
+    at the frontier costs one function.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    min: int
-    max: int
+    lo: int
+    hi: int
 
 
 class DeckCardView(CardView):
@@ -220,7 +256,12 @@ class CandidateView(CardView):
 
 
 class SwapCandidatesResponse(BaseModel):
-    """Replacements for ``out``, best first. ``feasible_count`` is the total.
+    """Replacements for ``current``, best first. ``feasible_count`` is the total.
+
+    ``current`` is the card being evaluated — the one the request called
+    ``out``. There is one ``candidates`` list and not the TFM's
+    ``synergy``/``power`` split: that split exists because it has two scorers,
+    and we have one. An empty ``power`` would be paperwork, not parity.
 
     ``feasible_count`` counts every feasible candidate, before ``limit``
     trimmed the list — so the UI can say "37 options" while showing ten.
@@ -228,7 +269,7 @@ class SwapCandidatesResponse(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    out: CardView
+    current: CardView
     candidates: list[CandidateView]
     feasible_count: int
     limit: int
@@ -292,7 +333,11 @@ class ExportRequest(BaseModel):
 
 
 def band_view(band: QuotaBand) -> BandView:
-    return BandView(min=band.min, max=band.max)
+    """Translate the domain's ``min``/``max`` band onto the wire's ``lo``/``hi``.
+
+    The only bridge between the two vocabularies. See ``BandView``.
+    """
+    return BandView(lo=band.min, hi=band.max)
 
 
 def deck_card_view(card: Mapping[str, Any], entry: DeckEntry) -> DeckCardView:

@@ -1,4 +1,4 @@
-"""Tests for POST /api/deck: the build endpoint's HTTP contract.
+"""Tests for POST /build: the build endpoint's HTTP contract.
 
 The solver is not exercised here — ``tests/test_cpsat.py`` owns that. What is
 tested is the frontier: which failure gets which status code, that the bands
@@ -50,7 +50,7 @@ def no_network(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_unknown_commander_is_a_404(client: TestClient, no_network: None) -> None:
-    response = client.post("/api/deck", json={"commander": "Fake McFakeface"})
+    response = client.post("/build", json={"commander": "Fake McFakeface"})
 
     assert response.status_code == 404
     assert "Fake McFakeface" in response.json()["detail"]
@@ -60,7 +60,7 @@ def test_a_card_that_is_not_a_commander_is_a_404(
     client: TestClient, no_network: None
 ) -> None:
     """Sol Ring is in the pool and is not commander-eligible."""
-    response = client.post("/api/deck", json={"commander": "Sol Ring"})
+    response = client.post("/build", json={"commander": "Sol Ring"})
 
     assert response.status_code == 404
 
@@ -77,7 +77,7 @@ def test_a_banned_commander_is_a_422(
         if card.get("oracle_id") in banned_ids
     )
 
-    response = client.post("/api/deck", json={"commander": name})
+    response = client.post("/build", json={"commander": name})
 
     assert response.status_code == 422
     assert "banlist" in response.json()["detail"]
@@ -93,7 +93,7 @@ def test_a_commander_without_an_edhrec_page_is_a_404(
 
     monkeypatch.setattr(service, "fetch_commander", not_found)
 
-    response = client.post("/api/deck", json={"commander": "Yargle, Glutton of Urborg"})
+    response = client.post("/build", json={"commander": "Yargle, Glutton of Urborg"})
 
     assert response.status_code == 404
     assert "EDHREC" in response.json()["detail"]
@@ -109,14 +109,14 @@ def test_edhrec_being_down_is_a_502(
 
     monkeypatch.setattr(service, "fetch_commander", down)
 
-    response = client.post("/api/deck", json={"commander": "Yargle, Glutton of Urborg"})
+    response = client.post("/build", json={"commander": "Yargle, Glutton of Urborg"})
 
     assert response.status_code == 502
 
 
 def test_an_invalid_dial_is_a_422(client: TestClient, no_network: None) -> None:
     response = client.post(
-        "/api/deck", json={"commander": COMMANDER, "dials": {"lands": "yolo"}}
+        "/build", json={"commander": COMMANDER, "dials": {"lands": "yolo"}}
     )
 
     assert response.status_code == 422
@@ -128,7 +128,7 @@ def test_a_dial_on_a_category_without_one_is_a_422(
 ) -> None:
     """quotas.yaml defines no dial for wincons: the config is the judge."""
     response = client.post(
-        "/api/deck", json={"commander": COMMANDER, "dials": {"wincons": "high"}}
+        "/build", json={"commander": COMMANDER, "dials": {"wincons": "high"}}
     )
 
     assert response.status_code == 422
@@ -137,7 +137,7 @@ def test_a_dial_on_a_category_without_one_is_a_422(
 def test_the_deck_endpoint_is_degraded_without_a_pool(
     degraded_client: TestClient,
 ) -> None:
-    response = degraded_client.post("/api/deck", json={"commander": COMMANDER})
+    response = degraded_client.post("/build", json={"commander": COMMANDER})
     assert response.status_code == 503
 
 
@@ -152,10 +152,10 @@ def test_bands_in_the_request_are_rejected(client: TestClient, no_network: None)
     ignored key that someone later "helpfully" starts reading.
     """
     response = client.post(
-        "/api/deck",
+        "/build",
         json={
             "commander": COMMANDER,
-            "bands": {"lands": {"min": 0, "max": 99}},
+            "bands": {"lands": {"lo": 0, "hi": 99}},
         },
     )
 
@@ -166,7 +166,7 @@ def test_an_unknown_request_field_is_rejected(
     client: TestClient, no_network: None
 ) -> None:
     response = client.post(
-        "/api/deck", json={"commander": COMMANDER, "solver_time_limit_s": 600}
+        "/build", json={"commander": COMMANDER, "solver_time_limit_s": 600}
     )
 
     assert response.status_code == 422
@@ -181,7 +181,7 @@ def krenko_deck(real_app_state: AppState) -> dict:
     app_main.app.state.deckbuilder = real_app_state
     try:
         response = TestClient(app_main.app).post(
-            "/api/deck", json={"commander": COMMANDER}
+            "/build", json={"commander": COMMANDER}
         )
     finally:
         del app_main.app.state.deckbuilder
@@ -202,7 +202,7 @@ def test_the_dials_are_echoed_and_the_bands_are_derived(krenko_deck: dict) -> No
     assert krenko_deck["dials"] == {}
     # The bands are the server's answer, not the client's question.
     assert set(krenko_deck["bands"]) == set(krenko_deck["statuses"])
-    assert krenko_deck["bands"]["lands"]["min"] <= krenko_deck["bands"]["lands"]["max"]
+    assert krenko_deck["bands"]["lands"]["lo"] <= krenko_deck["bands"]["lands"]["hi"]
 
 
 def test_the_dials_actually_move_the_bands(
@@ -210,13 +210,13 @@ def test_the_dials_actually_move_the_bands(
 ) -> None:
     """A dial the client sends is honoured server-side, via quotas.yaml."""
     response = client.post(
-        "/api/deck", json={"commander": COMMANDER, "dials": {"lands": "low"}}
+        "/build", json={"commander": COMMANDER, "dials": {"lands": "low"}}
     )
 
     assert response.status_code == 200
     body = response.json()
     assert body["dials"] == {"lands": "low"}
-    assert body["bands"]["lands"]["max"] < krenko_deck["bands"]["lands"]["max"]
+    assert body["bands"]["lands"]["hi"] < krenko_deck["bands"]["lands"]["hi"]
 
 
 def test_every_deck_card_carries_the_full_card_shape(krenko_deck: dict) -> None:
@@ -270,7 +270,7 @@ def test_a_forced_relaxed_stage_answers_200_with_an_amber_warning(
         return result
 
     monkeypatch.setattr(service, "build_deck_cpsat", relaxed)
-    response = client.post("/api/deck", json={"commander": COMMANDER})
+    response = client.post("/build", json={"commander": COMMANDER})
 
     assert response.status_code == 200
     body = response.json()
@@ -288,7 +288,7 @@ def test_a_second_build_reuses_the_edhrec_memo(
     client: TestClient, krenko_deck: dict, no_network: None
 ) -> None:
     """The memo is why the swap path never re-parses 200 KB of JSON."""
-    response = client.post("/api/deck", json={"commander": COMMANDER})
+    response = client.post("/build", json={"commander": COMMANDER})
 
     assert response.status_code == 200
     assert response.json()["mainboard"] == krenko_deck["mainboard"]

@@ -44,7 +44,7 @@ def krenko_mainboard(real_app_state: AppState) -> list[dict]:
     app_main.app.state.deckbuilder = real_app_state
     try:
         response = TestClient(app_main.app).post(
-            "/api/deck", json={"commander": COMMANDER}
+            "/build", json={"commander": COMMANDER}
         )
     finally:
         del app_main.app.state.deckbuilder
@@ -66,7 +66,7 @@ def replacement(real_app_state: AppState, krenko_mainboard: list[dict]) -> str:
     app_main.app.state.deckbuilder = real_app_state
     try:
         response = TestClient(app_main.app).post(
-            "/api/deck/swap/candidates",
+            "/sequential/candidates",
             json={
                 "commander": COMMANDER,
                 "deck": krenko_mainboard,
@@ -89,7 +89,7 @@ def test_candidates_are_ranked_and_counted(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     response = client.post(
-        "/api/deck/swap/candidates",
+        "/sequential/candidates",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -100,7 +100,7 @@ def test_candidates_are_ranked_and_counted(
 
     assert response.status_code == 200, response.text
     body = response.json()
-    assert body["out"]["name"] == "Goblin Bombardment"
+    assert body["current"]["name"] == "Goblin Bombardment"
     assert body["limit"] == 5
     assert len(body["candidates"]) <= 5
     assert body["feasible_count"] >= len(body["candidates"])
@@ -112,7 +112,7 @@ def test_candidates_carry_the_card_shape_and_a_reason(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     body = client.post(
-        "/api/deck/swap/candidates",
+        "/sequential/candidates",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -138,7 +138,7 @@ def test_candidates_are_never_already_in_the_deck(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     body = client.post(
-        "/api/deck/swap/candidates",
+        "/sequential/candidates",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -155,7 +155,7 @@ def test_candidates_stay_inside_the_commander_identity(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     body = client.post(
-        "/api/deck/swap/candidates",
+        "/sequential/candidates",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -171,7 +171,7 @@ def test_the_candidates_limit_is_clamped_not_rejected(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     response = client.post(
-        "/api/deck/swap/candidates",
+        "/sequential/candidates",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -229,7 +229,7 @@ def test_a_feasible_swap_is_200_and_carries_the_full_traffic_light(
 ) -> None:
     """statuses come back even when feasible: it is the live quota panel."""
     body = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -259,7 +259,7 @@ def test_an_infeasible_swap_is_a_200_with_blockers(
 ) -> None:
     """"Not feasible" is a verdict about the deck, not an error about the request."""
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -281,7 +281,7 @@ def test_an_off_identity_card_is_blocked_in_spanish(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -308,7 +308,7 @@ def test_a_duplicate_is_blocked(
         if row["count"] == 1 and row["name"] != "Goblin Bombardment"
     )
     body = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -331,7 +331,7 @@ def test_a_never_card_is_amber_and_still_feasible(
     out, never = pair
 
     body = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -374,7 +374,7 @@ def test_removing_an_always_card_is_amber_and_still_feasible(
         pytest.skip("no 'always' rule card ended up in Krenko's deck")
 
     body = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -396,7 +396,7 @@ def test_an_out_card_not_in_the_deck_is_a_422(
 ) -> None:
     """Island is in the pool and cannot be in a mono-red deck."""
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -413,7 +413,7 @@ def test_a_card_outside_the_pool_is_a_422(
     client: TestClient, krenko_mainboard: list[dict]
 ) -> None:
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
@@ -430,7 +430,7 @@ def test_a_deck_that_is_not_99_is_a_422(
     client: TestClient, krenko_mainboard: list[dict], replacement: str
 ) -> None:
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard[:-1],
@@ -446,15 +446,15 @@ def test_a_deck_that_is_not_99_is_a_422(
 def test_bands_in_a_swap_request_are_rejected(
     client: TestClient, krenko_mainboard: list[dict], replacement: str
 ) -> None:
-    """Same anti-tampering point as /api/deck: bands are never received."""
+    """Same anti-tampering point as /build: bands are never received."""
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
             "out": "Goblin Bombardment",
             "in": replacement,
-            "bands": {"lands": {"min": 0, "max": 99}},
+            "bands": {"lands": {"lo": 0, "hi": 99}},
         },
     )
 
@@ -469,7 +469,7 @@ def test_deck_rows_take_names_and_counts_only(
     tampered[0]["slot"] = "lands"
 
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": COMMANDER,
             "deck": tampered,
@@ -485,7 +485,7 @@ def test_an_unknown_commander_is_a_404(
     client: TestClient, krenko_mainboard: list[dict], replacement: str
 ) -> None:
     response = client.post(
-        "/api/deck/swap/validate",
+        "/sequential/validate",
         json={
             "commander": "Fake McFakeface",
             "deck": krenko_mainboard,
@@ -501,8 +501,8 @@ def test_the_swap_endpoints_are_degraded_without_a_pool(
     degraded_client: TestClient,
 ) -> None:
     for path, extra in (
-        ("/api/deck/swap/validate", {"in": "Chaos Warp"}),
-        ("/api/deck/swap/candidates", {}),
+        ("/sequential/validate", {"in": "Chaos Warp"}),
+        ("/sequential/candidates", {}),
     ):
         response = degraded_client.post(
             path,

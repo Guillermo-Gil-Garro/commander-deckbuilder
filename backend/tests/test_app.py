@@ -35,7 +35,7 @@ def degraded_client() -> Iterator[TestClient]:
 def test_health_reports_the_loaded_state(
     client: TestClient, real_app_state: AppState
 ) -> None:
-    response = client.get("/api/health")
+    response = client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {
@@ -49,7 +49,7 @@ def test_health_reports_the_loaded_state(
 
 def test_health_without_pool_is_degraded(degraded_client: TestClient) -> None:
     """Degraded still answers 200: health is the diagnosis, not the failure."""
-    response = degraded_client.get("/api/health")
+    response = degraded_client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {
@@ -68,7 +68,7 @@ def test_lifespan_populates_state(
 
     with TestClient(app_main.app) as client:
         assert client.app.state.deckbuilder is real_app_state  # type: ignore[attr-defined]
-        assert client.get("/api/health").json()["status"] == "ok"
+        assert client.get("/health").json()["status"] == "ok"
 
 
 def test_lifespan_starts_the_app_when_the_pool_is_missing(
@@ -78,7 +78,7 @@ def test_lifespan_starts_the_app_when_the_pool_is_missing(
     monkeypatch.setattr(app_main, "build_app_state", lambda: None)
 
     with TestClient(app_main.app) as client:
-        assert client.get("/api/health").json()["status"] == "degraded"
+        assert client.get("/health").json()["status"] == "degraded"
 
 
 # --- SPA mount (non-regression) ---------------------------------------------
@@ -93,7 +93,7 @@ def _spa_client(tmp_path: Path) -> TestClient:
 
     app = FastAPI()
 
-    @app.get("/api/health")
+    @app.get("/health")
     def _health() -> dict[str, str]:
         return {"status": "ok"}
 
@@ -115,14 +115,23 @@ def test_spa_falls_back_to_index_for_client_routes(tmp_path: Path) -> None:
     assert "spa" in response.text
 
 
-def test_spa_does_not_swallow_unknown_api_404(tmp_path: Path) -> None:
-    """An unknown /api path must 404, never return the SPA shell."""
-    response = _spa_client(tmp_path).get("/api/nope")
-    assert response.status_code == 404
-    assert "spa" not in response.text
+def test_spa_serves_the_shell_for_an_unknown_path(tmp_path: Path) -> None:
+    """An unmatched path is the SPA shell, not a 404 — including API typos.
+
+    The documented consequence of serving the API at the root with no /api
+    prefix: there is no namespace left to tell a client-side route from a
+    misspelled endpoint. `test_spa_still_serves_real_api_routes` is the guard
+    that matters — real routes must never reach this fallback.
+    """
+    response = _spa_client(tmp_path).get("/buildd")
+
+    assert response.status_code == 200
+    assert "spa" in response.text
 
 
 def test_spa_still_serves_real_api_routes(tmp_path: Path) -> None:
-    response = _spa_client(tmp_path).get("/api/health")
+    """Routes registered before the mount win: the SPA never shadows the API."""
+    response = _spa_client(tmp_path).get("/health")
+
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}

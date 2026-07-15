@@ -1,8 +1,13 @@
 """FastAPI app entrypoint.
 
-Run from ``backend/`` as ``uvicorn app.main:app``. Serves the API under
-``/api`` and, when a frontend build exists at ``frontend/dist/``, the SPA
-at ``/`` with an index.html fallback for client-side routes.
+Run from ``backend/`` as ``uvicorn app.main:app``. The API lives at the root
+(``/build``, ``/commanders``, ...) with no prefix, and when a frontend build
+exists at ``frontend/dist/`` the SPA is served from ``/`` too, with an
+index.html fallback for client-side routes.
+
+Both at the root means an unmatched path is the SPA shell, not a 404 — see
+``SPAStaticFiles``. Routes are registered before the mount, so the API always
+wins where it claims a path.
 
 The handlers here are transport only: they read the ``AppState`` that the
 lifespan built (``app.state.deckbuilder``) and translate domain errors into
@@ -29,7 +34,7 @@ from starlette.types import Scope
 from app import service
 from app.errors import POOL_UNAVAILABLE
 from app.schemas import (
-    CardView,
+    CommandersResponse,
     DeckRequest,
     DeckResponse,
     ExportRequest,
@@ -38,10 +43,10 @@ from app.schemas import (
     SwapCandidatesResponse,
     SwapValidateRequest,
     SwapValidateResponse,
-    card_view,
     commander_view,
 )
 from app.state import COMMANDER_SEARCH_LIMIT_DEFAULT, AppState, build_app_state
+from selector.deck_rules import archetype_for
 
 LOG_LEVEL_ENV = "DECKBUILDER_LOG_LEVEL"
 
@@ -128,7 +133,7 @@ def _state(request: Request) -> AppState:
     return state
 
 
-@app.get("/api/health")
+@app.get("/health")
 def health(request: Request) -> HealthResponse:
     """Service diagnosis, straight from the state loaded at startup.
 
@@ -136,6 +141,9 @@ def health(request: Request) -> HealthResponse:
     read this) but every deck endpoint will answer 503. Everything else that
     could go wrong is versioned config and aborts startup instead, so a
     running app that reports ``ok`` has all of its artifacts.
+
+    ``ok`` is about artifacts, not about EDHREC: this never touches the
+    network, so it cannot tell you a build will succeed.
     """
     state: AppState | None = getattr(request.app.state, "deckbuilder", None)
     if state is None:
@@ -151,40 +159,60 @@ def health(request: Request) -> HealthResponse:
     )
 
 
-@app.get("/api/commanders/featured")
-def featured_commanders(request: Request) -> list[CardView]:
-    """The group's curated commanders, in ``featured_commanders.yaml`` order.
+@app.get("/commanders")
+def featured_commanders(request: Request) -> CommandersResponse:
+    """The group's curated commanders for the picker, with their archetypes.
 
     This is the landing-page list: a hand-picked starting point for players
-    who do not arrive with a commander already in mind. File order is the
-    group's ordering and is preserved verbatim — do not sort it.
+    who do not arrive with a commander already in mind. File order
+    (``featured_commanders.yaml``) is the group's ordering and is preserved
+    verbatim — do not sort it. This is **not** every legal commander; it is
+    the group's shortlist. Use ``/commanders/search`` for the rest.
+
+    ``archetype`` is the quota archetype the build would start from
+    (``quotas.yaml``), not a claim about how the deck plays. 503 if the card
+    pool never loaded.
     """
     state = _state(request)
     # load_featured resolved these to canonical pool names, and startup proved
     # each one is selectable, so both lookups are total.
-    return [card_view(state.pool.by_name[c.name]) for c in state.featured]
+    commanders = [
+        commander_view(
+            state.commander_by_name(c.name),  # type: ignore[arg-type]
+            archetype_for(state.quotas, c.name),
+        )
+        for c in state.featured
+    ]
+    return CommandersResponse(count=len(commanders), commanders=commanders)
 
 
-@app.get("/api/commanders")
+@app.get("/commanders/search")
 def search_commanders(
     request: Request, q: str, limit: int = COMMANDER_SEARCH_LIMIT_DEFAULT
-) -> list[CardView]:
-    """Search selectable commanders by name.
+) -> CommandersResponse:
+    """Search selectable commanders by name. Typeahead source for the picker.
 
     ``q`` is a query parameter, not a path segment, because commander names
     carry commas and apostrophes ("Atraxa, Praetors' Voice"). Matching is
     case-insensitive exact-substring, with prefix matches ranked first and
-    ties broken alphabetically; there is no fuzzy matching.
+    ties broken alphabetically; there is no fuzzy matching, so a typo returns
+    nothing rather than a guess.
 
     A ``q`` shorter than 2 characters returns an empty list rather than
-    thousands of rows. ``limit`` is clamped to ``[1, 50]``. Banned commanders
-    are absent from the index and can never appear here.
+    thousands of rows — that is not an error and not "no such commander".
+    ``limit`` is clamped to ``[1, 50]``, so ``count`` is what was *returned*
+    and never how many matched. Banned commanders are absent from the index
+    and can never appear here. 503 if the card pool never loaded.
     """
     state = _state(request)
-    return [commander_view(row) for row in state.search_commanders(q, limit)]
+    commanders = [
+        commander_view(row, archetype_for(state.quotas, row.name))
+        for row in state.search_commanders(q, limit)
+    ]
+    return CommandersResponse(count=len(commanders), commanders=commanders)
 
 
-@app.post("/api/deck")
+@app.post("/build")
 async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     """Build a 99-card mainboard plus maybeboard for a commander.
 
@@ -195,7 +223,8 @@ async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     ``dials`` is echoed back; ``bands`` is **derived** from ``quotas.yaml`` +
     commander + dials on every request and is **never** accepted from the
     client (sending it is a 422). It is in the response as information only:
-    the server does not trust it and neither should you.
+    the server does not trust it and neither should you. Each band is an
+    inclusive ``{lo, hi}``.
 
     A deck at a relaxed solver stage is a 200, not an error: read
     ``solver.stage`` and the amber ``relaxed_stage`` warning. Only an input no
@@ -208,11 +237,11 @@ async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
         return await run_in_threadpool(service.build_deck, state, payload)
 
 
-@app.post("/api/deck/swap/candidates")
+@app.post("/sequential/candidates")
 async def swap_candidates(
     request: Request, payload: SwapCandidatesRequest
 ) -> SwapCandidatesResponse:
-    """Feasible replacements for ``out``, best first.
+    """Feasible replacements for ``out``, best first. ``current`` is that card.
 
     The deck travels as ``[{name, count}]`` and nothing more: categories and
     scores are rederived server-side from the pool and the tagger. Sending
@@ -225,13 +254,22 @@ async def swap_candidates(
     ``feasible_count`` is the total *before* ``limit`` trimmed the list;
     ``limit`` is clamped to [1, 50] and echoed back.
 
-    This never calls the solver.
+    One ``candidates`` list, not a ``synergy``/``power`` split: that split
+    belongs to an API with two scorers, and this one has a single score.
+
+    **A candidate is feasible, not advised.** Every card here would leave a
+    legal 99 — that is all the list means; it does not rank how much the deck
+    wants it beyond the EDHREC score. This never calls the solver.
+
+    404 for an unknown commander, 422 for a deck that is not 99 cards, an
+    ``out`` the deck does not hold or a card outside the pool, 502 if EDHREC
+    is unreachable, 503 if the card pool never loaded.
     """
     state = _state(request)
     return await run_in_threadpool(service.swap_candidates_for, state, payload)
 
 
-@app.post("/api/deck/swap/validate")
+@app.post("/sequential/validate")
 def validate_swap(
     request: Request, payload: SwapValidateRequest
 ) -> SwapValidateResponse:
@@ -255,7 +293,7 @@ def validate_swap(
     return service.validate_swap(state, payload)
 
 
-@app.post("/api/deck/export", response_class=PlainTextResponse)
+@app.post("/export", response_class=PlainTextResponse)
 def export_deck(request: Request, payload: ExportRequest) -> Response:
     """Render a deck as a decklist file. Formatting only, nothing re-decided.
 
@@ -284,16 +322,23 @@ def export_deck(request: Request, payload: ExportRequest) -> Response:
 class SPAStaticFiles(StaticFiles):
     """Static files with index.html fallback for client-side routes.
 
-    Unknown ``/api`` paths keep their 404 instead of returning the SPA shell.
+    **Any** unmatched path returns the SPA shell with a 200, API typos
+    included: ``GET /buildd`` serves index.html rather than a 404. That is a
+    deliberate consequence of dropping the ``/api`` prefix — with the API at
+    the root there is no longer a namespace to tell "a client-side route" and
+    "a misspelled endpoint" apart, and it is how the TFM API behaved.
+
+    Real API routes are unaffected: they are registered on the app *before*
+    this mount, so they always match first. Only paths no route claimed reach
+    this class. If a request that should hit the API renders the SPA instead,
+    the URL is wrong — check ``/docs``.
     """
 
     async def get_response(self, path: str, scope: Scope) -> Response:
         try:
             return await super().get_response(path, scope)
         except StarletteHTTPException as exc:
-            # StaticFiles normalizes the path with os.sep, so use posix form.
-            posix_path = path.replace("\\", "/")
-            if exc.status_code != 404 or posix_path.startswith("api/"):
+            if exc.status_code != 404:
                 raise
         return await super().get_response("index.html", scope)
 

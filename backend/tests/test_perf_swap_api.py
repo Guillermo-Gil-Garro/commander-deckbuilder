@@ -52,12 +52,12 @@ def client(real_app_state: AppState) -> Iterator[TestClient]:
 def test_the_full_http_swap_validation_fits_in_100ms(client: TestClient) -> None:
     deck = [
         {"name": card["name"], "count": card["count"]}
-        for card in client.post("/api/deck", json={"commander": COMMANDER}).json()[
+        for card in client.post("/build", json={"commander": COMMANDER}).json()[
             "mainboard"
         ]
     ]
     candidates = client.post(
-        "/api/deck/swap/candidates",
+        "/sequential/candidates",
         json={"commander": COMMANDER, "deck": deck, "out": "Goblin Bombardment", "limit": 1},
     ).json()["candidates"]
     assert candidates, "need a real replacement for a meaningful measurement"
@@ -70,7 +70,7 @@ def test_the_full_http_swap_validation_fits_in_100ms(client: TestClient) -> None
     }
 
     def call() -> None:
-        response = client.post("/api/deck/swap/validate", json=payload)
+        response = client.post("/sequential/validate", json=payload)
         assert response.status_code == 200
         assert response.json()["feasible"] is True
 
@@ -83,7 +83,7 @@ def test_the_full_http_swap_validation_fits_in_100ms(client: TestClient) -> None
     median = statistics.median(timings)
 
     logger.info(
-        "POST /api/deck/swap/validate (99 cards): median %.2f ms, max %.2f ms "
+        "POST /sequential/validate (99 cards): median %.2f ms, max %.2f ms "
         "over %d runs",
         median,
         max(timings),
