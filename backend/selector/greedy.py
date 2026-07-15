@@ -97,6 +97,17 @@ class SelectorError(Exception):
     """The deck cannot be built from the given inputs."""
 
 
+class CardLike(Protocol):
+    """Minimum surface the curve/Karsten helpers need from a card.
+
+    Structural on purpose: ``selector.constraints.CardFacts`` and the internal
+    ``_Candidate`` both satisfy it, so the land-floor math is defined once.
+    """
+
+    @property
+    def cmc(self) -> float: ...
+
+
 class RecommendationLike(Protocol):
     """Minimum surface the selector needs from a recommendation.
 
@@ -299,7 +310,8 @@ def _add_counts(counts: dict[str, int], categories: Iterable[str], amount: int =
         counts[category] = counts.get(category, 0) + amount
 
 
-def _curve(cards: Sequence[_Candidate]) -> dict[str, float]:
+def curve(cards: Sequence[CardLike]) -> dict[str, float]:
+    """Fraction of ``cards`` per curve bucket (non-land cards only, by contract)."""
     if not cards:
         return {}
     buckets: dict[str, int] = {}
@@ -309,9 +321,10 @@ def _curve(cards: Sequence[_Candidate]) -> dict[str, float]:
     return {bucket: n / len(cards) for bucket, n in buckets.items()}
 
 
-def _karsten_floor(nonland: Sequence[_Candidate], counts: Mapping[str, int]) -> int:
+def karsten_floor(nonland: Sequence[CardLike], counts: Mapping[str, int]) -> int:
+    """Karsten land floor of a deck: its non-land curve plus its ramp+draw count."""
     ramp_plus_draw = counts.get("ramp", 0) + counts.get("card_draw", 0)
-    return land_count(expected_curve_mv(_curve(nonland)), ramp_plus_draw)
+    return land_count(expected_curve_mv(curve(nonland)), ramp_plus_draw)
 
 
 def _basic_distribution(
@@ -574,7 +587,7 @@ def build_deck_greedy(
         trial_counts = dict(core_counts)
         for candidate in filler:
             _add_counts(trial_counts, candidate.categories)
-        floor = _karsten_floor(core_spells + filler, trial_counts)
+        floor = karsten_floor(core_spells + filler, trial_counts)
         effective_min = max(lands_band.min, floor)
         # Spell candidates ran out: leftover slots become lands too.
         exhausted_target = DECK_SIZE - len(core_spells) - len(filler)
@@ -604,7 +617,8 @@ def build_deck_greedy(
         _add_counts(counts, candidate.categories)
 
     nonland_final = core_spells + filler
-    karsten_floor = _karsten_floor(nonland_final, counts)
+    # Local name differs from the module-level helper it calls (same value).
+    deck_karsten_floor = karsten_floor(nonland_final, counts)
 
     # ── lands: recommended lands first, basics complete the rest ─────────
     lands_placed = auto_land_count
@@ -662,7 +676,7 @@ def build_deck_greedy(
     statuses = validate_deck(
         counts,
         bands,
-        curve=_curve(nonland_final),
+        curve=curve(nonland_final),
         ramp_plus_draw=counts.get("ramp", 0) + counts.get("card_draw", 0),
     )
 
@@ -702,7 +716,7 @@ def build_deck_greedy(
         counts=counts,
         statuses=statuses,
         maybeboard=maybeboard,
-        karsten_floor=karsten_floor,
+        karsten_floor=deck_karsten_floor,
         lands_target=lands_target,
         unresolved=unresolved,
         new_cards=_new_cards_section(ordered, picked),

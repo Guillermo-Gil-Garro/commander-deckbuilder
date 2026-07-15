@@ -63,6 +63,14 @@ Constraints and penalties:
   proportionally to pips — the solver places them, mostly driven by the color
   penalty — and saying otherwise would be false.
 
+``selector.constraints`` re-implements the ``none`` stage of the hard rules as
+plain counting (the <100 ms swap path cannot re-solve). The two are kept in
+lockstep by ``tests/test_constraints_contract.py`` plus the ``__debug__``
+assertion at the end of ``build_deck_cpsat``. **Known limit**: both only catch
+the checker being *stricter* than this model. A hard constraint added to
+``_assemble_model`` and not to ``constraints.hard_violations`` leaves the
+checker laxer and goes undetected — add it in both places.
+
 The result mirrors ``GreedyResult`` (mainboard ``DeckEntry`` rows with score
 and reason, counts, validator statuses, maybeboard, cold-start ``new_cards``
 section — see ``selector.greedy`` module doc for its relation to the
@@ -105,13 +113,14 @@ from selector.greedy import (
     ScoreWeights,
     SelectorError,
     _Candidate,
-    _curve,
     _is_new_rec,
-    _karsten_floor,
     _name_variants,
     _new_cards_section,
     _sorted_candidates,
+    curve as _curve,
+    karsten_floor as _karsten_floor,
 )
+from selector.constraints import CardFacts, deck_counts, hard_violations
 from selector.deck_rules import (
     RuleContext,
     RulesConfig,
@@ -512,6 +521,47 @@ def _assemble_model(
     return model, x, b
 
 
+def _facts_for_check(
+    pool: PoolIndex,
+    selected: Sequence[_Candidate],
+    basic_counts: Mapping[str, int],
+) -> list[tuple[CardFacts, int]]:
+    """The built deck as ``constraints.CardFacts`` rows (``__debug__`` assertion only)."""
+    rows: list[tuple[CardFacts, int]] = []
+    for cand in selected:
+        card = pool.resolve(cand.name) or {}
+        rows.append(
+            (
+                CardFacts(
+                    name=cand.name,
+                    oracle_id=str(card.get("oracle_id") or ""),
+                    categories=cand.categories,
+                    cmc=cand.cmc,
+                    mana_cost=cand.mana_cost,
+                    color_identity=frozenset(card.get("color_identity", [])),
+                ),
+                1,
+            )
+        )
+    for basic_name, n in sorted(basic_counts.items()):
+        card = pool.resolve(basic_name) or {}
+        rows.append(
+            (
+                CardFacts(
+                    name=basic_name,
+                    oracle_id=str(card.get("oracle_id") or ""),
+                    categories=frozenset({LANDS_CATEGORY}),
+                    cmc=float(card.get("cmc") or 0.0),
+                    mana_cost=card.get("mana_cost") or "",
+                    color_identity=frozenset(card.get("color_identity", [])),
+                    is_basic=True,
+                ),
+                n,
+            )
+        )
+    return rows
+
+
 def build_deck_cpsat(
     commander_name: str,
     *,
@@ -882,6 +932,20 @@ def build_deck_cpsat(
                 ),
             )
         )
+
+    if __debug__ and stage_used.name == "none":
+        # Closes the loop with the swap checker: at the strictest stage the
+        # solution satisfies every hard rule by construction, so any violation
+        # reported here means constraints.py and _assemble_model have diverged.
+        breaches = hard_violations(
+            deck_counts(_facts_for_check(pool, selected, basic_counts)), bands
+        )
+        if breaches:
+            raise SelectorError(
+                f"internal error: CP-SAT solution for {commander_name!r} breaks "
+                f"hard rules at stage 'none' (selector/constraints.py has "
+                f"diverged from _assemble_model): {breaches}"
+            )
 
     return CpSatResult(
         commander_name=commander_full_name,
