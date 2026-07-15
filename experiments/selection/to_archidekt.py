@@ -27,6 +27,7 @@ from selector.deck_rules import (  # noqa: E402
     load_rules,
     validate_rules_names,
 )
+from selector.export import format_archidekt  # noqa: E402
 from selector.greedy import build_deck_greedy, load_pool  # noqa: E402
 from tags.store import load_tags, tagger_from_store  # noqa: E402
 
@@ -36,40 +37,6 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger("to_archidekt")
 
 OUT_DIR = Path(__file__).resolve().parent / "decks" / "archidekt"
-
-# Archidekt category shown per card (slot the selector assigned, not every tag).
-CATEGORY_LABELS = {
-    "lands": "Lands",
-    "ramp": "Ramp",
-    "card_draw": "Card Draw",
-    "removal": "Removal",
-    "board_wipe": "Board Wipe",
-    "wincons": "Wincons",
-    "synergy": "Synergy",
-}
-
-
-def format_archidekt(result) -> str:
-    lines = [f"1x {result.commander_name} [Commander]"]
-    for entry in result.mainboard:
-        label = CATEGORY_LABELS.get(entry.slot, entry.slot)
-        lines.append(f"{entry.count}x {entry.name} [{label}]")
-    lines.append("")
-    lines.append("# Sideboard")
-    for entry in result.maybeboard:
-        lines.append(f"1x {entry.name}")
-    # Cold-start section at the end of the sideboard: the import format has no
-    # sideboard categories, so a comment line (Archidekt ignores lines starting
-    # with "#") separates them. Cards already in the maybeboard are not
-    # repeated (a duplicated sideboard line would break the import).
-    maybe_names = {entry.name for entry in result.maybeboard}
-    fresh = [e for e in result.new_cards if e.name not in maybe_names]
-    if fresh:
-        lines.append("# --- cartas nuevas ---")
-        for entry in fresh:
-            lines.append(f"1x {entry.name}")
-    lines.append("")
-    return "\n".join(lines)
 
 
 def main() -> None:
