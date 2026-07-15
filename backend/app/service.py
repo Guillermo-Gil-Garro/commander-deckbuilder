@@ -46,6 +46,7 @@ from app.schemas import (
     DeckCardView,
     DeckRequest,
     DeckResponse,
+    ExportRequest,
     NoticeView,
     SolverView,
     SwapCandidatesRequest,
@@ -78,6 +79,7 @@ from selector.deck_rules import (
     resolve_always,
     resolve_never,
 )
+from selector.export import format_archidekt
 from selector.greedy import (
     DECK_SIZE,
     SYNERGY_CATEGORY,
@@ -446,6 +448,72 @@ def _pool_candidates(
             )
         )
     return candidates
+
+
+# --- export ------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class DeckExport:
+    """A rendered decklist and the name to save it under."""
+
+    filename: str
+    content: str
+
+
+@dataclass(frozen=True)
+class _ExportResult:
+    """The ``export.DeckResultLike`` surface, built from a request instead of
+    a build result: after a few swaps the client's deck is not any build."""
+
+    commander_name: str
+    mainboard: list[DeckEntry]
+    maybeboard: list[DeckEntry]
+    new_cards: list[DeckEntry]
+
+
+def export_deck(state: AppState, request: ExportRequest) -> DeckExport:
+    """Render a deck as a decklist. Formatting only — nothing is re-decided.
+
+    Exporting on the server and not in the client is what keeps
+    ``CATEGORY_LABELS`` defined once: a copy in TypeScript would be the same
+    debt again, in another language.
+
+    Card names are resolved against the pool and exported canonically. The
+    decklist is the artifact the player pastes into Archidekt, and a name we
+    cannot resolve would silently break their import — so an unknown card is a
+    422 here rather than a broken file. ``slot`` is *not* validated: it is the
+    client's own grouping and falls back to its raw label.
+    """
+    row = resolve_commander(state, request.commander)
+    result = _ExportResult(
+        commander_name=row.name,
+        mainboard=[
+            _export_entry(state, ref.name, slot=ref.slot, count=ref.count)
+            for ref in request.deck
+        ],
+        maybeboard=[_export_entry(state, ref.name) for ref in request.maybeboard],
+        new_cards=[_export_entry(state, ref.name) for ref in request.new_cards],
+    )
+    return DeckExport(
+        filename=f"{slugify_commander(row.name)}.txt",
+        content=format_archidekt(result),
+    )
+
+
+def _export_entry(
+    state: AppState, name: str, *, slot: str = SYNERGY_CATEGORY, count: int = 1
+) -> DeckEntry:
+    # categories/score/reason are not read by any exporter: a decklist says
+    # what to buy, never why. Inventing values for them would be noise.
+    return DeckEntry(
+        name=_pool_card(state, name)["name"],
+        categories=(),
+        score=None,
+        reason="",
+        slot=slot,
+        count=count,
+    )
 
 
 def _notice(violation: Violation) -> NoticeView:

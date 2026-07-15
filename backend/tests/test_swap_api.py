@@ -17,7 +17,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import main as app_main
+from app import service
 from app.state import AppState
+from selector.deck_rules import RuleContext, resolve_always, resolve_never
 
 COMMANDER = "Krenko, Mob Boss"
 
@@ -182,6 +184,43 @@ def test_the_candidates_limit_is_clamped_not_rejected(
     assert response.json()["limit"] == 50
 
 
+def _never_swap(
+    state: AppState, mainboard: list[dict]
+) -> tuple[str, str] | None:
+    """A ``(out, in)`` pair where ``in`` is a ``never`` card of ``out``'s categories.
+
+    Same categories on both sides means the swap moves no counter at all, so
+    the only rule left with anything to say is the ``never`` one — which is
+    exactly what the test is about. Deterministic on purpose: ``resolve_never``
+    returns a frozenset, and picking an arbitrary member made the test depend
+    on the hash seed (a ramp card would break ramp's ceiling and fail for a
+    reason that has nothing to do with `never`).
+    """
+    ctx = RuleContext(
+        commander_name=COMMANDER, color_identity=frozenset("R"), archetype="aggro"
+    )
+    bands = service.bands_for(state, COMMANDER, {})
+
+    def categories(name: str) -> frozenset[str] | None:
+        card = state.pool.resolve(name)
+        if card is None or not set(card.get("color_identity") or ()) <= {"R"}:
+            return None
+        return service._facts(state, card, bands).categories
+
+    in_deck = {row["name"] for row in mainboard}
+    singles = [row["name"] for row in mainboard if row["count"] == 1]
+    for never in sorted(resolve_never(state.rules, ctx)):
+        if never in in_deck:
+            continue
+        wanted = categories(never)
+        if wanted is None:
+            continue
+        for out in singles:
+            if categories(out) == wanted:
+                return out, never
+    return None
+
+
 # --- validate: the domain results (always 200) ------------------------------
 
 
@@ -286,37 +325,23 @@ def test_a_never_card_is_amber_and_still_feasible(
     client: TestClient, real_app_state: AppState, krenko_mainboard: list[dict]
 ) -> None:
     """rules.yaml: never means "I don't recommend it", not "it's illegal"."""
-    from selector.deck_rules import RuleContext, resolve_never
-
-    ctx = RuleContext(
-        commander_name=COMMANDER,
-        color_identity=frozenset("R"),
-        archetype="aggro",
-    )
-    in_deck = {row["name"] for row in krenko_mainboard}
-    never = next(
-        (
-            name
-            for name in resolve_never(real_app_state.rules, ctx)
-            if name not in in_deck
-            and (card := real_app_state.pool.resolve(name)) is not None
-            and set(card.get("color_identity") or ()) <= {"R"}
-        ),
-        None,
-    )
-    if never is None:
-        pytest.skip("no 'never' rule matches Krenko outside its own deck")
+    pair = _never_swap(real_app_state, krenko_mainboard)
+    if pair is None:
+        pytest.skip("no 'never' rule card matches a Krenko deck card's categories")
+    out, never = pair
 
     body = client.post(
         "/api/deck/swap/validate",
         json={
             "commander": COMMANDER,
             "deck": krenko_mainboard,
-            "out": "Goblin Bombardment",
+            "out": out,
             "in": never,
         },
     ).json()
 
+    # The swap is quota-neutral by construction, so nothing but the `never`
+    # rule itself can have an opinion — and it only warns.
     assert body["feasible"] is True, body["blockers"]
     warnings = {w["code"]: w for w in body["warnings"]}
     assert "add_never_manually" in warnings
@@ -327,7 +352,7 @@ def test_removing_an_always_card_is_amber_and_still_feasible(
     client: TestClient, real_app_state: AppState, krenko_mainboard: list[dict], replacement: str
 ) -> None:
     """rules.yaml: "el mazo sigue siendo válido y exportable"."""
-    from selector.deck_rules import RuleContext, resolve_always
+
 
     ctx = RuleContext(
         commander_name=COMMANDER,

@@ -23,7 +23,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.types import Scope
 
 from app import service
@@ -32,6 +32,7 @@ from app.schemas import (
     CardView,
     DeckRequest,
     DeckResponse,
+    ExportRequest,
     HealthResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
@@ -252,6 +253,32 @@ def validate_swap(
     """
     state = _state(request)
     return service.validate_swap(state, payload)
+
+
+@app.post("/api/deck/export", response_class=PlainTextResponse)
+def export_deck(request: Request, payload: ExportRequest) -> Response:
+    """Render a deck as a decklist file. Formatting only, nothing re-decided.
+
+    Answers ``text/plain`` with a ``Content-Disposition`` attachment named
+    after the commander — the response is a file to save, not a document to
+    read.
+
+    ``slot`` comes from the client here, unlike everywhere else: it is the
+    section the player sees a card in, and after a few swaps only the client
+    knows where each card ended up. An unrecognised slot is exported as its
+    own raw label. Card names, in contrast, are resolved against the pool: an
+    unresolvable name would silently break the import on the other side.
+
+    Rendering here and not in the browser is what keeps ``CATEGORY_LABELS``
+    defined exactly once. ``format`` is an enum with a single value today so
+    that a second format is a new value, not a new endpoint.
+    """
+    state = _state(request)
+    export = service.export_deck(state, payload)
+    return PlainTextResponse(
+        export.content,
+        headers={"Content-Disposition": f'attachment; filename="{export.filename}"'},
+    )
 
 
 class SPAStaticFiles(StaticFiles):

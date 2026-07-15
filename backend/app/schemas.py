@@ -254,6 +254,43 @@ class SwapValidateResponse(BaseModel):
     deck_size: int
 
 
+# --- export ------------------------------------------------------------------
+
+
+class ExportCardRef(DeckCardRef):
+    """One mainboard row to export, with the section the player sees it in.
+
+    Unlike everywhere else, ``slot`` **is** taken from the client here: it is
+    the visual grouping, and after a few swaps the client is the one that
+    knows which section it put each card in. Nothing is validated against it —
+    an unknown slot is exported as its own raw label.
+    """
+
+    slot: str = Field(min_length=1)
+
+
+class CardRef(BaseModel):
+    """A card referenced by name only (the export's sideboard sections)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    name: str = Field(min_length=1)
+
+
+class ExportRequest(BaseModel):
+    """A finished deck to render as a decklist."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    deck: list[ExportCardRef] = Field(min_length=1)
+    maybeboard: list[CardRef] = Field(default_factory=list)
+    new_cards: list[CardRef] = Field(default_factory=list)
+    # An enum with one member today. It is here so that adding a second format
+    # is a new value and not a new endpoint.
+    format: Literal["archidekt"] = "archidekt"
+
+
 def band_view(band: QuotaBand) -> BandView:
     return BandView(min=band.min, max=band.max)
 
