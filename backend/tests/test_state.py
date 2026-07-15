@@ -211,5 +211,16 @@ def test_edhrec_memo_evicts_fifo() -> None:
 
 
 def test_edhrec_memo_default_is_bounded(real_app_state: AppState) -> None:
-    assert len(real_app_state.edhrec_memo) == 0
+    """The state's memo is an EdhrecMemo capped at the default maximum.
+
+    The cap is asserted on a fresh memo and not on ``real_app_state``'s: that
+    state is session-scoped, so the API tests may have filled its memo before
+    this runs. Emptiness there would be an ordering artifact, not a fact.
+    """
+    assert isinstance(real_app_state.edhrec_memo, EdhrecMemo)
+    memo = EdhrecMemo()
+    assert len(memo) == 0
+    for i in range(EDHREC_MEMO_MAX + 5):
+        memo.put(f"slug-{i}", _page(f"slug-{i}"))
+    assert len(memo) == EDHREC_MEMO_MAX
     assert EDHREC_MEMO_MAX == 64

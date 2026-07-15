@@ -12,23 +12,39 @@ HTTP status codes. Anything that decides *what* a deck looks like lives in
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import AsyncIterator
+from typing import AsyncIterator, Callable
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 from starlette.types import Scope
 
+from app import service
 from app.errors import POOL_UNAVAILABLE
-from app.schemas import CardView, HealthResponse, card_view, commander_view
+from app.schemas import (
+    CardView,
+    DeckRequest,
+    DeckResponse,
+    HealthResponse,
+    card_view,
+    commander_view,
+)
 from app.state import COMMANDER_SEARCH_LIMIT_DEFAULT, AppState, build_app_state
 
 LOG_LEVEL_ENV = "DECKBUILDER_LOG_LEVEL"
+
+# The solver runs on 1 worker and the Space's free tier has 2 shared vCPUs, so
+# two concurrent builds is the whole machine. Without this bound, five friends
+# generating at once turn a 10 s time limit into 50 s of wall clock for all of
+# them; with it, the third waits and everyone's deck still arrives.
+BUILD_CONCURRENCY = 2
 
 # uvicorn only configures its own loggers, so without this the startup summary
 # -- and, worse, the "degraded, no card pool" diagnosis -- would go nowhere.
@@ -70,6 +86,32 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Commander Deckbuilder", lifespan=lifespan)
+
+_build_slots = asyncio.Semaphore(BUILD_CONCURRENCY)
+
+# The one place where a domain error becomes a status code. `app.service` never
+# names one: it raises a typed error carrying the Spanish message, and this
+# table decides whose fault it was. 404 = "that commander does not exist here",
+# 422 = "your input cannot produce a deck", 502 = "EDHREC let us down".
+_ERROR_STATUS: tuple[tuple[type[service.ServiceError], int], ...] = (
+    (service.CommanderNotFound, 404),
+    (service.CommanderNotAllowed, 422),
+    (service.InvalidDials, 422),
+    (service.DeckBuildFailed, 422),
+    (service.EdhrecUnavailable, 502),
+)
+
+
+def _domain_error_handler(status_code: int) -> Callable[[Request, Exception], Response]:
+    def handle(request: Request, exc: Exception) -> Response:
+        # Same body shape as HTTPException's, so the frontend reads one field.
+        return JSONResponse(status_code=status_code, content={"detail": str(exc)})
+
+    return handle
+
+
+for _error_type, _status_code in _ERROR_STATUS:
+    app.add_exception_handler(_error_type, _domain_error_handler(_status_code))
 
 
 def _state(request: Request) -> AppState:
@@ -134,6 +176,30 @@ def search_commanders(
     """
     state = _state(request)
     return [commander_view(row) for row in state.search_commanders(q, limit)]
+
+
+@app.post("/api/deck")
+async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
+    """Build a 99-card mainboard plus maybeboard for a commander.
+
+    POST and not GET: ``dials`` is a nested mapping, and the operation is not
+    cacheable — it takes 0.05-10 s, reads the disk and may call EDHREC. The
+    shareable link to a deck is a frontend route, not this URL.
+
+    ``dials`` is echoed back; ``bands`` is **derived** from ``quotas.yaml`` +
+    commander + dials on every request and is **never** accepted from the
+    client (sending it is a 422). It is in the response as information only:
+    the server does not trust it and neither should you.
+
+    A deck at a relaxed solver stage is a 200, not an error: read
+    ``solver.stage`` and the amber ``relaxed_stage`` warning. Only an input no
+    relaxation can satisfy is a 422. ``statuses`` is the quota traffic light;
+    ``unresolved`` lists EDHREC recommendations absent from our pool, which
+    were simply skipped.
+    """
+    state = _state(request)
+    async with _build_slots:
+        return await run_in_threadpool(service.build_deck, state, payload)
 
 
 class SPAStaticFiles(StaticFiles):

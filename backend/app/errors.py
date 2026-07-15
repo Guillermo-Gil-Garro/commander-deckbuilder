@@ -16,10 +16,20 @@ from selector.constraints import Severity, Violation
 
 __all__ = [
     "CATEGORY_LABELS",
+    "DECK_BUILD_INFEASIBLE",
+    "EDHREC_UNAVAILABLE",
+    "INVALID_DIALS",
     "POOL_UNAVAILABLE",
     "Severity",
     "Violation",
+    "card_not_in_deck",
+    "card_not_in_pool",
     "category_label",
+    "commander_banned",
+    "commander_not_found",
+    "deck_size_mismatch",
+    "edhrec_not_found",
+    "relaxed_stage_message",
     "violation_message",
 ]
 
@@ -28,6 +38,69 @@ POOL_UNAVAILABLE = (
     "El servicio no tiene cargado el pool de cartas. "
     "Es un problema de despliegue, no de tu mazo: revisa /api/health."
 )
+EDHREC_UNAVAILABLE = (
+    "EDHREC no responde ahora mismo, así que no podemos recomendar cartas. "
+    "Es un problema nuestro (o suyo), no de tu comandante: prueba en un rato."
+)
+INVALID_DIALS = (
+    "Alguno de los diales no es válido. Cada categoría admite 'low', 'center', "
+    "'high' o null, y solo valen las categorías con dial definido en quotas.yaml."
+)
+DECK_BUILD_INFEASIBLE = (
+    "No se puede construir un mazo de 99 cartas con este comandante ni "
+    "relajando las cuotas. Revisa las cuotas y los diales."
+)
+
+
+def commander_not_found(name: str) -> str:
+    """Unknown, non-eligible or unresolvable commander name."""
+    return (
+        f"No encontramos ningún comandante llamado «{name}». Comprueba el "
+        f"nombre exacto en el buscador: no hay búsqueda difusa."
+    )
+
+
+def commander_banned(name: str) -> str:
+    """A card the group banned as a commander (banlist.yaml)."""
+    return (
+        f"«{name}» está en la banlist del grupo y no puede ser comandante. "
+        f"Elige otro."
+    )
+
+
+def edhrec_not_found(name: str) -> str:
+    """EDHREC has no page for this commander: their data gap, not our outage."""
+    return (
+        f"EDHREC no tiene página de recomendaciones para «{name}», así que no "
+        f"podemos proponerte un mazo. Suele pasar con comandantes muy nuevos."
+    )
+
+
+def card_not_in_pool(name: str) -> str:
+    return (
+        f"La carta «{name}» no está en nuestro pool de cartas legales en "
+        f"Commander. Comprueba el nombre exacto."
+    )
+
+
+def card_not_in_deck(name: str) -> str:
+    return f"La carta «{name}» no está en el mazo, así que no puedes quitarla."
+
+
+def deck_size_mismatch(actual: int, expected: int) -> str:
+    return (
+        f"El mazo enviado tiene {actual} cartas y debe tener exactamente "
+        f"{expected} (el comandante va aparte)."
+    )
+
+
+def relaxed_stage_message(stage: str) -> str:
+    """The deck came out of a relaxed solver stage: playable, but off-quota."""
+    return (
+        f"No hemos podido cumplir todas las cuotas con las cartas disponibles, "
+        f"así que hemos relajado restricciones (etapa «{stage}»). El mazo es "
+        f"legal y jugable, pero mira el panel de cuotas: alguna se queda corta."
+    )
 
 # Display names for the quota categories (quotas.config.CATEGORIES).
 CATEGORY_LABELS: dict[str, str] = {
@@ -41,13 +114,42 @@ CATEGORY_LABELS: dict[str, str] = {
     "synergy": "sinergia",
 }
 
-# One template per Violation.code (see selector.constraints).
+# One template per Violation.code: the numeric rules from selector.constraints
+# and the policy rules from selector.swap. The policy templates take no
+# placeholders because their codes carry no counts worth reading ("banned" is
+# 1 copy vs 0 allowed); which card each one is about is implicit in the code
+# (``remove_always`` speaks about the outgoing card, the rest about the
+# incoming one) and the caller sent both.
 VIOLATION_MESSAGES: dict[str, str] = {
     "deck_size": "El mazo tiene {actual} cartas y debe tener exactamente {limit}.",
     "lands_floor": "Faltan tierras: hay {actual} y el mínimo es {limit}.",
     "lands_ceiling": "Sobran tierras: hay {actual} y el máximo es {limit}.",
     "category_floor": "Faltan cartas de {category}: hay {actual} y el mínimo es {limit}.",
     "category_ceiling": "Sobran cartas de {category}: hay {actual} y el máximo es {limit}.",
+    "color_identity": (
+        "La carta que quieres meter tiene colores fuera de la identidad de tu "
+        "comandante."
+    ),
+    "banned": "La carta que quieres meter está en la banlist del grupo.",
+    "duplicate_card": (
+        "El mazo ya tiene esa carta y Commander es singleton: solo las tierras "
+        "básicas se repiten."
+    ),
+    "commander_duplicate": (
+        "Esa carta es tu comandante: no puede estar además en las 99."
+    ),
+    "add_never_manually": (
+        "Esta carta no se recomienda sola (regla «never» en rules.yaml), pero "
+        "el mazo sigue siendo válido si la metes a mano."
+    ),
+    "watchlist": (
+        "Esta carta está en la watchlist del grupo: no la recomendamos sola, "
+        "pero puedes jugarla."
+    ),
+    "remove_always": (
+        "Estás quitando una carta marcada como «always» en rules.yaml. El mazo "
+        "sigue siendo válido y exportable."
+    ),
 }
 
 
