@@ -81,7 +81,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.deckbuilder = state
     if state is None:
         logger.error(
-            "Startup DEGRADED: no card pool. /api/health reports 'degraded' "
+            "Startup DEGRADED: no card pool. /health reports 'degraded' "
             "and every deck endpoint returns 503."
         )
     else:

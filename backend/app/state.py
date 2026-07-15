@@ -11,7 +11,7 @@ tagger are all built from that same in-memory copy.
 
 The only data artifact is the card pool: it is gitignored, 16 MB and not in
 the Docker image today. Missing it makes the app start anyway, report
-``degraded`` on ``/api/health`` and answer 503 on the deck endpoints — the
+``degraded`` on ``/health`` and answer 503 on the deck endpoints — the
 Space must come up and show the diagnosis instead of crash-looping.
 
 Everything else is versioned config, and a half-loaded config is worse than
@@ -253,7 +253,7 @@ def build_app_state(
     except SelectorError as exc:
         logger.error(
             "Card pool not usable at %s; every deck endpoint will return 503 "
-            "and /api/health will report 'degraded': %s",
+            "and /health will report 'degraded': %s",
             pool_path,
             exc,
         )

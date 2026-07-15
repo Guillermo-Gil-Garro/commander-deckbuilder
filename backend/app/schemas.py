@@ -264,7 +264,7 @@ class SwapCandidatesRequest(SwapRequest):
     @field_validator("limit")
     @classmethod
     def _clamp_limit(cls, value: int) -> int:
-        # Clamped, not rejected: same call as /api/commanders — a bad limit is
+        # Clamped, not rejected: same call as /commanders/search — a bad limit is
         # not worth a 422, and neither endpoint should ever dump the whole pool.
         return min(max(value, SWAP_CANDIDATES_LIMIT_MIN), SWAP_CANDIDATES_LIMIT_MAX)
 
