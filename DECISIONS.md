@@ -57,6 +57,59 @@ el mínimo; (2) recalibrado el peso del fixing de color, que no mordía; (3) raz
 por carta post-hoc en la salida. El greedy queda en el repo como baseline
 experimental, sin mantenimiento activo.
 
+## 2026-07-15 — API stateless y swap sin re-resolver (Fase 4)
+
+**El mazo vive en el cliente** y viaja en cada request (`deck: [{name, count}]`). Sin
+sesiones de servidor: el Space se duerme y reinicia, y una sesión perdida a mitad de
+un mazo es peor experiencia que un payload de 2 KB. Patrón del repo TFM.
+
+**El cliente manda `dials`, nunca `bands`.** Las bandas son derivadas
+(`resolve_bands(config, commander, dials)`) y el servidor las recalcula en cada
+request. Si el cliente pudiera mandarlas, relajaría cualquier cuota y validaría
+cualquier swap: el anti-tampering del stateless. Verificado — inyectar `bands` da 422.
+
+**El swap no re-resuelve el CP-SAT** (que tarda 0,05-10 s): `selector/swap.py` valida
+con aritmética entera sobre las 99. Medido: **0,079 ms** la función pura, **4,2 ms de
+mediana end-to-end** por HTTP (requisito <100 ms). Sostenido por `counts_after_swap`,
+un conteo incremental O(categorías) — recontar el mazo por candidato costaba 21 ms
+solo de conteo para 500 candidatos, por encima del presupuesto.
+
+**Cómo se evita que el checker diverja del solver**: las reglas duras se extraen a
+`selector/constraints.py` como definición única (`hard_violations`), y un test de
+contrato verifica que todo `CpSatResult` en etapa `none` no las viola, más una
+aserción `if __debug__` post-solve. **Límite conocido y aceptado**: si alguien añade
+una restricción dura al modelo y no al checker, el contrato no lo detecta (el checker
+quedaría más laxo, no más estricto). Está documentado en ambos módulos.
+
+**Regla de no-empeoramiento**: el CP-SAT relaja por etapas, así que un mazo entregado
+en etapa relajada ya viola un suelo. Un checker ingenuo bloquearía todo swap sobre él,
+incluido el que lo arregla. Cada restricción se acepta si `cumple(después) OR
+no_peor(después, antes)`; sobre un mazo de etapa `none` es idéntica a la regla dura.
+
+**Semáforo RED/AMBER** (implementa `rules.yaml:69-72`, que ya lo anunciaba): solo la
+banlist bloquea. `never` significa "nunca la auto-recomiendo", no "ilegal" — no se
+ofrece como candidata, pero si el jugador la busca a mano entra con aviso. Quitar un
+`always` es AMBER. Decisión de Guille: el jugador tiene la última palabra sobre su mazo.
+
+**Una carta baneada no aparece en el buscador de comandantes**, aunque `banned` hable
+literalmente de las 99: el baneo del grupo se lee como "fuera del formato". Decisión
+de Guille.
+
+**Política de fallo del arranque**: *artefacto de datos gitignorado → degrada; config
+versionada → falla duro*. Sin pool la app arranca y `/api/health` dice `degraded` (el
+Space debe poder explicarse, no morir en bucle). Pero sin tags **falla duro**, aunque
+parezca "un artefacto": el tagger vacío manda todo a `synergy` y el CP-SAT construye
+99 cartas que incumplen todas las cuotas *sin que nadie lo note*. Un mazo plausible y
+mal es peor que no arrancar.
+
+**Banlist unificada** (deuda saldada): `banlist_names` proyecta los oracle_ids del
+resolver formal a los nombres que esperan los selectores. Se descartó cambiar la firma
+de los selectores a oracle_ids: tocaría el greedy congelado y rompería los fixtures de
+277 tests por cero valor de usuario. Los 5 mazos de referencia **no cambian**.
+
+**INFEASIBLE no es error HTTP** (patrón TFM): un mazo en etapa relajada devuelve 200 +
+`solver.stage` + warning AMBER. Solo el input estructuralmente imposible da 422.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

@@ -27,8 +27,13 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ✅ 🔶 Comparativa y decisión (2026-07-15): **CP-SAT motor único** con 3 arreglos (mins de hechizos no-tierra, fixing recalibrado, razones post-hoc); auditoría en `experiments/selection/AUDITORIA_SELECTORES.md`; greedy queda de baseline
 - ✅ Maybeboard (por score + sección de cartas nuevas de EDHREC para arranque en frío)
 
-## Fase 4 — API
-- ⬜ Endpoints: buscar comandante, generar 99 + maybeboard, validar swap (<100ms), exportar decklist
+## Fase 4 — API ✅ (completa 2026-07-15: 7 endpoints, 465 tests, swap end-to-end en 4,2ms)
+- ✅ `AppState` + lifespan: carga única del pool/tags/reglas, `request.app.state`, degradación explícita (sin pool → arranca, `/api/health` dice `degraded`, endpoints de mazo 503 en español)
+- ✅ Endpoints: `/api/health`, `/api/commanders?q=`, `/api/commanders/featured`, `POST /api/deck`, `POST /api/deck/swap/candidates`, `POST /api/deck/swap/validate`, `POST /api/deck/export`
+- ✅ Swap sin re-resolver (`selector/swap.py` + `selector/constraints.py`): **mediana 4,2ms end-to-end** (requisito <100ms), 0,079ms la función pura; test de contrato que impide que el checker diverja del CP-SAT
+- ✅ Deudas saldadas: banlist unificada al resolver formal (los 5 mazos no cambian), `format_archidekt` → `backend/selector/export.py` (+ label `protection`), Dockerfile copia todos los paquetes + YAML + tags (⚠️ **build no probado**: no hay Docker en la máquina)
+- ✅ `scripts/precache_edhrec.py` (55 destacados; ⚠️ `data/cache/` gitignorado → **no llega al Space**, es optimización de dev)
+- 🔶 Pendiente de revisión de Guille: probar la API a mano
 
 ## Fase 5 — Frontend
 - ⬜ Buscador, vista por categorías, semáforos de cuotas, swap, export
@@ -36,3 +41,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 
 ## Fase 6 — Despliegue
 - ⬜ HF Space Docker (FastAPI + build React), datos precacheados, refresco manual
+- ⬜ **`cards.jsonl` (16MB) está gitignorado → el Space arrancaría degradado.** Opción más simple: `RUN python -m pipeline.build` en el Dockerfile (rebuild = refresco manual). Alternativas: storage persistente del Space, o git-lfs
+- ⬜ Gemelo del anterior: `data/cache/edhrec/` también gitignorado → cada comandante paga su primer fetch (~1s). Decidir si versionar los 55 optimized (~11MB)
+- ⬜ ⚠️ **Verificar que el Space deja salir a `json.edhrec.com`**: todo el diseño on-demand lo asume
+- ⬜ Probar el `docker build` de verdad (nunca se ha ejecutado)
