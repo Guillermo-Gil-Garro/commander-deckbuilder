@@ -404,6 +404,134 @@ def test_weak_nonbasic_land_excluded_in_favor_of_basics() -> None:
     assert "Utility Land" in names  # good non-basics still enter
 
 
+# ── semántica de mínimos: solo no-tierras los cubren (AUDITORIA §5.D.1) ──
+
+
+def add_multi_land(
+    pool: PoolIndex, name: str = "Grim Backwoods Clone", *, categories: set[str],
+    synergy: float = 0.9,
+) -> Rec:
+    """Una tierra multicategoría de score alto (el 'truco' de Meren)."""
+    card = make_card(
+        name, mana_cost="", cmc=0.0, type_line="Land",
+        oracle_text="{T}: Add {R}.",
+    )
+    pool.by_name[card["name"]] = card
+    TAGS[name] = {"lands"} | categories
+    return Rec(name=name, synergy=synergy, inclusion=0.5)
+
+
+def test_multicategory_land_cannot_satisfy_a_spell_minimum() -> None:
+    # Sin hechizos de card_draw suficientes, una tierra [lands/card_draw] de
+    # score altísimo NO puede cubrir el mínimo: el suelo duro es infactible y
+    # el selector relaja y lo reporta, en vez de dar la cuota por cumplida.
+    pool, recs = build_inputs()
+    recs = [r for r in recs if not r.name.startswith("Draw ")]
+    for i in range(4):
+        TAGS.pop(f"Draw {i}", None)
+    recs = recs + [add_multi_land(pool, categories={"card_draw"})]
+    result = build(pool, recs)
+
+    assert "Grim Backwoods Clone" in {e.name for e in result.mainboard}
+    # La tierra entra (score 0.9) y cuenta en el conteo informativo...
+    assert result.counts["card_draw"] == 1
+    # ...pero no cubre el mínimo: cuota relajada y déficit reportado.
+    assert result.relaxation_stage == "soft_category_floors"
+    assert result.penalties["soft_floors"]["card_draw"]["deficit"] == 2
+
+
+def test_spell_minimum_ignores_land_and_is_met_by_nonlands() -> None:
+    # Con hechizos disponibles, el mínimo se cumple con ellos y la tierra
+    # multicategoría es un extra: no hay relajación ninguna.
+    pool, recs = build_inputs()
+    recs = recs + [add_multi_land(pool, categories={"card_draw"})]
+    result = build(pool, recs)
+    assert result.relaxation_stage == "none"
+    draws = [
+        e for e in result.mainboard if "card_draw" in e.categories
+    ]
+    nonland_draws = [e for e in draws if "lands" not in e.categories]
+    assert len(nonland_draws) >= bands_fixture()["card_draw"].min
+
+
+def test_multicategory_land_still_consumes_the_category_maximum() -> None:
+    # La otra cara: la tierra sigue contando para el MÁXIMO (no se puede
+    # reventar el techo por la puerta de atrás).
+    pool, recs = build_inputs()
+    lands = [
+        add_multi_land(pool, f"Wipe Land {i}", categories={"board_wipe"}, synergy=0.95)
+        for i in range(3)
+    ]
+    result = build(pool, recs + lands)
+    band = bands_fixture()["board_wipe"]
+    assert result.counts["board_wipe"] <= band.max
+    # Y el mínimo lo sigue cubriendo un hechizo, no las tierras.
+    nonland_wipes = [
+        e
+        for e in result.mainboard
+        if "board_wipe" in e.categories and "lands" not in e.categories
+    ]
+    assert len(nonland_wipes) >= band.min
+
+
+# ── razones por carta (AUDITORIA §5.D.3) ──
+
+
+def test_every_mainboard_entry_has_a_nonempty_reason() -> None:
+    pool, recs = build_inputs()
+    add_rule_cards(pool)
+    result = build_with(pool, recs, rules=rules_fixture())
+    for entry in result.mainboard:
+        assert entry.reason and entry.reason.strip(), entry.name
+    assert all(e.reason.strip() for e in result.maybeboard)
+    # Nadie se queda con el "cp-sat, score X" genérico de antes.
+    assert not any("cp-sat," in e.reason for e in result.mainboard)
+
+
+def test_reasons_use_the_greedy_vocabulary() -> None:
+    pool, recs = build_inputs()
+    result = build(pool, recs)
+    by_name = {e.name: e for e in result.mainboard}
+
+    # Cuota: el mejor ramp cubre el mínimo de ramp.
+    assert by_name["Ramp 0"].reason.startswith("ramp (cuota), score")
+    # Relleno: la synergy de más score no cubre ningún mínimo.
+    assert by_name["Synergy 000"].reason.startswith("relleno por score")
+    # Tierra recomendada (sin otras categorías: sin coletilla).
+    assert by_name["Utility Land"].reason == "tierra recomendada, score 1.40"
+    # Básicas: razón honesta (las coloca el solver, no un reparto por pips).
+    assert by_name["Mountain"].reason.startswith("básica x")
+    assert "solver" in by_name["Mountain"].reason
+
+
+def test_multicategory_land_reason_states_it_does_not_cover_the_minimum() -> None:
+    pool, recs = build_inputs()
+    recs = recs + [add_multi_land(pool, "Draw Land", categories={"card_draw"})]
+    result = build(pool, recs)
+    entry = next(e for e in result.mainboard if e.name == "Draw Land")
+    assert entry.reason == (
+        "tierra recomendada, score 1.40 (cuenta en card_draw, "
+        "pero no cubre su mínimo)"
+    )
+
+
+def test_quota_reason_covers_categories_the_greedy_never_fills() -> None:
+    # protection no está en FILL_ORDER (el greedy no la rellena): aun así la
+    # carta que cubre su mínimo debe explicarse como cuota, no como relleno.
+    pool, recs = build_inputs()
+    guard = make_card("Lightning Boots", type_line="Artifact — Equipment")
+    pool.by_name[guard["name"]] = guard
+    TAGS["Lightning Boots"] = {"protection"}
+    bands = bands_fixture()
+    bands["protection"] = QuotaBand(min=1, max=3)
+    result = build(
+        pool, recs + [Rec(name="Lightning Boots", synergy=0.2, inclusion=0.5)],
+        bands=bands,
+    )
+    entry = next(e for e in result.mainboard if e.name == "Lightning Boots")
+    assert entry.reason.startswith("protection (cuota), score")
+
+
 # ── cartas nuevas (arranque en frío, lista "New Cards" de EDHREC) ──
 
 

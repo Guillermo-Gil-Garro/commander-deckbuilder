@@ -89,6 +89,10 @@ def format_deck(result: CpSatResult, bands, build_seconds: float) -> str:
     lines.append("")
     lines.append("# Nota: una carta multicategoría cuenta en todas sus categorías,")
     lines.append("# por eso la suma de conteos puede superar 99.")
+    lines.append("# Nota: los mínimos de las categorías de hechizos se cubren SOLO con")
+    lines.append("# cartas no-tierra. Una tierra multicategoría (p.ej. Boseiju en removal)")
+    lines.append("# sigue contando en el conteo de arriba y consume su máximo, pero no")
+    lines.append("# puede satisfacer el mínimo de la categoría.")
     lines.append("")
 
     lines.append(f"## Mainboard ({result.total_cards})")

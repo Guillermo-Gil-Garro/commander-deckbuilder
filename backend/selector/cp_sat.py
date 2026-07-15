@@ -9,7 +9,15 @@ integer score space (``SCORE_SCALE``).
 Constraints and penalties:
 
 - **Bands** from ``quotas.resolver.resolve_bands``. At the strictest stage all
-  category minimums and maximums are hard. The ``lands`` minimum is
+  category minimums and maximums are hard. **Minimum semantics (AUDITORIA_SELECTORES
+  §5.D.1): the minimum of a non-``lands`` category is satisfied by NON-LAND cards
+  only.** A multi-category land (Boseiju → ``removal``, Grim Backwoods →
+  ``card_draw``, Westvale Abbey → ``wincons``) stays eligible, keeps counting
+  toward that category's MAXIMUM (so it cannot blow the ceiling through the back
+  door) and toward the informative counts reported to the validator — but it can
+  never *fulfil* a minimum. Rationale: the audit found CP-SAT paying quotas "on
+  paper" with marginal utility lands (Grim Backwoods 0.19 as card_draw, Westvale
+  Abbey 0.13 as a wincon) in order to cut real engines. The ``lands`` minimum is
   ``max(band.min, Karsten floor)`` — the floor depends on the selected deck
   (curve, ramp+draw), so it is resolved by an outer fixpoint: solve, compute
   the floor of the solution, raise the hard lands lower bound if breached,
@@ -43,6 +51,17 @@ Constraints and penalties:
   tiny CMC term) so among equal-score optima the cheaper deck wins.
 - **Determinism**: 1 worker, fixed seed, stable variable order
   ``(-score, cmc, name)``.
+- **Explainability** (AUDITORIA_SELECTORES §5.D.3): the solver returns a set of
+  cards, never a narrative, so per-card reasons are reconstructed post-hoc from
+  the optimal solution (``_quota_coverage`` / ``_reason_for``) in the greedy's
+  vocabulary: ``"<cat> (cuota), score X"`` when the card is attributed to a
+  category minimum, ``"relleno por score X"`` when it entered on score alone,
+  ``"tierra recomendada, score X"`` for non-basic lands (multi-category ones
+  say which categories they count in and that they do NOT cover their minimum),
+  ``"always (rules.yaml)"`` when forced by a rule. Basics keep
+  ``"asignada por el solver"``: unlike the greedy they are not distributed
+  proportionally to pips — the solver places them, mostly driven by the color
+  penalty — and saying otherwise would be false.
 
 The result mirrors ``GreedyResult`` (mainboard ``DeckEntry`` rows with score
 and reason, counts, validator statuses, maybeboard, cold-start ``new_cards``
@@ -122,10 +141,21 @@ DEFAULT_TIME_LIMIT_S = 10.0
 # Soft-floor weight (TFM tuning decision, kept): a missing category slot costs
 # ~0.50 score points — playability over shape, but below a typical quality gap.
 FLOOR_PENALTY_PER_CARD = round(0.50 * SCORE_SCALE)
-# Global λ for the convex color-source deficit penalty (TFM calibrated value):
-# a fully unsupported color costs ≈ λ (the shape saturates near 1 reliability
-# unit); realistic 2-4 source shortfalls cost a few hundredths.
-COLOR_SOURCE_PENALTY_SCALE = round(0.50 * SCORE_SCALE)
+# Global λ for the convex color-source deficit penalty: score points paid per
+# unit of lost reliability. Recalibrated 2026-07-15 from the TFM's inherited
+# 0.50 (AUDITORIA_SELECTORES §5.D.2 measured that CP-SAT ended with FEWER color
+# sources than the greedy despite being the only one with a fixing penalty).
+# Diagnosis: at λ=0.50 one missing source costs 0.005–0.03 score, one to two
+# orders of magnitude below the 0.1–0.9 score gaps it trades against — the
+# penalty could never bite. At λ=4.0 a marginal source costs ≈0.04 score near
+# zero deficit and ≈0.10 in the double-digit deficit range where these decks
+# actually sit: the solver buys a source whenever it costs less than ~0.1
+# score, but a genuine quality gap still wins. Empirically (sweep over the 5
+# test commanders vs the greedy baseline) this is the widest setting that keeps
+# every color at or above the greedy's source count while costing ≤1.3% of raw
+# score (worst case Omnath); λ=5.0 already breaks the 2% score budget (Omnath
+# −2.4%) and λ≥10 craters it (−5.6%) by overriding real card quality.
+COLOR_SOURCE_PENALTY_SCALE = round(4.0 * SCORE_SCALE)
 
 _KARSTEN_FIXPOINT_MAX_ITER = 16
 
@@ -287,6 +317,83 @@ def _produced_colors(card: Mapping[str, Any], identity: frozenset[str]) -> froze
     return frozenset(colors) & identity
 
 
+# ── Post-hoc explanations (reasons are the formatter's job, not the solver's) ─
+
+
+def _quota_order(bands: Mapping[str, QuotaBand]) -> tuple[str, ...]:
+    """Categories with a minimum to attribute, in greedy's scarcity order.
+
+    ``FILL_ORDER`` first (so a multi-category card is explained by the same
+    category the greedy would have picked it for, and by the same one used for
+    its ``slot``), then any other quota category the greedy never fills —
+    ``protection`` today — so that those cards get explained too instead of
+    being passed off as score filler.
+    """
+    rest = sorted(
+        cat
+        for cat, band in bands.items()
+        if band.min > 0
+        and cat not in FILL_ORDER
+        and cat not in (LANDS_CATEGORY, SYNERGY_CATEGORY)
+    )
+    return tuple(cat for cat in FILL_ORDER if cat in bands) + tuple(rest)
+
+
+def _quota_coverage(
+    selected: Sequence[_Candidate], bands: Mapping[str, QuotaBand]
+) -> dict[str, list[str]]:
+    """Which category minimums each selected card is covering (card -> categories).
+
+    The solver returns a set of cards, not a narrative: it never "picks a card
+    for a quota". This reconstructs the attribution the greedy would make from
+    the optimal solution — for each category, its ``min`` slots go to the
+    best-scored NON-LAND members present (``selected`` is already ordered by
+    ``(-score, cmc, name)``). Lands are excluded on purpose: they cannot fulfil
+    a spell minimum in the model either, so claiming they cover one would be a
+    lie (see module doc). Cards not attributed to any minimum entered on score
+    alone, and are explained as such.
+    """
+    coverage: dict[str, list[str]] = {}
+    for category in _quota_order(bands):
+        band = bands[category]
+        members = [
+            c for c in selected if not c.is_land and category in c.categories
+        ]
+        for cand in members[: band.min]:
+            coverage.setdefault(cand.name, []).append(category)
+    return coverage
+
+
+def _reason_for(
+    cand: _Candidate,
+    *,
+    forced: frozenset[str],
+    coverage: Mapping[str, Sequence[str]],
+    bands: Mapping[str, QuotaBand],
+) -> str:
+    """Greedy-style reason for one selected card, derived from the solution."""
+    if cand.name in forced:
+        return "always (rules.yaml)"
+    if cand.is_land:
+        # Multi-category lands: state plainly that they count toward those
+        # categories (they do, for the ceilings) but never satisfy their min.
+        extra = sorted(
+            cat
+            for cat in cand.categories
+            if cat != LANDS_CATEGORY and cat in bands and bands[cat].min > 0
+        )
+        if extra:
+            return (
+                f"tierra recomendada, score {cand.score:.2f} "
+                f"(cuenta en {'/'.join(extra)}, pero no cubre su mínimo)"
+            )
+        return f"tierra recomendada, score {cand.score:.2f}"
+    covered = coverage.get(cand.name)
+    if covered:
+        return f"{covered[0]} (cuota), score {cand.score:.2f}"
+    return f"relleno por score {cand.score:.2f}"
+
+
 # ── Model assembly and solve ─────────────────────────────────────────────────
 
 
@@ -352,16 +459,28 @@ def _assemble_model(
         for category, band in bands.items():
             if category == LANDS_CATEGORY:
                 continue
-            members = [x[c.name] for c in ordered if category in c.categories]
-            count_expr = sum(members)
+            # Ceilings count EVERY member (multi-category lands included): a
+            # land tagged `removal` does consume removal's ceiling.
+            ceiling_expr = cp_model.LinearExpr.sum(
+                [x[c.name] for c in ordered if category in c.categories]
+            )
+            # Floors count NON-LAND members only: a utility land may not fulfil
+            # a spell quota (see module doc, AUDITORIA_SELECTORES §5.D.1).
+            floor_expr = cp_model.LinearExpr.sum(
+                [
+                    x[c.name]
+                    for c in ordered
+                    if category in c.categories and not c.is_land
+                ]
+            )
             if stage.hard_ceilings:
-                model.add(count_expr <= band.max)
+                model.add(ceiling_expr <= band.max)
             if band.min > 0:
                 if stage.hard_category_floors:
-                    model.add(count_expr >= band.min)
+                    model.add(floor_expr >= band.min)
                 else:
                     deficit = model.new_int_var(0, band.min, f"deficit_{category}")
-                    model.add(deficit >= band.min - count_expr)
+                    model.add(deficit >= band.min - floor_expr)
                     # TIEBREAK_SCALE keeps the penalty/score ratio intact.
                     penalty_terms.append(FLOOR_PENALTY_PER_CARD * TIEBREAK_SCALE * deficit)
 
@@ -641,10 +760,16 @@ def build_deck_cpsat(
 
     # ── assemble result (same shapes as the greedy for comparability) ────
     counts: dict[str, int] = {}
+    # Same split the model enforces: floors are met by non-lands only, so the
+    # deficits reported below must be measured on the same counter.
+    nonland_counts: dict[str, int] = {}
+    coverage = _quota_coverage(selected, bands)
     picked: dict[str, DeckEntry] = {}
     for cand in selected:
         for category in cand.categories:
             counts[category] = counts.get(category, 0) + 1
+            if not cand.is_land:
+                nonland_counts[category] = nonland_counts.get(category, 0) + 1
         slot = (
             LANDS_CATEGORY
             if cand.is_land
@@ -655,10 +780,8 @@ def build_deck_cpsat(
             name=cand.name,
             categories=tuple(sorted(cand.categories)),
             score=cand.score,
-            reason=(
-                "always (rules.yaml)"
-                if cand.name in forced
-                else f"cp-sat, score {cand.score:.2f}"
+            reason=_reason_for(
+                cand, forced=forced, coverage=coverage, bands=bands
             ),
             slot=slot,
         )
@@ -701,7 +824,7 @@ def build_deck_cpsat(
         for category, band in bands.items():
             if category == LANDS_CATEGORY or band.min <= 0:
                 continue
-            deficit = max(0, band.min - counts.get(category, 0))
+            deficit = max(0, band.min - nonland_counts.get(category, 0))
             if deficit:
                 soft_floors[category] = {
                     "deficit": deficit,

@@ -60,7 +60,6 @@
 1x Hordeling Outburst [Synergy]
 1x Goblin Instigator [Synergy]
 1x Massive Raid [Removal]
-1x Gempalm Incinerator [Removal]
 1x Arena of Glory [Lands]
 1x Mana Echoes [Ramp]
 1x Patriar's Seal [Ramp]
@@ -73,10 +72,11 @@
 1x Ancient Tomb [Lands]
 1x Dark-Dweller Oracle [Card Draw]
 1x War Room [Lands]
+1x Thrill of Possibility [Card Draw]
 1x Goblin Burrows [Lands]
+1x Valakut, the Molten Pinnacle [Lands]
 1x Forgotten Cave [Lands]
 1x Hall of the Bandit Lord [Lands]
-1x Myriad Landscape [Lands]
 1x Command Beacon [Lands]
 1x Buried Ruin [Lands]
 1x Valakut Awakening // Valakut Stoneforge [Lands]
@@ -85,20 +85,18 @@
 1x Bloodstained Mire [Lands]
 1x Amonkhet Raceway [Lands]
 1x Wooded Foothills [Lands]
+1x Sandstone Needle [Lands]
 1x Arid Mesa [Lands]
 1x Reliquary Tower [Lands]
 1x Rogue's Passage [Lands]
 1x Gemstone Caverns [Lands]
-1x Crystal Vein [Lands]
-1x Hanweir Battlements [Lands]
-1x Scalding Tarn [Lands]
-1x Inventors' Fair [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-3x Mountain [Lands]
+6x Mountain [Lands]
 
 # Sideboard
 1x Swiftfoot Boots
+1x Gempalm Incinerator
 1x Battle Cry Goblin
 1x Jeska's Will
 1x Goblin Grenade
@@ -112,7 +110,6 @@
 1x Throne of the God-Pharaoh
 1x Rising of the Day
 1x Raid Bombardment
-1x Searslicer Goblin
 # --- cartas nuevas ---
 1x Hex Magic
 1x Super Speed
