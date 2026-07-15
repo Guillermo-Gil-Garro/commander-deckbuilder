@@ -33,6 +33,10 @@ from app.schemas import (
     DeckRequest,
     DeckResponse,
     HealthResponse,
+    SwapCandidatesRequest,
+    SwapCandidatesResponse,
+    SwapValidateRequest,
+    SwapValidateResponse,
     card_view,
     commander_view,
 )
@@ -98,6 +102,7 @@ _ERROR_STATUS: tuple[tuple[type[service.ServiceError], int], ...] = (
     (service.CommanderNotAllowed, 422),
     (service.InvalidDials, 422),
     (service.DeckBuildFailed, 422),
+    (service.SwapRequestInvalid, 422),
     (service.EdhrecUnavailable, 502),
 )
 
@@ -200,6 +205,53 @@ async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     state = _state(request)
     async with _build_slots:
         return await run_in_threadpool(service.build_deck, state, payload)
+
+
+@app.post("/api/deck/swap/candidates")
+async def swap_candidates(
+    request: Request, payload: SwapCandidatesRequest
+) -> SwapCandidatesResponse:
+    """Feasible replacements for ``out``, best first.
+
+    The deck travels as ``[{name, count}]`` and nothing more: categories and
+    scores are rederived server-side from the pool and the tagger. Sending
+    them would be both untrustworthy and redundant.
+
+    Candidates are ranked inside ``out``'s own primary category — swapping a
+    removal for a removal is the question the panel is asking, and "anything
+    that fits" would bury the answer. Cards already in the deck, banned,
+    ``never``, watchlisted or off-identity ones never appear.
+    ``feasible_count`` is the total *before* ``limit`` trimmed the list;
+    ``limit`` is clamped to [1, 50] and echoed back.
+
+    This never calls the solver.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.swap_candidates_for, state, payload)
+
+
+@app.post("/api/deck/swap/validate")
+def validate_swap(
+    request: Request, payload: SwapValidateRequest
+) -> SwapValidateResponse:
+    """Can ``out`` be replaced by ``in``? Plus the quota panel after the swap.
+
+    **An infeasible swap is a 200.** ``feasible: false`` with its ``blockers``
+    is a verdict about the deck, not an error about the request. A 422 means
+    something else entirely: a card outside our pool, an ``out`` the deck does
+    not hold, or a deck that is not 99 cards.
+
+    ``blockers`` are ``red`` (the result would not be a legal 99) and refuse
+    the swap; ``warnings`` are ``amber`` and never do. Only the banlist is a
+    policy ``red``: ``never`` and watchlist cards warn, because "I do not
+    recommend this" is not "this is illegal" (``rules.yaml``).
+
+    ``counts`` and ``statuses`` describe the deck after the swap and come back
+    even when it is feasible — the live quota panel needs them either way, and
+    they cost nothing here. This never calls the solver, EDHREC or the disk.
+    """
+    state = _state(request)
+    return service.validate_swap(state, payload)
 
 
 class SPAStaticFiles(StaticFiles):

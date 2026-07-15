@@ -22,6 +22,7 @@ __all__ = [
     "POOL_UNAVAILABLE",
     "Severity",
     "Violation",
+    "candidate_reason",
     "card_not_in_deck",
     "card_not_in_pool",
     "category_label",
@@ -92,6 +93,16 @@ def deck_size_mismatch(actual: int, expected: int) -> str:
         f"El mazo enviado tiene {actual} cartas y debe tener exactamente "
         f"{expected} (el comandante va aparte)."
     )
+
+
+def candidate_reason(category: str, score: float) -> str:
+    """Why a swap candidate is being offered, in the selectors' vocabulary.
+
+    Candidates are ranked within the outgoing card's own category (swapping a
+    removal for a removal is the question the UI asked), so the category IS
+    most of the answer; the score is the rest of it.
+    """
+    return f"alternativa de {category_label(category)}, score {score:.2f}"
 
 
 def relaxed_stage_message(stage: str) -> str:

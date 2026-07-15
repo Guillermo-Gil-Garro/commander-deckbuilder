@@ -23,23 +23,36 @@ card's category to make its deck legal.
 from __future__ import annotations
 
 import logging
-from typing import Mapping, Sequence
+from dataclasses import dataclass
+from typing import Any, Mapping, Sequence
 
 from app.errors import (
     DECK_BUILD_INFEASIBLE,
     EDHREC_UNAVAILABLE,
     INVALID_DIALS,
+    Violation,
+    candidate_reason,
+    card_not_in_deck,
+    card_not_in_pool,
     commander_banned,
     commander_not_found,
+    deck_size_mismatch,
     edhrec_not_found,
     relaxed_stage_message,
+    violation_message,
 )
 from app.schemas import (
+    CandidateView,
     DeckCardView,
     DeckRequest,
     DeckResponse,
+    NoticeView,
     SolverView,
-    WarningView,
+    SwapCandidatesRequest,
+    SwapCandidatesResponse,
+    SwapRequest,
+    SwapValidateRequest,
+    SwapValidateResponse,
     band_view,
     card_view,
     deck_card_view,
@@ -54,9 +67,25 @@ from pipeline.edhrec import (
 )
 from quotas.config import QuotaBand, QuotasError
 from quotas.resolver import resolve_bands
+from selector.constraints import CardFacts
 from selector.cp_sat import CpSatResult, build_deck_cpsat
-from selector.deck_rules import DeckRulesError, archetype_for
-from selector.greedy import DeckEntry, SelectorError
+from selector.deck_rules import (
+    DeckRulesError,
+    RuleContext,
+    archetype_for,
+    boost_for,
+    preferred_boosts,
+    resolve_always,
+    resolve_never,
+)
+from selector.greedy import (
+    DECK_SIZE,
+    SYNERGY_CATEGORY,
+    DeckEntry,
+    ScoreWeights,
+    SelectorError,
+)
+from selector.swap import swap_candidates, swap_is_feasible
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +122,15 @@ class DeckBuildFailed(ServiceError):
 
 class EdhrecUnavailable(ServiceError):
     """EDHREC is down or unreadable. Ours to fix, not the player's."""
+
+
+class SwapRequestInvalid(ServiceError):
+    """The swap request does not describe a coherent deck.
+
+    Not "the swap is illegal" — that is a verdict, and it comes back as a 200.
+    This is a request that cannot be evaluated at all: an unknown card, an
+    ``out`` the deck does not hold, a deck that is not 99 cards.
+    """
 
 
 def resolve_commander(state: AppState, name: str) -> CommanderRow:
@@ -221,3 +259,198 @@ def _deck_response(
 def _cards(state: AppState, entries: Sequence[DeckEntry]) -> list[DeckCardView]:
     # Every entry came out of the selector, which only ever picks pool cards.
     return [deck_card_view(state.pool.by_name[e.name], e) for e in entries]
+
+
+# --- swap --------------------------------------------------------------------
+#
+# NOTHING here calls the solver. That is the entire reason `selector.swap`
+# exists: a swap re-counts, it never re-solves (0.05-10 s vs the 100 ms the
+# live quota panel has). An import of `build_deck_cpsat` under this line is a
+# bug, not an optimisation.
+
+
+@dataclass(frozen=True)
+class _SwapContext:
+    """Everything both swap endpoints rederive from one request."""
+
+    row: CommanderRow
+    commander: CardFacts
+    bands: dict[str, QuotaBand]
+    deck: list[tuple[CardFacts, int]]
+    out_card: CardFacts
+    never_names: frozenset[str]
+    always_names: frozenset[str]
+
+
+def swap_candidates_for(
+    state: AppState, request: SwapCandidatesRequest
+) -> SwapCandidatesResponse:
+    """Rank the feasible replacements for ``out``. Blocking (reads EDHREC)."""
+    ctx = _swap_context(state, request)
+    data = edhrec_data(state, ctx.row.name)
+    candidates, feasible_count = swap_candidates(
+        deck=ctx.deck,
+        out_card=ctx.out_card,
+        pool_candidates=_pool_candidates(state, ctx, data),
+        bands=ctx.bands,
+        commander=ctx.commander,
+        banned_names=state.banned_names,
+        never_names=ctx.never_names,
+        watchlist_names=state.watchlist_names,
+        always_names=ctx.always_names,
+        limit=request.limit,
+    )
+    return SwapCandidatesResponse(
+        out=card_view(state.pool.by_name[ctx.out_card.name]),
+        candidates=[
+            CandidateView(
+                **card_view(state.pool.by_name[candidate.name]).model_dump(),
+                score=candidate.score,
+                reason=candidate_reason(candidate.primary_category, candidate.score),
+            )
+            for candidate in candidates
+        ],
+        feasible_count=feasible_count,
+        limit=request.limit,
+    )
+
+
+def validate_swap(state: AppState, request: SwapValidateRequest) -> SwapValidateResponse:
+    """Verdict on one swap plus the quota traffic light after it. No I/O.
+
+    "Not feasible" is a domain result and comes back as a 200: only an
+    incoherent request (a card outside the pool, an ``out`` the deck does not
+    hold, a deck that is not 99) raises. This is the <100 ms path — it does
+    not touch EDHREC, the disk or the solver.
+    """
+    ctx = _swap_context(state, request)
+    in_card = _facts(state, _pool_card(state, request.card_in), ctx.bands)
+    verdict = swap_is_feasible(
+        deck=ctx.deck,
+        out_card=ctx.out_card,
+        in_card=in_card,
+        bands=ctx.bands,
+        commander=ctx.commander,
+        banned_names=state.banned_names,
+        never_names=ctx.never_names,
+        watchlist_names=state.watchlist_names,
+        always_names=ctx.always_names,
+    )
+    return SwapValidateResponse(
+        feasible=verdict.feasible,
+        blockers=[_notice(v) for v in verdict.blockers],
+        warnings=[_notice(v) for v in verdict.warnings],
+        counts=dict(verdict.counts_after.by_category),
+        statuses={
+            category: status.value
+            for category, status in verdict.statuses_after.items()
+        },
+        karsten_floor=verdict.counts_after.karsten_floor,
+        deck_size=verdict.counts_after.total,
+    )
+
+
+def _swap_context(state: AppState, request: SwapRequest) -> _SwapContext:
+    row = resolve_commander(state, request.commander)
+    bands = bands_for(state, row.name, request.dials)
+    deck = [
+        (_facts(state, _pool_card(state, ref.name), bands), ref.count)
+        for ref in request.deck
+    ]
+    total = sum(count for _, count in deck)
+    if total != DECK_SIZE:
+        raise SwapRequestInvalid(deck_size_mismatch(total, DECK_SIZE))
+    out_card = _facts(state, _pool_card(state, request.out), bands)
+    if not any(facts.name == out_card.name for facts, _ in deck):
+        raise SwapRequestInvalid(card_not_in_deck(request.out))
+
+    rule_ctx = RuleContext(
+        commander_name=row.name,
+        color_identity=frozenset(row.color_identity),
+        archetype=archetype_for(state.quotas, row.name),
+    )
+    return _SwapContext(
+        row=row,
+        commander=_facts(state, state.pool.by_name[row.name], bands),
+        bands=bands,
+        deck=deck,
+        out_card=out_card,
+        never_names=resolve_never(state.rules, rule_ctx),
+        always_names=frozenset(
+            rule.name
+            for rule in resolve_always(state.rules, rule_ctx, state.banned_names)
+        ),
+    )
+
+
+def _pool_card(state: AppState, name: str) -> Mapping[str, Any]:
+    card = state.pool.resolve(name)
+    if card is None:
+        raise SwapRequestInvalid(card_not_in_pool(name))
+    return card
+
+
+def _facts(
+    state: AppState, card: Mapping[str, Any], bands: Mapping[str, QuotaBand]
+) -> CardFacts:
+    """Rederive a card's facts from the pool + tagger. NEVER from the client.
+
+    The category projection is the selector's, verbatim (``cp_sat.py``): the
+    tagger's labels restricted to the banded categories, ``synergy`` as the
+    fallback bucket. Anything else and the swap checker would be counting a
+    different deck than the one the solver built.
+    """
+    name = card["name"]
+    categories = state.tagger(name) & (set(bands) - {SYNERGY_CATEGORY})
+    if not categories:
+        categories = {SYNERGY_CATEGORY}
+    return CardFacts(
+        name=name,
+        oracle_id=card["oracle_id"],
+        categories=frozenset(categories),
+        cmc=float(card.get("cmc") or 0.0),
+        mana_cost=card.get("mana_cost") or "",
+        color_identity=frozenset(card.get("color_identity") or ()),
+        is_basic="Basic" in (card.get("type_line") or ""),
+    )
+
+
+def _pool_candidates(
+    state: AppState, ctx: _SwapContext, data: EdhrecCommanderData
+) -> list[tuple[CardFacts, float]]:
+    """The commander's EDHREC recommendations as ``(facts, score)``.
+
+    Scored exactly as the build scored them, boosts included, so the ranking
+    the player sees here agrees with the deck they are editing. The policy
+    filtering (banned, never, watchlist, off-identity, already in the deck) is
+    ``swap_candidates``' job and is not duplicated here.
+    """
+    weights = ScoreWeights()
+    boosts = preferred_boosts(state.rules, ctx.row.color_identity)
+    candidates: list[tuple[CardFacts, float]] = []
+    seen: set[str] = set()
+    for rec in data.recommendations:
+        card = state.pool.resolve(rec.name)
+        if card is None:
+            continue
+        name = card["name"]
+        # Basics are never candidates: they are the only legal duplicate and
+        # enter a deck through the solver's per-color counters, not a swap.
+        if name in seen or name == ctx.row.name or "Basic" in (card.get("type_line") or ""):
+            continue
+        seen.add(name)
+        candidates.append(
+            (
+                _facts(state, card, ctx.bands),
+                weights.score(rec.synergy, rec.inclusion) + boost_for(boosts, name),
+            )
+        )
+    return candidates
+
+
+def _notice(violation: Violation) -> NoticeView:
+    return NoticeView(
+        code=violation.code,
+        severity=violation.severity.value,
+        message=violation_message(violation),
+    )
