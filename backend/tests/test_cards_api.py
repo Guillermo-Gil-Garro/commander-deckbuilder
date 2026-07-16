@@ -164,6 +164,22 @@ def test_a_banned_card_is_rejected_as_the_groups_call(
     assert "banlist" in body["reason"]
 
 
+def test_why_not_honours_the_archetype_scoped_banlist_exception(
+    client: TestClient,
+) -> None:
+    """Smothering Tithe is banned, except in enchantress decks. /why-not must
+    agree with /build: telling a Sythis player it is 'banned' while the build
+    includes it would be the endpoint lying about its own selector.
+    """
+    in_enchantress = _why_not(client, "Smothering Tithe", commander="Sythis, Harvest's Hand")
+    assert in_enchantress["reason_bucket"] != "banned"
+
+    # A white deck that is not enchantress still sees the ban.
+    elsewhere = _why_not(client, "Smothering Tithe", commander="Giada, Font of Hope")
+    assert elsewhere["eligible"] is False
+    assert elsewhere["reason_bucket"] == "banned"
+
+
 def test_a_never_card_is_rejected_by_its_rule(
     client: TestClient, real_app_state: AppState
 ) -> None:

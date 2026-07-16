@@ -264,7 +264,7 @@ def why_not(state: AppState, commander_name: str, card_name: str) -> WhyNotRespo
     # because "your group threw this out" is a better answer than "wrong
     # colours" for a card that is both.
     buckets: tuple[tuple[str, bool], ...] = (
-        ("banned", bool(variants & set(state.banned_names))),
+        ("banned", bool(variants & set(state.effective_banned_names(rule_ctx.archetype)))),
         ("never_rule", bool(variants & _canonical(state, resolve_never(state.rules, rule_ctx)))),
         ("watchlist", bool(variants & set(state.watchlist_names))),
         (
