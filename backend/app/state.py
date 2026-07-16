@@ -36,6 +36,7 @@ from pipeline.edhrec import EdhrecCommanderData
 from quotas.config import DEFAULT_QUOTAS_PATH, QuotasConfig, load_quotas
 from rules.banlist import (
     DEFAULT_BANLIST_PATH,
+    Banlist,
     ResolvedBanlist,
     banlist_names,
     load_banlist,
@@ -174,7 +175,10 @@ class AppState:
     # Canonical commander name -> EDHREC num_decks. Empty when the ranking
     # artifact is absent; the picker then falls back to alphabetical order.
     edhrec_num_decks: Mapping[str, int]
+    # The parsed banlist, kept whole (with reasons) for GET /banlist. The
+    # oracle_id projection lives in resolved_banlist; this is the source the
     # reasons and the human-facing card/rule structure come from.
+    banlist: Banlist
     commanders: tuple[CommanderRow, ...] = field(init=False)
     card_names: tuple[str, ...] = field(init=False)
     _by_lower_name: Mapping[str, CommanderRow] = field(init=False)
@@ -376,7 +380,8 @@ def build_app_state(
     rules = load_rules(rules_path, valid_archetypes=set(quotas.archetypes))
     validate_rules_names(rules, pool.resolve)
 
-    resolved_banlist = resolve_banlist(load_banlist(banlist_path), name_index)
+    banlist = load_banlist(banlist_path)
+    resolved_banlist = resolve_banlist(banlist, name_index)
     banned_names, watchlist_names = banlist_names(resolved_banlist, pool_cards)
 
     tags_path = Path(tags_path)
@@ -419,6 +424,7 @@ def build_app_state(
         tags_count=len(tag_store),
         solver_time_limit_s=solver_time_limit_s,
         edhrec_num_decks=edhrec_num_decks,
+        banlist=banlist,
     )
 
     # load_featured rejects `banned_as_commander` but not `banned`, so a card

@@ -46,6 +46,9 @@ from app.schemas import (
     BAND_CEILING_ONLY,
     BAND_HARD,
     BAND_SOFT_NO_LOWER,
+    BanlistCardView,
+    BanlistResponse,
+    BanlistWatchlistView,
     CategoryRow,
     ColorSourceRow,
     CurveRow,
@@ -79,6 +82,8 @@ from pipeline.edhrec import (
     slugify_commander,
 )
 from quotas.config import CEILING_ONLY_CATEGORIES, QuotaBand, QuotasError
+from rules.banlist import BANNED_STATUSES
+from rules.resolve import ResolutionError
 from quotas.lands import curve_bucket
 from quotas.resolver import resolve_bands
 from quotas.validator import CategoryStatus
@@ -924,3 +929,100 @@ def _notice(violation: Violation) -> NoticeView:
         severity=violation.severity.value,
         message=violation_message(violation),
     )
+
+
+# --- banlist -----------------------------------------------------------------
+
+
+def banlist_view(state: AppState) -> BanlistResponse:
+    """The group's banlist and watchlist, resolved to pool cards. No I/O.
+
+    Reads the whole parsed banlist (``state.banlist``): the manual card bans
+    *and* every card a programmatic rule resolves to, each carried with the
+    reason that applies (the card's own note, or its rule's). The set of banned
+    cards is taken from ``resolved_banlist.banned`` — the same projection the
+    rest of the API trusts — so rule exceptions are already subtracted and the
+    count matches what ``/build`` refuses. Each entry is resolved to its
+    canonical name, ``oracle_id`` and art from the pool; both lists are sorted
+    alphabetically by name.
+    """
+    reasons, names = _banned_reasons(state)
+    banned = [
+        BanlistCardView(
+            name=names[oracle_id],
+            reason=reasons[oracle_id],
+            image_uri_normal=state.pool.by_name[names[oracle_id]].get(
+                "image_uri_normal"
+            )
+            or None,
+            oracle_id=oracle_id,
+        )
+        for oracle_id in state.resolved_banlist.banned
+    ]
+
+    watchlist: list[BanlistWatchlistView] = []
+    for entry in state.banlist.watchlist:
+        resolved = _resolve_banlist_name(state, entry.name)
+        if resolved is None:
+            continue
+        watchlist.append(
+            BanlistWatchlistView(
+                name=resolved.canonical_name,
+                reason=entry.reason,
+                image_uri_normal=state.pool.by_name[resolved.canonical_name].get(
+                    "image_uri_normal"
+                )
+                or None,
+                oracle_id=resolved.oracle_id,
+                scope=entry.scope,
+            )
+        )
+
+    banned.sort(key=lambda card: card.name)
+    watchlist.sort(key=lambda card: card.name)
+    return BanlistResponse(banned=banned, watchlist=watchlist)
+
+
+def _banned_reasons(state: AppState) -> tuple[dict[str, str], dict[str, str]]:
+    """Map each banned oracle_id to its reason and its canonical pool name.
+
+    Rules first, then manual card bans override — an explicitly listed card
+    carries a more specific reason than the rule that also catches it. Only
+    oracle_ids present in ``resolved_banlist.banned`` are ever emitted by the
+    caller, so exception cards (subtracted there) fall away on their own.
+    """
+    reasons: dict[str, str] = {}
+    names: dict[str, str] = {}
+
+    def record(name: str, reason: str, *, override: bool) -> None:
+        resolved = _resolve_banlist_name(state, name)
+        if resolved is None:
+            return
+        names[resolved.oracle_id] = resolved.canonical_name
+        if override or resolved.oracle_id not in reasons:
+            reasons[resolved.oracle_id] = reason
+
+    for rule in state.banlist.rules:
+        if rule.status not in BANNED_STATUSES:
+            continue
+        for name in rule.resolved_cards:
+            record(name, rule.reason, override=False)
+    for card in state.banlist.cards:
+        if card.status in BANNED_STATUSES:
+            record(card.name, card.reason, override=True)
+    return reasons, names
+
+
+def _resolve_banlist_name(state: AppState, name: str):
+    """Resolve a banlist name to a pool card, or ``None`` if it cannot resolve.
+
+    The banlist resolved cleanly against this same pool at startup (else the
+    app would not have started), so a miss here is not expected; it is handled
+    defensively rather than raised, because a banlist view is never worth a
+    500.
+    """
+    try:
+        return state.name_index.resolve(name)
+    except ResolutionError:
+        logger.warning("banlist name %r no longer resolves against the pool", name)
+        return None

@@ -35,6 +35,7 @@ from starlette.types import Scope
 from app import service
 from app.errors import POOL_UNAVAILABLE, invalid_dial_param
 from app.schemas import (
+    BanlistResponse,
     CardSearchResponse,
     CommanderListResponse,
     CommandersResponse,
@@ -304,6 +305,31 @@ def search_cards(
     state = _state(request)
     names = list(state.search_cards(q, limit))
     return CardSearchResponse(count=len(names), names=names)
+
+
+@app.get("/banlist")
+def banlist(request: Request) -> BanlistResponse:
+    """The group's banlist and watchlist, each entry with its reason and art.
+
+    Two lists. ``banned`` are the cards **illegal in the 99**: both the
+    manually banned cards and every card a programmatic rule resolves to (the
+    tutors and other pattern-matched bans), each carried with the reason that
+    applies — the card's own note, or its rule's. ``watchlist`` are the cards
+    that are **legal but never auto-recommended**, each with a ``scope`` saying
+    where the flag applies (``null`` = everywhere). Both are sorted
+    alphabetically by name and resolved to a pool ``oracle_id`` and
+    ``image_uri_normal`` so the UI can render each card.
+
+    **Deliberately not here:** ``banned_as_commander`` — cards barred from
+    being a deck's *face* but legal in the 99. That is a different axis (it
+    hides commanders from the picker rather than making a card illegal), so it
+    is out of scope here; ``GET /commanders`` is where it takes effect.
+
+    A pure projection of the banlist loaded at startup: no solver, no EDHREC,
+    no disk. 503 if the card pool never loaded.
+    """
+    state = _state(request)
+    return service.banlist_view(state)
 
 
 @app.get("/why-not")

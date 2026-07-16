@@ -703,6 +703,58 @@ class SwapValidateResponse(BaseModel):
     deck_size: int
 
 
+# --- banlist -----------------------------------------------------------------
+
+
+class BanlistCardView(BaseModel):
+    """One banned card as the banlist page shows it: name, reason, art.
+
+    ``reason`` is the group's own wording — the manual ban's note, or, for a
+    card caught by a programmatic rule (a tutor, say), that rule's reason.
+    ``image_uri_normal`` is ``None`` only for the handful of cards Scryfall has
+    no art for, nullable so the client always reads the same key.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    name: str
+    reason: str
+    image_uri_normal: str | None
+    oracle_id: str
+
+
+class BanlistWatchlistView(BanlistCardView):
+    """A watchlisted card: a banned card's shape plus where the flag applies.
+
+    ``scope`` narrows the watch — e.g. ``in_the_99`` for a card fine as a
+    commander but discouraged in the 99 — and is ``null`` when it applies
+    everywhere. A watchlisted card is **legal**; it is simply never
+    auto-recommended.
+    """
+
+    scope: str | None
+
+
+class BanlistResponse(BaseModel):
+    """The group's banlist and watchlist, each entry resolved to a pool card.
+
+    ``banned`` are the cards illegal in the 99: both the manually listed bans
+    and the cards a programmatic rule resolves to (tutors and the like), each
+    with the reason that applies and each sorted alphabetically by name.
+    ``watchlist`` are the legal-but-never-recommended cards, with their scope.
+
+    **Not here:** ``banned_as_commander`` — the cards barred from being a
+    deck's face but legal in the 99 — is a different axis (it hides commanders
+    from the picker, it does not make a card illegal) and is out of this
+    endpoint's scope. See ``GET /commanders``, which already excludes them.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    banned: list[BanlistCardView]
+    watchlist: list[BanlistWatchlistView]
+
+
 # --- export ------------------------------------------------------------------
 
 
