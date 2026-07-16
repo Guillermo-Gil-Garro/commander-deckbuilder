@@ -67,6 +67,13 @@ class CardView(BaseModel):
     cmc: float
     image_uri_normal: str | None
     image_uri_art_crop: str | None
+    # Back face of a two-faced card (transform, modal_dfc); "" for the
+    # single-faced majority, which have no back to render. Kefka, Sephiroth and
+    # Etali are the reason this exists — the picker and the deck view both need
+    # to flip them. Defaulted, mirroring the pipeline Card: "" is the real
+    # "no back", so a caller that has nothing to say need say nothing.
+    image_uri_back_normal: str = ""
+    image_uri_back_art_crop: str = ""
 
 
 def card_view(card: Mapping[str, Any]) -> CardView:
@@ -91,6 +98,8 @@ def card_view(card: Mapping[str, Any]) -> CardView:
         cmc=float(card.get("cmc") or 0.0),
         image_uri_normal=card.get("image_uri_normal"),
         image_uri_art_crop=card.get("image_uri_art_crop"),
+        image_uri_back_normal=card.get("image_uri_back_normal") or "",
+        image_uri_back_art_crop=card.get("image_uri_back_art_crop") or "",
     )
 
 
@@ -160,7 +169,11 @@ class CommanderListItem(BaseModel):
     color_identity: list[str]
     image_uri_normal: str | None
     image_uri_art_crop: str | None
+    # Back face for the double-faced commanders in the pool (Kefka, Sephiroth,
     # Etali): the picker flips them. "" for the single-faced majority. Both
+    # sizes, mirroring the front — the full card to read, the crop for rows.
+    image_uri_back_normal: str = ""
+    image_uri_back_art_crop: str = ""
     archetype: str
     featured: bool
     description: str | None
@@ -197,6 +210,8 @@ def commander_list_item(
         color_identity=list(card.get("color_identity") or ()),
         image_uri_normal=card.get("image_uri_normal"),
         image_uri_art_crop=card.get("image_uri_art_crop"),
+        image_uri_back_normal=card.get("image_uri_back_normal") or "",
+        image_uri_back_art_crop=card.get("image_uri_back_art_crop") or "",
         archetype=archetype,
         featured=featured,
         description=description,

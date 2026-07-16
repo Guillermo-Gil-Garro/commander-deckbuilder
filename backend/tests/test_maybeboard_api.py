@@ -32,6 +32,8 @@ CARD_FIELDS = {
     "cmc",
     "image_uri_normal",
     "image_uri_art_crop",
+    "image_uri_back_normal",
+    "image_uri_back_art_crop",
     "categories",
     "count",
     "slot",

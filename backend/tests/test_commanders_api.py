@@ -27,6 +27,8 @@ COMMANDER_FIELDS = {
     "cmc",
     "image_uri_normal",
     "image_uri_art_crop",
+    "image_uri_back_normal",
+    "image_uri_back_art_crop",
     "archetype",
 }
 
@@ -65,6 +67,8 @@ LIST_FIELDS = {
     "color_identity",
     "image_uri_normal",
     "image_uri_art_crop",
+    "image_uri_back_normal",
+    "image_uri_back_art_crop",
     "archetype",
     "featured",
     "description",
@@ -191,6 +195,27 @@ def test_the_list_carries_edhrec_deck_counts(
     assert body[0]["num_decks"] > 0
 
 
+def test_the_list_exposes_the_back_face_of_double_faced_commanders(
+    client: TestClient,
+) -> None:
+    """The transform commanders flip; the single-faced majority carry an empty
+    back. Only genuine two-physical-face cards get a back — a split/room "a // b"
+    commander shares one physical face and has none."""
+    body = {c["name"]: c for c in client.get("/commanders").json()["commanders"]}
+
+    transform = [
+        name
+        for name in body
+        if name.startswith(("Kefka, Court Mage", "Sephiroth, Fabled", "Etali, Primal Conqueror"))
+    ]
+    assert len(transform) == 3, "Kefka, Sephiroth and Etali are the point"
+    for name in transform:
+        assert body[name]["image_uri_back_normal"].startswith("http")
+        assert "/back/" in body[name]["image_uri_back_normal"]
+
+    single = body["Krenko, Mob Boss"]
+    assert single["image_uri_back_normal"] == ""
+    assert single["image_uri_back_art_crop"] == ""
 
 
 def test_the_list_never_offers_a_banned_commander(

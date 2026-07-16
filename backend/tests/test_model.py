@@ -194,6 +194,27 @@ def test_two_faced_card_takes_front_face_images() -> None:
     assert card.image_uri_art_crop == "https://cards.scryfall.io/art_crop/front.jpg"
 
 
+def test_two_faced_card_carries_the_back_face_images() -> None:
+    # The reason this field exists: Kefka/Sephiroth/Etali have a back to flip.
+    card = Card.from_scryfall(TWO_FACED)
+    assert card.image_uri_back_normal == "https://cards.scryfall.io/normal/back.jpg"
+    assert card.image_uri_back_art_crop == "https://cards.scryfall.io/art_crop/back.jpg"
+
+
+def test_single_faced_card_has_no_back_face_images() -> None:
+    card = Card.from_scryfall(BEAR)
+    assert card.image_uri_back_normal == ""
+    assert card.image_uri_back_art_crop == ""
+
+
+def test_split_card_has_no_back_face_images() -> None:
+    # One physical face: card_faces exist but hold no image_uris, so there is
+    # no back to carry even though len(card_faces) > 1.
+    card = Card.from_scryfall(SPLIT)
+    assert card.image_uri_back_normal == ""
+    assert card.image_uri_back_art_crop == ""
+
+
 def test_split_card_prefers_root_images_over_faces() -> None:
     # Regression: card_faces exist but hold no image_uris, so a faces-first
     # rule would blank out every split/adventure/flip card in the pool.

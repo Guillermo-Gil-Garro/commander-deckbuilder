@@ -61,6 +61,11 @@ class Card(BaseModel):
     # a name-only placeholder. No card in the current pool hits this.
     image_uri_normal: str = ""
     image_uri_art_crop: str = ""
+    # Back face of a two-physical-face card (transform, modal_dfc): its own
+    # image_uris live in card_faces[1]. Empty for single-face cards, which have
+    # no back to show.
+    image_uri_back_normal: str = ""
+    image_uri_back_art_crop: str = ""
 
     @classmethod
     def from_scryfall(cls, data: dict) -> "Card":
@@ -72,6 +77,10 @@ class Card(BaseModel):
         faces = data.get("card_faces") or []
         front = faces[0] if faces else data
         images = image_uris(data)
+        # Two physical faces (transform, modal_dfc) carry their own image_uris
+        # per face; a single-face card (split, adventure, flip) has one face's
+        # worth of art at the root and none on the back.
+        back_images = faces[1].get("image_uris") or {} if len(faces) > 1 else {}
 
         mana_cost = front.get("mana_cost") or ""
         type_line = front.get("type_line") or data.get("type_line") or ""
@@ -101,6 +110,8 @@ class Card(BaseModel):
             scryfall_id=data["id"],
             image_uri_normal=images.get("normal") or "",
             image_uri_art_crop=images.get("art_crop") or "",
+            image_uri_back_normal=back_images.get("normal") or "",
+            image_uri_back_art_crop=back_images.get("art_crop") or "",
         )
 
 
