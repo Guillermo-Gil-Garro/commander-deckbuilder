@@ -45,6 +45,18 @@ def degraded_client() -> Iterator[TestClient]:
     del app_main.app.state.deckbuilder
 
 
+def test_the_commander_list_is_compressed(client: TestClient) -> None:
+    """The list is ~1.3 MB of JSON: the picker fetches all 3.288 at once so it
+    can filter and paginate client-side. Uncompressed that is the single
+    heaviest thing we serve; gzip takes it to ~0.25 MB because the two image
+    URLs of a row differ by one path segment.
+    """
+    response = client.get("/commanders", headers={"Accept-Encoding": "gzip"})
+
+    assert response.status_code == 200
+    assert response.headers["content-encoding"] == "gzip"
+
+
 # --- the full list ----------------------------------------------------------
 
 LIST_FIELDS = {

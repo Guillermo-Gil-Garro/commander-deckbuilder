@@ -26,6 +26,7 @@ from typing import Annotated, AsyncIterator, Callable
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.concurrency import run_in_threadpool
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse, PlainTextResponse, Response
@@ -109,6 +110,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Commander Deckbuilder", lifespan=lifespan)
+
+# /commanders ships all 3.288 rows (~1.3 MB) in one go because the picker
+# filters and paginates client-side. Compressed it is ~0.25 MB: the two image
+# URLs of a row differ by a single path segment, so gzip deduplicates almost
+# all of it.
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 _build_slots = asyncio.Semaphore(BUILD_CONCURRENCY)
 
