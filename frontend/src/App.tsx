@@ -1,10 +1,12 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Setup } from './views/Setup';
+import { Result } from './views/Result';
 import {
   buildDeck,
   fetchCommanders,
   type BuildRequest,
+  type BuildResult,
   type CommanderListItem,
   type Dials,
 } from './api';
@@ -33,9 +35,7 @@ function App() {
   const [builtCommander, setBuiltCommander] = useState<CommanderListItem | null>(
     null,
   );
-  // The deck payload from /build. Typed `unknown` on purpose: the Result view
-  // owns that shape and is built in a separate task.
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<BuildResult | null>(null);
   const [buildReq, setBuildReq] = useState<BuildRequest | null>(null);
 
   useLayoutEffect(() => {
@@ -126,9 +126,15 @@ function App() {
             buildError={buildError}
             onBuild={handleBuild}
           />
+        ) : step === 'result' && result ? (
+          <Result
+            result={result}
+            commander={builtCommander}
+            req={buildReq}
+            onBack={() => setStep('setup')}
+          />
         ) : (
           <PendingView
-            step={step}
             commander={builtCommander}
             req={buildReq}
             result={result}
@@ -141,16 +147,14 @@ function App() {
 }
 
 // Honest placeholder: /build already answers and the payload is in hand, but the
-// Result and Sequential views are separate tasks. Rather than fake a deck, show
-// what actually came back so the round trip is verifiable.
+// Sequential view is a separate task. Rather than fake it, show what actually
+// came back so the round trip is verifiable.
 function PendingView({
-  step,
   commander,
   req,
   result,
   onBack,
 }: {
-  step: Step;
   commander: CommanderListItem | null;
   req: BuildRequest | null;
   result: unknown;
@@ -159,13 +163,11 @@ function PendingView({
   const dialEntries = Object.entries(req?.dials ?? {});
   return (
     <Panel>
-      <h2 className="text-xl font-semibold">
-        {step === 'result' ? 'Mazo construido' : 'Modo secuencial'}
-      </h2>
+      <h2 className="text-xl font-semibold">Modo secuencial</h2>
       <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-        La vista <strong>{step === 'result' ? 'Result' : 'Sequential'}</strong>{' '}
-        todavía no está implementada — se construye en otra tarea. El API ya ha
-        respondido; abajo va el payload en crudo para poder verificarlo.
+        La vista <strong>Sequential</strong> todavía no está implementada — se
+        construye en otra tarea. El API ya ha respondido; abajo va el payload en
+        crudo para poder verificarlo.
       </p>
       <dl className="mt-4 grid gap-1 text-sm">
         <div className="flex gap-2">
