@@ -1,4 +1,16 @@
-from pipeline.model import Card
+from pipeline.model import Card, image_uris
+
+
+def _images(slug: str) -> dict:
+    return {
+        "small": f"https://cards.scryfall.io/small/{slug}.jpg",
+        "normal": f"https://cards.scryfall.io/normal/{slug}.jpg",
+        "large": f"https://cards.scryfall.io/large/{slug}.jpg",
+        "png": f"https://cards.scryfall.io/png/{slug}.png",
+        "art_crop": f"https://cards.scryfall.io/art_crop/{slug}.jpg",
+        "border_crop": f"https://cards.scryfall.io/border_crop/{slug}.jpg",
+    }
+
 
 BEAR = {
     "id": "aaaa1111-1111-1111-1111-111111111111",
@@ -12,6 +24,7 @@ BEAR = {
     "color_identity": ["G"],
     "layout": "normal",
     "legalities": {"commander": "legal"},
+    "image_uris": _images("bear"),
 }
 
 LEGENDARY_CREATURE = {
@@ -71,6 +84,7 @@ TWO_FACED = {
             "type_line": "Creature — Human Rogue",
             "oracle_text": "Front ability.",
             "colors": ["U"],
+            "image_uris": _images("front"),
         },
         {
             "name": "Back Side",
@@ -78,8 +92,52 @@ TWO_FACED = {
             "type_line": "Creature — Vampire",
             "oracle_text": "Back ability.",
             "colors": ["U"],
+            "image_uris": _images("back"),
         },
     ],
+}
+
+# split/adventure/flip/prepare: one physical face, so Scryfall keeps image_uris
+# at the root and the card_faces carry none.
+SPLIT = {
+    "id": "ffff6666-6666-6666-6666-666666666666",
+    "oracle_id": "oracle-ffff-6666",
+    "name": "Left // Right",
+    "cmc": 3.0,
+    "color_identity": ["R"],
+    "layout": "split",
+    "legalities": {"commander": "legal"},
+    "image_uris": _images("split"),
+    "card_faces": [
+        {
+            "name": "Left",
+            "mana_cost": "{R}",
+            "type_line": "Instant",
+            "oracle_text": "Left ability.",
+            "colors": ["R"],
+        },
+        {
+            "name": "Right",
+            "mana_cost": "{2}{R}",
+            "type_line": "Sorcery",
+            "oracle_text": "Right ability.",
+            "colors": ["R"],
+        },
+    ],
+}
+
+IMAGELESS = {
+    "id": "9999aaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "oracle_id": "oracle-9999-aaaa",
+    "name": "No Art Here",
+    "mana_cost": "{1}",
+    "cmc": 1.0,
+    "type_line": "Artifact",
+    "oracle_text": "",
+    "colors": [],
+    "color_identity": [],
+    "layout": "normal",
+    "legalities": {"commander": "legal"},
 }
 
 
@@ -122,3 +180,40 @@ def test_legendary_sorcery_is_not_eligible() -> None:
 
 def test_can_be_your_commander_text_is_eligible() -> None:
     assert Card.from_scryfall(PLANESWALKER_COMMANDER).is_commander_eligible
+
+
+def test_single_faced_card_takes_root_images() -> None:
+    card = Card.from_scryfall(BEAR)
+    assert card.image_uri_normal == "https://cards.scryfall.io/normal/bear.jpg"
+    assert card.image_uri_art_crop == "https://cards.scryfall.io/art_crop/bear.jpg"
+
+
+def test_two_faced_card_takes_front_face_images() -> None:
+    card = Card.from_scryfall(TWO_FACED)
+    assert card.image_uri_normal == "https://cards.scryfall.io/normal/front.jpg"
+    assert card.image_uri_art_crop == "https://cards.scryfall.io/art_crop/front.jpg"
+
+
+def test_split_card_prefers_root_images_over_faces() -> None:
+    # Regression: card_faces exist but hold no image_uris, so a faces-first
+    # rule would blank out every split/adventure/flip card in the pool.
+    card = Card.from_scryfall(SPLIT)
+    assert card.image_uri_normal == "https://cards.scryfall.io/normal/split.jpg"
+    assert card.image_uri_art_crop == "https://cards.scryfall.io/art_crop/split.jpg"
+
+
+def test_card_without_images_gets_empty_strings() -> None:
+    card = Card.from_scryfall(IMAGELESS)
+    assert card.image_uri_normal == ""
+    assert card.image_uri_art_crop == ""
+
+
+def test_image_uris_helper() -> None:
+    assert image_uris(BEAR)["normal"] == "https://cards.scryfall.io/normal/bear.jpg"
+    assert (
+        image_uris(TWO_FACED)["normal"]
+        == "https://cards.scryfall.io/normal/front.jpg"
+    )
+    assert image_uris(SPLIT)["normal"] == "https://cards.scryfall.io/normal/split.jpg"
+    assert image_uris(IMAGELESS) == {}
+    assert image_uris({"card_faces": [{"name": "no images"}]}) == {}

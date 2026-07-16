@@ -11,6 +11,25 @@ PIP_COLORS = ("W", "U", "B", "R", "G", "C")
 _SYMBOL_RE = re.compile(r"\{([^{}]+)\}")
 
 
+def image_uris(data: dict) -> dict[str, str]:
+    """Return the image_uris object for a raw Scryfall card object.
+
+    Scryfall puts image_uris at the root for cards printed on a single physical
+    face, even when they expose card_faces (split, adventure, prepare, flip):
+    those faces carry no image_uris of their own. Cards with two physical faces
+    (transform, modal_dfc) have no root image_uris and hold them per face, so we
+    fall back to the front face -- consistent with slugify_commander, which also
+    keys DFCs by their front face.
+    """
+    root = data.get("image_uris")
+    if root:
+        return root
+    faces = data.get("card_faces") or []
+    if faces:
+        return faces[0].get("image_uris") or {}
+    return {}
+
+
 def count_pips(mana_cost: str) -> dict[str, int]:
     """Count colored (and {C}) pips in a mana cost string.
 
@@ -38,6 +57,10 @@ class Card(BaseModel):
     is_commander_eligible: bool
     layout: str
     scryfall_id: str
+    # Empty when Scryfall ships no image for the card; the frontend degrades to
+    # a name-only placeholder. No card in the current pool hits this.
+    image_uri_normal: str = ""
+    image_uri_art_crop: str = ""
 
     @classmethod
     def from_scryfall(cls, data: dict) -> "Card":
@@ -48,6 +71,7 @@ class Card(BaseModel):
         """
         faces = data.get("card_faces") or []
         front = faces[0] if faces else data
+        images = image_uris(data)
 
         mana_cost = front.get("mana_cost") or ""
         type_line = front.get("type_line") or data.get("type_line") or ""
@@ -75,6 +99,8 @@ class Card(BaseModel):
             is_commander_eligible=_is_commander_eligible(type_line, oracle_text),
             layout=data.get("layout") or "",
             scryfall_id=data["id"],
+            image_uri_normal=images.get("normal") or "",
+            image_uri_art_crop=images.get("art_crop") or "",
         )
 
 
