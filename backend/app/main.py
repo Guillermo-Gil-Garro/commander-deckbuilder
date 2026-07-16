@@ -43,6 +43,7 @@ from app.schemas import (
     HealthResponse,
     MaybeboardRequest,
     MaybeboardResponse,
+    SequentialStartResponse,
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
@@ -407,6 +408,44 @@ async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     state = _state(request)
     async with _build_slots:
         return await run_in_threadpool(service.build_deck, state, payload)
+
+
+@app.post("/sequential/start")
+async def sequential_start(
+    request: Request, payload: DeckRequest
+) -> SequentialStartResponse:
+    """Start the guided build: a deck, plus the cards worth deciding.
+
+    The charter's "switcheo semiinteractivo". Same request as ``POST /build``
+    and ``deck`` is exactly what ``/build`` returns — this endpoint *is* a
+    build plus an analysis of its result, so it costs the same (0.05-10 s) and
+    the solver runs **once**. It is never re-run: from here on the flow is
+    ``/sequential/candidates`` (feasible same-role replacements) and
+    ``/sequential/validate`` (the verdict), both of which only re-count.
+
+    ``decisions`` are the deck's doubtful cards, worst first, at most 12. Per
+    category, the cards whose score falls below the largest gap **within the
+    lower half** of that category; categories with fewer than 4 cards are
+    skipped, because an elbow needs something to bend. Ties pick the deepest
+    gap, which flags fewer cards.
+
+    Each decision is a **pointer**: ``{oracle_id, name, category, score}``.
+    The card's art and full shape are in ``deck.nonbasic_cards`` of this same
+    response, keyed by ``oracle_id`` — one copy of each card, so nothing can
+    drift.
+
+    **A decision is not a mistake, and an empty list is not a perfect deck.**
+    These are the weakest cards *relative to their own role* — where a
+    player's taste beats an EDHREC average — and every one of them is a legal
+    card the solver chose. No decisions means no category had a meaningful
+    elbow, which is a valid outcome.
+
+    Basics are never decided: they are interchangeable copies, not cards to
+    weigh. Same errors as ``/build``.
+    """
+    state = _state(request)
+    async with _build_slots:
+        return await run_in_threadpool(service.sequential_start, state, payload)
 
 
 @app.post("/sequential/candidates")

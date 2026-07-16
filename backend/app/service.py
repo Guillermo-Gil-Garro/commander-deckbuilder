@@ -49,6 +49,7 @@ from app.schemas import (
     CategoryRow,
     ColorSourceRow,
     CurveRow,
+    DecisionView,
     DeckCardView,
     DeckRequest,
     DeckResponse,
@@ -56,6 +57,7 @@ from app.schemas import (
     MaybeboardRequest,
     MaybeboardResponse,
     NoticeView,
+    SequentialStartResponse,
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
@@ -471,6 +473,96 @@ def _color_source_breakdown(result: CpSatResult) -> dict[str, ColorSourceRow]:
 def _cards(state: AppState, entries: Sequence[DeckEntry]) -> list[DeckCardView]:
     # Every entry came out of the selector, which only ever picks pool cards.
     return [deck_card_view(state.pool.by_name[e.name], e) for e in entries]
+
+
+# --- sequential / guided build -----------------------------------------------
+#
+# The "switcheo semiinteractivo" of the charter: build the optimal deck once,
+# then surface its weak cards so the player decides them against same-role
+# candidates. Ported from the TFM's `src/api/sequential.py` with our data (our
+# EDHREC score, our eight categories, our slots).
+#
+# This layer only *reads* a build result. It never re-solves and never
+# re-scores: `/sequential/start` is one `build_deck` plus arithmetic.
+
+# A category needs at least this many cards for an elbow to mean anything;
+# below it, the "lower half" is one or two cards and the largest gap is noise.
+MIN_CATEGORY_SIZE = 4
+# Global cap on surfaced decisions: the guided flow has to stay short enough
+# that a player finishes it.
+MAX_DECISIONS = 12
+
+
+def sequential_start(state: AppState, request: DeckRequest) -> SequentialStartResponse:
+    """Build a deck and surface the cards worth deciding. Blocking and CPU-bound.
+
+    One build, then arithmetic: ``decisions`` is derived from the cards the
+    solver chose, so this costs exactly what ``POST /build`` costs. The solver
+    is **never** re-run, here or on any later decision.
+    """
+    deck = build_deck(state, request)
+    return SequentialStartResponse(
+        deck=deck, decisions=compute_decisions(deck.nonbasic_cards)
+    )
+
+
+def compute_decisions(
+    nonbasic_cards: Sequence[DeckCardView], *, max_decisions: int = MAX_DECISIONS
+) -> list[DecisionView]:
+    """The doubtful cards of a deck, worst score first, capped.
+
+    The TFM's elbow, with our data. Per category (the card's ``slot``, which
+    is what the deck already displays it under): sort by ``(score desc,
+    oracle_id asc)``; skip categories with fewer than ``MIN_CATEGORY_SIZE``
+    cards. Inside the **lower half** only, cut at the **largest score gap**
+    between consecutive cards; everything from the elbow down is doubtful.
+
+    Two deliberate conservative choices, both the TFM's:
+
+    - Only the lower half is ever eligible. The gap between the first and
+      second best removal can be huge and means nothing — nobody wants to be
+      asked about their best card.
+    - On a gap tie the **deepest** one wins (``>=`` as the loop walks down),
+      which flags *fewer* cards.
+
+    Basics never appear: they are interchangeable copies, not individual cards
+    to weigh, and they are not in ``nonbasic_cards`` to begin with.
+    """
+    by_category: dict[str, list[DecisionView]] = {}
+    for card in nonbasic_cards:
+        # Basics are the only scoreless rows and are not in this list; a card
+        # without a score cannot be placed on an elbow, so skipping it is the
+        # only honest option.
+        if card.score is None:
+            continue
+        by_category.setdefault(card.slot, []).append(
+            DecisionView(
+                oracle_id=card.oracle_id,
+                name=card.name,
+                category=card.slot,
+                score=card.score,
+            )
+        )
+
+    doubtful: list[DecisionView] = []
+    for cards in by_category.values():
+        cards.sort(key=lambda item: (-item.score, item.oracle_id))
+        if len(cards) < MIN_CATEGORY_SIZE:
+            continue
+        lower = cards[len(cards) // 2 :]
+        if len(lower) < 2:
+            continue
+        best_gap = -1.0
+        cut = len(lower)  # nothing flagged
+        for i in range(1, len(lower)):
+            gap = lower[i - 1].score - lower[i].score
+            if gap >= best_gap:  # >= keeps the deepest tie: fewer cards flagged
+                best_gap = gap
+                cut = i
+        doubtful.extend(lower[cut:])
+
+    doubtful.sort(key=lambda item: (item.score, item.oracle_id))
+    return doubtful[:max_decisions]
 
 
 # --- swap --------------------------------------------------------------------

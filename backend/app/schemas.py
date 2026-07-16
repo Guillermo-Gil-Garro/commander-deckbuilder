@@ -472,6 +472,54 @@ class DeckResponse(BaseModel):
     unresolved: list[str]
 
 
+# --- sequential / guided build -----------------------------------------------
+
+
+class DecisionView(BaseModel):
+    """One doubtful card to put in front of the player, worst first.
+
+    A **pointer into the deck**, not a second copy of the card: the full card
+    shape (art, mana cost, categories) is in ``deck.nonbasic_cards`` of the
+    same response, keyed by this ``oracle_id``. Carrying the images here too
+    would be two copies of one card that can drift apart.
+
+    ``category`` is the slot the card is displayed and decided under — the
+    same one ``/sequential/candidates`` ranks replacements within, so a
+    ``removal`` is decided against other removals.
+
+    **A decision is not a mistake.** These are the cards whose score sits
+    below the elbow of their own category: the deck's weakest links *relative
+    to their role*, which is exactly where a player's own taste beats an
+    EDHREC average. Every one of them is a legal, solver-chosen card.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    oracle_id: str
+    name: str
+    category: str
+    score: float
+
+
+class SequentialStartResponse(BaseModel):
+    """A built deck plus the cards worth deciding. The guided flow's entry point.
+
+    ``deck`` is exactly what ``POST /build`` returns, same shape and same
+    build — this endpoint *is* a build plus an analysis of its result. The
+    solver runs once and is never re-run: ``decisions`` is computed from the
+    cards it chose.
+
+    ``decisions`` is empty when there is nothing worth asking about (every
+    category too small for a meaningful elbow), which is a valid outcome and
+    not an error.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    deck: DeckResponse
+    decisions: list[DecisionView]
+
+
 # --- swap --------------------------------------------------------------------
 
 
