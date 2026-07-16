@@ -203,6 +203,44 @@ no hay fixpoint que honrar.
 arquetipo para esquivarlo, creyendo que era infactibilidad. Esa decisión se tomó sobre
 una premisa falsa y hay que revisarla con criterio de juego, no de "qué no peta".
 
+## 2026-07-16 — Modo secuencial retirado; auditoría de mazo pendiente de diseño
+
+Guille, tras probarlo: *"Olvídate del modo secuencial. Prefiero que el mazo salga
+tal cual."* Se retira la vista Sequential (las decisiones guiadas carta a carta). El
+mazo se entrega completo desde `/build`. **El swap manual dentro de Result se
+mantiene** (click en carta → candidatos → validación en vivo): es el "switchear
+cartas semiinteractivamente" del charter y Guille no pidió quitarlo — decisión mía,
+marcada para que la corrija si no era eso.
+
+**Idea de auditoría, a diseñar bien más adelante** (apunte de Guille, es el sustituto
+correcto del modo secuencial): en vez de forzar decisiones, **señalar** las cartas
+que conviene revisar —"qué se desvía más, qué cartas convendría revisar si se quieren
+dentro o fuera"— y marcarlas **tanto en el mainboard como en el maybeboard**. O sea:
+el mazo sale entero, y la UI resalta las dudosas (las de debajo del codo de score de
+su categoría, que es justo lo que ya calcula `/sequential/start`) sin obligar a
+tocarlas. El algoritmo del codo ya existe; lo que falta es el diseño de UX de
+"señalar sin forzar". Endpoints `/sequential/candidates` y `/sequential/validate` se
+conservan (los usa el swap de Result). `/sequential/start` queda sin consumidor en el
+front, pero se mantiene en la API para cuando se retome la auditoría.
+
+## 2026-07-16 — Sesgo de precio en el score de EDHREC (para revisar) 🔶
+
+Hallazgo de Guille mirando el maybeboard de The Ur-Dragon: las **duales ABUR**
+(Badlands, Bayou, Tropical Island, Volcanic Island, Plateau, Savannah) y staples caros
+quedan en maybeboard, no en el mainboard, con scores bajos (0.28–0.36). Motivo: el
+score de EDHREC refleja **lo que la gente juega de verdad**, y la gente no juega esas
+tierras porque son **caras** — aunque para un grupo con proxies son autoincludes
+estrictos. Es el mismo sesgo de arranque en frío que ya conocíamos, pero por precio:
+*"hay cartas que son autoincludes que no entran porque la gente es pobre de dinero"*.
+
+Consecuencia: en un mazo multicolor, el fixing óptimo (duales) puntúa por debajo de
+tierras peores pero más jugadas. **Sin resolver, solo anotado.** Opciones futuras a
+valorar: (a) un boost `prefer` para las duales por pareja de colores en `rules.yaml`
+(como ya hacemos con Signets/Talismanes), (b) una señal de "fixing ideal" independiente
+del score de popularidad, (c) tratarlas como los Signets en el sistema de reglas.
+Encaja con la categoría de "cold start" que ya documentamos: el score de EDHREC mide
+popularidad, no calidad, y el precio distorsiona la popularidad hacia abajo.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).
