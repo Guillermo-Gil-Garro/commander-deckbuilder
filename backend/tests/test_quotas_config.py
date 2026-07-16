@@ -97,7 +97,7 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (2, 4),
         "protection": (1, 3),
-        "synergy": (0, 18),
+        "synergy": (0, 24),  # raised from 18 (Guille 2026-07-16): keep land payoffs
     },
 }
 
