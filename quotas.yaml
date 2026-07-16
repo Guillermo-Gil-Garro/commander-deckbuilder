@@ -145,10 +145,15 @@ dials:
 # reales, o el arquetipo que les pega no existe entre los 8.
 commanders:
   # --- Mono / incoloro ---
+  # OJO (2026-07-15): `aggro` tiene techo de tierras 36 y el suelo Karsten es
+  # infranqueable, así que un mazo de curva alta con `aggro` se rompe: Giada
+  # petaba el selector (SelectorError) y Gishath/Kaalia salían con las tierras
+  # fuera de banda. Los tres van a midrange. Regla práctica: `aggro` solo para
+  # curvas bajas de verdad (Krenko, Lathril, Edgar, Isshin, First Sliver...).
   "Giada, Font of Hope":
-    archetype: aggro                 # DUDOSO: tribal de ángeles. Ataca por aire y
-                                     # el techo synergy 35 le va, pero ramp 7-12 es
-                                     # justo para ángeles de 4-6 MV. Alt: midrange.
+    archetype: midrange              # DUDOSO: tribal de ángeles, querría aggro por el
+                                     # techo synergy 35, pero su suelo Karsten (36-37)
+                                     # no cabe bajo el techo de tierras de aggro.
   "Urza, Lord High Artificer":
     archetype: control
   "Baral, Chief of Compliance":
@@ -158,10 +163,13 @@ commanders:
   "Talrand, Sky Summoner":
     archetype: spellslinger
   "Bruvac the Grandiloquent":
-    archetype: control               # DUDOSO: es un mazo de molienda y no hay
-                                     # arquetipo `mill`. Control es lo más cercano
-                                     # (necesita sobrevivir), pero synergy 20 aprieta
-                                     # el paquete de molienda.
+    archetype: spellslinger          # DUDOSO: es un mazo de molienda y no hay
+                                     # arquetipo `mill`. Control (lo primero que
+                                     # probé) incumple su suelo de board_wipe 4-6:
+                                     # en mono-azul no hay barridos que valgan.
+                                     # spellslinger encaja: la molienda mono-U son
+                                     # instantáneos/conjuros y su synergy 30 la deja
+                                     # entrar. Resuelve sin relajar.
   "Emry, Lurker of the Loch":
     archetype: graveyard             # DUDOSO: relanza artefactos DESDE el cementerio,
                                      # de ahí graveyard; pero el mazo real es de
@@ -264,7 +272,8 @@ commanders:
                                      # mazo real es stax + castigo de mano llena.
                                      # Alt: control.
   "Gishath, Sun's Avatar":
-    archetype: aggro
+    archetype: midrange              # DUDOSO: quiere atacar, pero es rampa + dinos de
+                                     # 5-7 MV: suelo Karsten 38-39, no cabe en aggro.
   "Arcades, the Strategist":
     archetype: midrange              # DUDOSO: muros que roban; defensivo y luego ataca
                                      # con resistencia. Alt: control.
@@ -285,8 +294,9 @@ commanders:
   "Edgar Markov":
     archetype: aggro
   "Kaalia of the Vast":
-    archetype: aggro                 # DUDOSO: ataca para trampear gordos, pero pide
-                                     # protección de comandante como un voltron.
+    archetype: midrange              # DUDOSO: ataca para trampear gordos y pide
+                                     # protección como un voltron, pero su curva
+                                     # (suelo Karsten 39) tampoco cabe en aggro.
   "Isshin, Two Heavens as One":
     archetype: aggro
   "Flubs, the Fool":
