@@ -485,7 +485,8 @@ def test_budget_holds_for_all_55_featured_commanders(real_rules, real_pool) -> N
     featured = raw["featured"]
     assert len(featured) == 55
     max_count = 0
-    for name in featured:
+    for entry in featured:
+        name = entry["name"]
         card = real_pool.resolve(name)
         assert card is not None, name
         context = RuleContext(

@@ -3,67 +3,126 @@
 # individualizadas) y de banlist.yaml (ninguno de estos puede estar
 # banned_as_commander — el loader debe validarlo).
 # Resolución de nombres: misma regla de dos pasos que banlist.yaml.
+#
+# `description` (2026-07-15): una frase para el hover del picker, dirigida a
+# quien NO conoce la carta. Dice QUÉ HACE EL MAZO, no repite el oracle text
+# (el picker ya pinta la carta entera). Máximo ~90 caracteres.
 
 featured:
   # Mono / incoloro
-  - Giada, Font of Hope              # W
-  - Urza, Lord High Artificer        # U
-  - Baral, Chief of Compliance       # U
-  - Talrand, Sky Summoner            # U
-  - Bruvac the Grandiloquent         # U
-  - Emry, Lurker of the Loch         # U
-  - Sephiroth, Fabled SOLDIER        # B
-  - K'rrik, Son of Yawgmoth          # B
-  - Krenko, Mob Boss                 # R
-  - Azusa, Lost but Seeking          # G
-  - Lumra, Bellow of the Woods       # G
-  - Titania, Protector of Argoth     # G
-  - Selvala, Heart of the Wilds      # G
-  - Zhulodok, Void Gorger            # incoloro
+  - name: Giada, Font of Hope              # W
+    description: "Rampa blanca para desplegar ángeles enormes y ganar por el aire."
+  - name: Urza, Lord High Artificer        # U
+    description: "Convierte tus artefactos en maná y en un Construct gigante."
+  - name: Baral, Chief of Compliance       # U
+    description: "Contramagia barata: dices que no a todo y robas mientras tanto."
+  - name: Talrand, Sky Summoner            # U
+    description: "Cada hechizo te regala un dragón; ganas con un ejército volador."
+  - name: Bruvac the Grandiloquent         # U
+    description: "Duplica el molido y vacía las bibliotecas rivales."
+  - name: Emry, Lurker of the Loch         # U
+    description: "Relanza artefactos desde tu cementerio, turno tras turno."
+  - name: Sephiroth, Fabled SOLDIER        # B
+    description: "Sacrifica tus propias criaturas para robar y drenar a la mesa."
+  - name: K'rrik, Son of Yawgmoth          # B
+    description: "Paga con vida en vez de maná y lanza hechizos negros enormes ya."
+  - name: Krenko, Mob Boss                 # R
+    description: "Fabrica hordas de goblins y los convierte en daño masivo de golpe."
+  - name: Azusa, Lost but Seeking          # G
+    description: "Juega tres tierras por turno y convierte el maná extra en ventaja."
+  - name: Lumra, Bellow of the Woods       # G
+    description: "Recupera tierras del cementerio y pega con un oso descomunal."
+  - name: Titania, Protector of Argoth     # G
+    description: "Sacrifica tus tierras para fabricar elementales 5/3 y recuperarlas."
+  - name: Selvala, Heart of the Wilds      # G
+    description: "Tu bicho más grande genera maná a raudales para encadenar gigantes."
+  - name: Zhulodok, Void Gorger            # incoloro
+    description: "Eldrazis colosales que encadenan cascadas y arrasan al caer."
 
   # Parejas
-  - Grand Arbiter Augustin IV        # WU
-  - Wilhelt, the Rotcleaver          # UB
-  - Captain N'ghathrod               # UB
-  - Prosper, Tome-Bound              # BR
-  - Olivia, Crimson Bride            # BR
-  - Etali, Primal Conqueror          # RG
-  - Minsc & Boo, Timeless Heroes     # RG
-  - Sythis, Harvest's Hand           # WG
-  - Ketramose, the New Dawn          # WB
-  - Athreos, God of Passage          # WB
-  - The Locust God                   # UR
-  - Niv-Mizzet, Parun                # UR
-  - Lathril, Blade of the Elves      # BG
-  - Meren of Clan Nel Toth           # BG
-  - Winota, Joiner of Forces         # WR
-  - Hakbal of the Surging Soul       # UG
-  - Kinnan, Bonder Prodigy           # UG
-  - Aesi, Tyrant of Gyre Strait      # UG
-  - Volo, Guide to Monsters          # UG
+  - name: Grand Arbiter Augustin IV        # WU
+    description: "Tú pagas menos y los rivales pagan más: control asfixiante."
+  - name: Wilhelt, the Rotcleaver          # UB
+    description: "Zombis que al morir dejan más zombis, y los cambias por cartas."
+  - name: Captain N'ghathrod               # UB
+    description: "Horrores imblocables que muelen al rival y le roban lo molido."
+  - name: Prosper, Tome-Bound              # BR
+    description: "Juega cartas exiliadas de tu biblioteca y acumula tesoros."
+  - name: Olivia, Crimson Bride            # BR
+    description: "Ataca reanimando criaturas del cementerio directas al combate."
+  - name: Etali, Primal Conqueror          # RG
+    description: "Rampa hasta un dinosaurio que lanza gratis los hechizos de todos."
+  - name: Minsc & Boo, Timeless Heroes     # RG
+    description: "Engorda un bicho con arrollar y luego lo lanza a la cara del rival."
+  - name: Sythis, Harvest's Hand           # WG
+    description: "Encantamientos baratos que roban cartas solos mientras montas la mesa."
+  - name: Ketramose, the New Dawn          # WB
+    description: "Exilia cementerios sin parar y cada exilio te roba una carta."
+  - name: Athreos, God of Passage          # WB
+    description: "Tus criaturas vuelven al morir salvo que el rival pague vidas."
+  - name: The Locust God                   # UR
+    description: "Cada carta que robas es un insecto volador; roba en masa y ataca."
+  - name: Niv-Mizzet, Parun                # UR
+    description: "Robar dispara daño; encadena robo hasta quemar a toda la mesa."
+  - name: Lathril, Blade of the Elves      # BG
+    description: "Un ejército de elfos que se multiplica y drena 10 vidas de golpe."
+  - name: Meren of Clan Nel Toth           # BG
+    description: "Sacrifica criaturas y devuélvelas del cementerio gratis cada turno."
+  - name: Winota, Joiner of Forces         # WR
+    description: "Ataca con fichas para colar humanos enormes gratis en pleno combate."
+  - name: Hakbal of the Surging Soul       # UG
+    description: "Tritones que exploran cada turno: crecen solos y buscan tierras."
+  - name: Kinnan, Bonder Prodigy           # UG
+    description: "Duplica el maná de tus dorks y artefactos para trampear bichos."
+  - name: Aesi, Tyrant of Gyre Strait      # UG
+    description: "Una tierra extra por turno y una carta por cada tierra que juegas."
+  - name: Volo, Guide to Monsters          # UG
+    description: "Copia cada criatura que lanzas si no repites tipo en la mesa."
 
   # Tríos
-  - Oloro, Ageless Ascetic           # WUB
-  - Zur the Enchanter                # WUB
-  - Kefka, Court Mage                # UBR
-  - Obeka, Brute Chronologist        # UBR
-  - Korvold, Fae-Cursed King         # BRG
-  - Winter, Misanthropic Guide       # BRG
-  - Gishath, Sun's Avatar            # WRG
-  - Arcades, the Strategist          # WUG
-  - Thalia and The Gitrog Monster    # WBG
-  - Kykar, Wind's Fury               # WUR
-  - Narset, Enlightened Master       # WUR
-  - Muldrotha, the Gravetide         # UBG
-  - Glarb, Calamity's Augur          # UBG
-  - Edgar Markov                     # WBR
-  - Kaalia of the Vast               # WBR
-  - Isshin, Two Heavens as One       # WBR
-  - Flubs, the Fool                  # URG
-  - Animar, Soul of Elements         # URG
+  - name: Oloro, Ageless Ascetic           # WUB
+    description: "Gana vida desde el mando y traduce cada punto en robo y drenaje."
+  - name: Zur the Enchanter                # WUB
+    description: "Busca encantamientos al atacar y se vuelve intocable y letal."
+  - name: Kefka, Court Mage                # UBR
+    description: "Obliga a todos a descartar y robas por cada tipo de carta tirada."
+  - name: Obeka, Brute Chronologist        # UBR
+    description: "Termina el turno cuando quieras: esquiva costes y corta al rival."
+  - name: Korvold, Fae-Cursed King         # BRG
+    description: "Sacrifica tus permanentes: cada uno te roba una carta y lo engorda."
+  - name: Winter, Misanthropic Guide       # BRG
+    description: "Todos roban de más, pero tu cementerio castiga su mano llena."
+  - name: Gishath, Sun's Avatar            # WRG
+    description: "Conecta una vez y suelta dinosaurios gratis desde tu biblioteca."
+  - name: Arcades, the Strategist          # WUG
+    description: "Muros que roban al entrar y atacan con su resistencia."
+  - name: Thalia and The Gitrog Monster    # WBG
+    description: "Tierras de más y sacrificios para robar mientras frenas a la mesa."
+  - name: Kykar, Wind's Fury               # WUR
+    description: "Cada hechizo no criatura crea un espíritu que quemas por maná."
+  - name: Narset, Enlightened Master       # WUR
+    description: "Ataca y lanza gratis los hechizos de lo alto de tu biblioteca."
+  - name: Muldrotha, the Gravetide         # UBG
+    description: "Juega tierras y permanentes desde tu cementerio como si fuera tu mano."
+  - name: Glarb, Calamity's Augur          # UBG
+    description: "Ordena tu biblioteca y lanza los hechizos caros desde arriba."
+  - name: Edgar Markov                     # WBR
+    description: "Cada vampiro que lanzas trae otro gratis; el ejército crece y pega."
+  - name: Kaalia of the Vast               # WBR
+    description: "Ataca y planta ángeles, demonios y dragones gigantes gratis."
+  - name: Isshin, Two Heavens as One       # WBR
+    description: "Duplica tus disparos de ataque: cada combate vale por dos."
+  - name: Flubs, the Fool                  # URG
+    description: "Vacía la mano cada turno para robar, y juega tierras de más."
+  - name: Animar, Soul of Elements         # URG
+    description: "Crece con cada criatura y abarata bichos enormes hasta ser gratis."
 
   # 4 y 5 colores
-  - Omnath, Locus of Creation        # WURG
-  - The Ur-Dragon                    # WUBRG
-  - Ulalek, Fused Atrocity           # WUBRG
-  - The First Sliver                 # WUBRG
+  - name: Omnath, Locus of Creation        # WURG
+    description: "Cada tierra que juegas da vida, maná y luego daño a los rivales."
+  - name: The Ur-Dragon                    # WUBRG
+    description: "Abarata dragones; sus ataques masivos roban y sueltan permanentes."
+  - name: Ulalek, Fused Atrocity           # WUBRG
+    description: "Copia tus hechizos y habilidades de Eldrazi para doblar cada turno."
+  - name: The First Sliver                 # WUBRG
+    description: "Cada sliver encadena cascadas y llena tu mesa de bichos gratis."

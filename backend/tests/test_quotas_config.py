@@ -159,13 +159,22 @@ def test_real_yaml_band_parity_with_approved_table() -> None:
 def test_real_yaml_defaults_and_commanders() -> None:
     config = load_quotas()
     assert config.defaults.archetype == "midrange"
-    assert {name: cmd.archetype for name, cmd in config.commanders.items()} == {
+    # Guille's original five, decided before the featured list was mapped:
+    # these are settled and must not drift.
+    for name, archetype in {
         "Krenko, Mob Boss": "aggro",
         "Meren of Clan Nel Toth": "graveyard",
         "Niv-Mizzet, Parun": "spellslinger",
         "Sythis, Harvest's Hand": "enchantress",
         "Omnath, Locus of Creation": "lands_matter",
-    }
+    }.items():
+        assert config.commanders[name].archetype == archetype
+    # The rest of the section is the 55 featured commanders (2026-07-15); the
+    # per-commander mapping itself lives in the YAML, not duplicated here.
+    assert len(config.commanders) == 55
+    assert all(
+        cmd.archetype in config.archetypes for cmd in config.commanders.values()
+    )
 
 
 def test_real_yaml_dials() -> None:

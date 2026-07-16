@@ -1,8 +1,9 @@
 """Featured commanders: loader and validation for ``featured_commanders.yaml``.
 
-Every entry must resolve against the pool (two-step exact rule), be unique,
-be commander-eligible, and not be ``banned_as_commander`` in the group
-banlist. Any violation raises ``FeaturedError``.
+Every entry is a ``{name, description}`` mapping. The name must resolve against
+the pool (two-step exact rule), be unique, be commander-eligible, and not be
+``banned_as_commander`` in the group banlist; the description is the picker's
+hover text and may not be empty. Any violation raises ``FeaturedError``.
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ import logging
 from pathlib import Path
 
 import yaml
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from rules.banlist import ResolvedBanlist
 from rules.resolve import REPO_ROOT, NameIndex, ResolutionError
@@ -25,10 +26,19 @@ class FeaturedError(Exception):
     """Invalid, unreadable or unresolvable featured-commanders list."""
 
 
+class _FeaturedEntry(BaseModel):
+    """One raw ``featured:`` entry, before resolution against the pool."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    name: str
+    description: str = Field(min_length=1)
+
+
 class _FeaturedFile(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    featured: list[str]
+    featured: list[_FeaturedEntry]
 
 
 class FeaturedCommander(BaseModel):
@@ -38,6 +48,7 @@ class FeaturedCommander(BaseModel):
 
     name: str
     oracle_id: str
+    description: str
 
 
 def load_featured(
@@ -72,7 +83,8 @@ def load_featured(
 
     featured: list[FeaturedCommander] = []
     seen: dict[str, str] = {}
-    for name in parsed.featured:
+    for entry in parsed.featured:
+        name = entry.name
         try:
             resolved = name_index.resolve(name)
         except ResolutionError as exc:
@@ -95,7 +107,9 @@ def load_featured(
             )
         featured.append(
             FeaturedCommander(
-                name=resolved.canonical_name, oracle_id=resolved.oracle_id
+                name=resolved.canonical_name,
+                oracle_id=resolved.oracle_id,
+                description=entry.description,
             )
         )
 
