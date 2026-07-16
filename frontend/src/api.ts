@@ -24,6 +24,10 @@ export type CommanderListItem = {
    *  know a commander can read what it does. */
   image_uri_normal: string | null;
   image_uri_art_crop: string | null;
+  /** Back face of a double-faced commander (Kefka, Sephiroth, Etali…). Empty
+   *  string `""` for single-faced cards — treat any falsy value as "no back". */
+  image_uri_back_normal: string;
+  image_uri_back_art_crop: string;
   archetype: string;
   /** The group's curated shortlist (featured_commanders.yaml). Also the only
    *  commanders whose `archetype` is a real judgement — see `curatedArchetype`. */
@@ -31,6 +35,10 @@ export type CommanderListItem = {
   /** The shortlist's one-line pitch, straight from featured_commanders.yaml.
    *  `null` for every commander outside it, which is most of them. */
   description: string | null;
+  /** EDHREC deck count — how many decks run this commander. The server already
+   *  orders `/commanders` by it (desc), so the client just preserves arrival
+   *  order. Shown discreetly on the pick, EDHREC-style. */
+  num_decks: number;
 };
 
 export type StructureBand = {
@@ -48,6 +56,8 @@ export type CardView = {
   cmc: number;
   image_uri_normal: string | null;
   image_uri_art_crop: string | null;
+  image_uri_back_normal: string;
+  image_uri_back_art_crop: string;
 };
 
 export type CommanderStructure = {
@@ -77,6 +87,10 @@ export type DeckCard = {
   cmc: number;
   image_uri_normal: string | null;
   image_uri_art_crop: string | null;
+  /** Back face of a double-faced card, empty `""` for single-faced ones. Lets
+   *  the deck views offer a front↔back flip on transforming cards. */
+  image_uri_back_normal: string;
+  image_uri_back_art_crop: string;
   categories: string[];
   count: number;
   slot: string;
@@ -171,30 +185,27 @@ export type SwapValidation = {
   deck_size: number;
 };
 
-/** One card the guided flow asks about. A POINTER into the deck, not a copy of
- *  the card: the full shape (art, mana cost, categories) lives in the same
- *  response's `deck.nonbasic_cards`, keyed by this `oracle_id`.
- *
- *  A decision is NOT a mistake. These are the cards whose score sits below the
- *  elbow of their own category — the deck's weakest links *relative to their
- *  role*, which is where a player's taste beats an EDHREC average. */
-export type SequentialDecision = {
-  oracle_id: string;
-  name: string;
-  category: string;
-  score: number;
-};
-
-/** `/sequential/start`. `deck` is exactly what `/build` returns — this endpoint
- *  IS a build plus an analysis of its result. `decisions` is empty when no
- *  category is big enough for a meaningful elbow, which is a valid outcome and
- *  not an error. */
-export type SequentialStart = {
-  deck: BuildResult;
-  decisions: SequentialDecision[];
-};
-
 export type Maybeboard = Record<string, DeckCard[]>;
+
+/** One card on the group's banlist: the reason it is banned, plus its image so
+ *  the panel can show what the card is. */
+export type BanlistCard = {
+  name: string;
+  reason: string;
+  image_uri_normal: string | null;
+  oracle_id: string;
+};
+
+/** One card on the watchlist: like a banned card, but `scope` says where the
+ *  concern applies (e.g. a commander-only worry). `null` when it is general. */
+export type WatchlistCard = BanlistCard & {
+  scope: string | null;
+};
+
+export type Banlist = {
+  banned: BanlistCard[];
+  watchlist: WatchlistCard[];
+};
 
 export type WhyNotResult = {
   commander_name: string;
@@ -232,6 +243,11 @@ export async function fetchCommanders(): Promise<CommanderListItem[]> {
     '/commanders',
   );
   return data.commanders;
+}
+
+/** The group's banlist and watchlist, for the informational panel. */
+export async function fetchBanlist(): Promise<Banlist> {
+  return request<Banlist>('/banlist');
 }
 
 /** The bands a build would target, for previewing what the dials do. */
@@ -317,11 +333,4 @@ export async function exportDeck(req: {
   });
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
   return response.text();
-}
-
-/** Build a deck AND get the cards worth deciding, in one call. */
-export async function sequentialStart(
-  req: BuildRequest,
-): Promise<SequentialStart> {
-  return post<SequentialStart>('/sequential/start', req);
 }

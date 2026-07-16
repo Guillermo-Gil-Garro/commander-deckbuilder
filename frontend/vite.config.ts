@@ -11,6 +11,7 @@ import { defineConfig } from 'vite';
 const API_ROUTES = [
   '/health',
   '/commanders',
+  '/banlist',
   '/cards',
   '/why-not',
   '/structure',
