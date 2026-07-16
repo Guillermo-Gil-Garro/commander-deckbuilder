@@ -138,14 +138,174 @@ dials:
 #     overrides:
 #       card_draw: [10, 14]    # pisa solo esa categoría
 #       synergy: 32            # techo: entero, como en los arquetipos
+# Cobertura (2026-07-15): los 55 de featured_commanders.yaml. El resto del pool
+# cae al default (midrange). Criterio: el plan de juego dominante REAL, medido
+# por cómo gasta sus slots (que es lo que las bandas modelan), no por lo vistoso.
+# Los marcados `# DUDOSO` los revisa Guille: o tienen varios planes de juego
+# reales, o el arquetipo que les pega no existe entre los 8.
 commanders:
+  # --- Mono / incoloro ---
+  "Giada, Font of Hope":
+    archetype: aggro                 # DUDOSO: tribal de ángeles. Ataca por aire y
+                                     # el techo synergy 35 le va, pero ramp 7-12 es
+                                     # justo para ángeles de 4-6 MV. Alt: midrange.
+  "Urza, Lord High Artificer":
+    archetype: control
+  "Baral, Chief of Compliance":
+    archetype: control               # DUDOSO: su premio solo salta al contrarrestar,
+                                     # así que el mazo es contramagia (control). Si
+                                     # Guille lo quiere storm/hechizos: spellslinger.
+  "Talrand, Sky Summoner":
+    archetype: spellslinger
+  "Bruvac the Grandiloquent":
+    archetype: control               # DUDOSO: es un mazo de molienda y no hay
+                                     # arquetipo `mill`. Control es lo más cercano
+                                     # (necesita sobrevivir), pero synergy 20 aprieta
+                                     # el paquete de molienda.
+  "Emry, Lurker of the Loch":
+    archetype: graveyard             # DUDOSO: relanza artefactos DESDE el cementerio,
+                                     # de ahí graveyard; pero el mazo real es de
+                                     # artefactos. Alt: control.
+  # Nombre canónico completo (regla de dos pasos): la app busca aquí por el
+  # nombre del pool, así que un "Sephiroth, Fabled SOLDIER" a secas NO casaría
+  # y caería al default en silencio. Ídem Etali y Kefka más abajo.
+  "Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel":
+    archetype: graveyard             # DUDOSO: es aristócratas (sacrificar + drenar).
+                                     # No existe `aristocrats`; graveyard es el que
+                                     # mejor modela sus slots (sac outlets, recursión).
+  "K'rrik, Son of Yawgmoth":
+    archetype: midrange              # DUDOSO: paga vida por maná negro = mazo de
+                                     # rampa/big-mana mono-negro. No hay arquetipo de
+                                     # big mana; midrange es el menos malo.
   "Krenko, Mob Boss":
+    archetype: aggro
+  "Azusa, Lost but Seeking":
+    archetype: lands_matter
+  "Lumra, Bellow of the Woods":
+    archetype: lands_matter
+  "Titania, Protector of Argoth":
+    archetype: lands_matter
+  "Selvala, Heart of the Wilds":
+    archetype: midrange              # rampa vía criaturas grandes, no vía tierras:
+                                     # lands_matter no le pega.
+  "Zhulodok, Void Gorger":
+    archetype: midrange              # DUDOSO: Eldrazi colosales = big mana puro.
+                                     # lands_matter le daría las tierras/rampa que
+                                     # quiere pero su synergy 18 ahogaría el paquete
+                                     # de Eldrazi. Falta un arquetipo `big_mana`.
+
+  # --- Parejas ---
+  "Grand Arbiter Augustin IV":
+    archetype: control
+  "Wilhelt, the Rotcleaver":
+    archetype: aggro                 # DUDOSO: tribal de zombis go-wide (synergy 35 le
+                                     # va), pero vive de recursión. Alt: graveyard.
+  "Captain N'ghathrod":
+    archetype: midrange              # DUDOSO: ataca para moler y roba del cementerio
+                                     # rival. Mezcla tribal + mill + robo de tumba;
+                                     # ninguno de los 8 lo describe bien.
+  "Prosper, Tome-Bound":
+    archetype: midrange
+  "Olivia, Crimson Bride":
+    archetype: graveyard
+  "Etali, Primal Conqueror // Etali, Primal Sickness":
+    archetype: midrange
+  "Minsc & Boo, Timeless Heroes":
+    archetype: aggro
+  "Sythis, Harvest's Hand":
+    archetype: enchantress
+  "Ketramose, the New Dawn":
+    archetype: midrange              # DUDOSO: motor de robo por exilio; mazo de
+                                     # desgaste. Alt: control.
+  "Athreos, God of Passage":
+    archetype: graveyard             # DUDOSO: aristócratas de recursión (devuelve a la
+                                     # mano, no desde la tumba). Mismo problema que
+                                     # Sephiroth: no hay `aristocrats`.
+  "The Locust God":
+    archetype: spellslinger          # DUDOSO: robo masivo -> ejército de insectos.
+                                     # Los slots son robo/wheels (spellslinger), pero
+                                     # gana yendo ancho (aggro).
+  "Niv-Mizzet, Parun":
+    archetype: spellslinger
+  "Lathril, Blade of the Elves":
     archetype: aggro
   "Meren of Clan Nel Toth":
     archetype: graveyard
-  "Niv-Mizzet, Parun":
+  "Winota, Joiner of Forces":
+    archetype: aggro
+  "Hakbal of the Surging Soul":
+    archetype: aggro
+  "Kinnan, Bonder Prodigy":
+    archetype: midrange              # rampa de permanentes no-tierra: lands_matter no.
+  "Aesi, Tyrant of Gyre Strait":
+    archetype: lands_matter
+  "Volo, Guide to Monsters":
+    archetype: midrange
+
+  # --- Tríos ---
+  "Oloro, Ageless Ascetic":
+    archetype: control
+  "Zur the Enchanter":
+    archetype: voltron               # DUDOSO (el más dudoso de los 55): dos planes
+                                     # reales. Voltron (busca auras baratas, se vuelve
+                                     # intocable y pega) vs enchantress (busca Rhystic
+                                     # Study y compañía y controla). Elijo voltron por
+                                     # la banda protection 3-6, que es lo que Zur pide.
+  "Kefka, Court Mage // Kefka, Ruler of Ruin":
+    archetype: control               # DUDOSO: descarte simétrico + robo. Stax suave.
+  "Obeka, Brute Chronologist":
+    archetype: midrange              # DUDOSO: caja de herramientas rara (terminar el
+                                     # turno). No tiene arquetipo natural.
+  "Korvold, Fae-Cursed King":
+    archetype: graveyard             # DUDOSO: sacrifica permanentes propios
+                                     # (aristócratas/tesoros), no recursión pura.
+  "Winter, Misanthropic Guide":
+    archetype: graveyard             # DUDOSO: delirium quiere la tumba llena, pero el
+                                     # mazo real es stax + castigo de mano llena.
+                                     # Alt: control.
+  "Gishath, Sun's Avatar":
+    archetype: aggro
+  "Arcades, the Strategist":
+    archetype: midrange              # DUDOSO: muros que roban; defensivo y luego ataca
+                                     # con resistencia. Alt: control.
+  "Thalia and The Gitrog Monster":
+    archetype: lands_matter          # DUDOSO: tierra extra + sacrificar tierras encaja
+                                     # en las bandas, pero el mazo real es agro-stax.
+  "Kykar, Wind's Fury":
     archetype: spellslinger
-  "Sythis, Harvest's Hand":
-    archetype: enchantress
+  "Narset, Enlightened Master":
+    archetype: spellslinger          # DUDOSO: hay que protegerla y conectar (huele a
+                                     # voltron), pero sus slots son hechizos no
+                                     # criatura, no auras/equipos.
+  "Muldrotha, the Gravetide":
+    archetype: graveyard
+  "Glarb, Calamity's Augur":
+    archetype: midrange              # DUDOSO: juega desde lo alto de la biblioteca,
+                                     # no desde la tumba, pese al surveil.
+  "Edgar Markov":
+    archetype: aggro
+  "Kaalia of the Vast":
+    archetype: aggro                 # DUDOSO: ataca para trampear gordos, pero pide
+                                     # protección de comandante como un voltron.
+  "Isshin, Two Heavens as One":
+    archetype: aggro
+  "Flubs, the Fool":
+    archetype: midrange              # DUDOSO: tierra extra apunta a lands_matter, pero
+                                     # su premio real es vaciar la mano. Depende mucho
+                                     # de la construcción.
+  "Animar, Soul of Elements":
+    archetype: midrange
+
+  # --- 4 y 5 colores ---
   "Omnath, Locus of Creation":
     archetype: lands_matter
+  "The Ur-Dragon":
+    archetype: midrange              # DUDOSO: tribal de dragones = rampa + ataque. Las
+                                     # bandas de aggro (lands 33-36, ramp 7-12) matan
+                                     # de hambre a un mazo de dragones de 5-7 MV;
+                                     # midrange le da el maná pero le capa el paquete
+                                     # tribal a 28.
+  "Ulalek, Fused Atrocity":
+    archetype: midrange              # DUDOSO: mismo caso que Zhulodok (big mana Eldrazi).
+  "The First Sliver":
+    archetype: aggro
