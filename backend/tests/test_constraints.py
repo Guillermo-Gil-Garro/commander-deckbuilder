@@ -203,6 +203,28 @@ def test_karsten_floor_raises_the_lands_floor_above_the_band_min() -> None:
     assert breach.actual == 20
 
 
+def test_an_explicit_lands_min_overrides_the_recomputed_karsten_floor() -> None:
+    """The solver reaches its lands floor through a fixpoint, and that floor can
+    land above the Karsten floor of the deck it finally produces. Recomputing
+    the floor from the result then reads a legal deck as over the ceiling —
+    which is how a Giada-in-aggro build died accusing constraints.py of having
+    diverged. Callers that know the floor the solver used must pass it.
+    """
+    bands = bands_fixture()
+    bands["lands"] = QuotaBand(min=33, max=36)
+    counts = deck_counts(deck(lands=37))
+    assert counts.karsten_floor <= 36, "otherwise the case is not reproduced"
+
+    # Recomputed: 37 lands over a ceiling of max(36, karsten) == 36.
+    assert [v for v in hard_violations(counts, bands) if v.code == "lands_ceiling"]
+    # The floor the solver actually enforced lifts the ceiling with it.
+    assert not [
+        v
+        for v in hard_violations(counts, bands, lands_min=37)
+        if v.code == "lands_ceiling"
+    ]
+
+
 def test_lands_ceiling_is_max_of_band_max_and_the_karsten_floor() -> None:
     # A band max below the Karsten floor must not turn the floor into a breach.
     bands = bands_fixture()

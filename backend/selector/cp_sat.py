@@ -938,7 +938,13 @@ def build_deck_cpsat(
         # solution satisfies every hard rule by construction, so any violation
         # reported here means constraints.py and _assemble_model have diverged.
         breaches = hard_violations(
-            deck_counts(_facts_for_check(pool, selected, basic_counts)), bands
+            deck_counts(_facts_for_check(pool, selected, basic_counts)),
+            bands,
+            # The floor the fixpoint settled on, not the one this deck's curve
+            # implies: they differ when the search raised the floor above what
+            # the winning deck ends up needing, and recomputing it here would
+            # read a legal deck as over its ceiling.
+            lands_min=lands_min,
         )
         if breaches:
             raise SelectorError(

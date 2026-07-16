@@ -242,11 +242,19 @@ def hard_violations(
     bands: Mapping[str, QuotaBand],
     *,
     baseline: DeckCounts | None = None,
+    lands_min: int | None = None,
 ) -> tuple[Violation, ...]:
     """Hard rules broken by ``counts``; empty means the deck is feasible.
 
     With ``baseline`` given, a numeric rule already broken by the baseline deck
     is only reported when the new counts are *worse* than it (see module doc).
+
+    ``lands_min`` is the lands floor the caller actually enforced. Pass it when
+    you know it: the solver reaches its floor through a fixpoint, and that floor
+    can sit above the Karsten floor of the deck it finally produces, so deriving
+    the floor from the result reads a legal deck as over its ceiling. Without
+    it the floor is recomputed from the deck's own curve, which is what a swap
+    wants — there is no fixpoint history to honour.
     """
     lands_band = bands.get(LANDS_CATEGORY)
     if lands_band is None:
@@ -263,7 +271,8 @@ def hard_violations(
     base_lands = (
         None if baseline is None else baseline.by_category.get(LANDS_CATEGORY, 0)
     )
-    lands_min = max(lands_band.min, counts.karsten_floor)
+    if lands_min is None:
+        lands_min = max(lands_band.min, counts.karsten_floor)
     if _floor_broken(lands, lands_min, base_lands):
         violations.append(Violation("lands_floor", LANDS_CATEGORY, lands, lands_min))
     # The Karsten floor may legitimately exceed the band max (cp_sat.py:457).
