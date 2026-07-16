@@ -63,6 +63,124 @@ export type BuildRequest = {
   dials: Dials;
 };
 
+/** A card as `/build` and friends answer it (`DeckCardView`). `score` is null for
+ *  basic lands: a basic has no EDHREC score. `count` is present on EVERY card —
+ *  1 for non-basics, N for a basic's copies — so it is NOT a "this is a basic"
+ *  test the way it is in the TFM. See `ViewCard` in deck.ts. */
+export type DeckCard = {
+  name: string;
+  oracle_id: string;
+  scryfall_id: string;
+  color_identity: ColorCode[];
+  type_line: string | null;
+  mana_cost: string;
+  cmc: number;
+  image_uri_normal: string | null;
+  image_uri_art_crop: string | null;
+  categories: string[];
+  count: number;
+  slot: string;
+  reason: string;
+  score: number | null;
+};
+
+/** One category's line in the composition panel.
+ *
+ *  `within_band` is deliberately NOT `lo <= count <= hi`: for `lands` the
+ *  effective minimum is `max(lo, karsten_floor)`, and the floor is derived from
+ *  the deck's own curve. Only the API can rule on it — see `deck.ts`. */
+export type CategoryRow = {
+  count: number;
+  lo: number;
+  hi: number;
+  /** `hard`: both bounds bind (lands: the Karsten floor is unbreachable).
+   *  `ceiling_only`: only the cap binds (synergy has no floor by nature).
+   *  `soft_no_lower`: the cap binds; `lo` is a target the solver aims at. */
+  band: 'hard' | 'ceiling_only' | 'soft_no_lower';
+  within_band: boolean;
+};
+
+/** A mana-curve bucket. Only a count: our solver has no curve objective, so
+ *  there is no `target`/`deviation` to draw (unlike the TFM). */
+export type CurveRow = { count: number };
+
+export type ColorSourceRow = {
+  sources: number;
+  demand: number;
+  deficit: number;
+};
+
+export type Notice = { code: string; message: string };
+
+export type BuildResult = {
+  commander_id: string;
+  commander_name: string;
+  commander: CardView;
+  dials: Dials;
+  status: string;
+  deck_size: number;
+  selected_count: number;
+  nonbasic_cards: DeckCard[];
+  basic_lands: DeckCard[];
+  maybeboard: DeckCard[];
+  new_cards: DeckCard[];
+  category_breakdown: Record<string, CategoryRow>;
+  curve_breakdown: Record<string, CurveRow>;
+  color_source_breakdown: Record<string, ColorSourceRow>;
+  karsten_floor: number;
+  lands_target: number;
+  target_structure_source: 'commander' | 'archetype';
+  relaxation_stage: string;
+  objective_value: number;
+  solve_time_seconds: number;
+  infeasible_reason: string | null;
+  warnings: Notice[];
+  unresolved: Notice[];
+};
+
+/** How the deck travels to the API: by NAME, not oracle_id (unlike the TFM).
+ *  The backend is stateless — the deck lives in the client. */
+export type DeckCardRef = { name: string; count: number };
+
+export type SwapCandidatesRequest = {
+  commander: string;
+  dials: Dials;
+  deck: DeckCardRef[];
+  out: string;
+  limit?: number;
+};
+
+/** `/sequential/candidates`. One flat `candidates[]` list: we have a single
+ *  scorer, so there is no synergy/power split to show. */
+export type SwapCandidates = {
+  current: DeckCard;
+  candidates: DeckCard[];
+  feasible_count: number;
+  limit: number;
+};
+
+/** `/sequential/validate`. The authoritative post-swap verdict: `counts` and
+ *  `statuses` are the backend's own, including the recomputed Karsten floor. */
+export type SwapValidation = {
+  feasible: boolean;
+  blockers: Notice[];
+  warnings: Notice[];
+  counts: Record<string, number>;
+  statuses: Record<string, string>;
+  karsten_floor: number;
+  deck_size: number;
+};
+
+export type Maybeboard = Record<string, DeckCard[]>;
+
+export type WhyNotResult = {
+  commander_name: string;
+  card_name: string;
+  eligible: boolean;
+  reason_bucket: string;
+  reason: string;
+};
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, init);
   if (!response.ok) {
@@ -76,6 +194,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(detail);
   }
   return (await response.json()) as T;
+}
+
+async function post<T>(path: string, body: unknown): Promise<T> {
+  return request<T>(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
 }
 
 export async function fetchCommanders(): Promise<CommanderListItem[]> {
@@ -97,14 +223,77 @@ export async function fetchCommanderStructure(
   return request<CommanderStructure>(`/structure?${params.toString()}`);
 }
 
-// The deck shape is owned by the Result view (a separate task); `/build` is typed
-// as `unknown` here on purpose rather than guessed at.
-export async function buildDeck(req: BuildRequest): Promise<unknown> {
-  return request<unknown>('/build', {
+export async function buildDeck(req: BuildRequest): Promise<BuildResult> {
+  return post<BuildResult>('/build', req);
+}
+
+/** Same-role, still-feasible alternatives for the card marked to leave. */
+export async function sequentialCandidates(
+  req: SwapCandidatesRequest,
+): Promise<SwapCandidates> {
+  return post<SwapCandidates>('/sequential/candidates', req);
+}
+
+/** Validate one prospective swap. The response is the source of truth for the
+ *  post-swap category verdicts — the client must not re-derive them. */
+export async function sequentialValidate(req: {
+  commander: string;
+  dials: Dials;
+  deck: DeckCardRef[];
+  out: string;
+  in: string;
+}): Promise<SwapValidation> {
+  return post<SwapValidation>('/sequential/validate', req);
+}
+
+export async function fetchMaybeboard(req: {
+  commander: string;
+  dials: Dials;
+  deck: DeckCardRef[];
+  limit?: number;
+}): Promise<Maybeboard> {
+  const data = await post<{ maybeboard: Maybeboard; limit: number }>(
+    '/maybeboard',
+    req,
+  );
+  return data.maybeboard;
+}
+
+export async function whyNotCard(
+  commander: string,
+  card: string,
+): Promise<WhyNotResult> {
+  const params = new URLSearchParams({ commander, card });
+  return request<WhyNotResult>(`/why-not?${params.toString()}`);
+}
+
+export async function searchCardNames(
+  query: string,
+  limit = 20,
+): Promise<string[]> {
+  const params = new URLSearchParams({ q: query, limit: String(limit) });
+  const data = await request<{ count: number; names: string[] }>(
+    `/cards/search?${params.toString()}`,
+  );
+  return data.names;
+}
+
+/** The decklist as text. The Archidekt format lives in the backend on purpose:
+ *  re-implementing it here would be a second, drifting copy. `slot` is the
+ *  section the player sees a card in, which only the client knows after swaps. */
+export async function exportDeck(req: {
+  commander: string;
+  deck: { name: string; count: number; slot: string }[];
+  maybeboard?: { name: string }[];
+  new_cards?: { name: string }[];
+}): Promise<string> {
+  const response = await fetch(`${API_BASE}/export`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(req),
+    body: JSON.stringify({ ...req, format: 'archidekt' }),
   });
+  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+  return response.text();
 }
 
 export async function sequentialStart(req: BuildRequest): Promise<unknown> {
