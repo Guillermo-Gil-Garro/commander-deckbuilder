@@ -184,6 +184,49 @@ def commander_view(card: Mapping[str, Any], archetype: str) -> CommanderView:
     return CommanderView(**card_view(card).model_dump(), archetype=archetype)
 
 
+class CardSearchResponse(BaseModel):
+    """Card names matching a query. Names only — the typeahead draws nothing else.
+
+    ``count`` is the length of ``names``: what was *returned* after ``limit``
+    trimmed the list, never how many matched.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    count: int
+    names: list[str]
+
+
+class WhyNotResponse(BaseModel):
+    """Why a card is (or is not) a candidate for a commander's deck.
+
+    **``eligible: true`` does not mean the card is in the deck.** It means the
+    card enters the candidate set: it passes every filter that can be decided
+    by looking at that one card. Whether it lands in the 99 is the solver's
+    *aggregate* call — quotas, curve and the scores of 400 other cards — and
+    this endpoint never asks it.
+
+    ``reason_bucket`` is stable and machine-readable; ``reason`` is the Spanish
+    sentence the player reads (``errors.WHY_NOT_REASONS``). Buckets, in the
+    order they are tested:
+
+    - ``not_commander_legal``: absent from our pool.
+    - ``banned``: the group's banlist.
+    - ``never_rule``: a ``never`` rule in ``rules.yaml`` for this commander.
+    - ``watchlist``: the group's watchlist.
+    - ``color_identity``: outside the commander's identity.
+    - ``not_selected``: **eligible** — nothing per-card rejects it.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander_name: str
+    card_name: str
+    eligible: bool
+    reason_bucket: str
+    reason: str
+
+
 class StructureResponse(BaseModel):
     """The quota bands a build would use, without building anything.
 

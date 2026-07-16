@@ -29,7 +29,7 @@ import os
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Iterable, Mapping
 
 from pipeline.edhrec import EdhrecCommanderData
 from quotas.config import DEFAULT_QUOTAS_PATH, QuotasConfig, load_quotas
@@ -62,12 +62,51 @@ DEFAULT_SOLVER_TIME_LIMIT_S = 10.0
 # commander (the featured list is what most players click).
 EDHREC_MEMO_MAX = 64
 
-# Commander search. Below the minimum we return nothing rather than 30k rows;
-# the limit is clamped (not rejected) because a bad limit is not worth a 422.
+# Name search (commanders and the whole pool alike). Below the minimum we
+# return nothing rather than 30k rows; the limit is clamped (not rejected)
+# because a bad limit is not worth a 422.
 COMMANDER_SEARCH_MIN_CHARS = 2
 COMMANDER_SEARCH_LIMIT_DEFAULT = 20
 COMMANDER_SEARCH_LIMIT_MIN = 1
 COMMANDER_SEARCH_LIMIT_MAX = 50
+
+# The card typeahead reuses the commander search's policy verbatim: same
+# minimum, same clamp, same ranking. One rule for "search a name here", so the
+# two boxes in the UI cannot drift apart.
+CARD_SEARCH_MIN_CHARS = COMMANDER_SEARCH_MIN_CHARS
+CARD_SEARCH_LIMIT_DEFAULT = COMMANDER_SEARCH_LIMIT_DEFAULT
+CARD_SEARCH_LIMIT_MIN = COMMANDER_SEARCH_LIMIT_MIN
+CARD_SEARCH_LIMIT_MAX = COMMANDER_SEARCH_LIMIT_MAX
+
+
+def _ranked_names(
+    names: Iterable[str], query: str, *, min_chars: int, limit: int, lo: int, hi: int
+) -> tuple[str, ...]:
+    """Substring search over pre-sorted ``names``, prefix matches first.
+
+    The ranking every name box in this API shares: case-insensitive
+    exact-substring, prefix matches ahead of mere substring ones ("Krenko"
+    must not sit under "Fake Krenko Impersonator"), each group keeping the
+    caller's alphabetical order — so the result is fully deterministic and
+    there is no fuzzy matching (a typo returns nothing, never a guess).
+
+    ``names`` must already be sorted; a query shorter than ``min_chars``
+    returns nothing, and ``limit`` is clamped to ``[lo, hi]``.
+    """
+    needle = query.strip().lower()
+    if len(needle) < min_chars:
+        return ()
+    limit = min(max(limit, lo), hi)
+
+    prefix: list[str] = []
+    contains: list[str] = []
+    for name in names:
+        lowered = name.lower()
+        if lowered.startswith(needle):
+            prefix.append(name)
+        elif needle in lowered:
+            contains.append(name)
+    return tuple((prefix + contains)[:limit])
 
 
 class EdhrecMemo:
@@ -127,6 +166,7 @@ class AppState:
     tags_count: int
     solver_time_limit_s: float
     commanders: tuple[CommanderRow, ...] = field(init=False)
+    card_names: tuple[str, ...] = field(init=False)
     _by_lower_name: Mapping[str, CommanderRow] = field(init=False)
     _edhrec: EdhrecMemo = field(init=False)
 
@@ -143,6 +183,9 @@ class AppState:
         )
         # frozen=True blocks plain assignment; these are derived, not inputs.
         object.__setattr__(self, "commanders", commanders)
+        # Sorted once here rather than per search: the whole pool is ~31k names
+        # and the typeahead is on the keystroke path.
+        object.__setattr__(self, "card_names", tuple(sorted(self.pool.by_name)))
         object.__setattr__(
             self, "_by_lower_name", {row.name.lower(): row for row in commanders}
         )
@@ -155,30 +198,45 @@ class AppState:
     def search_commanders(
         self, query: str, limit: int = COMMANDER_SEARCH_LIMIT_DEFAULT
     ) -> tuple[CommanderRow, ...]:
-        """Substring search over commander names, best matches first.
+        """Substring search over **selectable commander** names, best first.
 
-        Prefix matches rank above mere substring matches ("Krenko" should not
-        be buried under "Fake Krenko Impersonator"), and each group keeps the
-        index's alphabetical order, so the result is fully deterministic.
-        Matching is case-insensitive and exact-substring: no fuzzy matching.
-
-        A query shorter than ``COMMANDER_SEARCH_MIN_CHARS`` returns nothing;
-        ``limit`` is clamped to ``[1, 50]``.
+        See ``_ranked_names`` for the ranking. Banned commanders are not in
+        this index and can never appear. A query shorter than
+        ``COMMANDER_SEARCH_MIN_CHARS`` returns nothing; ``limit`` is clamped
+        to ``[1, 50]``.
         """
-        needle = query.strip().lower()
-        if len(needle) < COMMANDER_SEARCH_MIN_CHARS:
-            return ()
-        limit = min(max(limit, COMMANDER_SEARCH_LIMIT_MIN), COMMANDER_SEARCH_LIMIT_MAX)
+        by_name = {row.name: row for row in self.commanders}
+        names = _ranked_names(
+            by_name,  # already sorted by name
+            query,
+            min_chars=COMMANDER_SEARCH_MIN_CHARS,
+            limit=limit,
+            lo=COMMANDER_SEARCH_LIMIT_MIN,
+            hi=COMMANDER_SEARCH_LIMIT_MAX,
+        )
+        return tuple(by_name[name] for name in names)
 
-        prefix: list[CommanderRow] = []
-        contains: list[CommanderRow] = []
-        for row in self.commanders:  # already sorted by name
-            lowered = row.name.lower()
-            if lowered.startswith(needle):
-                prefix.append(row)
-            elif needle in lowered:
-                contains.append(row)
-        return tuple((prefix + contains)[:limit])
+    def search_cards(
+        self, query: str, limit: int = CARD_SEARCH_LIMIT_DEFAULT
+    ) -> tuple[str, ...]:
+        """Substring search over the **whole pool**, best matches first.
+
+        Every Commander-legal card, not just the commanders and not just a
+        deck's cards: this is what the "add a card" box searches, so a card
+        the group banned *is* here. That it can be typed does not mean it can
+        be played — ``/why-not`` is what answers that.
+
+        Canonical names only ("Fire // Ice", never "Fire"); the pool's own
+        face-name fallback resolves the halves everywhere a name is accepted.
+        """
+        return _ranked_names(
+            self.card_names,
+            query,
+            min_chars=CARD_SEARCH_MIN_CHARS,
+            limit=limit,
+            lo=CARD_SEARCH_LIMIT_MIN,
+            hi=CARD_SEARCH_LIMIT_MAX,
+        )
 
     @property
     def edhrec_memo(self) -> EdhrecMemo:

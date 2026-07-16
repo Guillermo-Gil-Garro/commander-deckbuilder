@@ -40,6 +40,7 @@ from app.errors import (
     edhrec_not_found,
     relaxed_stage_message,
     violation_message,
+    why_not_reason,
 )
 from app.schemas import (
     BAND_CEILING_ONLY,
@@ -61,6 +62,7 @@ from app.schemas import (
     SwapRequest,
     SwapValidateRequest,
     SwapValidateResponse,
+    WhyNotResponse,
     band_view,
     bench_card_view,
     card_view,
@@ -97,6 +99,7 @@ from selector.greedy import (
     DeckEntry,
     ScoreWeights,
     SelectorError,
+    _name_variants,
 )
 from selector.swap import primary_category, swap_candidates, swap_is_feasible
 
@@ -207,6 +210,67 @@ def _structure_source(state: AppState, commander_name: str) -> str:
     if entry is not None and (entry.archetype is not None or entry.overrides):
         return "commander"
     return "archetype"
+
+
+def why_not(state: AppState, commander_name: str, card_name: str) -> WhyNotResponse:
+    """Why ``card_name`` is (or is not) a candidate for ``commander_name``.
+
+    Answers the **per-card** filter only: the checks ``cp_sat`` applies while
+    it walks the recommendation list (banlist, ``never``, watchlist, colour
+    identity — see ``build_deck_cpsat``'s candidate loop). Those rules are
+    read from the same config the build reads; none of them is restated here.
+
+    Deliberately cheap: no solver, no EDHREC, no disk. That is also its
+    limit — ``eligible`` cannot mean "the solver would offer you this card",
+    because our candidate universe is additionally restricted to EDHREC's
+    recommendations for the commander, which this endpoint does not fetch.
+    See ``WhyNotResponse``.
+
+    Raises ``CommanderNotFound`` for an unknown commander (a 404). An unknown
+    *card* is not an error: it is the ``not_commander_legal`` verdict, since
+    our pool is exactly the Commander-legal set and a card that is not in it
+    is either illegal or misspelled — and nothing here can tell those apart.
+    """
+    row = resolve_commander(state, commander_name)
+    card = state.pool.resolve(card_name)
+    if card is None:
+        return _why_not(commander_name=row.name, card_name=card_name, bucket="not_commander_legal")
+
+    name = card["name"]
+    rule_ctx = RuleContext(
+        commander_name=row.name,
+        color_identity=frozenset(row.color_identity),
+        archetype=archetype_for(state.quotas, row.name),
+    )
+    # Face names and full names both count, exactly as the selector matches
+    # them ("Fire" must hit a banlist entry for "Fire // Ice").
+    variants = _name_variants(name) | {card_name}
+    # cp_sat tests banned/watchlist/never as one condition, so their order here
+    # is ours to choose: rules.yaml declares the precedence ban > never, and
+    # the watchlist is the weakest of the three. Colour identity comes last
+    # because "your group threw this out" is a better answer than "wrong
+    # colours" for a card that is both.
+    buckets: tuple[tuple[str, bool], ...] = (
+        ("banned", bool(variants & set(state.banned_names))),
+        ("never_rule", bool(variants & _canonical(state, resolve_never(state.rules, rule_ctx)))),
+        ("watchlist", bool(variants & set(state.watchlist_names))),
+        (
+            "color_identity",
+            not set(card.get("color_identity") or ()) <= set(row.color_identity),
+        ),
+    )
+    bucket = next((name_ for name_, hit in buckets if hit), "not_selected")
+    return _why_not(commander_name=row.name, card_name=name, bucket=bucket)
+
+
+def _why_not(*, commander_name: str, card_name: str, bucket: str) -> WhyNotResponse:
+    return WhyNotResponse(
+        commander_name=commander_name,
+        card_name=card_name,
+        eligible=bucket == "not_selected",
+        reason_bucket=bucket,
+        reason=why_not_reason(bucket),
+    )
 
 
 def edhrec_data(state: AppState, commander_name: str) -> EdhrecCommanderData:

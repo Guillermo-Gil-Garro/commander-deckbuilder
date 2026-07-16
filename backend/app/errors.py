@@ -20,6 +20,7 @@ __all__ = [
     "EDHREC_UNAVAILABLE",
     "INVALID_DIALS",
     "POOL_UNAVAILABLE",
+    "WHY_NOT_REASONS",
     "Severity",
     "Violation",
     "candidate_reason",
@@ -33,6 +34,7 @@ __all__ = [
     "invalid_dial_param",
     "relaxed_stage_message",
     "violation_message",
+    "why_not_reason",
 ]
 
 # Service-level messages.
@@ -175,6 +177,52 @@ VIOLATION_MESSAGES: dict[str, str] = {
         "sigue siendo válido y exportable."
     ),
 }
+
+
+# One sentence per /why-not bucket. `not_selected` is the *eligible* answer and
+# is deliberately the wordiest: "this card passes every per-card filter" is the
+# easiest verdict in the whole API to misread as "this card is in your deck".
+WHY_NOT_REASONS: dict[str, str] = {
+    "not_commander_legal": (
+        "Esta carta no está en nuestro pool: o no es legal en Commander, o el "
+        "nombre no es exacto (no hay búsqueda difusa). Compruébalo en el "
+        "buscador de cartas."
+    ),
+    "banned": (
+        "Esta carta está en la banlist del grupo, así que no la metemos en "
+        "ningún mazo. Es una decisión vuestra, no de las reglas oficiales."
+    ),
+    "never_rule": (
+        "Esta carta tiene una regla «never» en rules.yaml para este comandante: "
+        "no la recomendamos sola. El mazo sigue siendo válido si la metes a mano."
+    ),
+    "watchlist": (
+        "Esta carta está en la watchlist del grupo: no la recomendamos sola, "
+        "pero puedes jugarla si la metes a mano."
+    ),
+    "color_identity": (
+        "Esta carta tiene colores fuera de la identidad de tu comandante, así "
+        "que es ilegal en este mazo."
+    ),
+    "not_selected": (
+        "Esta carta es elegible: pasa todos los filtros carta a carta. Eso NO "
+        "significa que esté en tu mazo — que entre en las 99 lo decide el "
+        "solver mirando el mazo entero (cuotas, curva y score). Además solo "
+        "competimos con las cartas que EDHREC recomienda para este comandante, "
+        "y eso este endpoint no lo comprueba."
+    ),
+}
+
+
+def why_not_reason(bucket: str) -> str:
+    """Spanish sentence for a ``/why-not`` bucket.
+
+    An unknown bucket degrades to a factual fallback instead of raising: a new
+    filter must never turn an explanation into a 500.
+    """
+    return WHY_NOT_REASONS.get(
+        bucket, f"Esta carta no entra en el mazo por la regla «{bucket}»."
+    )
 
 
 def category_label(category: str) -> str:

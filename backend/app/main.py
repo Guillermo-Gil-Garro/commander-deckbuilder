@@ -34,6 +34,7 @@ from starlette.types import Scope
 from app import service
 from app.errors import POOL_UNAVAILABLE, invalid_dial_param
 from app.schemas import (
+    CardSearchResponse,
     CommanderListResponse,
     CommandersResponse,
     DeckRequest,
@@ -47,10 +48,16 @@ from app.schemas import (
     SwapCandidatesResponse,
     SwapValidateRequest,
     SwapValidateResponse,
+    WhyNotResponse,
     commander_list_item,
     commander_view,
 )
-from app.state import COMMANDER_SEARCH_LIMIT_DEFAULT, AppState, build_app_state
+from app.state import (
+    CARD_SEARCH_LIMIT_DEFAULT,
+    COMMANDER_SEARCH_LIMIT_DEFAULT,
+    AppState,
+    build_app_state,
+)
 from selector.deck_rules import archetype_for
 
 LOG_LEVEL_ENV = "DECKBUILDER_LOG_LEVEL"
@@ -233,6 +240,66 @@ def search_commanders(
         for row in state.search_commanders(q, limit)
     ]
     return CommandersResponse(count=len(commanders), commanders=commanders)
+
+
+@app.get("/cards/search")
+def search_cards(
+    request: Request, q: str, limit: int = CARD_SEARCH_LIMIT_DEFAULT
+) -> CardSearchResponse:
+    """Search **every** Commander-legal card by name. Typeahead for "add a card".
+
+    The whole pool, not just commanders and not just a deck's cards, so this
+    is the box a player types into to look a card up. Same matching policy as
+    ``/commanders/search``: case-insensitive exact-substring, prefix matches
+    first, ties alphabetical, no fuzzy matching — a typo returns nothing
+    rather than a guess.
+
+    A ``q`` shorter than 2 characters returns an empty list rather than 31k
+    rows; that is not an error and not "no such card". ``limit`` is clamped to
+    ``[1, 50]``, so ``count`` is what was *returned* and never how many
+    matched.
+
+    **A name here is not a playable card.** Unlike ``/commanders``, this index
+    is not filtered by the group's banlist: a banned card can be found and
+    typed. Ask ``/why-not`` whether it can actually go in a deck.
+
+    Names come back canonical ("Fire // Ice", never "Fire" alone), which is
+    what the other endpoints echo back. 503 if the card pool never loaded.
+    """
+    state = _state(request)
+    names = list(state.search_cards(q, limit))
+    return CardSearchResponse(count=len(names), names=names)
+
+
+@app.get("/why-not")
+def why_not(request: Request, commander: str, card: str) -> WhyNotResponse:
+    """Why a card is (or is not) a candidate for this commander's deck.
+
+    **``eligible: true`` does not mean the card is in the deck.** It means the
+    card enters the *candidate set*: nothing that can be decided by looking at
+    that one card rejects it. Whether it makes the 99 is the solver's
+    aggregate decision — quotas, curve and the scores of every rival card —
+    and this endpoint never runs it. This is the single most misreadable
+    answer in the API, which is why ``reason`` spells it out in Spanish.
+
+    ``reason_bucket`` is stable and machine-readable, ``reason`` is for the
+    player. The buckets, in the order they are tested: ``not_commander_legal``
+    (absent from our pool), ``banned`` (the group's banlist), ``never_rule``
+    (``rules.yaml`` for this commander), ``watchlist``, ``color_identity``,
+    and ``not_selected`` — the eligible verdict.
+
+    ``commander`` and ``card`` are query params because card names carry
+    commas and apostrophes. Cheap by design: no solver, no EDHREC, no disk.
+    Its blind spot follows from that — our candidate universe is also limited
+    to EDHREC's recommendations for the commander, which this does not fetch,
+    so an eligible card may still never be offered.
+
+    An unknown *card* is a 200 with ``not_commander_legal``, not a 404: our
+    pool is exactly the Commander-legal set, so "not in it" is the answer.
+    404 is only for an unknown commander; 503 if the card pool never loaded.
+    """
+    state = _state(request)
+    return service.why_not(state, commander, card)
 
 
 @app.get("/structure")
