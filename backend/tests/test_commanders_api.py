@@ -11,7 +11,18 @@ from app import main as app_main
 from app.state import AppState
 from selector.deck_rules import archetype_for
 
-COMMANDER_FIELDS = {"name", "oracle_id", "scryfall_id", "color_identity", "archetype"}
+COMMANDER_FIELDS = {
+    "name",
+    "oracle_id",
+    "scryfall_id",
+    "color_identity",
+    "type_line",
+    "mana_cost",
+    "cmc",
+    "image_uri_normal",
+    "image_uri_art_crop",
+    "archetype",
+}
 
 
 @pytest.fixture()

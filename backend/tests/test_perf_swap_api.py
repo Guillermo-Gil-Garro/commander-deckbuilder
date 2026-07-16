@@ -50,11 +50,10 @@ def client(real_app_state: AppState) -> Iterator[TestClient]:
 
 @pytest.mark.perf
 def test_the_full_http_swap_validation_fits_in_100ms(client: TestClient) -> None:
+    built = client.post("/build", json={"commander": COMMANDER}).json()
     deck = [
         {"name": card["name"], "count": card["count"]}
-        for card in client.post("/build", json={"commander": COMMANDER}).json()[
-            "mainboard"
-        ]
+        for card in built["nonbasic_cards"] + built["basic_lands"]
     ]
     candidates = client.post(
         "/sequential/candidates",

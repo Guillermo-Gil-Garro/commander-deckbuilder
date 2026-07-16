@@ -42,7 +42,12 @@ from app.errors import (
     violation_message,
 )
 from app.schemas import (
-    CandidateView,
+    BAND_CEILING_ONLY,
+    BAND_HARD,
+    BAND_SOFT_NO_LOWER,
+    CategoryRow,
+    ColorSourceRow,
+    CurveRow,
     DeckCardView,
     DeckRequest,
     DeckResponse,
@@ -50,7 +55,6 @@ from app.schemas import (
     MaybeboardRequest,
     MaybeboardResponse,
     NoticeView,
-    SolverView,
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
@@ -58,6 +62,7 @@ from app.schemas import (
     SwapValidateRequest,
     SwapValidateResponse,
     band_view,
+    bench_card_view,
     card_view,
     deck_card_view,
 )
@@ -69,8 +74,10 @@ from pipeline.edhrec import (
     fetch_commander,
     slugify_commander,
 )
-from quotas.config import QuotaBand, QuotasError
+from quotas.config import CEILING_ONLY_CATEGORIES, QuotaBand, QuotasError
+from quotas.lands import curve_bucket
 from quotas.resolver import resolve_bands
+from quotas.validator import CategoryStatus
 from selector.constraints import CardFacts
 from selector.cp_sat import CpSatResult, build_deck_cpsat
 from selector.deck_rules import (
@@ -85,6 +92,7 @@ from selector.deck_rules import (
 from selector.export import format_archidekt
 from selector.greedy import (
     DECK_SIZE,
+    LANDS_CATEGORY,
     SYNERGY_CATEGORY,
     DeckEntry,
     ScoreWeights,
@@ -261,6 +269,15 @@ def _deck_response(
     bands: Mapping[str, QuotaBand],
     result: CpSatResult,
 ) -> DeckResponse:
+    """Project a solver result onto the flat wire shape. Nothing is re-decided.
+
+    The three breakdowns are pure projections of what the solver already
+    reported: ``category_breakdown`` fuses ``counts`` + ``bands`` +
+    ``statuses``, ``curve_breakdown`` histograms the selected non-lands, and
+    ``color_source_breakdown`` renames the ``target`` key of
+    ``penalties["color_sources"]`` to ``demand``. No new judgement is formed
+    here — this layer must never become a second opinion on the deck.
+    """
     warnings: list[NoticeView] = []
     if result.relaxation_stage != "none":
         warnings.append(
@@ -270,28 +287,121 @@ def _deck_response(
                 message=relaxed_stage_message(result.relaxation_stage),
             )
         )
+    basics, nonbasics = _split_basics(state, result.mainboard)
     return DeckResponse(
+        commander_id=row.oracle_id,
+        commander_name=row.name,
         commander=card_view(state.pool.by_name[row.name]),
         dials=dict(dials),
-        bands={category: band_view(band) for category, band in bands.items()},
-        mainboard=_cards(state, result.mainboard),
+        status=result.solver_status,
+        deck_size=result.total_cards,
+        selected_count=len(nonbasics),
+        nonbasic_cards=_cards(state, nonbasics),
+        basic_lands=_cards(state, basics),
         maybeboard=_cards(state, result.maybeboard),
         new_cards=_cards(state, result.new_cards),
-        counts=dict(result.counts),
-        statuses={
-            category: status.value for category, status in result.statuses.items()
-        },
+        category_breakdown=_category_breakdown(bands, result),
+        curve_breakdown=_curve_breakdown(state, nonbasics),
+        color_source_breakdown=_color_source_breakdown(result),
         karsten_floor=result.karsten_floor,
         lands_target=result.lands_target,
-        solver=SolverView(
-            status=result.solver_status,
-            stage=result.relaxation_stage,
-            solve_time_s=result.solve_time_s,
-            objective=result.objective_value,
-        ),
+        target_structure_source=_structure_source(state, row.name),
+        relaxation_stage=result.relaxation_stage,
+        objective_value=result.objective_value,
+        solve_time_seconds=result.solve_time_s,
+        # A deck the solver could not build is a 422 (DeckBuildFailed), so a
+        # response only ever exists for a deck that resolved.
+        infeasible_reason=None,
         warnings=warnings,
         unresolved=list(result.unresolved),
     )
+
+
+def _split_basics(
+    state: AppState, mainboard: Sequence[DeckEntry]
+) -> tuple[list[DeckEntry], list[DeckEntry]]:
+    """Split the mainboard into ``(basic lands, everything else)``.
+
+    Tested on the type line and not on ``count > 1``: a deck can legitimately
+    run a single Mountain, and it is still a basic.
+    """
+    basics: list[DeckEntry] = []
+    nonbasics: list[DeckEntry] = []
+    for entry in mainboard:
+        card = state.pool.by_name[entry.name]
+        target = basics if "Basic" in (card.get("type_line") or "") else nonbasics
+        target.append(entry)
+    return basics, nonbasics
+
+
+def _category_breakdown(
+    bands: Mapping[str, QuotaBand], result: CpSatResult
+) -> dict[str, CategoryRow]:
+    return {
+        category: CategoryRow(
+            count=result.counts.get(category, 0),
+            lo=band.min,
+            hi=band.max,
+            band=_band_kind(category),
+            # The solver's own verdict, which for `lands` already accounts for
+            # the Karsten floor that `lo` cannot show. See `CategoryRow`.
+            within_band=result.statuses.get(category) == CategoryStatus.IN_RANGE,
+        )
+        for category, band in bands.items()
+    }
+
+
+def _band_kind(category: str) -> str:
+    """How this category's band binds the solver. See the ``BAND_*`` constants.
+
+    ``lands`` is asked by name because its floor is the one constraint
+    ``_assemble_model`` places outside the ``stage.composition`` guard;
+    ``CEILING_ONLY_CATEGORIES`` is asked as the constant rather than by
+    testing ``band.min == 0``, because it is a statement about the category's
+    nature (the config *forbids* it a floor), not about today's numbers.
+    """
+    if category == LANDS_CATEGORY:
+        return BAND_HARD
+    if category in CEILING_ONLY_CATEGORIES:
+        return BAND_CEILING_ONLY
+    return BAND_SOFT_NO_LOWER
+
+
+def _curve_breakdown(
+    state: AppState, nonbasics: Sequence[DeckEntry]
+) -> dict[str, CurveRow]:
+    """Mana-curve histogram of the selected non-lands, by ``curve_bucket``.
+
+    Buckets ("0".."6", "7+") and not raw CMCs, because that is the vocabulary
+    the Karsten land floor already speaks (``quotas.lands``) and a second one
+    would be a second thing to keep in sync. Lands are excluded: they have no
+    meaningful cost and would swamp bucket 0.
+    """
+    curve: dict[str, int] = {}
+    for entry in nonbasics:
+        if LANDS_CATEGORY in entry.categories:
+            continue
+        card = state.pool.by_name[entry.name]
+        bucket = curve_bucket(card.get("cmc"))
+        curve[bucket] = curve.get(bucket, 0) + entry.count
+    return {bucket: CurveRow(count=count) for bucket, count in sorted(curve.items())}
+
+
+def _color_source_breakdown(result: CpSatResult) -> dict[str, ColorSourceRow]:
+    """The solver's color-fixing rows, with ``target`` published as ``demand``.
+
+    ``demand`` on the wire because that is the TFM's name for it and the
+    frontend reads it; ``target`` internally because that is the solver's.
+    This function is the only place the two meet. Empty at the
+    ``base_size_and_lands`` stage, where the solver drops the color term.
+    """
+    rows: Mapping[str, Any] = result.penalties.get("color_sources") or {}
+    return {
+        color: ColorSourceRow(
+            sources=row["sources"], demand=row["target"], deficit=row["deficit"]
+        )
+        for color, row in rows.items()
+    }
 
 
 def _cards(state: AppState, entries: Sequence[DeckEntry]) -> list[DeckCardView]:
@@ -326,10 +436,11 @@ def swap_candidates_for(
     """Rank the feasible replacements for ``out``. Blocking (reads EDHREC)."""
     ctx = _swap_context(state, request)
     data = edhrec_data(state, ctx.row.name)
+    pool_candidates = _pool_candidates(state, ctx.row, ctx.bands, data)
     candidates, feasible_count = swap_candidates(
         deck=ctx.deck,
         out_card=ctx.out_card,
-        pool_candidates=_pool_candidates(state, ctx.row, ctx.bands, data),
+        pool_candidates=pool_candidates,
         bands=ctx.bands,
         commander=ctx.commander,
         banned_names=state.banned_names,
@@ -338,12 +449,29 @@ def swap_candidates_for(
         always_names=ctx.always_names,
         limit=request.limit,
     )
+    out_category = primary_category(ctx.out_card)
+    # The outgoing card's own score, on the same scale as the candidates', so
+    # the panel can put them side by side. 0.0 when EDHREC does not recommend
+    # it for this commander at all -- which is a real answer ("nothing here
+    # wants this card"), not a missing one.
+    out_score = next(
+        (score for facts, score in pool_candidates if facts.name == ctx.out_card.name),
+        0.0,
+    )
     return SwapCandidatesResponse(
-        current=card_view(state.pool.by_name[ctx.out_card.name]),
+        current=bench_card_view(
+            state.pool.by_name[ctx.out_card.name],
+            categories=sorted(ctx.out_card.categories),
+            score=out_score,
+            slot=out_category,
+            reason=candidate_reason(out_category, out_score),
+        ),
         candidates=[
-            CandidateView(
-                **card_view(state.pool.by_name[candidate.name]).model_dump(),
+            bench_card_view(
+                state.pool.by_name[candidate.name],
+                categories=candidate.categories,
                 score=candidate.score,
+                slot=candidate.primary_category,
                 reason=candidate_reason(candidate.primary_category, candidate.score),
             )
             for candidate in candidates
@@ -391,7 +519,7 @@ def maybeboard_for(state: AppState, request: MaybeboardRequest) -> MaybeboardRes
     )
     commander_identity = frozenset(row.color_identity)
 
-    grouped: dict[str, list[CandidateView]] = {}
+    grouped: dict[str, list[DeckCardView]] = {}
     for facts, score in _pool_candidates(state, row, bands, data):
         if facts.name in excluded:
             continue
@@ -399,9 +527,11 @@ def maybeboard_for(state: AppState, request: MaybeboardRequest) -> MaybeboardRes
             continue
         category = primary_category(facts)
         grouped.setdefault(category, []).append(
-            CandidateView(
-                **card_view(state.pool.by_name[facts.name]).model_dump(),
+            bench_card_view(
+                state.pool.by_name[facts.name],
+                categories=sorted(facts.categories),
                 score=score,
+                slot=category,
                 reason=candidate_reason(category, score),
             )
         )

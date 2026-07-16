@@ -189,20 +189,40 @@ def krenko_deck(real_app_state: AppState) -> dict:
     return response.json()
 
 
+def _all_cards(deck: dict) -> list[dict]:
+    """The whole 99: /build publishes basics apart from everything else."""
+    return deck["nonbasic_cards"] + deck["basic_lands"]
+
+
 def test_the_deck_has_exactly_99_cards(krenko_deck: dict) -> None:
-    assert sum(card["count"] for card in krenko_deck["mainboard"]) == 99
+    assert sum(card["count"] for card in _all_cards(krenko_deck)) == 99
+    assert krenko_deck["deck_size"] == 99
+    # selected_count is the non-basics: the cards the solver actually chose.
+    assert krenko_deck["selected_count"] == len(krenko_deck["nonbasic_cards"])
+
+
+def test_the_basics_are_split_out_and_are_the_only_duplicates(
+    krenko_deck: dict,
+) -> None:
+    """The split is the point of the two lists: basics are the legal duplicate."""
+    assert krenko_deck["basic_lands"], "Krenko runs basics"
+    for card in krenko_deck["basic_lands"]:
+        assert "Basic" in card["type_line"]
+    assert all(card["count"] == 1 for card in krenko_deck["nonbasic_cards"])
 
 
 def test_the_commander_is_not_in_its_own_99(krenko_deck: dict) -> None:
-    assert COMMANDER not in [card["name"] for card in krenko_deck["mainboard"]]
+    assert COMMANDER not in [card["name"] for card in _all_cards(krenko_deck)]
+    assert krenko_deck["commander_name"] == COMMANDER
     assert krenko_deck["commander"]["name"] == COMMANDER
+    assert krenko_deck["commander_id"] == krenko_deck["commander"]["oracle_id"]
 
 
 def test_the_dials_are_echoed_and_the_bands_are_derived(krenko_deck: dict) -> None:
     assert krenko_deck["dials"] == {}
     # The bands are the server's answer, not the client's question.
-    assert set(krenko_deck["bands"]) == set(krenko_deck["statuses"])
-    assert krenko_deck["bands"]["lands"]["lo"] <= krenko_deck["bands"]["lands"]["hi"]
+    lands = krenko_deck["category_breakdown"]["lands"]
+    assert lands["lo"] <= lands["hi"]
 
 
 def test_the_dials_actually_move_the_bands(
@@ -216,7 +236,10 @@ def test_the_dials_actually_move_the_bands(
     assert response.status_code == 200
     body = response.json()
     assert body["dials"] == {"lands": "low"}
-    assert body["bands"]["lands"]["hi"] < krenko_deck["bands"]["lands"]["hi"]
+    assert (
+        body["category_breakdown"]["lands"]["hi"]
+        < krenko_deck["category_breakdown"]["lands"]["hi"]
+    )
 
 
 def test_every_deck_card_carries_the_full_card_shape(krenko_deck: dict) -> None:
@@ -225,30 +248,122 @@ def test_every_deck_card_carries_the_full_card_shape(krenko_deck: dict) -> None:
         "oracle_id",
         "scryfall_id",
         "color_identity",
+        "type_line",
+        "mana_cost",
+        "cmc",
+        "image_uri_normal",
+        "image_uri_art_crop",
+        "categories",
         "count",
         "slot",
         "reason",
         "score",
     }
-    for section in ("mainboard", "maybeboard", "new_cards"):
+    for section in ("nonbasic_cards", "basic_lands", "maybeboard", "new_cards"):
         assert krenko_deck[section], f"{section} should not be empty for Krenko"
         for card in krenko_deck[section]:
             assert set(card) == fields
-            # Fase 5 builds the card images from this.
+            # Fase 5 builds the card images from these.
             assert card["scryfall_id"]
+            assert card["image_uri_normal"]
+            assert card["image_uri_art_crop"]
 
 
-def test_the_solver_block_reports_what_it_did(krenko_deck: dict) -> None:
-    solver = krenko_deck["solver"]
-    assert solver["status"] in ("OPTIMAL", "FEASIBLE")
-    assert solver["solve_time_s"] > 0
-    assert set(solver) == {"status", "stage", "solve_time_s", "objective"}
+def test_the_build_omits_what_does_not_apply_to_this_group(krenko_deck: dict) -> None:
+    """Price and WotC's bracket policy are absent, not null.
+
+    The group plays proxies (price is meaningless) and its own banlist replaces
+    the bracket/Game Changer policy. Returning these as null "for parity" with
+    the TFM would be noise pretending to be an equivalence.
+    """
+    omitted = {
+        "price_eur",
+        "budget_total",
+        "budget_available",
+        "deck_cost",
+        "max_card_price",
+        "is_game_changer",
+        "gc_cap",
+        "gc_floor",
+        "game_changer_count",
+        "bracket",
+        "target_bracket",
+        "power_weight",
+    }
+    assert not (omitted & set(krenko_deck))
+    assert not (omitted & set(krenko_deck["nonbasic_cards"][0]))
+
+
+def test_the_solver_reports_what_it_did_at_the_root(krenko_deck: dict) -> None:
+    assert krenko_deck["status"] in ("OPTIMAL", "FEASIBLE")
+    assert krenko_deck["solve_time_seconds"] > 0
+    assert krenko_deck["relaxation_stage"] in (
+        "none",
+        "soft_category_floors",
+        "drop_ceilings",
+        "base_size_and_lands",
+    )
+    # A 200 is always a real deck: infeasibility is a 422.
+    assert krenko_deck["infeasible_reason"] is None
+    assert krenko_deck["target_structure_source"] in ("commander", "archetype")
+
+
+def test_the_category_breakdown_fuses_counts_bands_and_statuses(
+    krenko_deck: dict,
+) -> None:
+    breakdown = krenko_deck["category_breakdown"]
+    assert set(breakdown) == {
+        "lands",
+        "ramp",
+        "card_draw",
+        "removal",
+        "board_wipe",
+        "wincons",
+        "protection",
+        "synergy",
+    }
+    for row in breakdown.values():
+        assert set(row) == {"count", "lo", "hi", "band", "within_band"}
+    # Verified against cp_sat._assemble_model: the lands floor is the only one
+    # applied outside the `stage.composition` guard; synergy is ceiling-only by
+    # config (min == 0); every other floor is relaxed into a penalty.
+    assert breakdown["lands"]["band"] == "hard"
+    assert breakdown["synergy"]["band"] == "ceiling_only"
+    assert breakdown["synergy"]["lo"] == 0
+    assert breakdown["removal"]["band"] == "soft_no_lower"
+
+
+def test_the_curve_breakdown_counts_nonlands_and_promises_no_target(
+    krenko_deck: dict,
+) -> None:
+    """Only a count: our solver has no curve objective to compare against."""
+    curve = krenko_deck["curve_breakdown"]
+    assert curve, "Krenko has non-lands"
+    for row in curve.values():
+        assert set(row) == {"count"}
+    nonlands = [
+        card
+        for card in krenko_deck["nonbasic_cards"]
+        if "lands" not in card["categories"]
+    ]
+    assert sum(row["count"] for row in curve.values()) == len(nonlands)
+
+
+def test_the_color_source_breakdown_reports_demand_not_target(
+    krenko_deck: dict,
+) -> None:
+    """Krenko is mono-red, so R is the one color with real demand."""
+    colors = krenko_deck["color_source_breakdown"]
+    assert set(colors) == {"R"}
+    row = colors["R"]
+    assert set(row) == {"sources", "demand", "deficit"}
+    assert row["deficit"] == max(0, row["demand"] - row["sources"])
 
 
 def test_a_relaxed_stage_warns_but_still_answers_200(krenko_deck: dict) -> None:
     """INFEASIBLE is not an HTTP error: the warning and the stage carry it."""
     codes = {w["code"] for w in krenko_deck["warnings"]}
-    if krenko_deck["solver"]["stage"] == "none":
+    if krenko_deck["relaxation_stage"] == "none":
         assert "relaxed_stage" not in codes
     else:
         assert "relaxed_stage" in codes
@@ -274,13 +389,16 @@ def test_a_forced_relaxed_stage_answers_200_with_an_amber_warning(
 
     assert response.status_code == 200
     body = response.json()
-    assert body["solver"]["stage"] == "soft_category_floors"
+    assert body["relaxation_stage"] == "soft_category_floors"
     assert [w["code"] for w in body["warnings"]] == ["relaxed_stage"]
     assert body["warnings"][0]["severity"] == "amber"
 
 
 def test_the_lands_never_go_below_the_karsten_floor(krenko_deck: dict) -> None:
-    assert krenko_deck["counts"]["lands"] >= krenko_deck["karsten_floor"]
+    assert (
+        krenko_deck["category_breakdown"]["lands"]["count"]
+        >= krenko_deck["karsten_floor"]
+    )
     assert krenko_deck["lands_target"] >= 0
 
 
@@ -291,4 +409,4 @@ def test_a_second_build_reuses_the_edhrec_memo(
     response = client.post("/build", json={"commander": COMMANDER})
 
     assert response.status_code == 200
-    assert response.json()["mainboard"] == krenko_deck["mainboard"]
+    assert response.json()["nonbasic_cards"] == krenko_deck["nonbasic_cards"]

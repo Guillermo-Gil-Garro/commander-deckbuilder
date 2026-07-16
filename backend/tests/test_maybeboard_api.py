@@ -21,7 +21,23 @@ from app.state import AppState
 from selector.deck_rules import RuleContext, resolve_never
 
 COMMANDER = "Krenko, Mob Boss"
-CARD_FIELDS = {"name", "oracle_id", "scryfall_id", "color_identity", "score", "reason"}
+# The one card shape the whole API publishes (app.schemas.DeckCardView).
+CARD_FIELDS = {
+    "name",
+    "oracle_id",
+    "scryfall_id",
+    "color_identity",
+    "type_line",
+    "mana_cost",
+    "cmc",
+    "image_uri_normal",
+    "image_uri_art_crop",
+    "categories",
+    "count",
+    "slot",
+    "reason",
+    "score",
+}
 
 
 @pytest.fixture()
@@ -47,9 +63,12 @@ def krenko_mainboard(real_app_state: AppState) -> list[dict]:
     finally:
         del app_main.app.state.deckbuilder
     assert response.status_code == 200, response.text
+    deck = response.json()
+    # The 99 is the two lists together: /build returns basics apart from the
+    # rest, and the maybeboard wants the whole mainboard back.
     return [
         {"name": card["name"], "count": card["count"]}
-        for card in response.json()["mainboard"]
+        for card in deck["nonbasic_cards"] + deck["basic_lands"]
     ]
 
 

@@ -178,12 +178,9 @@ def featured_commanders(request: Request) -> CommandersResponse:
     """
     state = _state(request)
     # load_featured resolved these to canonical pool names, and startup proved
-    # each one is selectable, so both lookups are total.
+    # each one is selectable, so the lookup is total.
     commanders = [
-        commander_view(
-            state.commander_by_name(c.name),  # type: ignore[arg-type]
-            archetype_for(state.quotas, c.name),
-        )
+        commander_view(state.pool.by_name[c.name], archetype_for(state.quotas, c.name))
         for c in state.featured
     ]
     return CommandersResponse(count=len(commanders), commanders=commanders)
@@ -209,7 +206,7 @@ def search_commanders(
     """
     state = _state(request)
     commanders = [
-        commander_view(row, archetype_for(state.quotas, row.name))
+        commander_view(state.pool.by_name[row.name], archetype_for(state.quotas, row.name))
         for row in state.search_commanders(q, limit)
     ]
     return CommandersResponse(count=len(commanders), commanders=commanders)
@@ -275,22 +272,47 @@ async def build_deck(request: Request, payload: DeckRequest) -> DeckResponse:
     cacheable — it takes 0.05-10 s, reads the disk and may call EDHREC. The
     shareable link to a deck is a frontend route, not this URL.
 
-    ``dials`` is echoed back; ``bands`` is **derived** from ``quotas.yaml`` +
-    commander + dials on every request and is **never** accepted from the
-    client (sending it is a 422). It is in the response as information only:
-    the server does not trust it and neither should you. Each band is an
-    inclusive ``{lo, hi}``; ``/structure`` returns the same thing without
-    building anything.
+    The 99 comes back as **two lists**: ``nonbasic_cards`` and ``basic_lands``.
+    Basics are the only legal duplicate and the only rows with ``count > 1``.
+    ``deck_size`` is the whole 99; ``selected_count`` is the non-basics alone
+    — the cards the solver *chose*, since basics are placed by its per-color
+    counters.
+
+    ``dials`` is echoed back. The bands are **derived** from ``quotas.yaml`` +
+    commander + dials on every request and are **never** accepted from the
+    client (sending ``bands`` is a 422). They come back inside
+    ``category_breakdown`` as information only: the server does not trust the
+    client's copy and neither should you. ``/structure`` returns the same
+    bands without building anything.
+
+    Three breakdowns explain the deck:
+
+    - ``category_breakdown``: ``{count, lo, hi, band, within_band}`` per
+      category. ``band`` says how the quota binds the solver — ``hard`` (never
+      relaxed: ``lands``), ``ceiling_only`` (no floor at all: ``synergy``) or
+      ``soft_no_lower`` (floor becomes a penalty when the solver relaxes).
+      **``within_band`` is not ``lo <= count <= hi``**: ``lands`` is really
+      bound by ``max(lo, karsten_floor)``, which the deck's own curve decides.
+    - ``curve_breakdown``: ``{count}`` per curve bucket of the non-lands.
+      Only a count — unlike the TFM, our solver has no curve target to deviate
+      from, so a ``target`` here would be fiction.
+    - ``color_source_breakdown``: ``{sources, demand, deficit}`` per color.
+      Fixing is a *soft* objective term, so a small deficit is a price the
+      solver chose to pay, not a broken deck.
 
     ``maybeboard`` here is this build's bench, frozen at build time. Once the
     player starts swapping it goes stale — ``POST /maybeboard`` recomputes it
     for the deck's current state.
 
     A deck at a relaxed solver stage is a 200, not an error: read
-    ``solver.stage`` and the amber ``relaxed_stage`` warning. Only an input no
-    relaxation can satisfy is a 422. ``statuses`` is the quota traffic light;
-    ``unresolved`` lists EDHREC recommendations absent from our pool, which
-    were simply skipped.
+    ``relaxation_stage`` and the amber ``relaxed_stage`` warning. Only an
+    input no relaxation can satisfy is a 422, which is why
+    ``infeasible_reason`` is always null here. ``unresolved`` lists EDHREC
+    recommendations absent from our pool, which were simply skipped.
+
+    404 for an unknown commander or one EDHREC has no page for, 422 for a
+    banned commander / a bad dial / an unbuildable input, 502 if EDHREC is
+    unreachable, 503 if the card pool never loaded.
     """
     state = _state(request)
     async with _build_slots:

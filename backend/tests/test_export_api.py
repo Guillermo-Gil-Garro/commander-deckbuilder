@@ -139,7 +139,7 @@ def test_a_real_krenko_deck_round_trips_through_the_export(
             "commander": COMMANDER,
             "deck": [
                 {"name": c["name"], "count": c["count"], "slot": c["slot"]}
-                for c in deck["mainboard"]
+                for c in deck["nonbasic_cards"] + deck["basic_lands"]
             ],
             "maybeboard": [{"name": c["name"]} for c in deck["maybeboard"]],
             "new_cards": [{"name": c["name"]} for c in deck["new_cards"]],

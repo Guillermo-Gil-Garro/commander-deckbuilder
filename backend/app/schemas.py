@@ -11,11 +11,10 @@ Fase 5 builds the card images from.
 
 from __future__ import annotations
 
-from typing import Any, Literal, Mapping
+from typing import Any, Literal, Mapping, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.state import CommanderRow
 from quotas.config import QuotaBand
 from selector.greedy import DeckEntry
 
@@ -46,7 +45,16 @@ class HealthResponse(BaseModel):
 
 
 class CardView(BaseModel):
-    """One card as the API publishes it, everywhere."""
+    """One card as the API publishes it, everywhere.
+
+    Everything here is a *fact about the card*, straight from the pool: the
+    printing (``scryfall_id``, images), the mana (``mana_cost``, ``cmc``) and
+    the identity. Nothing here depends on a deck, which is why the commander,
+    a maybeboard card and a mainboard card can all be this shape.
+
+    ``score``, ``categories`` and the rest of the "what is this card doing in
+    *this* deck" fields live in ``DeckCardView``.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -54,6 +62,11 @@ class CardView(BaseModel):
     oracle_id: str
     scryfall_id: str
     color_identity: list[str]
+    type_line: str | None
+    mana_cost: str
+    cmc: float
+    image_uri_normal: str | None
+    image_uri_art_crop: str | None
 
 
 def card_view(card: Mapping[str, Any]) -> CardView:
@@ -62,12 +75,22 @@ def card_view(card: Mapping[str, Any]) -> CardView:
     Raises ``KeyError`` for a card missing a required field: the pool is
     built by our own pipeline, so a gap is a bug to surface, not to paper
     over with a default.
+
+    The image URIs are ``None`` for the handful of cards Scryfall has no art
+    for; they are nullable rather than absent so a client always reads the
+    same key. ``mana_cost`` is ``""`` for lands, which have none — that is the
+    card's real mana cost, not a missing value.
     """
     return CardView(
         name=card["name"],
         oracle_id=card["oracle_id"],
         scryfall_id=card["scryfall_id"],
         color_identity=list(card.get("color_identity") or ()),
+        type_line=card.get("type_line"),
+        mana_cost=card.get("mana_cost") or "",
+        cmc=float(card.get("cmc") or 0.0),
+        image_uri_normal=card.get("image_uri_normal"),
+        image_uri_art_crop=card.get("image_uri_art_crop"),
     )
 
 
@@ -98,15 +121,18 @@ class CommandersResponse(BaseModel):
     commanders: list[CommanderView]
 
 
-def commander_view(row: CommanderRow, archetype: str) -> CommanderView:
-    """Project a pre-indexed commander row onto the commander shape."""
-    return CommanderView(
-        name=row.name,
-        oracle_id=row.oracle_id,
-        scryfall_id=row.scryfall_id,
-        color_identity=list(row.color_identity),
-        archetype=archetype,
-    )
+def commander_view(card: Mapping[str, Any], archetype: str) -> CommanderView:
+    """Project a pool card onto the commander shape (the card shape + archetype).
+
+    Takes the pool card and not the pre-indexed ``CommanderRow`` because the
+    card shape now carries the printing and mana facts, and ``CommanderRow``
+    only ever held the fields the search index needs. Callers hold a row and
+    reach the card through ``state.pool.by_name[row.name]``, which is a dict
+    hit — cheap at this endpoint's scale (``/commanders/search`` caps at 50).
+    ``GET /commanders`` ships thousands of rows and uses the slimmer
+    ``CommanderListItem`` instead.
+    """
+    return CommanderView(**card_view(card).model_dump(), archetype=archetype)
 
 
 class StructureResponse(BaseModel):
@@ -152,23 +178,108 @@ class BandView(BaseModel):
 
 
 class DeckCardView(CardView):
-    """A card *in a deck*: the one card shape plus its place in this build."""
+    """A card *in a deck or on a bench*: the card shape plus its role here.
 
+    The one shape for every list of cards this API returns that is not the
+    commander itself: ``nonbasic_cards``, ``basic_lands``, ``maybeboard``,
+    ``new_cards`` and the swap candidates. One shape means the frontend writes
+    one card component.
+
+    ``categories`` are **all** the card's quota categories (the tagger's
+    labels restricted to the banded ones); ``slot`` is the single one it is
+    displayed under. A removal that is also a creature counts against removal
+    *and* is shown there. Both are rederived server-side, never accepted from
+    a client.
+    """
+
+    categories: list[str]
     count: int  # > 1 only for basic lands
     slot: str  # the category it is displayed under
     reason: str  # why the selector put it here, in the selector's own words
     score: float | None  # None for basics: the solver places them, no score
 
 
-class SolverView(BaseModel):
-    """What the solver did. ``stage`` != "none" means quotas were relaxed."""
+# --- breakdowns --------------------------------------------------------------
+
+# How a category's band binds the solver. Reported per category so a client can
+# explain *why* a count sits outside its band instead of just flagging it red.
+# Verified against `selector/cp_sat.py::_assemble_model` and `_STAGES`:
+#
+# - `hard`: the floor holds at EVERY relaxation stage. Only `lands`
+#   (`_assemble_model` adds `lands_count >= lands_min` outside the
+#   `stage.composition` guard, and the module docstring says so: "never
+#   relaxed by design"). `lands_min` is the band min raised to the deck's
+#   Karsten floor by the outer fixpoint.
+# - `ceiling_only`: no floor at all, by config — `quotas.config`'s
+#   CEILING_ONLY_CATEGORIES have `min == 0`, and the model guards its floor
+#   with `if band.min > 0`. Today: `synergy`.
+# - `soft_no_lower`: floor is hard at stage `none` and becomes a penalised
+#   deficit from stage `soft_category_floors` on. Every other category.
+#
+# Ceilings are not what this field describes: they are hard through stage
+# `drop_ceilings` for every category alike, so they would not tell the
+# categories apart.
+BAND_HARD = "hard"
+BAND_CEILING_ONLY = "ceiling_only"
+BAND_SOFT_NO_LOWER = "soft_no_lower"
+
+
+class CategoryRow(BaseModel):
+    """One category's line in the quota panel: count, band and verdict.
+
+    ``lo``/``hi`` are the band ``quotas.yaml`` + the dials resolved to — the
+    same numbers ``/structure`` publishes.
+
+    **``within_band`` is not ``lo <= count <= hi``.** For ``lands`` the
+    effective minimum is ``max(lo, karsten_floor)``, which the deck's own
+    curve decides and can exceed ``lo``; ``within_band`` reports the real
+    verdict (``quotas.validator``), so it can be ``false`` on a count that
+    looks inside the printed band. ``karsten_floor`` and ``lands_target`` on
+    the build response are that missing number.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    status: str
-    stage: str
-    solve_time_s: float
-    objective: float
+    count: int
+    lo: int
+    hi: int
+    band: Literal["hard", "ceiling_only", "soft_no_lower"]
+    within_band: bool
+
+
+class CurveRow(BaseModel):
+    """One mana-curve bucket of the deck's non-lands.
+
+    **Only a count, deliberately.** The TFM's row carries ``target`` and
+    ``deviation`` because its solver penalises deviation from a target curve.
+    Ours does not: the curve is an *output* here — it feeds the Karsten land
+    floor (``quotas.lands``) and nothing in the objective pulls toward a
+    shape. Publishing a ``target`` would invent a goal the solver never had.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    count: int
+
+
+class ColorSourceRow(BaseModel):
+    """One color's mana-fixing line: how many sources, how many are wanted.
+
+    ``demand`` is the pool-derived Karsten target (``quotas.color_sources``);
+    ``sources`` counts the selected cards that produce this color, basics
+    included; ``deficit`` is ``max(0, demand - sources)``.
+
+    **A deficit is not an error.** Color fixing is a *soft* objective term
+    (see ``cp_sat``'s convex penalty): the solver buys a source whenever it
+    costs less than roughly 0.1 of score, so a small deficit means the cards
+    were worth more than the fixing, not that the deck is broken.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    sources: int
+    demand: int
+    deficit: int
 
 
 class NoticeView(BaseModel):
@@ -204,21 +315,67 @@ class DeckRequest(BaseModel):
 
 
 class DeckResponse(BaseModel):
-    """A built deck plus everything needed to explain and re-validate it."""
+    """A built deck plus everything needed to explain and re-validate it.
+
+    Flat, like the TFM API this frontend was written against: the solver's
+    verdict lives at the root (``status``, ``relaxation_stage``,
+    ``objective_value``, ``solve_time_seconds``) rather than nested under a
+    ``solver`` object, and the deck arrives as two lists — ``nonbasic_cards``
+    and ``basic_lands`` — instead of one mixed mainboard. Basics are the only
+    legal duplicate and the only rows with ``count > 1``; splitting them out
+    is what lets a client render "8x Mountain" as one tile without inspecting
+    type lines.
+
+    ``deck_size`` is the whole 99 (basics counted with multiplicity);
+    ``selected_count`` is just the non-basics — the cards the solver actually
+    *chose*, since basics are placed by its per-color counters.
+
+    ``infeasible_reason`` is always ``null`` here: an input no relaxation
+    stage can satisfy is a 422, so a 200 is always a real deck. The field is
+    part of the contract, not dead weight — read ``relaxation_stage`` and the
+    amber ``relaxed_stage`` warning to find out what the solver gave up.
+
+    ``dials`` is echoed back. The bands are **not** accepted from the client
+    (``DeckRequest`` is ``extra="forbid"``): they are rederived from
+    ``quotas.yaml`` + commander + dials on every request and come back inside
+    ``category_breakdown``, as information only.
+
+    ``maybeboard`` is this build's bench, frozen at build time; it goes stale
+    the moment the player swaps, and ``POST /maybeboard`` is what recomputes
+    it. ``unresolved`` lists EDHREC recommendations absent from our pool,
+    which were simply skipped — not an error.
+
+    Absent on purpose, and not as ``null``: ``price_eur``/``budget_total``/
+    ``deck_cost`` (the group plays proxies, so price is meaningless here) and
+    ``is_game_changer``/``bracket``/``gc_cap`` (WotC's power policy, which the
+    group's banlist replaces). ``num_eligible_nonbasics``/
+    ``num_eligible_basics`` are absent because the solver does not report the
+    size of its eligible set.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
+    commander_id: str
+    commander_name: str
     commander: CardView
     dials: dict[str, str | None]
-    bands: dict[str, BandView]
-    mainboard: list[DeckCardView]
+    status: str
+    deck_size: int
+    selected_count: int
+    nonbasic_cards: list[DeckCardView]
+    basic_lands: list[DeckCardView]
     maybeboard: list[DeckCardView]
     new_cards: list[DeckCardView]
-    counts: dict[str, int]
-    statuses: dict[str, str]
+    category_breakdown: dict[str, CategoryRow]
+    curve_breakdown: dict[str, CurveRow]
+    color_source_breakdown: dict[str, ColorSourceRow]
     karsten_floor: int
     lands_target: int
-    solver: SolverView
+    target_structure_source: Literal["commander", "archetype"]
+    relaxation_stage: str
+    objective_value: float
+    solve_time_seconds: float
+    infeasible_reason: str | None
     warnings: list[NoticeView]
     unresolved: list[str]
 
@@ -277,13 +434,6 @@ class SwapValidateRequest(SwapRequest):
     card_in: str = Field(alias="in", min_length=1)
 
 
-class CandidateView(CardView):
-    """One feasible replacement: the card shape plus why it is being offered."""
-
-    score: float
-    reason: str
-
-
 class SwapCandidatesResponse(BaseModel):
     """Replacements for ``current``, best first. ``feasible_count`` is the total.
 
@@ -298,8 +448,8 @@ class SwapCandidatesResponse(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    current: CardView
-    candidates: list[CandidateView]
+    current: DeckCardView
+    candidates: list[DeckCardView]
     feasible_count: int
     limit: int
 
@@ -340,7 +490,7 @@ class MaybeboardResponse(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    maybeboard: dict[str, list[CandidateView]]
+    maybeboard: dict[str, list[DeckCardView]]
     limit: int
 
 
@@ -412,12 +562,35 @@ def band_view(band: QuotaBand) -> BandView:
 def deck_card_view(card: Mapping[str, Any], entry: DeckEntry) -> DeckCardView:
     """Project a pool card plus its ``DeckEntry`` onto the deck card shape."""
     return DeckCardView(
-        name=card["name"],
-        oracle_id=card["oracle_id"],
-        scryfall_id=card["scryfall_id"],
-        color_identity=list(card.get("color_identity") or ()),
+        **card_view(card).model_dump(),
+        categories=list(entry.categories),
         count=entry.count,
         slot=entry.slot,
         reason=entry.reason,
         score=entry.score,
+    )
+
+
+def bench_card_view(
+    card: Mapping[str, Any],
+    *,
+    categories: Sequence[str],
+    score: float,
+    slot: str,
+    reason: str,
+) -> DeckCardView:
+    """Project a pool card that is *not* in a deck onto the deck card shape.
+
+    The swap candidates and the maybeboard: cards with a category, a score and
+    a reason, but no ``DeckEntry`` behind them because no selector placed them.
+    ``count`` is 1 — basics are never candidates (they are the only legal
+    duplicate and enter through the solver's per-color counters, not a swap).
+    """
+    return DeckCardView(
+        **card_view(card).model_dump(),
+        categories=sorted(categories),
+        count=1,
+        slot=slot,
+        reason=reason,
+        score=score,
     )
