@@ -126,15 +126,26 @@ class CommanderListItem(BaseModel):
 
     ``GET /commanders`` ships every selectable commander in one response so the
     frontend can page, filter by identity and search by name entirely in the
-    client. At that scale the card shape's other fields (``scryfall_id``,
-    ``mana_cost``, ``cmc``, ``type_line``, ``image_uri_normal``) are dead
-    weight — the picker renders an art crop and a name, and the deck endpoints
+    client. At that scale the card shape's remaining fields (``scryfall_id``,
+    ``mana_cost``, ``cmc``, ``type_line``) are dead weight — the deck endpoints
     hand back the full shape once a commander is chosen.
+
+    **Both images are here, and that is not redundancy.** The picker renders
+    the whole card, not a crop: the group's players do not know most of these
+    commanders and need to *read* what they do (Guille, 2026-07-15). The art
+    crop stays for the compact rows. The two URIs differ only by a path
+    segment, but deriving one from the other is the client guessing at
+    Scryfall's URL layout — the pool already stores both, so both are
+    published.
 
     ``featured`` is the group's shortlist (``featured_commanders.yaml``): a
     curated starting point for players who arrive without a commander in mind,
     not a claim that these are the best ones. The list is ordered featured
     first, then alphabetically.
+
+    ``description`` is that shortlist's one-line pitch, and is ``null`` for
+    every commander outside it — the overwhelming majority. It is only written
+    for the featured ones, so a null is "nobody wrote one", never a gap.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -142,9 +153,11 @@ class CommanderListItem(BaseModel):
     name: str
     oracle_id: str
     color_identity: list[str]
+    image_uri_normal: str | None
     image_uri_art_crop: str | None
     archetype: str
     featured: bool
+    description: str | None
 
 
 class CommanderListResponse(BaseModel):
@@ -157,16 +170,27 @@ class CommanderListResponse(BaseModel):
 
 
 def commander_list_item(
-    card: Mapping[str, Any], archetype: str, *, featured: bool
+    card: Mapping[str, Any],
+    archetype: str,
+    *,
+    featured: bool,
+    description: str | None,
 ) -> CommanderListItem:
-    """Project a pool card onto the slim picker shape."""
+    """Project a pool card onto the slim picker shape.
+
+    ``description`` is passed in rather than read from the card: it is the
+    group's editorial line from ``featured_commanders.yaml``, not a fact about
+    the printing, and nothing in the pool knows about it.
+    """
     return CommanderListItem(
         name=card["name"],
         oracle_id=card["oracle_id"],
         color_identity=list(card.get("color_identity") or ()),
+        image_uri_normal=card.get("image_uri_normal"),
         image_uri_art_crop=card.get("image_uri_art_crop"),
         archetype=archetype,
         featured=featured,
+        description=description,
     )
 
 

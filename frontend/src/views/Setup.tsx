@@ -21,8 +21,7 @@ import {
 } from '../components/ui';
 import { ParamsIcon } from '../components/icons';
 import { DialBar } from '../components/dials';
-import { normalImageUri, type CommanderListItem, type Dials } from '../api';
-import { commanderDescription } from '../commanderDescriptions';
+import { type CommanderListItem, type Dials } from '../api';
 import { DIALS, archetypeLabel, ARCHETYPE_OPTIONS } from '../labels';
 
 // Page size tuned to the card grid (fills ~3 rows per page).
@@ -341,8 +340,8 @@ function CommanderPick({
 }) {
   // The whole card, not a crop: the point is that someone who has never seen the
   // commander can read what it does.
-  const image = normalImageUri(commander.image_uri_art_crop);
-  const description = commanderDescription(commander.name);
+  const image = commander.image_uri_normal;
+  const description = commander.description;
   const archetype = curatedArchetype(commander);
 
   return (

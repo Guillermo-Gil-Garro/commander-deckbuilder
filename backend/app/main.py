@@ -189,30 +189,39 @@ def list_commanders(request: Request) -> CommanderListResponse:
     ``featured`` marks the group's curated shortlist
     (``featured_commanders.yaml``) — a starting point for players who arrive
     without a commander in mind, **not** a claim that these are the strongest.
-    Ordered featured first, then alphabetically.
+    Ordered featured first, then alphabetically. ``description`` is that
+    shortlist's one-line pitch and is ``null`` for everyone else.
 
     ``archetype`` is the quota archetype the build would start from
     (``quotas.yaml``), **not** a claim about how the deck actually plays: it
     says which bands the solver begins with, nothing more.
 
-    Rows here carry only what the picker draws (name, identity, art crop,
-    archetype). The full card shape — mana cost, type line, both images —
-    comes back from the deck endpoints once a commander is chosen.
+    Rows here carry what the picker draws (name, identity, both images,
+    archetype, description). The rest of the card shape — mana cost, type
+    line, ``scryfall_id`` — comes back from the deck endpoints once a
+    commander is chosen.
 
     503 if the card pool never loaded.
     """
     state = _state(request)
-    featured = {c.name for c in state.featured}
+    # Keyed by `name` and not `oracle_id` because `load_featured` already
+    # resolved every YAML name to its canonical pool name — including the
+    # double-faced commanders the file lists by front face alone ("Kefka,
+    # Court Mage" for "Kefka, Court Mage // Kefka, Ruler of Ruin"). So these
+    # keys are `CommanderRow.name` by construction, and a lookup here cannot
+    # silently miss the way an exact match against the raw YAML would.
+    descriptions = {c.name: c.description for c in state.featured}
     commanders = [
         commander_list_item(
             state.pool.by_name[row.name],
             archetype_for(state.quotas, row.name),
-            featured=row.name in featured,
+            featured=row.name in descriptions,
+            description=descriptions.get(row.name),
         )
         # `state.commanders` is already sorted by name, so a stable sort on
         # "not featured" is the whole ordering: shortlist first, each group
         # alphabetical.
-        for row in sorted(state.commanders, key=lambda r: r.name not in featured)
+        for row in sorted(state.commanders, key=lambda r: r.name not in descriptions)
     ]
     return CommanderListResponse(count=len(commanders), commanders=commanders)
 

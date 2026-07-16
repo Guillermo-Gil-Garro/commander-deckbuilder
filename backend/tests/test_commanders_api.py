@@ -51,9 +51,11 @@ LIST_FIELDS = {
     "name",
     "oracle_id",
     "color_identity",
+    "image_uri_normal",
     "image_uri_art_crop",
     "archetype",
     "featured",
+    "description",
 }
 
 
@@ -73,11 +75,60 @@ def test_the_list_carries_every_selectable_commander(
 
 
 def test_the_list_carries_the_slim_picker_shape(client: TestClient) -> None:
-    """Slim by design: thousands of rows, and the picker draws an art crop."""
+    """Slim by design, but both images: the picker renders the whole card."""
     body = client.get("/commanders").json()["commanders"]
 
     assert all(set(card) == LIST_FIELDS for card in body)
     assert all(card["image_uri_art_crop"] for card in body)
+    assert all(card["image_uri_normal"] for card in body)
+
+
+def test_the_list_publishes_the_full_card_image_from_the_pool(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    """Straight from the pool, never derived from the art crop's URL.
+
+    The frontend used to rewrite `/art_crop/` to `/normal/`; that guessed at
+    Scryfall's URL layout. This is the field the pool actually stores.
+    """
+    body = client.get("/commanders").json()["commanders"]
+
+    assert {c["name"]: c["image_uri_normal"] for c in body} == {
+        row.name: real_app_state.pool.by_name[row.name]["image_uri_normal"]
+        for row in real_app_state.commanders
+    }
+
+
+def test_the_list_describes_the_featured_and_only_them(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    """A description is the shortlist's pitch; null everywhere else."""
+    body = client.get("/commanders").json()["commanders"]
+
+    described = {c["name"]: c["description"] for c in body if c["description"]}
+    assert described == {c.name: c.description for c in real_app_state.featured}
+    assert all(c["description"] is None for c in body if not c["featured"])
+    assert all(c["description"] for c in body if c["featured"])
+
+
+def test_the_list_describes_double_faced_featured_commanders(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    """The trap: the YAML names a front face, the API a canonical "a // b".
+
+    `featured_commanders.yaml` lists Sephiroth, Etali and Kefka by their front
+    face alone. An exact match against the raw YAML name would drop their
+    descriptions **silently** — every other commander would still be fine, so
+    nothing would fail. `load_featured` resolves through the pool's NameIndex,
+    which is what makes the lookup land.
+    """
+    body = {c["name"]: c for c in client.get("/commanders").json()["commanders"]}
+
+    double_faced = [c.name for c in real_app_state.featured if " // " in c.name]
+    assert len(double_faced) >= 3, "the double-faced featured commanders are the point"
+    for name in double_faced:
+        assert body[name]["featured"] is True
+        assert body[name]["description"], f"{name} lost its description"
 
 
 def test_the_list_puts_the_featured_first_then_sorts_alphabetically(

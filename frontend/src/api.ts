@@ -20,29 +20,18 @@ export type CommanderListItem = {
   name: string;
   oracle_id: string;
   color_identity: ColorCode[];
+  /** The whole card, readable: the picker renders this so players who do not
+   *  know a commander can read what it does. */
+  image_uri_normal: string | null;
   image_uri_art_crop: string | null;
   archetype: string;
   /** The group's curated shortlist (featured_commanders.yaml). Also the only
    *  commanders whose `archetype` is a real judgement — see `curatedArchetype`. */
   featured: boolean;
+  /** The shortlist's one-line pitch, straight from featured_commanders.yaml.
+   *  `null` for every commander outside it, which is most of them. */
+  description: string | null;
 };
-
-/** The full, readable card image for a commander.
- *
- *  `GET /commanders` ships only `image_uri_art_crop` (it was built for a picker
- *  that rendered cropped art), but this picker shows the whole card so players
- *  who do not know a commander can read what it does. Scryfall serves every size
- *  of a given printing under the same path with only the size segment changing,
- *  so the full image is a pure rewrite of the crop URL — verified byte-identical
- *  against the `image_uri_normal` that `/structure` returns for the same cards.
- *
- *  This is a stopgap: the honest fix is for `/commanders` to return
- *  `image_uri_normal` directly.
- */
-export function normalImageUri(artCropUri: string | null): string | null {
-  if (!artCropUri) return null;
-  return artCropUri.replace('/art_crop/', '/normal/');
-}
 
 export type StructureBand = {
   lo: number;
