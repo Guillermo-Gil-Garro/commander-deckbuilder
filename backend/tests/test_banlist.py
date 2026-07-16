@@ -7,6 +7,8 @@ from rules.banlist import (
     Banlist,
     BanlistError,
     ResolvedBanlist,
+    banlist_archetype_exception_names,
+    banlist_archetype_exceptions,
     banlist_names,
     load_banlist,
     resolve_banlist,
@@ -216,6 +218,66 @@ def test_real_banlist_names_project_one_to_one(real_index: NameIndex) -> None:
     assert len(watchlist) == len(resolved.watchlist)
     assert "Demonic Tutor" in banned
     assert "Tergrid, God of Fright // Tergrid's Lantern" in watchlist
+
+
+# --- archetype-scoped exceptions --------------------------------------------
+
+
+def test_archetype_exceptions_map_tagged_cards(tmp_path: Path) -> None:
+    """`legal_in_archetypes` builds an archetype -> exempted oracle_ids map; a
+    plain ban contributes nothing."""
+    index = _index(tmp_path, {"Card A": "oid-a", "Card B": "oid-b"})
+    banlist = _banlist(
+        cards=[
+            {
+                "name": "Card A",
+                "status": "banned",
+                "reason": "test",
+                "legal_in_archetypes": ["enchantress"],
+            },
+            {"name": "Card B", "status": "banned", "reason": "test"},
+        ]
+    )
+    exceptions = banlist_archetype_exceptions(banlist, index)
+    assert exceptions == {"enchantress": frozenset({"oid-a"})}
+
+
+def test_archetype_exceptions_default_is_empty(tmp_path: Path) -> None:
+    index = _index(tmp_path, {"Card A": "oid-a"})
+    banlist = _banlist(cards=[{"name": "Card A", "status": "banned", "reason": "x"}])
+    assert banlist_archetype_exceptions(banlist, index) == {}
+
+
+def test_archetype_exception_names_project_to_names(tmp_path: Path) -> None:
+    exceptions = {"enchantress": frozenset({"oid-a"})}
+    names = banlist_archetype_exception_names(
+        exceptions, _cards({"Card A": "oid-a", "Card B": "oid-b"})
+    )
+    assert names == {"enchantress": frozenset({"Card A"})}
+
+
+def test_archetype_exception_names_fail_on_absent_oracle_id() -> None:
+    with pytest.raises(BanlistError, match="oid-ghost"):
+        banlist_archetype_exception_names(
+            {"enchantress": frozenset({"oid-ghost"})}, _cards({"Card A": "oid-a"})
+        )
+
+
+def test_real_banlist_archetype_exceptions(real_index: NameIndex) -> None:
+    """The trio is exempted for enchantress and stays in the global ban."""
+    banlist = load_banlist()
+    exceptions = banlist_archetype_exceptions(banlist, real_index)
+    names = banlist_archetype_exception_names(exceptions, list(_iter_real_pool()))
+    assert names == {
+        "enchantress": frozenset(
+            {"Rhystic Study", "Mystic Remora", "Smothering Tithe"}
+        )
+    }
+    # Still globally banned: the exception is a per-archetype subtraction, not a
+    # removal from `resolved.banned`.
+    resolved = resolve_banlist(banlist, real_index)
+    for name in ("Rhystic Study", "Mystic Remora", "Smothering Tithe"):
+        assert real_index.resolve(name).oracle_id in resolved.banned
 
 
 # --- Integration: the REAL banlist resolves fully against the REAL pool ----

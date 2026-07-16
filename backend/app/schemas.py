@@ -713,6 +713,13 @@ class BanlistCardView(BaseModel):
     card caught by a programmatic rule (a tutor, say), that rule's reason.
     ``image_uri_normal`` is ``None`` only for the handful of cards Scryfall has
     no art for, nullable so the client always reads the same key.
+
+    ``legal_in_archetypes`` lists the archetypes where this otherwise-banned
+    card is on-theme and therefore playable (``banlist.yaml``'s
+    ``legal_in_archetypes``): e.g. ``["enchantress"]`` for Rhystic Study. Empty
+    for the overwhelming majority, which are banned everywhere — so the panel
+    can show "salvo en enchantress" without inventing a rule. The card is still
+    listed as banned: it is the default, and the exception is the note.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -721,6 +728,7 @@ class BanlistCardView(BaseModel):
     reason: str
     image_uri_normal: str | None
     oracle_id: str
+    legal_in_archetypes: list[str] = Field(default_factory=list)
 
 
 class BanlistWatchlistView(BanlistCardView):

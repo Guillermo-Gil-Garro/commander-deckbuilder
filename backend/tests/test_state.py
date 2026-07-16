@@ -110,6 +110,31 @@ def test_banned_names_is_not_empty(real_app_state: AppState) -> None:
     assert "Approach of the Second Sun" in real_app_state.banned_names
 
 
+ENCHANTRESS_EXCEPTIONS = frozenset(
+    {"Rhystic Study", "Mystic Remora", "Smothering Tithe"}
+)
+
+
+def test_effective_banned_names_default_matches_global(
+    real_app_state: AppState,
+) -> None:
+    """An archetype with no exceptions sees the whole global ban unchanged."""
+    assert (
+        real_app_state.effective_banned_names("midrange")
+        == real_app_state.banned_names
+    )
+
+
+def test_effective_banned_names_enchantress_drops_the_trio(
+    real_app_state: AppState,
+) -> None:
+    """Enchantress decks lose exactly the passive-tax trio from the ban."""
+    effective = real_app_state.effective_banned_names("enchantress")
+    assert real_app_state.banned_names - effective == ENCHANTRESS_EXCEPTIONS
+    # The three are otherwise really in the global ban (so this is a real drop).
+    assert ENCHANTRESS_EXCEPTIONS <= real_app_state.banned_names
+
+
 def test_commander_index_excludes_both_ban_sets(real_app_state: AppState) -> None:
     """A card banned in the 99 must not resurface as a commander either."""
     banlist = real_app_state.resolved_banlist

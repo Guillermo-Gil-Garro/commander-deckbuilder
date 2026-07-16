@@ -15,8 +15,12 @@ from fastapi.testclient import TestClient
 from app import main as app_main
 from app.state import AppState
 
-BANNED_FIELDS = {"name", "reason", "image_uri_normal", "oracle_id"}
+BANNED_FIELDS = {"name", "reason", "image_uri_normal", "oracle_id", "legal_in_archetypes"}
 WATCHLIST_FIELDS = BANNED_FIELDS | {"scope"}
+
+# The passive-tax trio, banned by default but on-theme (and so legal) in
+# enchantress decks — see banlist.yaml's `legal_in_archetypes`.
+ENCHANTRESS_EXCEPTIONS = {"Rhystic Study", "Mystic Remora", "Smothering Tithe"}
 
 
 @pytest.fixture()
@@ -92,6 +96,22 @@ def test_both_lists_are_sorted_alphabetically(client: TestClient) -> None:
     assert [e["name"] for e in body["watchlist"]] == sorted(
         e["name"] for e in body["watchlist"]
     )
+
+
+def test_archetype_exceptions_are_marked_and_no_one_else(client: TestClient) -> None:
+    """The trio carries ``legal_in_archetypes: ["enchantress"]``; every other
+    banned card carries an empty list — the field is a note on the exception,
+    not a new status."""
+    banned = client.get("/banlist").json()["banned"]
+    exceptions = {
+        entry["name"]: entry["legal_in_archetypes"]
+        for entry in banned
+        if entry["legal_in_archetypes"]
+    }
+
+    assert exceptions == {name: ["enchantress"] for name in ENCHANTRESS_EXCEPTIONS}
+    # The trio is still listed as banned — the exception does not remove them.
+    assert ENCHANTRESS_EXCEPTIONS <= {entry["name"] for entry in banned}
 
 
 def test_banlist_is_degraded_without_a_pool(degraded_client: TestClient) -> None:

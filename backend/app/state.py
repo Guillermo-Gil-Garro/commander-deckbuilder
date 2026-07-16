@@ -38,6 +38,8 @@ from rules.banlist import (
     DEFAULT_BANLIST_PATH,
     Banlist,
     ResolvedBanlist,
+    banlist_archetype_exception_names,
+    banlist_archetype_exceptions,
     banlist_names,
     load_banlist,
     resolve_banlist,
@@ -168,6 +170,10 @@ class AppState:
     resolved_banlist: ResolvedBanlist
     banned_names: frozenset[str]
     watchlist_names: frozenset[str]
+    # Archetype -> the banned card names legal in that archetype (banlist.yaml's
+    # `legal_in_archetypes`). Subtracted from the global ban per deck via
+    # `effective_banned_names`; an archetype with no exceptions is simply absent.
+    banned_exceptions_by_archetype: Mapping[str, frozenset[str]]
     tagger: Callable[[str], set[str]]
     featured: tuple[FeaturedCommander, ...]
     tags_count: int
@@ -208,6 +214,18 @@ class AppState:
     def commander_by_name(self, name: str) -> CommanderRow | None:
         """Case-insensitive exact lookup by canonical pool name."""
         return self._by_lower_name.get(name.lower())
+
+    def effective_banned_names(self, archetype: str) -> frozenset[str]:
+        """The banned card names in force for a deck of ``archetype``.
+
+        The global ban minus the archetype's ``legal_in_archetypes`` exceptions
+        (``banlist.yaml``): a card exempted for ``enchantress`` drops out of the
+        ban for enchantress decks only. An archetype with no exceptions gets the
+        global ban unchanged.
+        """
+        return self.banned_names - self.banned_exceptions_by_archetype.get(
+            archetype, frozenset()
+        )
 
     def search_commanders(
         self, query: str, limit: int = COMMANDER_SEARCH_LIMIT_DEFAULT
@@ -383,6 +401,9 @@ def build_app_state(
     banlist = load_banlist(banlist_path)
     resolved_banlist = resolve_banlist(banlist, name_index)
     banned_names, watchlist_names = banlist_names(resolved_banlist, pool_cards)
+    banned_exceptions_by_archetype = banlist_archetype_exception_names(
+        banlist_archetype_exceptions(banlist, name_index), pool_cards
+    )
 
     tags_path = Path(tags_path)
     # load_tags treats a missing store as empty, which is right for the batch
@@ -419,6 +440,7 @@ def build_app_state(
         resolved_banlist=resolved_banlist,
         banned_names=banned_names,
         watchlist_names=watchlist_names,
+        banned_exceptions_by_archetype=banned_exceptions_by_archetype,
         tagger=tagger,
         featured=tuple(featured),
         tags_count=len(tag_store),

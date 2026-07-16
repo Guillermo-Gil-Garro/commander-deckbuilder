@@ -74,6 +74,11 @@ class CardBan(BaseModel):
     reason: str
     # Tag linking bans that close the same line (e.g. alt_win_empty_library).
     reason_group: str | None = None
+    # Archetypes (quotas.yaml) where this otherwise-banned card is on-theme and
+    # therefore legal: the card stays globally banned, but a deck of one of
+    # these archetypes may run it. Empty (the default) = banned everywhere.
+    # Colour identity filters on its own — a blue card only reaches blue decks.
+    legal_in_archetypes: list[str] = Field(default_factory=list)
 
 
 class CommanderBan(BaseModel):
@@ -286,3 +291,62 @@ def banlist_names(
         len(watchlist_names),
     )
     return banned_names, watchlist_names
+
+
+def banlist_archetype_exceptions(
+    banlist: Banlist, index: NameIndex
+) -> dict[str, frozenset[str]]:
+    """Archetype -> the banned oracle_ids that are *legal* in that archetype.
+
+    Reads the ``legal_in_archetypes`` field of each manual card ban: a card so
+    tagged stays in the global ``banned`` set (``resolve_banlist`` is untouched)
+    but is exempted for decks of the named archetypes. The result is the
+    per-archetype exception set the API subtracts from the global ban.
+
+    Raises ``BanlistError`` if a tagged card name does not resolve to exactly
+    one pool card — same policy as ``resolve_banlist``: a versioned config that
+    cannot be resolved is a startup failure, never a silent drop.
+    """
+    exceptions: dict[str, set[str]] = {}
+    for card in banlist.cards:
+        if card.status not in BANNED_STATUSES or not card.legal_in_archetypes:
+            continue
+        oracle_id = _resolve(index, card.name, "cards legal_in_archetypes")
+        for archetype in card.legal_in_archetypes:
+            exceptions.setdefault(archetype, set()).add(oracle_id)
+    return {archetype: frozenset(ids) for archetype, ids in exceptions.items()}
+
+
+def banlist_archetype_exception_names(
+    exceptions: Mapping[str, frozenset[str]], cards: Iterable[Mapping[str, Any]]
+) -> dict[str, frozenset[str]]:
+    """Project the per-archetype exception oracle_ids onto pool names.
+
+    The name-based twin of ``banlist_archetype_exceptions``, mirroring
+    ``banlist_names``: the selectors speak names, so the exceptions must too.
+    Names are the pool's canonical ``name`` field.
+
+    Raises ``BanlistError`` if an exception oracle_id is absent from ``cards``
+    — same contract as ``banlist_names``: a miss means the exceptions and the
+    pool came from different sources, which is a caller bug, not to be ignored.
+    """
+    wanted: frozenset[str] = frozenset().union(*exceptions.values()) if exceptions else frozenset()
+    names: dict[str, str] = {}
+    for card in cards:
+        oracle_id = card.get("oracle_id")
+        if oracle_id in wanted and oracle_id not in names:
+            names[oracle_id] = card["name"]
+
+    missing = wanted - names.keys()
+    if missing:
+        raise BanlistError(
+            f"archetype exceptions do not match the given cards: "
+            f"{len(missing)} oracle_id(s) absent from the pool "
+            f"({sorted(missing)}) — banlist_archetype_exceptions and "
+            f"banlist_archetype_exception_names must run against the same pool"
+        )
+
+    return {
+        archetype: frozenset(names[oracle_id] for oracle_id in ids)
+        for archetype, ids in exceptions.items()
+    }

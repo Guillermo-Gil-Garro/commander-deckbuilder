@@ -25,6 +25,11 @@ meta:
 #   banned_pending_review -> ban temporal con condición de revisión
 #   watchlist             -> legal, pero NUNCA auto-recomendada por el sistema;
 #                            solo añadible manualmente desde el maybeboard
+#
+# Campo opcional `legal_in_archetypes: [<arquetipo>, ...]` en un ban de `cards`:
+# la carta sigue baneada por defecto en todos los mazos, PERO deja de estarlo en
+# los mazos cuyo arquetipo (quotas.yaml) aparezca en la lista — es on-theme allí.
+# La identidad de color filtra sola (una carta azul solo entra en mazos azules).
 
 # ---------------------------------------------------------------------------
 # Reglas programáticas (se evalúan contra el pool completo; sobreviven a sets
@@ -74,15 +79,18 @@ cards:
   - name: Rhystic Study
     status: banned
     reason: "Auto-include azul; ventaja pasiva que castiga jugar Magic."
+    legal_in_archetypes: [enchantress]  # encantamiento on-theme en enchantress
   - name: Smothering Tithe
     status: banned
     reason: "Auto-include blanco; ventaja pasiva que castiga jugar Magic."
+    legal_in_archetypes: [enchantress]  # encantamiento on-theme en enchantress
   - name: Esper Sentinel
     status: banned
     reason: "Rhystic Study con patas; completa el trío de taxes pasivos."
   - name: Mystic Remora
     status: banned
     reason: "Rhystic pequeño; mismo patrón de tax pasivo."
+    legal_in_archetypes: [enchantress]  # encantamiento on-theme en enchantress
   - name: The One Ring
     status: banned
     reason: "Ventaja genérica incolora; va en cualquier mazo."

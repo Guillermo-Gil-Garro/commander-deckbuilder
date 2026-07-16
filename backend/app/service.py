@@ -320,6 +320,7 @@ def build_deck(state: AppState, request: DeckRequest) -> DeckResponse:
     row = resolve_commander(state, request.commander)
     bands = bands_for(state, row.name, request.dials)
     data = edhrec_data(state, row.name)
+    archetype = archetype_for(state.quotas, row.name)
     try:
         result = build_deck_cpsat(
             row.name,
@@ -327,10 +328,13 @@ def build_deck(state: AppState, request: DeckRequest) -> DeckResponse:
             recommendations=data.recommendations,
             bands=bands,
             tagger=state.tagger,
-            banned_names=state.banned_names,
+            # Archetype-scoped: a card exempted for this archetype (e.g. Rhystic
+            # Study in enchantress) drops out of the ban here, but stays banned
+            # for every other archetype.
+            banned_names=state.effective_banned_names(archetype),
             watchlist_names=state.watchlist_names,
             rules=state.rules,
-            archetype=archetype_for(state.quotas, row.name),
+            archetype=archetype,
             time_limit_s=state.solver_time_limit_s,
         )
     except (SelectorError, DeckRulesError) as exc:
@@ -595,6 +599,9 @@ class _SwapContext:
     out_card: CardFacts
     never_names: frozenset[str]
     always_names: frozenset[str]
+    # The commander's quota archetype, so both swap paths can subtract the same
+    # archetype-scoped banlist exceptions the build applied.
+    archetype: str
 
 
 def swap_candidates_for(
@@ -610,7 +617,7 @@ def swap_candidates_for(
         pool_candidates=pool_candidates,
         bands=ctx.bands,
         commander=ctx.commander,
-        banned_names=state.banned_names,
+        banned_names=state.effective_banned_names(ctx.archetype),
         never_names=ctx.never_names,
         watchlist_names=state.watchlist_names,
         always_names=ctx.always_names,
@@ -682,7 +689,10 @@ def maybeboard_for(state: AppState, request: MaybeboardRequest) -> MaybeboardRes
     # collapsing the other side to canonical names is the same comparison, and
     # keeps this layer off the selector's private helpers.
     excluded = deck_names | _canonical(
-        state, resolve_never(state.rules, rule_ctx) | state.banned_names | state.watchlist_names
+        state,
+        resolve_never(state.rules, rule_ctx)
+        | state.effective_banned_names(rule_ctx.archetype)
+        | state.watchlist_names,
     )
     commander_identity = frozenset(row.color_identity)
 
@@ -739,7 +749,7 @@ def validate_swap(state: AppState, request: SwapValidateRequest) -> SwapValidate
         in_card=in_card,
         bands=ctx.bands,
         commander=ctx.commander,
-        banned_names=state.banned_names,
+        banned_names=state.effective_banned_names(ctx.archetype),
         never_names=ctx.never_names,
         watchlist_names=state.watchlist_names,
         always_names=ctx.always_names,
@@ -772,11 +782,13 @@ def _swap_context(state: AppState, request: SwapRequest) -> _SwapContext:
     if not any(facts.name == out_card.name for facts, _ in deck):
         raise SwapRequestInvalid(card_not_in_deck(request.out))
 
+    archetype = archetype_for(state.quotas, row.name)
     rule_ctx = RuleContext(
         commander_name=row.name,
         color_identity=frozenset(row.color_identity),
-        archetype=archetype_for(state.quotas, row.name),
+        archetype=archetype,
     )
+    effective_banned = state.effective_banned_names(archetype)
     return _SwapContext(
         row=row,
         commander=_facts(state, state.pool.by_name[row.name], bands),
@@ -786,8 +798,9 @@ def _swap_context(state: AppState, request: SwapRequest) -> _SwapContext:
         never_names=resolve_never(state.rules, rule_ctx),
         always_names=frozenset(
             rule.name
-            for rule in resolve_always(state.rules, rule_ctx, state.banned_names)
+            for rule in resolve_always(state.rules, rule_ctx, effective_banned)
         ),
+        archetype=archetype,
     )
 
 
@@ -1114,6 +1127,12 @@ def banlist_view(state: AppState) -> BanlistResponse:
     alphabetically by name.
     """
     reasons, names = _banned_reasons(state)
+    # Invert the archetype -> exempted names map to name -> archetypes, so each
+    # banned card can carry the archetypes it is nonetheless legal in.
+    legal_by_name: dict[str, list[str]] = {}
+    for archetype, exempt_names in state.banned_exceptions_by_archetype.items():
+        for name in exempt_names:
+            legal_by_name.setdefault(name, []).append(archetype)
     banned = [
         BanlistCardView(
             name=names[oracle_id],
@@ -1123,6 +1142,7 @@ def banlist_view(state: AppState) -> BanlistResponse:
             )
             or None,
             oracle_id=oracle_id,
+            legal_in_archetypes=sorted(legal_by_name.get(names[oracle_id], [])),
         )
         for oracle_id in state.resolved_banlist.banned
     ]
