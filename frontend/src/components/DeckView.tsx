@@ -3,7 +3,15 @@
 // the export delegated to the API.
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { Download, Grid2x2, LayoutList, Sparkles, Tags } from 'lucide-react';
+import {
+  Download,
+  Grid2x2,
+  LayoutList,
+  Loader2,
+  Printer,
+  Sparkles,
+  Tags,
+} from 'lucide-react';
 import { Button, Panel } from './ui';
 import {
   CardFlipButton,
@@ -15,7 +23,12 @@ import {
 } from './cards';
 import { categoryLabel } from '../labels';
 import { deckCards, type ViewCard } from '../deck';
-import { exportDeck, type BuildResult, type CategoryRow } from '../api';
+import {
+  exportDeck,
+  exportProxyPdf,
+  type BuildResult,
+  type CategoryRow,
+} from '../api';
 
 // Spanish labels for the primary card type (derived from type_line), MTGGoldfish-style.
 const TYPE_LABELS: Record<string, string> = {
@@ -335,6 +348,8 @@ export function DeckView({
   const [sort, setSort] = useState<SortAxis>('type');
   const [display, setDisplay] = useState<DisplayAxis>('list');
   const [exportError, setExportError] = useState<string | null>(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
 
   const groups = useMemo(() => groupCards(deckCards(result), sort), [result, sort]);
   const basicsTotal = result.basic_lands.reduce((sum, b) => sum + b.count, 0);
@@ -350,6 +365,29 @@ export function DeckView({
     }
   }
 
+  // The proxy sheet: the commander plus every non-basic card (each once). Basics
+  // are deliberately omitted — nobody wants 21 identical Mountain proxies — and
+  // `nonbasic_cards` already excludes them, so non-basic lands (duals) still go.
+  // Built from the live deck, so swaps are reflected. First render can take a few
+  // seconds while the backend fetches uncached card images.
+  async function onExportPdf() {
+    setPdfError(null);
+    setPdfLoading(true);
+    try {
+      await exportProxyPdf({
+        commander: result.commander_name,
+        cards: result.nonbasic_cards.map((card) => ({
+          name: card.name,
+          count: card.count,
+        })),
+      });
+    } catch (error: unknown) {
+      setPdfError(error instanceof Error ? error.message : 'Error desconocido');
+    } finally {
+      setPdfLoading(false);
+    }
+  }
+
   return (
     <Panel>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -358,14 +396,36 @@ export function DeckView({
           {basicsTotal > 0 && ` + ${basicsTotal} básicas`}
         </h3>
         {showExport && (
-          <Button variant="secondary" onClick={() => void onExport()}>
-            <Download className="h-4 w-4" /> Exportar
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="secondary" onClick={() => void onExport()}>
+              <Download className="h-4 w-4" /> Exportar
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => void onExportPdf()}
+              disabled={pdfLoading}
+            >
+              {pdfLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Generando PDF…
+                </>
+              ) : (
+                <>
+                  <Printer className="h-4 w-4" /> Descargar PDF (proxies 3×3)
+                </>
+              )}
+            </Button>
+          </div>
         )}
       </div>
       {exportError && (
         <p className="mb-4 text-sm text-rose-700 dark:text-rose-300">
           No se pudo exportar ({exportError}).
+        </p>
+      )}
+      {pdfError && (
+        <p className="mb-4 text-sm text-rose-700 dark:text-rose-300">
+          No se pudo generar el PDF ({pdfError}).
         </p>
       )}
 

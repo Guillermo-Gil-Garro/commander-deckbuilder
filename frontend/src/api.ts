@@ -334,3 +334,49 @@ export async function exportDeck(req: {
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
   return response.text();
 }
+
+/** Pull the `filename="…"` out of a Content-Disposition header, or fall back. */
+function filenameFromDisposition(header: string | null, fallback: string): string {
+  const match = header?.match(/filename="?([^";]+)"?/i);
+  return match ? match[1] : fallback;
+}
+
+/** Download the deck as a print-and-cut proxy PDF (3×3, real card size). Send
+ *  the commander plus the cards to print — the caller decides what those are
+ *  (the non-basics, never the basic lands). The PDF is rendered server-side and
+ *  streamed back as a blob, which the browser saves under the name the backend
+ *  chose (Content-Disposition), or `<slug>_proxies.pdf` if that header is lost. */
+export async function exportProxyPdf(req: {
+  commander: string;
+  cards: { name: string; count: number }[];
+}): Promise<void> {
+  const response = await fetch(`${API_BASE}/export/pdf`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(req),
+  });
+  if (!response.ok) {
+    let detail = `${response.status} ${response.statusText}`;
+    try {
+      const body = (await response.json()) as { detail?: string };
+      if (body?.detail) detail = body.detail;
+    } catch {
+      // Non-JSON error body; keep the status line.
+    }
+    throw new Error(detail);
+  }
+  const blob = await response.blob();
+  const slug = req.commander.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  const filename = filenameFromDisposition(
+    response.headers.get('Content-Disposition'),
+    `${slug}_proxies.pdf`,
+  );
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
