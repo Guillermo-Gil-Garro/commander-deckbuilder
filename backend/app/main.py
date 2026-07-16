@@ -45,6 +45,7 @@ from app.schemas import (
     HealthResponse,
     MaybeboardRequest,
     MaybeboardResponse,
+    ProxyPdfRequest,
     SequentialStartResponse,
     StructureResponse,
     SwapCandidatesRequest,
@@ -619,6 +620,40 @@ def export_deck(request: Request, payload: ExportRequest) -> Response:
     return PlainTextResponse(
         export.content,
         headers={"Content-Disposition": f'attachment; filename="{export.filename}"'},
+    )
+
+
+@app.post("/export/pdf")
+async def export_pdf(request: Request, payload: ProxyPdfRequest) -> Response:
+    """Render a deck as a print-and-cut proxy PDF. Formatting only, nothing decided.
+
+    Answers ``application/pdf`` as a ``Content-Disposition`` attachment named
+    ``<commander-slug>_proxies.pdf`` — a file to print, not a document to read.
+
+    **Layout.** A4 portrait, cards at their real size — 63 mm wide by 88 mm tall
+    (a Magic card is taller than wide) — laid 3x3, nine per page, glued edge to
+    edge and centred, with faint grey lines on the grid so one straight
+    guillotine cut separates them all. The last page fills only the cells it
+    needs; the rest stay blank.
+
+    **What it prints.** Exactly what it receives: the ``commander`` first, then
+    ``cards`` in order, each repeated its ``count`` times. Deciding what to send
+    is the client's job, and the frontend deliberately omits the **basic lands**
+    (nobody wants 21 identical Mountain proxies) while keeping every non-basic,
+    dual lands included. A **double-faced card** (Kefka, Etali) prints **both
+    faces** as two consecutive cells, so its proxy has a real back.
+
+    Images are Scryfall's ``image_uri_normal`` (~488x680 JPEG, ample for a
+    proxy), fetched through a disk cache: the first build of a deck takes a few
+    seconds, later ones are instant. An unknown card name is a 422; a degraded
+    service with no card pool is a 503.
+    """
+    state = _state(request)
+    proxy = await run_in_threadpool(service.build_proxy_pdf, state, payload)
+    return Response(
+        content=proxy.content,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{proxy.filename}"'},
     )
 
 

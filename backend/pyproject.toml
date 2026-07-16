@@ -10,6 +10,7 @@ dependencies = [
     "fastapi",
     "uvicorn[standard]",
     "ortools",
+    "fpdf2",
 ]
 
 [project.optional-dependencies]

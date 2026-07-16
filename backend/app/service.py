@@ -23,8 +23,12 @@ card's category to make its deck legal.
 from __future__ import annotations
 
 import logging
+import math
 from dataclasses import dataclass
-from typing import Any, Iterable, Mapping, Sequence
+from io import BytesIO
+from typing import Any, Callable, Iterable, Mapping, Sequence
+
+from fpdf import FPDF
 
 from app.errors import (
     DECK_BUILD_INFEASIBLE,
@@ -60,6 +64,7 @@ from app.schemas import (
     MaybeboardRequest,
     MaybeboardResponse,
     NoticeView,
+    ProxyPdfRequest,
     SequentialStartResponse,
     StructureResponse,
     SwapCandidatesRequest,
@@ -74,6 +79,7 @@ from app.schemas import (
     deck_card_view,
 )
 from app.state import AppState, CommanderRow
+from pipeline.card_images import fetch_card_image
 from pipeline.edhrec import (
     EdhrecCommanderData,
     EdhrecError,
@@ -921,6 +927,145 @@ def _export_entry(
         slot=slot,
         count=count,
     )
+
+
+# --- proxy PDF export --------------------------------------------------------
+#
+# A print-and-cut proxy sheet: real-size cards laid 3x3 on A4 portrait, glued
+# edge to edge so one straight guillotine cut goes through every shared border.
+# A Magic card is 63 mm wide x 88 mm tall (taller than wide), so the 3x3 block
+# is 189x264 mm, centred on A4 (210x297) with a 10.5 mm horizontal and 16.5 mm
+# vertical margin. Double-faced cards print both faces as two consecutive cells
+# so the proxy is actually playable.
+
+CARD_W_MM = 63.0
+CARD_H_MM = 88.0
+GRID_COLS = 3
+GRID_ROWS = 3
+CARDS_PER_PAGE = GRID_COLS * GRID_ROWS
+A4_W_MM = 210.0
+A4_H_MM = 297.0
+BLOCK_W_MM = CARD_W_MM * GRID_COLS
+BLOCK_H_MM = CARD_H_MM * GRID_ROWS
+MARGIN_X_MM = (A4_W_MM - BLOCK_W_MM) / 2
+MARGIN_Y_MM = (A4_H_MM - BLOCK_H_MM) / 2
+# Faint grey guillotine guides on the grid borders. 0.1 mm is the thinnest line
+# that still prints; grey 200 is visible on screen but disappears once cut.
+CUT_LINE_WIDTH_MM = 0.1
+CUT_LINE_GREY = 200
+
+
+@dataclass(frozen=True)
+class ProxyPdf:
+    """A rendered proxy sheet and the name to save it under."""
+
+    filename: str
+    content: bytes
+
+
+def build_proxy_pdf(
+    state: AppState,
+    request: ProxyPdfRequest,
+    *,
+    fetch_image: Callable[[str], bytes] | None = None,
+) -> ProxyPdf:
+    """Render a deck as a 3x3, real-size, print-and-cut proxy sheet. Blocking.
+
+    Resolves each name against the pool (an unknown one is a
+    ``SwapRequestInvalid`` -> 422), fetches every card image (disk cache, then
+    Scryfall) and lays them 9 per A4 page. The commander comes first, then the
+    cards in the order received, each expanded to its ``count``; a double-faced
+    card contributes two consecutive cells (front then back).
+
+    ``fetch_image`` defaults to the module-level ``fetch_card_image`` and is
+    injectable so tests can render without touching the network.
+    """
+    if fetch_image is None:
+        fetch_image = fetch_card_image
+
+    commander = _pool_card(state, request.commander)
+    face_urls: list[str] = list(_face_urls(commander))
+    for ref in request.cards:
+        urls = list(_face_urls(_pool_card(state, ref.name)))
+        for _ in range(ref.count):
+            face_urls.extend(urls)
+
+    # One fetch per distinct URL; duplicate copies and shared faces reuse the
+    # bytes instead of re-reading the cache for every cell.
+    fetched: dict[str, bytes] = {}
+    faces: list[bytes] = []
+    for url in face_urls:
+        if url not in fetched:
+            fetched[url] = fetch_image(url)
+        faces.append(fetched[url])
+
+    return ProxyPdf(
+        filename=f"{slugify_commander(commander['name'])}_proxies.pdf",
+        content=_render_proxy_pdf(faces),
+    )
+
+
+def _face_urls(card: Mapping[str, Any]) -> list[str]:
+    """The image URLs to print for one card: front, then back for a DFC.
+
+    A double-faced card (``image_uri_back_normal`` non-empty: Kefka, Etali)
+    yields both faces so the proxy has a real back. A card Scryfall has no art
+    for (a null ``image_uri_normal``) yields nothing and is skipped with a
+    warning — there is no image to draw.
+    """
+    urls: list[str] = []
+    front = card.get("image_uri_normal")
+    if front:
+        urls.append(front)
+    else:
+        logger.warning("No image for %r; it will not appear in the proxy PDF", card.get("name"))
+    back = card.get("image_uri_back_normal") or ""
+    if back:
+        urls.append(back)
+    return urls
+
+
+def _render_proxy_pdf(faces: Sequence[bytes]) -> bytes:
+    """Lay ``faces`` 3x3 across A4 pages, each image filling a 63x88 mm cell."""
+    pdf = FPDF(orientation="P", unit="mm", format="A4")
+    # Every cell is placed by hand at an absolute (x, y); auto page breaks would
+    # fight that and shove images onto a new page.
+    pdf.set_auto_page_break(False)
+
+    # At least one page, so a commander-only request still renders a sheet.
+    page_count = max(1, math.ceil(len(faces) / CARDS_PER_PAGE))
+    for page in range(page_count):
+        pdf.add_page()
+        page_faces = faces[page * CARDS_PER_PAGE : (page + 1) * CARDS_PER_PAGE]
+        for index, image_bytes in enumerate(page_faces):
+            col = index % GRID_COLS
+            row = index // GRID_COLS
+            x = MARGIN_X_MM + col * CARD_W_MM
+            y = MARGIN_Y_MM + row * CARD_H_MM
+            # fpdf2 embeds the JPEG straight from the bytes (no Pillow); w and h
+            # both given means it fills the cell exactly, no aspect fitting.
+            pdf.image(BytesIO(image_bytes), x=x, y=y, w=CARD_W_MM, h=CARD_H_MM)
+        _draw_cut_lines(pdf)
+    return bytes(pdf.output())
+
+
+def _draw_cut_lines(pdf: FPDF) -> None:
+    """Draw the faint grid over the block so the sheet cuts on straight lines.
+
+    Drawn after the images and on every page (the empty cells of a short last
+    page included), so the four vertical and four horizontal borders always
+    line up for a single guillotine pass.
+    """
+    pdf.set_draw_color(CUT_LINE_GREY, CUT_LINE_GREY, CUT_LINE_GREY)
+    pdf.set_line_width(CUT_LINE_WIDTH_MM)
+    top, bottom = MARGIN_Y_MM, MARGIN_Y_MM + BLOCK_H_MM
+    left, right = MARGIN_X_MM, MARGIN_X_MM + BLOCK_W_MM
+    for col in range(GRID_COLS + 1):
+        x = MARGIN_X_MM + col * CARD_W_MM
+        pdf.line(x, top, x, bottom)
+    for row in range(GRID_ROWS + 1):
+        y = MARGIN_Y_MM + row * CARD_H_MM
+        pdf.line(left, y, right, y)
 
 
 def _notice(violation: Violation) -> NoticeView:

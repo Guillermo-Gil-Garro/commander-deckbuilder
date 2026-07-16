@@ -778,6 +778,23 @@ class CardRef(BaseModel):
     name: str = Field(min_length=1)
 
 
+class ProxyPdfRequest(BaseModel):
+    """A deck to render as a 3x3 print-and-cut proxy PDF.
+
+    ``commander`` is printed first, then ``cards`` in the order received, each
+    repeated ``count`` times (a ``DeckCardRef`` count). The endpoint prints
+    **exactly what it is sent** — deciding what to send (the commander plus the
+    non-basic cards, never the basic lands) is the client's call, so nobody
+    wants 21 identical Mountain proxies. ``cards`` may be empty, which yields a
+    single-card sheet with just the commander. See ``POST /export/pdf``.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    cards: list[DeckCardRef] = Field(default_factory=list)
+
+
 class ExportRequest(BaseModel):
     """A finished deck to render as a decklist."""
 
