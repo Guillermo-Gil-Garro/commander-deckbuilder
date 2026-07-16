@@ -1,4 +1,10 @@
-"""Tests for the commander endpoints: featured list and name search."""
+"""Tests for the commander endpoints: the full picker list and name search.
+
+``/commanders`` ships every selectable commander because the frontend pages,
+filters and searches in the client; ``/commanders/search`` is the server-side
+typeahead over the same index. The two answer deliberately different shapes —
+the list is slim (thousands of rows), the search is the full card shape.
+"""
 
 from __future__ import annotations
 
@@ -39,31 +45,66 @@ def degraded_client() -> Iterator[TestClient]:
     del app_main.app.state.deckbuilder
 
 
-# --- featured ---------------------------------------------------------------
+# --- the full list ----------------------------------------------------------
+
+LIST_FIELDS = {
+    "name",
+    "oracle_id",
+    "color_identity",
+    "image_uri_art_crop",
+    "archetype",
+    "featured",
+}
 
 
-def test_featured_returns_the_whole_list_in_file_order(
+def test_the_list_carries_every_selectable_commander(
     client: TestClient, real_app_state: AppState
 ) -> None:
+    """Not the 55 featured: the frontend filters and pages the whole pool."""
     response = client.get("/commanders")
 
     assert response.status_code == 200
     body = response.json()
-    assert body["count"] == 55
-    assert len(body["commanders"]) == 55
-    assert [c["name"] for c in body["commanders"]] == [
-        c.name for c in real_app_state.featured
-    ]
+    assert body["count"] == len(real_app_state.commanders)
+    assert body["count"] > 3000, "the whole pool, not a shortlist"
+    assert {c["name"] for c in body["commanders"]} == {
+        row.name for row in real_app_state.commanders
+    }
 
 
-def test_featured_cards_carry_the_full_card_shape(client: TestClient) -> None:
+def test_the_list_carries_the_slim_picker_shape(client: TestClient) -> None:
+    """Slim by design: thousands of rows, and the picker draws an art crop."""
     body = client.get("/commanders").json()["commanders"]
-    assert all(set(card) == COMMANDER_FIELDS for card in body)
-    # Fase 5 builds the images from scryfall_id: it must never be empty.
-    assert all(card["scryfall_id"] for card in body)
+
+    assert all(set(card) == LIST_FIELDS for card in body)
+    assert all(card["image_uri_art_crop"] for card in body)
 
 
-def test_featured_reports_each_commander_archetype(
+def test_the_list_puts_the_featured_first_then_sorts_alphabetically(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    body = client.get("/commanders").json()["commanders"]
+
+    featured = [c for c in body if c["featured"]]
+    rest = [c for c in body if not c["featured"]]
+    assert body[: len(featured)] == featured, "featured must lead the list"
+    assert {c["name"] for c in featured} == {c.name for c in real_app_state.featured}
+    assert [c["name"] for c in featured] == sorted(c["name"] for c in featured)
+    assert [c["name"] for c in rest] == sorted(c["name"] for c in rest)
+
+
+def test_the_list_never_offers_a_banned_commander(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    """Both ban sets hide a card here, so the list is exactly what /build takes."""
+    banlist = real_app_state.resolved_banlist
+    banned = banlist.banned | banlist.banned_as_commander
+    body = client.get("/commanders").json()["commanders"]
+
+    assert not ({c["oracle_id"] for c in body} & banned)
+
+
+def test_the_list_reports_each_commander_archetype(
     client: TestClient, real_app_state: AppState
 ) -> None:
     """The archetype must be the one the build would resolve, not a guess."""
@@ -71,15 +112,13 @@ def test_featured_reports_each_commander_archetype(
 
     known = set(real_app_state.quotas.archetypes)
     assert all(card["archetype"] in known for card in body)
-    assert {
-        card["name"]: card["archetype"] for card in body
-    } == {
-        c.name: archetype_for(real_app_state.quotas, c.name)
-        for c in real_app_state.featured
+    assert {card["name"]: card["archetype"] for card in body} == {
+        row.name: archetype_for(real_app_state.quotas, row.name)
+        for row in real_app_state.commanders
     }
 
 
-def test_featured_is_degraded_without_a_pool(degraded_client: TestClient) -> None:
+def test_the_list_is_degraded_without_a_pool(degraded_client: TestClient) -> None:
     assert degraded_client.get("/commanders").status_code == 503
 
 

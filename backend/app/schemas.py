@@ -121,6 +121,55 @@ class CommandersResponse(BaseModel):
     commanders: list[CommanderView]
 
 
+class CommanderListItem(BaseModel):
+    """One commander in the full picker list. Deliberately **not** ``CardView``.
+
+    ``GET /commanders`` ships every selectable commander in one response so the
+    frontend can page, filter by identity and search by name entirely in the
+    client. At that scale the card shape's other fields (``scryfall_id``,
+    ``mana_cost``, ``cmc``, ``type_line``, ``image_uri_normal``) are dead
+    weight — the picker renders an art crop and a name, and the deck endpoints
+    hand back the full shape once a commander is chosen.
+
+    ``featured`` is the group's shortlist (``featured_commanders.yaml``): a
+    curated starting point for players who arrive without a commander in mind,
+    not a claim that these are the best ones. The list is ordered featured
+    first, then alphabetically.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    name: str
+    oracle_id: str
+    color_identity: list[str]
+    image_uri_art_crop: str | None
+    archetype: str
+    featured: bool
+
+
+class CommanderListResponse(BaseModel):
+    """Every selectable commander, plus how many. See ``CommanderListItem``."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    count: int
+    commanders: list[CommanderListItem]
+
+
+def commander_list_item(
+    card: Mapping[str, Any], archetype: str, *, featured: bool
+) -> CommanderListItem:
+    """Project a pool card onto the slim picker shape."""
+    return CommanderListItem(
+        name=card["name"],
+        oracle_id=card["oracle_id"],
+        color_identity=list(card.get("color_identity") or ()),
+        image_uri_art_crop=card.get("image_uri_art_crop"),
+        archetype=archetype,
+        featured=featured,
+    )
+
+
 def commander_view(card: Mapping[str, Any], archetype: str) -> CommanderView:
     """Project a pool card onto the commander shape (the card shape + archetype).
 

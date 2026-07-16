@@ -34,6 +34,7 @@ from starlette.types import Scope
 from app import service
 from app.errors import POOL_UNAVAILABLE, invalid_dial_param
 from app.schemas import (
+    CommanderListResponse,
     CommandersResponse,
     DeckRequest,
     DeckResponse,
@@ -46,6 +47,7 @@ from app.schemas import (
     SwapCandidatesResponse,
     SwapValidateRequest,
     SwapValidateResponse,
+    commander_list_item,
     commander_view,
 )
 from app.state import COMMANDER_SEARCH_LIMIT_DEFAULT, AppState, build_app_state
@@ -163,27 +165,48 @@ def health(request: Request) -> HealthResponse:
 
 
 @app.get("/commanders")
-def featured_commanders(request: Request) -> CommandersResponse:
-    """The group's curated commanders for the picker, with their archetypes.
+def list_commanders(request: Request) -> CommanderListResponse:
+    """**Every** selectable commander, with art and archetype. The whole picker.
 
-    This is the landing-page list: a hand-picked starting point for players
-    who do not arrive with a commander already in mind. File order
-    (``featured_commanders.yaml``) is the group's ordering and is preserved
-    verbatim — do not sort it. This is **not** every legal commander; it is
-    the group's shortlist. Use ``/commanders/search`` for the rest.
+    The entire list in one response — thousands of rows, a few MB — because
+    the picker pages, filters by colour identity and searches by name entirely
+    in the client, and doing any of that server-side would put a round trip
+    between the player and every keystroke. Cheap to serve: it is a projection
+    of the pool loaded at startup, with no solver, no EDHREC and no disk.
+
+    "Selectable" is commander-eligible and absent from both of the group's ban
+    sets (``banned`` and ``banned_as_commander``): a banned card can never
+    appear here, so this list is exactly what ``/build`` will accept.
+
+    ``featured`` marks the group's curated shortlist
+    (``featured_commanders.yaml``) — a starting point for players who arrive
+    without a commander in mind, **not** a claim that these are the strongest.
+    Ordered featured first, then alphabetically.
 
     ``archetype`` is the quota archetype the build would start from
-    (``quotas.yaml``), not a claim about how the deck plays. 503 if the card
-    pool never loaded.
+    (``quotas.yaml``), **not** a claim about how the deck actually plays: it
+    says which bands the solver begins with, nothing more.
+
+    Rows here carry only what the picker draws (name, identity, art crop,
+    archetype). The full card shape — mana cost, type line, both images —
+    comes back from the deck endpoints once a commander is chosen.
+
+    503 if the card pool never loaded.
     """
     state = _state(request)
-    # load_featured resolved these to canonical pool names, and startup proved
-    # each one is selectable, so the lookup is total.
+    featured = {c.name for c in state.featured}
     commanders = [
-        commander_view(state.pool.by_name[c.name], archetype_for(state.quotas, c.name))
-        for c in state.featured
+        commander_list_item(
+            state.pool.by_name[row.name],
+            archetype_for(state.quotas, row.name),
+            featured=row.name in featured,
+        )
+        # `state.commanders` is already sorted by name, so a stable sort on
+        # "not featured" is the whole ordering: shortlist first, each group
+        # alphabetical.
+        for row in sorted(state.commanders, key=lambda r: r.name not in featured)
     ]
-    return CommandersResponse(count=len(commanders), commanders=commanders)
+    return CommanderListResponse(count=len(commanders), commanders=commanders)
 
 
 @app.get("/commanders/search")
