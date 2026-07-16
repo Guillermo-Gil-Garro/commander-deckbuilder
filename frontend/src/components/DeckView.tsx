@@ -99,15 +99,24 @@ function categoryGroupLabel(code: string): string {
 // /export asks the client for — hence primaryCategory, not the build's `slot`
 // (after a swap the two can disagree, and the player's view wins).
 async function downloadDecklist(result: BuildResult): Promise<void> {
+  const cards = deckCards(result);
+  // `maybeboard`/`new_cards` are the build's original lists and do not move when
+  // the player swaps. A card swapped IN would otherwise be exported twice — once
+  // in the deck and again in the sideboard — so drop what is already in the deck.
+  const inDeck = new Set(cards.map((card) => card.name));
   const text = await exportDeck({
     commander: result.commander_name,
-    deck: deckCards(result).map((card) => ({
+    deck: cards.map((card) => ({
       name: card.name,
       count: card.count,
       slot: primaryCategory(card.categories),
     })),
-    maybeboard: result.maybeboard.map((card) => ({ name: card.name })),
-    new_cards: result.new_cards.map((card) => ({ name: card.name })),
+    maybeboard: result.maybeboard
+      .filter((card) => !inDeck.has(card.name))
+      .map((card) => ({ name: card.name })),
+    new_cards: result.new_cards
+      .filter((card) => !inDeck.has(card.name))
+      .map((card) => ({ name: card.name })),
   });
   const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);

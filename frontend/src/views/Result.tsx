@@ -988,9 +988,14 @@ function BenchTile({
   );
 }
 
-// The swap confirmation tray: a sticky bar making the change unambiguous.
+// The swap confirmation tray: a pinned bar making the change unambiguous.
 // ENTRA (Y, accent + plus) ↔ SALE (X, rose + minus). Confirm stays disabled
 // until the API has ruled the pair feasible — the client never decides that.
+//
+// `fixed`, not the TFM's `sticky`: our <main> is `overflow-hidden` (it clips the
+// blurred full-bleed art), and an overflow-hidden ancestor makes a sticky child
+// scroll away — the tray landed ~5000px below the fold, so picking a candidate
+// appeared to do nothing.
 function SwapTray({
   outCard,
   inCard,
@@ -1010,7 +1015,7 @@ function SwapTray({
 }) {
   const blocked = validation !== null && !validation.feasible;
   return (
-    <div className="sticky bottom-4 z-40 mx-auto w-full max-w-3xl rounded-xl border border-black/10 bg-white/95 p-4 shadow-2xl backdrop-blur dark:border-white/15 dark:bg-zinc-900/95">
+    <div className="fixed inset-x-4 bottom-4 z-40 mx-auto max-w-3xl rounded-xl border border-black/10 bg-white/95 p-4 shadow-2xl backdrop-blur dark:border-white/15 dark:bg-zinc-900/95">
       <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
         <div className="flex flex-1 items-center justify-center gap-3 sm:justify-start">
           <SwapSide card={inCard} kind="in" />
