@@ -146,6 +146,11 @@ class CommanderListItem(BaseModel):
     ``description`` is that shortlist's one-line pitch, and is ``null`` for
     every commander outside it — the overwhelming majority. It is only written
     for the featured ones, so a null is "nobody wrote one", never a gap.
+
+    ``num_decks`` is the commander's EDHREC deck count and drives the list's
+    order (most-played first within the featured block and within the rest).
+    It is ``0`` for the long tail EDHREC does not rank — those sort last,
+    alphabetically. The frontend may show it ("48.767 decks") or ignore it.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -155,9 +160,11 @@ class CommanderListItem(BaseModel):
     color_identity: list[str]
     image_uri_normal: str | None
     image_uri_art_crop: str | None
+    # Etali): the picker flips them. "" for the single-faced majority. Both
     archetype: str
     featured: bool
     description: str | None
+    num_decks: int
 
 
 class CommanderListResponse(BaseModel):
@@ -175,12 +182,14 @@ def commander_list_item(
     *,
     featured: bool,
     description: str | None,
+    num_decks: int,
 ) -> CommanderListItem:
     """Project a pool card onto the slim picker shape.
 
-    ``description`` is passed in rather than read from the card: it is the
-    group's editorial line from ``featured_commanders.yaml``, not a fact about
-    the printing, and nothing in the pool knows about it.
+    ``description`` and ``num_decks`` are passed in rather than read from the
+    card: the description is the group's editorial line from
+    ``featured_commanders.yaml`` and ``num_decks`` is EDHREC popularity — both
+    live outside the pool, which knows only facts about the printing.
     """
     return CommanderListItem(
         name=card["name"],
@@ -191,6 +200,7 @@ def commander_list_item(
         archetype=archetype,
         featured=featured,
         description=description,
+        num_decks=num_decks,
     )
 
 

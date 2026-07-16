@@ -196,8 +196,16 @@ def list_commanders(request: Request) -> CommanderListResponse:
     ``featured`` marks the group's curated shortlist
     (``featured_commanders.yaml``) — a starting point for players who arrive
     without a commander in mind, **not** a claim that these are the strongest.
-    Ordered featured first, then alphabetically. ``description`` is that
-    shortlist's one-line pitch and is ``null`` for everyone else.
+    ``description`` is that shortlist's one-line pitch and is ``null`` for
+    everyone else.
+
+    **Order is by EDHREC popularity**, most-played first, so the well-known
+    commanders lead: the featured shortlist first (sorted by ``num_decks``
+    among themselves), then everyone else by ``num_decks``. The long tail
+    EDHREC does not rank has ``num_decks: 0`` and sorts last, alphabetically.
+    The ranking is a committed data artifact
+    (``scripts/precache_edhrec_ranking.py``); if it is missing the whole list
+    degrades to alphabetical, featured still first.
 
     ``archetype`` is the quota archetype the build would start from
     (``quotas.yaml``), **not** a claim about how the deck actually plays: it
@@ -218,17 +226,27 @@ def list_commanders(request: Request) -> CommanderListResponse:
     # keys are `CommanderRow.name` by construction, and a lookup here cannot
     # silently miss the way an exact match against the raw YAML would.
     descriptions = {c.name: c.description for c in state.featured}
+    num_decks = state.edhrec_num_decks
     commanders = [
         commander_list_item(
             state.pool.by_name[row.name],
             archetype_for(state.quotas, row.name),
             featured=row.name in descriptions,
             description=descriptions.get(row.name),
+            num_decks=num_decks.get(row.name, 0),
         )
-        # `state.commanders` is already sorted by name, so a stable sort on
-        # "not featured" is the whole ordering: shortlist first, each group
-        # alphabetical.
-        for row in sorted(state.commanders, key=lambda r: r.name not in descriptions)
+        # Featured first, then by EDHREC popularity descending; unranked
+        # commanders (num_decks 0) fall to the end of each group, and the
+        # trailing `row.name` keeps ties — and the whole degraded case, when
+        # the ranking is empty — deterministically alphabetical.
+        for row in sorted(
+            state.commanders,
+            key=lambda r: (
+                r.name not in descriptions,
+                -num_decks.get(r.name, 0),
+                r.name,
+            ),
+        )
     ]
     return CommanderListResponse(count=len(commanders), commanders=commanders)
 

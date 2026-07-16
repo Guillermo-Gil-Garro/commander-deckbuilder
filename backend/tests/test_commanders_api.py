@@ -68,6 +68,7 @@ LIST_FIELDS = {
     "archetype",
     "featured",
     "description",
+    "num_decks",
 }
 
 
@@ -143,17 +144,53 @@ def test_the_list_describes_double_faced_featured_commanders(
         assert body[name]["description"], f"{name} lost its description"
 
 
-def test_the_list_puts_the_featured_first_then_sorts_alphabetically(
+def test_the_list_puts_the_featured_first_then_by_popularity(
     client: TestClient, real_app_state: AppState
 ) -> None:
+    """Featured lead; within each block EDHREC deck count descends (ties by name)."""
     body = client.get("/commanders").json()["commanders"]
 
     featured = [c for c in body if c["featured"]]
     rest = [c for c in body if not c["featured"]]
     assert body[: len(featured)] == featured, "featured must lead the list"
     assert {c["name"] for c in featured} == {c.name for c in real_app_state.featured}
-    assert [c["name"] for c in featured] == sorted(c["name"] for c in featured)
-    assert [c["name"] for c in rest] == sorted(c["name"] for c in rest)
+
+    def order_key(card: dict) -> tuple[int, str]:
+        return (-card["num_decks"], card["name"])
+
+    assert [order_key(c) for c in featured] == sorted(order_key(c) for c in featured)
+    assert [order_key(c) for c in rest] == sorted(order_key(c) for c in rest)
+
+
+def test_the_list_ends_with_the_unranked_commanders_alphabetically(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    """Commanders EDHREC does not rank carry num_decks 0 and sort last, by name."""
+    rest = [c for c in client.get("/commanders").json()["commanders"] if not c["featured"]]
+
+    ranked = [c for c in rest if c["num_decks"] > 0]
+    unranked = [c for c in rest if c["num_decks"] == 0]
+    assert ranked and unranked, "need both to prove the split"
+    # Every ranked commander precedes every unranked one.
+    assert rest[: len(ranked)] == ranked
+    assert [c["name"] for c in unranked] == sorted(c["name"] for c in unranked)
+
+
+def test_the_list_carries_edhrec_deck_counts(
+    client: TestClient, real_app_state: AppState
+) -> None:
+    """num_decks is the ranking artifact's value, 0 for the unranked tail."""
+    ranking = real_app_state.edhrec_num_decks
+    assert ranking, "the real ranking artifact should be loaded"
+    body = client.get("/commanders").json()["commanders"]
+
+    assert {c["name"]: c["num_decks"] for c in body} == {
+        row.name: ranking.get(row.name, 0) for row in real_app_state.commanders
+    }
+    # A famous commander the ranking knows must lead the well-known pack.
+    assert body[0]["num_decks"] > 0
+
+
 
 
 def test_the_list_never_offers_a_banned_commander(

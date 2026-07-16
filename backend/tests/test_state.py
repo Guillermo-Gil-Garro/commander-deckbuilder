@@ -11,7 +11,13 @@ from pathlib import Path
 
 import pytest
 
-from app.state import EDHREC_MEMO_MAX, AppState, EdhrecMemo, build_app_state
+from app.state import (
+    EDHREC_MEMO_MAX,
+    AppState,
+    EdhrecMemo,
+    build_app_state,
+    load_edhrec_ranking,
+)
 from pipeline.edhrec import EdhrecCommanderData
 from quotas.config import QuotasError
 from rules.banlist import BanlistError
@@ -175,6 +181,39 @@ def test_pool_missing_a_banlist_card_fails_hard(tmp_path: Path) -> None:
     )
     with pytest.raises((BanlistError, DeckRulesError)):
         build_app_state(pool_path=pool)
+
+
+# --- EDHREC popularity ranking ----------------------------------------------
+
+
+def test_ranking_loads_from_the_real_artifact(real_app_state: AppState) -> None:
+    ranking = real_app_state.edhrec_num_decks
+    assert ranking, "the committed ranking artifact should load"
+    # A famous commander must be ranked with a plausible deck count.
+    assert ranking.get("The Ur-Dragon", 0) > 1000
+
+
+def test_missing_ranking_degrades_to_empty(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A data artifact, not config: its absence must not stop startup."""
+    with caplog.at_level("WARNING"):
+        ranking = load_edhrec_ranking(tmp_path / "missing.json")
+    assert ranking == {}
+    assert "alphabetically" in caplog.text
+
+
+def test_corrupt_ranking_degrades_to_empty(tmp_path: Path) -> None:
+    bad = tmp_path / "edhrec_ranking.json"
+    bad.write_text("{not valid json", encoding="utf-8")
+    assert load_edhrec_ranking(bad) == {}
+
+
+def test_build_app_state_still_starts_without_a_ranking(tmp_path: Path) -> None:
+    """The whole app must come up on a missing ranking, just alphabetical."""
+    state = build_app_state(ranking_path=tmp_path / "missing.json")
+    assert state is not None
+    assert state.edhrec_num_decks == {}
 
 
 # --- EDHREC memo ------------------------------------------------------------

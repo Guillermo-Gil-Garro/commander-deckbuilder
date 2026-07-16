@@ -24,6 +24,7 @@ every quota *and nobody notices*. Those raise and the app refuses to start.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 from collections import OrderedDict
@@ -46,7 +47,7 @@ from rules.featured import (
     FeaturedError,
     load_featured,
 )
-from rules.resolve import DEFAULT_POOL_PATH, NameIndex, name_index_from_cards
+from rules.resolve import DEFAULT_POOL_PATH, REPO_ROOT, NameIndex, name_index_from_cards
 from selector.deck_rules import DEFAULT_RULES_PATH, RulesConfig, load_rules, validate_rules_names
 from selector.greedy import PoolIndex, SelectorError, load_pool
 from tags.store import DEFAULT_STORE_PATH, TagStoreError, load_tags, tagger_from_store
@@ -56,6 +57,11 @@ logger = logging.getLogger(__name__)
 # 10 s of solver on the Space's 2 shared vCPUs can be 30 s of wall clock.
 SOLVER_TIME_LIMIT_ENV = "DECKBUILDER_SOLVER_TIME_LIMIT"
 DEFAULT_SOLVER_TIME_LIMIT_S = 10.0
+
+# EDHREC popularity ranking (canonical name -> num_decks), built offline by
+# scripts/precache_edhrec_ranking.py. A committed data artifact, not config: it
+# is optional and degrades to an empty map (alphabetical commander order).
+DEFAULT_RANKING_PATH = REPO_ROOT / "data" / "edhrec_ranking.json"
 
 # EDHREC pages are ~1 MB parsed; a bounded memo keeps a busy Space from
 # growing without limit while still absorbing repeat picks of the same
@@ -165,6 +171,10 @@ class AppState:
     featured: tuple[FeaturedCommander, ...]
     tags_count: int
     solver_time_limit_s: float
+    # Canonical commander name -> EDHREC num_decks. Empty when the ranking
+    # artifact is absent; the picker then falls back to alphabetical order.
+    edhrec_num_decks: Mapping[str, int]
+    # reasons and the human-facing card/rule structure come from.
     commanders: tuple[CommanderRow, ...] = field(init=False)
     card_names: tuple[str, ...] = field(init=False)
     _by_lower_name: Mapping[str, CommanderRow] = field(init=False)
@@ -285,6 +295,46 @@ def _solver_time_limit() -> float:
     return value
 
 
+def load_edhrec_ranking(path: Path | str = DEFAULT_RANKING_PATH) -> dict[str, int]:
+    """Load the EDHREC popularity map, or an empty one if it is unusable.
+
+    A **data artifact**, not config (see the module docstring's failure rule):
+    it is committed but optional, so a missing/corrupt file degrades to an
+    empty ranking — the commander picker falls back to alphabetical order — and
+    never stops the app from starting. Keys are canonical pool names; values
+    are ``num_decks`` on EDHREC.
+    """
+    path = Path(path)
+    if not path.is_file():
+        logger.warning(
+            "EDHREC ranking not found at %s; commanders will be ordered "
+            "alphabetically. Run scripts/precache_edhrec_ranking.py to build it.",
+            path,
+        )
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning(
+            "EDHREC ranking at %s is unreadable (%s); ordering commanders "
+            "alphabetically instead.",
+            path,
+            exc,
+        )
+        return {}
+    if not isinstance(raw, dict):
+        logger.warning(
+            "EDHREC ranking at %s is not a JSON object; ignoring it.", path
+        )
+        return {}
+    ranking: dict[str, int] = {}
+    for name, num_decks in raw.items():
+        if isinstance(name, str) and isinstance(num_decks, int):
+            ranking[name] = num_decks
+    logger.info("Loaded EDHREC ranking from %s: %d commanders", path, len(ranking))
+    return ranking
+
+
 def build_app_state(
     *,
     pool_path: Path | str = DEFAULT_POOL_PATH,
@@ -293,6 +343,7 @@ def build_app_state(
     banlist_path: Path | str = DEFAULT_BANLIST_PATH,
     featured_path: Path | str = DEFAULT_FEATURED_PATH,
     tags_path: Path | str = DEFAULT_STORE_PATH,
+    ranking_path: Path | str = DEFAULT_RANKING_PATH,
     solver_time_limit_s: float | None = None,
 ) -> AppState | None:
     """Load every artifact the API serves from. ``None`` means degraded.
@@ -350,6 +401,8 @@ def build_app_state(
         featured_path, resolved_banlist=resolved_banlist, name_index=name_index
     )
 
+    edhrec_num_decks = load_edhrec_ranking(ranking_path)
+
     if solver_time_limit_s is None:
         solver_time_limit_s = _solver_time_limit()
 
@@ -365,6 +418,7 @@ def build_app_state(
         featured=tuple(featured),
         tags_count=len(tag_store),
         solver_time_limit_s=solver_time_limit_s,
+        edhrec_num_decks=edhrec_num_decks,
     )
 
     # load_featured rejects `banned_as_commander` but not `banned`, so a card
