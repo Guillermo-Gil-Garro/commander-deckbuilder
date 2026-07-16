@@ -370,15 +370,6 @@ function CommanderPick({
           </span>
         )}
 
-        {commander.featured && (
-          <span
-            title="Destacado: seleccionado a mano por Guille, con estilo de juego y descripción."
-            className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold text-amber-300 shadow ring-1 ring-white/20"
-          >
-            <Star className="h-3 w-3 fill-amber-300" /> Destacado
-          </span>
-        )}
-
         {/* Hover/focus description — only the curated commanders have one. */}
         {description && (
           <span className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black/95 via-black/85 to-black/40 p-3 text-xs font-medium leading-5 text-zinc-100 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
@@ -387,16 +378,30 @@ function CommanderPick({
         )}
       </div>
 
+      {/* Name/archetype live below the art, never over it: the card face has to
+          stay readable, which is the whole point of showing the full card. */}
       <div className="flex items-start justify-between gap-2 bg-white/70 px-2.5 py-2 dark:bg-zinc-950/40">
         <div className="min-w-0">
           <p className="truncate text-xs font-bold leading-tight text-zinc-900 dark:text-zinc-50">
             {commander.name}
           </p>
-          {archetype && (
-            <p className="mt-0.5 text-[0.7rem] font-medium text-zinc-500 dark:text-zinc-400">
-              {archetypeLabel(archetype)}
-            </p>
-          )}
+          <p className="mt-0.5 flex items-center gap-1 text-[0.7rem] font-medium text-zinc-500 dark:text-zinc-400">
+            {commander.featured && (
+              <span
+                title="Destacado: elegido a mano, con estilo de juego y descripción."
+                className="accent-text inline-flex shrink-0 items-center gap-0.5 font-semibold"
+              >
+                <Star className="h-3 w-3 fill-current" />
+                Destacado
+              </span>
+            )}
+            {commander.featured && archetype && (
+              <span aria-hidden="true" className="text-zinc-300 dark:text-zinc-600">
+                ·
+              </span>
+            )}
+            {archetype && <span className="truncate">{archetypeLabel(archetype)}</span>}
+          </p>
         </div>
         <div className="shrink-0 scale-90 origin-top-right">
           <ColorPips colors={commander.color_identity} />

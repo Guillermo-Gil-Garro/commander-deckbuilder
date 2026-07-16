@@ -1,13 +1,12 @@
 // Thin client for the Commander Deckbuilder API (FastAPI).
-// The base URL is configurable via VITE_API_BASE; without it, dev builds target the
-// local API port and production builds use same-origin relative paths (the SPA is
-// served by FastAPI itself).
+// Same-origin relative paths by default: in production FastAPI serves this SPA
+// itself, and in dev Vite proxies the API routes to :8000 (see vite.config.ts),
+// so neither environment needs CORS. VITE_API_BASE overrides it for a split
+// deploy.
 
 import type { ColorCode } from './components/ui';
 
-const API_BASE: string =
-  (import.meta.env.VITE_API_BASE as string | undefined) ??
-  (import.meta.env.DEV ? 'http://127.0.0.1:8000' : '');
+const API_BASE: string = (import.meta.env.VITE_API_BASE as string | undefined) ?? '';
 
 /** Dial positions the API accepts. There is deliberately no "balanced" label: the
  *  centre is just the untouched middle of a low↔high bar. */
