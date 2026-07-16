@@ -144,6 +144,65 @@ habría sido un número falso.
 de `decisions` (cartas dudosas por codo de score) — que es el "switcheo semiinteractivo"
 del charter y hoy no existe —, `/why-not`, `/audit` y `/cards/search`.
 
+## 2026-07-16 — Lo que Guille quería replicar era el FRONTEND, no la API
+
+Tras dos intentos fallidos de "parecerse al TFM" (primero se alinearon los patrones
+internos, luego los nombres de las rutas), Guille lo dijo explícito: *"Lo que me
+interesa es que repliques el frontend eh. A partir de ahí ya trabajamos en el
+backend"*. La API solo importa en la medida en que da de comer al frontend.
+
+**Lección de proceso, y ya van dos**: cuando el usuario señala una referencia que le
+gusta, hay que ir a **verla** antes de deducir qué le gusta de ella. El Space estaba
+público y vivo todo el tiempo; interrogar su API en directo (`/openapi.json`, `/build`)
+dio en diez minutos lo que dos rondas de suposiciones no dieron.
+
+**Fase 0 reabierta**: el pool no guardaba imágenes y el frontend las pinta en todas
+partes. `Card` gana `image_uri_normal` e `image_uri_art_crop` (31.552/31.552, +46% de
+fichero). Regla verificada contra el bulk real: **raíz primero, cara frontal como
+fallback** — `split`/`adventure`/`flip` (322 cartas) llevan la imagen en la raíz y sus
+`card_faces` no tienen ninguna, mientras `transform`/`modal_dfc` (486) solo la tienen
+por cara. La regla ingenua "usa `card_faces[0]`" habría roto 322 cartas en silencio.
+
+**Fase 1 completada**: los 55 destacados tenían pendiente su arquetipo desde julio
+(*"no individualizaremos todos, sólo los que me parezcan más interesantes"*). Asignados
+los 55 — **no es cosmético: cambia las cuotas con las que se construyen esos mazos**
+(Zur pasa de 3 a 6 cartas de protección; Titania cambia 12 cartas y sube a 42 tierras).
+55/55 OPTIMAL, relajaciones 11 → 8. **26 quedan marcados dudosos**, pendientes del
+criterio de Guille. Cada destacado gana además una `description` de una frase, porque
+sus amigos no conocen los comandantes.
+
+**El picker NO usa art_crop**, a diferencia del TFM: usa la **carta entera**
+(`image_uri_normal`). Petición explícita de Guille — *"muchos de mis amigos no saben
+qué hacen los distintos comandantes... de esta forma pueden leer qué hace la carta"*.
+El art_crop se queda solo para el fondo global desenfocado.
+
+**El filtro de estilo de juego solo aplica a los 55 curados.** La API devuelve
+`archetype: "midrange"` para los otros 3.233, pero eso es el bloque por defecto del
+resolver, **no un juicio**: la UI no se lo atribuye a nadie y filtrar por estilo
+muestra solo destacados. Un filtro que mintiera sería peor que no tenerlo.
+
+**gzip**: `/commanders` manda los 3.288 de golpe (el picker filtra y pagina en cliente,
+como el TFM). Con imagen y descripción son 1,34 MB sin comprimir — lo más pesado que
+servimos, sobre un Space que se duerme. Medido: **1,34 MB → 0,25 MB (81%)**.
+
+## 2026-07-16 — La aserción `__debug__` del CP-SAT daba falsos positivos
+
+El riesgo #1 anotado al introducir `constraints.py` era real y se materializó: la
+aserción recalculaba el suelo de tierras sobre el mazo terminado, pero el solver llega
+al suyo por fixpoint y ese suelo puede quedar **por encima** del Karsten del mazo que
+acaba produciendo. Resultado: un mazo legal se leía como fuera de techo y el selector
+moría **acusando a `constraints.py` de haber divergido** — culpando al sitio equivocado.
+
+Reproducido con Giada, Font of Hope en bandas de aggro: 37 tierras, suelo del fixpoint
+37 (techo `max(36,37)=37`, legal), suelo recalculado 36 (techo 36) → falsa violación
+`lands_ceiling`. `hard_violations` acepta ahora un `lands_min` opcional: quien impuso
+un suelo lo pasa; el checker de swap sigue recalculando, que es lo correcto ahí porque
+no hay fixpoint que honrar.
+
+**Coste real del bug**: tres comandantes (Giada, Gishath, Kaalia) fueron movidos de
+arquetipo para esquivarlo, creyendo que era infactibilidad. Esa decisión se tomó sobre
+una premisa falsa y hay que revisarla con criterio de juego, no de "qué no peta".
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

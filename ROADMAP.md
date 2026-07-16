@@ -36,9 +36,17 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecho · 🔶 requiere OK de Guil
 - ✅ `scripts/precache_edhrec.py` (55 destacados; ⚠️ `data/cache/` gitignorado → **no llega al Space**, es optimización de dev)
 - 🔶 Pendiente de revisión de Guille: probar la API a mano
 
-## Fase 5 — Frontend
-- ⬜ Buscador, vista por categorías, semáforos de cuotas, swap, export
+## Fase 5 — Frontend (réplica del TFM, en curso desde 2026-07-16)
+Referencia: el Space vivo de Guille (https://caskis-commander-deckbuilder.hf.space) + `frontend/` del repo TFM.
+Stack copiado tal cual: React 19 + Vite + TS estricto + Tailwind v4 (plugin de Vite, config en CSS), Exo 2, `lucide-react`, `mana-font`. Sin router, sin store, sin axios.
+- ✅ Base: tema oscuro/dorado y claro/morado (`data-accent` atado al tema), `.surface`, fondo art_crop aleatorio desenfocado, `api.ts`, `labels.ts`, `ui.tsx`
+- ✅ Vista **Setup**: picker de los 3.288 con **carta entera legible** (`image_uri_normal`, NO art_crop — petición explícita de Guille: sus amigos no conocen los comandantes), filtro de color exacto, **filtro de estilo de juego**, **descripción al hover**, paginación de 24, destacados primero
+- ✅ Panel de **diales con los memes de Guille** (sustituye al panel de presupuesto/bracket/potencia del TFM, que aquí no aplica). Sin etiqueta "balanced" en el centro
+- 🔄 Vista **Result** (DeckView, CompositionPanel, curva, swap workspace, maybeboard, why-not, mano inicial)
+- ⬜ Vista **Sequential** (decisiones guiadas)
 - ⬜ 🔶 Revisión de UX con Guille
+
+**Del TFM se descarta** (decisión de Guille): presupuesto y `price_eur` (juegan con proxies), brackets y Game Changers (política de WotC, no la banlist del grupo), slider Sinergia↔Potencia y columna "power" (el TFM tiene dos scorers ML; nosotros uno), `/audit` y los badges "Revisar" (usan embeddings de coherencia que no tenemos), y `curve_breakdown.target`/`deviation` (nuestro solver no tiene objetivo de curva).
 
 ## Fase 6 — Despliegue
 - ⬜ HF Space Docker (FastAPI + build React), datos precacheados, refresco manual
