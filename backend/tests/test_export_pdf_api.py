@@ -207,3 +207,57 @@ def test_an_extra_field_is_rejected(
         json={"commander": COMMANDER, "cards": _cards("Sol Ring"), "slot": "ramp"},
     )
     assert response.status_code == 422
+
+
+def test_a_basic_land_prints_with_the_theros_art(
+    client: TestClient, real_app_state: AppState, fetch_calls: list[str]
+) -> None:
+    """A basic is drawn from the Theros full-art map, not the pool's printing.
+
+    ``count`` copies each mean ``count`` placements: commander + 3 Mountains is
+    four faces, one page. The fetcher deduplicates by URL, so the Theros art is
+    fetched once — what matters is *which* URL, so the assertion is that the THB
+    art was asked for and the pool's default Mountain printing never was.
+    """
+    theros_mountain = service.THEROS_BASIC_IMAGES["Mountain"]
+    pool_mountain = real_app_state.pool.by_name["Mountain"]["image_uri_normal"]
+
+    response = client.post(
+        "/export/pdf",
+        json={"commander": COMMANDER, "cards": _cards("Mountain", count=3)},
+    )
+
+    assert response.status_code == 200, response.text
+    assert theros_mountain in fetch_calls
+    assert pool_mountain not in fetch_calls
+    # Commander + three Mountains = four faces = one page: the count is honoured.
+    assert _page_count(response.content) == 1
+
+
+def test_nine_basic_copies_spill_onto_a_second_page(
+    client: TestClient, fetch_calls: list[str]
+) -> None:
+    """A basic's ``count`` places one face per copy, exactly like a non-basic."""
+    response = client.post(
+        "/export/pdf",
+        json={"commander": COMMANDER, "cards": _cards("Mountain", count=9)},
+    )
+
+    assert response.status_code == 200, response.text
+    # Commander + nine Mountains = ten faces -> ceil(10 / 9) == 2.
+    assert _page_count(response.content) == 2
+
+
+def test_a_nonbasic_still_uses_the_pool_art(
+    client: TestClient, real_app_state: AppState, fetch_calls: list[str]
+) -> None:
+    """The Theros override is basics-only: a non-basic keeps its pool printing."""
+    pool_sol_ring = real_app_state.pool.by_name["Sol Ring"]["image_uri_normal"]
+
+    response = client.post(
+        "/export/pdf", json={"commander": COMMANDER, "cards": _cards("Sol Ring")}
+    )
+
+    assert response.status_code == 200, response.text
+    assert pool_sol_ring in fetch_calls
+    assert not (set(fetch_calls) & set(service.THEROS_BASIC_IMAGES.values()))

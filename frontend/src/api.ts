@@ -343,7 +343,8 @@ function filenameFromDisposition(header: string | null, fallback: string): strin
 
 /** Download the deck as a print-and-cut proxy PDF (3×3, real card size). Send
  *  the commander plus the cards to print — the caller decides what those are
- *  (the non-basics, never the basic lands). The PDF is rendered server-side and
+ *  (the non-basics plus the basic lands by count; the backend prints basics in
+ *  the Theros Beyond Death full-art). The PDF is rendered server-side and
  *  streamed back as a blob, which the browser saves under the name the backend
  *  chose (Content-Disposition), or `<slug>_proxies.pdf` if that header is lost. */
 export async function exportProxyPdf(req: {

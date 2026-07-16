@@ -954,6 +954,20 @@ MARGIN_Y_MM = (A4_H_MM - BLOCK_H_MM) / 2
 CUT_LINE_WIDTH_MM = 0.1
 CUT_LINE_GREY = 200
 
+# Guille's basic lands print with the Theros Beyond Death full-art (the nyx
+# starfield), not the pool's default printing: it is the group's house look for
+# proxies. Keyed by the pool's canonical basic name; basics are single-faced,
+# so one URL each. To refresh after a bulk update, re-query Scryfall
+# `set:thb is:fullart type:basic` (set THB, collector 250-254) and paste the
+# `image_uris.normal` of each of the five basics here.
+THEROS_BASIC_IMAGES: dict[str, str] = {
+    "Plains": "https://cards.scryfall.io/normal/front/a/9/a9891b7b-fc52-470c-9f74-292ae665f378.jpg?1783931510",
+    "Island": "https://cards.scryfall.io/normal/front/a/c/acf7b664-3e75-4018-81f6-2a14ab59f258.jpg?1783931508",
+    "Swamp": "https://cards.scryfall.io/normal/front/0/2/02cb5cfd-018e-4c5e-bef1-166262aa5f1d.jpg?1783931508",
+    "Mountain": "https://cards.scryfall.io/normal/front/5/3/53fb7b99-9e47-46a6-9c8a-88e28b5197f1.jpg?1783931511",
+    "Forest": "https://cards.scryfall.io/normal/front/3/2/32af9f41-89e2-4e7a-9fec-fffe79cae077.jpg?1783931507",
+}
+
 
 @dataclass(frozen=True)
 class ProxyPdf:
@@ -1012,7 +1026,15 @@ def _face_urls(card: Mapping[str, Any]) -> list[str]:
     yields both faces so the proxy has a real back. A card Scryfall has no art
     for (a null ``image_uri_normal``) yields nothing and is skipped with a
     warning — there is no image to draw.
+
+    Basic lands are overridden to the Theros Beyond Death full-art
+    (``THEROS_BASIC_IMAGES``): the group prints its manabase in that frame, not
+    in whatever printing the pool happens to store. Basics are single-faced, so
+    that override replaces the front and there is no back to add.
     """
+    theros = THEROS_BASIC_IMAGES.get(card.get("name") or "")
+    if theros is not None:
+        return [theros]
     urls: list[str] = []
     front = card.get("image_uri_normal")
     if front:

@@ -365,18 +365,18 @@ export function DeckView({
     }
   }
 
-  // The proxy sheet: the commander plus every non-basic card (each once). Basics
-  // are deliberately omitted — nobody wants 21 identical Mountain proxies — and
-  // `nonbasic_cards` already excludes them, so non-basic lands (duals) still go.
-  // Built from the live deck, so swaps are reflected. First render can take a few
-  // seconds while the backend fetches uncached card images.
+  // The proxy sheet: the commander, every non-basic card (each once) and the
+  // basic lands by their count (Guille prints the whole deck). The backend swaps
+  // each basic's art for the Theros Beyond Death full-art, so the manabase looks
+  // uniform. Built from the live deck, so swaps are reflected. First render can
+  // take a few seconds while the backend fetches uncached card images.
   async function onExportPdf() {
     setPdfError(null);
     setPdfLoading(true);
     try {
       await exportProxyPdf({
         commander: result.commander_name,
-        cards: result.nonbasic_cards.map((card) => ({
+        cards: [...result.nonbasic_cards, ...result.basic_lands].map((card) => ({
           name: card.name,
           count: card.count,
         })),
