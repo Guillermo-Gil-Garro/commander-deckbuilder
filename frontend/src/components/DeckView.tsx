@@ -5,7 +5,14 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Download, Grid2x2, LayoutList, Sparkles, Tags } from 'lucide-react';
 import { Button, Panel } from './ui';
-import { CardImage, CardTile, ManaCost, ScoreBadge, SCORE_TOOLTIP } from './cards';
+import {
+  CardFlipButton,
+  CardImage,
+  CardTile,
+  ManaCost,
+  ScoreBadge,
+  SCORE_TOOLTIP,
+} from './cards';
 import { categoryLabel } from '../labels';
 import { deckCards, type ViewCard } from '../deck';
 import { exportDeck, type BuildResult, type CategoryRow } from '../api';
@@ -508,6 +515,10 @@ function VisualGridView({
 
 // A CardTile wrapped as a clickable swap source (visual grid). The active card
 // (the one marked to leave) gets a red ring; others get an accent hover ring.
+// A div, not a button: the tile hosts a flip control (for double-faced cards),
+// and a button-in-button both is invalid and lets the inner click reach the
+// outer button. As a div with role=button, the flip's stopPropagation reliably
+// keeps a flip from starting a swap.
 function SwapTileButton({
   card,
   active,
@@ -518,16 +529,23 @@ function SwapTileButton({
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      }}
       aria-pressed={active}
       className={`accent-focus block rounded-xl text-left transition ${
         active ? 'ring-2 ring-rose-500' : 'cursor-pointer hover:accent-ring'
       }`}
     >
       <CardTile card={card} />
-    </button>
+    </div>
   );
 }
 
@@ -564,6 +582,16 @@ function StackColumn({
   activeOutName,
 }: { group: CardGroup } & SwapProps) {
   const [hovered, setHovered] = useState<number | null>(null);
+  // Which cards are showing their back face, by oracle_id (double-faced only).
+  const [flipped, setFlipped] = useState<Set<string>>(new Set());
+  function toggleFlip(oracleId: string) {
+    setFlipped((current) => {
+      const next = new Set(current);
+      if (next.has(oracleId)) next.delete(oracleId);
+      else next.add(oracleId);
+      return next;
+    });
+  }
   // When a card is hovered, every card BELOW it cascades down by the revealed
   // amount so the hovered card is shown in full (Archidekt behaviour).
   const reveal = STACK_CARD_H - STACK_PEEK;
@@ -611,7 +639,17 @@ function StackColumn({
                       : 'ring-black/10 dark:ring-white/10'
                 }`}
               >
-                <CardImage card={card} className="aspect-[5/7] w-full object-cover" />
+                <CardImage
+                  card={card}
+                  showBack={flipped.has(card.oracle_id)}
+                  className="aspect-[5/7] w-full object-cover"
+                />
+                {isHovered && Boolean(card.image_uri_back_normal) && (
+                  <CardFlipButton
+                    showBack={flipped.has(card.oracle_id)}
+                    onToggle={() => toggleFlip(card.oracle_id)}
+                  />
+                )}
                 {card.basic && (
                   <span className="pointer-events-none absolute bottom-2 right-2 rounded-lg bg-black/80 px-3 py-1.5 text-2xl font-extrabold tabular-nums text-white shadow-lg ring-1 ring-white/25">
                     ×{card.count}

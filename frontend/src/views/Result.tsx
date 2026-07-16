@@ -975,16 +975,25 @@ function BenchTile({
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
+    // A div, not a button: CardTile hosts a flip control for double-faced cards,
+    // and nesting a button inside a button lets the inner click reach the outer.
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      }}
       aria-pressed={selected}
       className={`accent-focus block rounded-xl text-left transition ${
         selected ? 'accent-ring' : 'cursor-pointer hover:accent-ring'
       }`}
     >
       <CardTile card={toViewCard(card)} />
-    </button>
+    </div>
   );
 }
 

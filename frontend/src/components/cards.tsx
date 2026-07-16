@@ -2,7 +2,8 @@
 // minus the price and Game Changer affordances: Guille plays with proxies (the
 // price is irrelevant) and runs his own banlist, so this project has neither.
 
-import { Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { FlipHorizontal2, Sparkles } from 'lucide-react';
 import type { ViewCard } from '../deck';
 
 // Parse a Scryfall mana-cost string ("{2}{R}{R}", "{W/U}", "{X}") into the symbol
@@ -67,21 +68,23 @@ export function ManaCost({ manaCost }: { manaCost: string }) {
 }
 
 // Shared card-image renderer with a graceful no-image fallback (the name).
+// `showBack` flips to the back face of a double-faced card when it has one.
 export function CardImage({
   card,
   className,
+  showBack = false,
 }: {
   card: ViewCard;
   className?: string;
+  showBack?: boolean;
 }) {
-  if (card.image_uri_normal) {
+  const uri =
+    showBack && card.image_uri_back_normal
+      ? card.image_uri_back_normal
+      : card.image_uri_normal;
+  if (uri) {
     return (
-      <img
-        src={card.image_uri_normal}
-        alt={card.name}
-        loading="lazy"
-        className={className}
-      />
+      <img src={uri} alt={card.name} loading="lazy" className={className} />
     );
   }
   return (
@@ -93,14 +96,68 @@ export function CardImage({
   );
 }
 
+// Corner control to flip a double-faced card front↔back. A `span[role=button]`,
+// not a `<button>`, so it can live inside another clickable card (swap tiles,
+// commander picks) without nesting native buttons; it stops propagation so the
+// flip never triggers the parent's select/swap.
+export function CardFlipButton({
+  showBack,
+  onToggle,
+  className,
+}: {
+  showBack: boolean;
+  onToggle: () => void;
+  className?: string;
+}) {
+  const label = showBack ? 'Ver la cara frontal' : 'Ver la cara trasera';
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      aria-label={label}
+      aria-pressed={showBack}
+      title={label}
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        onToggle();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          event.stopPropagation();
+          onToggle();
+        }
+      }}
+      className={`absolute right-2 top-2 z-10 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-black/65 text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-black/85 ${
+        showBack ? 'accent-text' : ''
+      } ${className ?? ''}`}
+    >
+      <FlipHorizontal2 className="h-4 w-4" aria-hidden="true" />
+    </span>
+  );
+}
+
 // EDHREC-style tile: the full card image (5:7) with the score below. Basic lands
 // show a ×N badge instead and omit the score — a basic has no EDHREC score (the
 // API sends `score: null` for them).
 export function CardTile({ card }: { card: ViewCard }) {
+  const [showBack, setShowBack] = useState(false);
+  const hasBack = Boolean(card.image_uri_back_normal);
   return (
     <div className="flex flex-col gap-1.5">
       <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
-        <CardImage card={card} className="aspect-[5/7] w-full object-cover" />
+        <CardImage
+          card={card}
+          showBack={showBack}
+          className="aspect-[5/7] w-full object-cover"
+        />
+        {hasBack && (
+          <CardFlipButton
+            showBack={showBack}
+            onToggle={() => setShowBack((value) => !value)}
+          />
+        )}
         {card.basic && (
           <span className="absolute bottom-2 right-2 rounded-lg bg-black/80 px-3 py-1.5 text-2xl font-extrabold tabular-nums text-white shadow-lg ring-1 ring-white/25">
             ×{card.count}
