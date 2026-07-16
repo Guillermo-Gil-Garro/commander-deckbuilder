@@ -194,6 +194,9 @@ export type BanlistCard = {
   reason: string;
   image_uri_normal: string | null;
   oracle_id: string;
+  /** Archetypes where this otherwise-banned card is legal (e.g. thematic
+   *  staples allowed in enchantress decks). Empty for a flat ban. */
+  legal_in_archetypes: string[];
 };
 
 /** One card on the watchlist: like a banned card, but `scope` says where the

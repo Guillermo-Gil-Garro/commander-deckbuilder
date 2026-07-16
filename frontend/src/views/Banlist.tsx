@@ -196,6 +196,11 @@ function BanRow({
               {scope}
             </span>
           )}
+          {card.legal_in_archetypes.length > 0 && (
+            <span className="accent-soft-bg accent-text rounded px-1.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wide">
+              salvo en {card.legal_in_archetypes.join(', ')}
+            </span>
+          )}
         </p>
         <p className="mt-0.5 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
           {card.reason}
