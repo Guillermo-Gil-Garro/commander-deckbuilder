@@ -42,9 +42,14 @@ Stack copiado tal cual: React 19 + Vite + TS estricto + Tailwind v4 (plugin de V
 - ✅ Base: tema oscuro/dorado y claro/morado (`data-accent` atado al tema), `.surface`, fondo art_crop aleatorio desenfocado, `api.ts`, `labels.ts`, `ui.tsx`
 - ✅ Vista **Setup**: picker de los 3.288 con **carta entera legible** (`image_uri_normal`, NO art_crop — petición explícita de Guille: sus amigos no conocen los comandantes), filtro de color exacto, **filtro de estilo de juego**, **descripción al hover**, paginación de 24, destacados primero
 - ✅ Panel de **diales con los memes de Guille** (sustituye al panel de presupuesto/bracket/potencia del TFM, que aquí no aplica). Sin etiqueta "balanced" en el centro
-- 🔄 Vista **Result** (DeckView, CompositionPanel, curva, swap workspace, maybeboard, why-not, mano inicial)
-- ⬜ Vista **Sequential** (decisiones guiadas)
-- ⬜ 🔶 Revisión de UX con Guille
+- ✅ Vista **Result**: DeckView (toggles Tipo/Categoría y Lista/Visual), CompositionPanel con bandas emerald/amber, curva real, swap workspace, maybeboard, why-not (typeahead, debounce 160ms), mano de apertura
+- ✅ Vista **Sequential**: el *switcheo semiinteractivo* del charter — 12 decisiones por codo de score, fila de actual + 4 candidatos, mazo vivo debajo que se actualiza con cada cambio
+- ⬜ 🔶 **Revisión de UX con Guille** (pendiente: que lo use)
+
+**Pendientes conocidos de la Fase 5**:
+- Los encabezados por categoría del DeckView **no cuadran** con el panel de composición (p.ej. Ramp 8 vs 12): el panel cuenta multi-pertenencia (una tierra que rampea suma en Tierras y en Ramp) y la agrupación tiene que elegir un grupo por carta. Es inherente y está dicho en la UI; si se quiere que cuadren hay que elegir una de las dos semánticas. 🔶
+- El maybeboard y el `color_source_breakdown` **no se reoptimizan** al swapear (avisado en ámbar en la UI).
+- Una carta que solo cubre `protection` sigue con `slot=synergy` (el `FILL_ORDER` vive en `greedy.py`, congelado). Por eso el DeckView agrupa por `categories`, no por `slot`.
 
 **Del TFM se descarta** (decisión de Guille): presupuesto y `price_eur` (juegan con proxies), brackets y Game Changers (política de WotC, no la banlist del grupo), slider Sinergia↔Potencia y columna "power" (el TFM tiene dos scorers ML; nosotros uno), `/audit` y los badges "Revisar" (usan embeddings de coherencia que no tenemos), y `curve_breakdown.target`/`deviation` (nuestro solver no tiene objetivo de curva).
 
