@@ -43,8 +43,16 @@ Stack copiado tal cual: React 19 + Vite + TS estricto + Tailwind v4 (plugin de V
 - ✅ Vista **Setup**: picker de los 3.288 con **carta entera legible** (`image_uri_normal`, NO art_crop — petición explícita de Guille: sus amigos no conocen los comandantes), filtro de color exacto, **filtro de estilo de juego**, **descripción al hover**, paginación de 24, destacados primero
 - ✅ Panel de **diales con los memes de Guille** (sustituye al panel de presupuesto/bracket/potencia del TFM, que aquí no aplica). Sin etiqueta "balanced" en el centro
 - ✅ Vista **Result**: DeckView (toggles Tipo/Categoría y Lista/Visual), CompositionPanel con bandas emerald/amber, curva real, swap workspace, maybeboard, why-not (typeahead, debounce 160ms), mano de apertura
-- ✅ Vista **Sequential**: el *switcheo semiinteractivo* del charter — 12 decisiones por codo de score, fila de actual + 4 candidatos, mazo vivo debajo que se actualiza con cada cambio
-- ⬜ 🔶 **Revisión de UX con Guille** (pendiente: que lo use)
+- ✅ ~~Vista Sequential~~ **retirada 2026-07-16** por decisión de Guille ("prefiero que el mazo salga tal cual"). El swap manual en Result se conserva. Sustituto futuro = auditoría de mazo (señalar dudosas sin forzar), ver DECISIONS
+- ✅ Ronda de retoques de Guille (2026-07-16): solo modo oscuro; picker ordenado por popularidad EDHREC (`data/edhrec_ranking.json`, unión de 32 páginas por color, ~59% cobertura, resto al final); cara trasera de los DFC con botón de flip (Kefka/Sephiroth/Etali); panel modal de banlist+watchlist (`GET /banlist`); "Diales"→"Personalización" con leyenda MÍN/MÁX; scroll-arriba al paginar; gzip
+- ⬜ 🔶 **Revisión de UX con Guille** (en curso: Guille lo está usando y pidiendo cambios)
+
+**Decisiones de jugador pendientes** (acumuladas, ninguna urgente):
+- Los **26 arquetipos dudosos** de los 55 destacados (Zur el más difícil: voltron vs enchantress)
+- Giada/Gishath/Kaalia se movieron a midrange por un **bug del selector ya arreglado** (aserción `__debug__`), no por criterio real → revisar su arquetipo de verdad
+- Si `lands_matter` debe expulsar los payoffs de tierras (techo de synergy 18)
+- **Auditoría de mazo** (sustituto del modo secuencial): señalar dudosas en mainboard y maybeboard sin forzar decisiones
+- **Sesgo de precio en el score EDHREC**: las duales caras quedan en maybeboard aunque para proxies son autoincludes (opciones en DECISIONS)
 
 **Pendientes conocidos de la Fase 5**:
 - Los encabezados por categoría del DeckView **no cuadran** con el panel de composición (p.ej. Ramp 8 vs 12): el panel cuenta multi-pertenencia (una tierra que rampea suma en Tierras y en Ramp) y la agrupación tiene que elegir un grupo por carta. Es inherente y está dicho en la UI; si se quiere que cuadren hay que elegir una de las dos semánticas. 🔶
