@@ -2,15 +2,17 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Setup } from './views/Setup';
 import { Result } from './views/Result';
+import { Sequential } from './views/Sequential';
 import {
   buildDeck,
   fetchCommanders,
+  sequentialStart,
   type BuildRequest,
   type BuildResult,
   type CommanderListItem,
   type Dials,
+  type SequentialStart,
 } from './api';
-import { Button, Panel } from './components/ui';
 
 type Theme = 'dark' | 'light';
 type Step = 'setup' | 'result' | 'sequential';
@@ -37,6 +39,9 @@ function App() {
   );
   const [result, setResult] = useState<BuildResult | null>(null);
   const [buildReq, setBuildReq] = useState<BuildRequest | null>(null);
+  // The guided flow's payload: the same build /build would return, plus the
+  // cards worth deciding. Only set when the user asked for sequential mode.
+  const [start, setStart] = useState<SequentialStart | null>(null);
 
   useLayoutEffect(() => {
     const isDark = theme === 'dark';
@@ -83,16 +88,31 @@ function App() {
     setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
   }
 
-  async function handleBuild(commander: CommanderListItem, dials: Dials) {
+  async function handleBuild(
+    commander: CommanderListItem,
+    dials: Dials,
+    sequential: boolean,
+  ) {
     setBuilding(true);
     setBuildError(null);
     setBuiltCommander(commander);
     const req: BuildRequest = { commander: commander.name, dials };
     try {
-      const built = await buildDeck(req);
-      setResult(built);
-      setBuildReq(req);
-      setStep('result');
+      if (sequential) {
+        // /sequential/start IS a build plus an analysis of its result, so it
+        // replaces the /build call rather than following it.
+        const started = await sequentialStart(req);
+        setStart(started);
+        setResult(started.deck);
+        setBuildReq(req);
+        setStep('sequential');
+      } else {
+        const built = await buildDeck(req);
+        setStart(null);
+        setResult(built);
+        setBuildReq(req);
+        setStep('result');
+      }
     } catch (error: unknown) {
       setBuildError(
         error instanceof Error ? error.message : 'Error desconocido',
@@ -100,6 +120,14 @@ function App() {
     } finally {
       setBuilding(false);
     }
+  }
+
+  // Leaving the guided flow with the player's choices applied: the deck Result
+  // shows from here on is the one they decided, not the one the solver handed us.
+  function handleFinishSequential(deck: BuildResult) {
+    setResult(deck);
+    setStart(null);
+    setStep('result');
   }
 
   return (
@@ -126,76 +154,23 @@ function App() {
             buildError={buildError}
             onBuild={handleBuild}
           />
-        ) : step === 'result' && result ? (
+        ) : step === 'sequential' && start && buildReq ? (
+          <Sequential
+            start={start}
+            req={buildReq}
+            onFinish={handleFinishSequential}
+            onBack={() => setStep('setup')}
+          />
+        ) : result ? (
           <Result
             result={result}
             commander={builtCommander}
             req={buildReq}
             onBack={() => setStep('setup')}
           />
-        ) : (
-          <PendingView
-            commander={builtCommander}
-            req={buildReq}
-            result={result}
-            onBack={() => setStep('setup')}
-          />
-        )}
+        ) : null}
       </div>
     </main>
-  );
-}
-
-// Honest placeholder: /build already answers and the payload is in hand, but the
-// Sequential view is a separate task. Rather than fake it, show what actually
-// came back so the round trip is verifiable.
-function PendingView({
-  commander,
-  req,
-  result,
-  onBack,
-}: {
-  commander: CommanderListItem | null;
-  req: BuildRequest | null;
-  result: unknown;
-  onBack: () => void;
-}) {
-  const dialEntries = Object.entries(req?.dials ?? {});
-  return (
-    <Panel>
-      <h2 className="text-xl font-semibold">Modo secuencial</h2>
-      <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-        La vista <strong>Sequential</strong> todavía no está implementada — se
-        construye en otra tarea. El API ya ha respondido; abajo va el payload en
-        crudo para poder verificarlo.
-      </p>
-      <dl className="mt-4 grid gap-1 text-sm">
-        <div className="flex gap-2">
-          <dt className="font-medium text-zinc-500 dark:text-zinc-400">
-            Comandante:
-          </dt>
-          <dd className="font-semibold">{commander?.name ?? '—'}</dd>
-        </div>
-        <div className="flex gap-2">
-          <dt className="font-medium text-zinc-500 dark:text-zinc-400">
-            Diales enviados:
-          </dt>
-          <dd className="font-semibold">
-            {dialEntries.length === 0
-              ? 'ninguno (cuotas por defecto)'
-              : dialEntries.map(([k, v]) => `${k}: ${v}`).join(' · ')}
-          </dd>
-        </div>
-      </dl>
-      <pre className="mt-4 max-h-80 overflow-auto rounded-lg bg-zinc-100 p-3 text-[0.7rem] leading-5 text-zinc-700 dark:bg-zinc-950/60 dark:text-zinc-300">
-        {JSON.stringify(result, null, 2)}
-      </pre>
-      <div className="mt-5">
-        <Button variant="secondary" onClick={onBack}>
-          Volver
-        </Button>
-      </div>
-    </Panel>
   );
 }
 

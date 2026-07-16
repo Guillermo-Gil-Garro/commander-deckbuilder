@@ -171,6 +171,29 @@ export type SwapValidation = {
   deck_size: number;
 };
 
+/** One card the guided flow asks about. A POINTER into the deck, not a copy of
+ *  the card: the full shape (art, mana cost, categories) lives in the same
+ *  response's `deck.nonbasic_cards`, keyed by this `oracle_id`.
+ *
+ *  A decision is NOT a mistake. These are the cards whose score sits below the
+ *  elbow of their own category — the deck's weakest links *relative to their
+ *  role*, which is where a player's taste beats an EDHREC average. */
+export type SequentialDecision = {
+  oracle_id: string;
+  name: string;
+  category: string;
+  score: number;
+};
+
+/** `/sequential/start`. `deck` is exactly what `/build` returns — this endpoint
+ *  IS a build plus an analysis of its result. `decisions` is empty when no
+ *  category is big enough for a meaningful elbow, which is a valid outcome and
+ *  not an error. */
+export type SequentialStart = {
+  deck: BuildResult;
+  decisions: SequentialDecision[];
+};
+
 export type Maybeboard = Record<string, DeckCard[]>;
 
 export type WhyNotResult = {
@@ -296,10 +319,9 @@ export async function exportDeck(req: {
   return response.text();
 }
 
-export async function sequentialStart(req: BuildRequest): Promise<unknown> {
-  return request<unknown>('/sequential/start', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(req),
-  });
+/** Build a deck AND get the cards worth deciding, in one call. */
+export async function sequentialStart(
+  req: BuildRequest,
+): Promise<SequentialStart> {
+  return post<SequentialStart>('/sequential/start', req);
 }

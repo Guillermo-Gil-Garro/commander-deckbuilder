@@ -3,6 +3,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Crown,
+  FlagTriangleRight,
   Loader2,
   Play,
   Search,
@@ -52,9 +53,16 @@ export function Setup({
   loadError: string | null;
   building: boolean;
   buildError: string | null;
-  onBuild: (commander: CommanderListItem, dials: Dials) => void;
+  onBuild: (
+    commander: CommanderListItem,
+    dials: Dials,
+    sequential: boolean,
+  ) => void;
 }) {
   const [search, setSearch] = useState('');
+  // Off by default: the normal flow is build -> result. On, the build also asks
+  // which cards are doubtful and walks them one at a time.
+  const [sequential, setSequential] = useState(false);
   const [identityFilter, setIdentityFilter] = useState<Set<ColorCode>>(
     new Set(),
   );
@@ -127,7 +135,7 @@ export function Setup({
 
   function handleSubmit() {
     if (!selected || !canBuild) return;
-    onBuild(selected, dials);
+    onBuild(selected, dials, sequential);
   }
 
   return (
@@ -303,6 +311,24 @@ export function Setup({
               ))}
             </div>
 
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-black/10 bg-white/70 px-3.5 py-3 transition hover:accent-border dark:border-white/10 dark:bg-zinc-950/40">
+              <input
+                type="checkbox"
+                checked={sequential}
+                onChange={(event) => setSequential(event.target.checked)}
+                className="accent-accent-color mt-0.5 h-4 w-4 shrink-0 cursor-pointer"
+              />
+              <span className="min-w-0">
+                <span className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  Modo secuencial
+                </span>
+                <span className="mt-0.5 block text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+                  En vez de soltarte las 99 y ya, te enseña las cartas dudosas
+                  una a una para que decidas tú.
+                </span>
+              </span>
+            </label>
+
             {buildError && (
               <p className="rounded-lg border border-rose-300 bg-rose-50 px-3 py-2 text-sm text-rose-800 dark:border-rose-500/40 dark:bg-rose-950/40 dark:text-rose-200">
                 {buildError}
@@ -312,10 +338,16 @@ export function Setup({
             <Button fullWidth onClick={handleSubmit} disabled={!canBuild}>
               {building ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
+              ) : sequential ? (
+                <FlagTriangleRight className="h-4 w-4" />
               ) : (
                 <Play className="h-4 w-4" />
               )}
-              {building ? 'Construyendo…' : 'Construir mazo'}
+              {building
+                ? 'Construyendo…'
+                : sequential
+                  ? 'Construir y decidir'
+                  : 'Construir mazo'}
             </Button>
             {!building && !selected && (
               <p className="-mt-2 text-xs text-zinc-500 dark:text-zinc-400">
