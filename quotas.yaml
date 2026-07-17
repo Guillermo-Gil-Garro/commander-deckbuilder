@@ -100,6 +100,49 @@ archetypes:
                    # expulsaba los propios payoffs de tierras (Scapeshift, Life from
                    # the Loam) para meter más tierras/rampa; con 24 caben.
 
+  aristocrats:         # sacrificar criaturas/permanentes para valor + drenar; wincon = drenaje
+    lands: [33, 37]
+    ramp: [8, 13]
+    card_draw: [9, 13]
+    removal: [7, 12]
+    board_wipe: [2, 4]
+    wincons: [3, 5]
+    protection: [1, 3]
+    synergy: 33
+
+  mill:                # moler la biblioteca rival; board_wipe bajo (mono-U no tiene barridos)
+    lands: [35, 39]
+    ramp: [9, 14]
+    card_draw: [10, 14]
+    removal: [7, 13]
+    board_wipe: [1, 3]
+    wincons: [2, 5]
+    protection: [2, 4]
+    synergy: 24
+
+  big_mana:            # rampar durísimo a bombas vía vida/criaturas/devoción (no tierras)
+    lands: [36, 40]
+    ramp: [11, 17]
+    card_draw: [9, 13]
+    removal: [6, 11]
+    board_wipe: [2, 4]
+    wincons: [2, 5]
+    protection: [2, 4]
+    synergy: 22
+
+  stax:                # prison/castigo. LIMITACIÓN: sin etiqueta de 'pieza de stax'
+                       # en el tagger, se comporta casi como un control con menos
+                       # wincons. Se afinará cuando se añada esa categoría al
+                       # tagging. (Guille lo sabe.)
+    lands: [35, 39]
+    ramp: [10, 15]
+    card_draw: [8, 12]
+    removal: [8, 14]
+    board_wipe: [2, 5]
+    wincons: [1, 3]
+    protection: [2, 4]
+    synergy: 22
+
 # Diales de la UI: desplazan la banda resultante ±delta (low resta, high suma).
 # `synergy` solo mueve el techo (el min queda fijo en 0). La posición central
 # es el punto de partida y no lleva frase. Sin dial para `wincons` ni

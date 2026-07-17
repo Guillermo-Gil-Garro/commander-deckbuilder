@@ -99,6 +99,46 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "protection": (1, 3),
         "synergy": (0, 24),  # raised from 18 (Guille 2026-07-16): keep land payoffs
     },
+    "aristocrats": {  # added 2026-07-17: sac for value + drain
+        "lands": (33, 37),
+        "ramp": (8, 13),
+        "card_draw": (9, 13),
+        "removal": (7, 12),
+        "board_wipe": (2, 4),
+        "wincons": (3, 5),
+        "protection": (1, 3),
+        "synergy": (0, 33),
+    },
+    "mill": {  # added 2026-07-17: grind opponents' libraries
+        "lands": (35, 39),
+        "ramp": (9, 14),
+        "card_draw": (10, 14),
+        "removal": (7, 13),
+        "board_wipe": (1, 3),
+        "wincons": (2, 5),
+        "protection": (2, 4),
+        "synergy": (0, 24),
+    },
+    "big_mana": {  # added 2026-07-17: ramp hard to bombs (not via lands)
+        "lands": (36, 40),
+        "ramp": (11, 17),
+        "card_draw": (9, 13),
+        "removal": (6, 11),
+        "board_wipe": (2, 4),
+        "wincons": (2, 5),
+        "protection": (2, 4),
+        "synergy": (0, 22),
+    },
+    "stax": {  # added 2026-07-17: prison/tax (no stax tag yet; near-control)
+        "lands": (35, 39),
+        "ramp": (10, 15),
+        "card_draw": (8, 12),
+        "removal": (8, 14),
+        "board_wipe": (2, 5),
+        "wincons": (1, 3),
+        "protection": (2, 4),
+        "synergy": (0, 22),
+    },
 }
 
 EXPECTED_DIAL_DELTAS = {
@@ -154,6 +194,19 @@ def test_real_yaml_band_parity_with_approved_table() -> None:
             assert (band.min, band.max) == expected[category], (
                 f"{archetype_name}.{category}"
             )
+
+
+def test_new_archetypes_exist_and_are_complete() -> None:
+    # The four archetypes added 2026-07-17 must exist and define all eight
+    # categories (seven [min,max] bands plus the synergy ceiling).
+    config = load_quotas()
+    for name in ("aristocrats", "mill", "big_mana", "stax"):
+        assert name in config.archetypes, name
+        archetype = config.archetypes[name]
+        for category in CATEGORIES:
+            band = archetype.band(category)
+            assert band.min <= band.max, f"{name}.{category}"
+        assert archetype.synergy.min == 0, name
 
 
 def test_real_yaml_defaults_and_commanders() -> None:
