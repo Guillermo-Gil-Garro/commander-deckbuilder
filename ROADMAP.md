@@ -47,12 +47,22 @@ Stack copiado tal cual: React 19 + Vite + TS estricto + Tailwind v4 (plugin de V
 - ✅ Ronda de retoques de Guille (2026-07-16): solo modo oscuro; picker ordenado por popularidad EDHREC (`data/edhrec_ranking.json`, unión de 32 páginas por color, ~59% cobertura, resto al final); cara trasera de los DFC con botón de flip (Kefka/Sephiroth/Etali); panel modal de banlist+watchlist (`GET /banlist`); "Diales"→"Personalización" con leyenda MÍN/MÁX; scroll-arriba al paginar; gzip
 - ⬜ 🔶 **Revisión de UX con Guille** (en curso: Guille lo está usando y pidiendo cambios)
 
-**Decisiones de jugador pendientes** (acumuladas, ninguna urgente):
-- Los **26 arquetipos dudosos** de los 55 destacados (Zur el más difícil: voltron vs enchantress)
-- Giada/Gishath/Kaalia se movieron a midrange por un **bug del selector ya arreglado** (aserción `__debug__`), no por criterio real → revisar su arquetipo de verdad
-- Si `lands_matter` debe expulsar los payoffs de tierras (techo de synergy 18)
-- **Auditoría de mazo** (sustituto del modo secuencial): señalar dudosas en mainboard y maybeboard sin forzar decisiones
-- **Sesgo de precio en el score EDHREC**: las duales caras quedan en maybeboard aunque para proxies son autoincludes (opciones en DECISIONS)
+**Ronda de jugador 2026-07-17** (ver DECISIONS): 4 arquetipos nuevos (aristocrats, mill,
+big_mana, stax) + 12 comandantes reasignados; excepción de banlist por arquetipo
+(Rhystic/Remora/Tithe en enchantress); Giada→aggro, Zur→enchantress, lands_matter
+synergy→24; Black Market→watchlist; PDF de proxies 3×3 con básicas de Theros; ataque al
+sesgo de precio en 3 capas (fixing prefer con inyección arreglada + sección "caras y
+buenas" + método C).
+
+**Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
+- **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
+- **3 relajaciones de wincons** (Wilhelt/aristocrats, Zhulodok+Ulalek/big_mana): hueco de tagging (drenaje y bombas no marcados `wincons`). Decidir si bajar el min o mejorar el tagging.
+- **stax** es provisional (sin etiqueta de pieza de stax → casi control). Mejora al añadir esa categoría al tagger.
+
+**Decisiones de jugador aún pendientes** (ninguna urgente):
+- El **resto de dudosos** que no toqué: Emry, The Locust God, Kefka, Obeka, Baral, Ketramose, Arcades, Narset (se quedan como están hasta orden).
+- **Auditoría de mazo** (sustituto del modo secuencial): señalar dudosas en mainboard y maybeboard sin forzar.
+- **Inconsistencia cosmética**: el método C no se aplica en el re-scoring de `service.py` (swap/maybeboard) → el score mostrado de una carta cara puede diferir ≤0.15 entre contextos (no afecta a legalidad).
 
 **Pendientes conocidos de la Fase 5**:
 - Los encabezados por categoría del DeckView **no cuadran** con el panel de composición (p.ej. Ramp 8 vs 12): el panel cuenta multi-pertenencia (una tierra que rampea suma en Tierras y en Ramp) y la agrupación tiene que elegir un grupo por carta. Es inherente y está dicho en la UI; si se quiere que cuadren hay que elegir una de las dos semánticas. 🔶

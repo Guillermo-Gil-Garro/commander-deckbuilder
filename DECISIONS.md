@@ -241,6 +241,60 @@ del score de popularidad, (c) tratarlas como los Signets en el sistema de reglas
 Encaja con la categoría de "cold start" que ya documentamos: el score de EDHREC mide
 popularidad, no calidad, y el precio distorsiona la popularidad hacia abajo.
 
+## 2026-07-17 — 4 arquetipos nuevos, excepción de banlist por arquetipo, PDF, ataque al sesgo de precio
+
+**4 arquetipos nuevos** (de 8 a 12), para comandantes que no encajaban en los 8:
+`aristocrats` (sac + drenaje; wincon = drenaje), `mill` (moler; board_wipe bajo porque
+mono-U no tiene barridos), `big_mana` (rampa dura a bombas vía vida/criaturas/devoción,
+no tierras), `stax` (prison — LIMITACIÓN: sin etiqueta de "pieza de stax" en el tagger
+se comporta como control de wincons bajas; a afinar cuando se añada esa categoría).
+Reasignados 12 comandantes. **9/12 construyen OPTIMAL limpio; 3 relajan en `wincons`**
+(Wilhelt, Zhulodok, Ulalek) porque el drenaje de aristócratas y el "castear el bicho
+gordo" de big-mana no están etiquetados `wincons` — hueco de tagging, no infactibilidad.
+Bandas sin tocar, pendiente de decisión de jugador de Guille.
+
+**Excepción de banlist por arquetipo**: Rhystic Study, Mystic Remora y Smothering Tithe
+(baneadas como trío de taxes pasivos) son legales SOLO en `enchantress` (encantamientos
+on-theme). Mecanismo `legal_in_archetypes` en banlist.yaml; el build/maybeboard/
+candidates/validate/why-not usan `effective_banned_names(archetype)`. La identidad de
+color filtra sola (Tithe blanca → solo enchantress blancas como Sythis). El panel de
+banlist las marca "salvo en enchantress". Verificado: Sythis mete Smothering Tithe.
+
+**Zur → enchantress** (era voltron), **Giada → aggro** (era midrange, movida por el bug
+de la aserción ya arreglado), **lands_matter synergy 18→24** (para que no expulse sus
+propios payoffs). **Black Market Connections → watchlist**.
+
+**PDF de proxies**: `POST /export/pdf`, 3×3 A4, cartas 63×88 mm, líneas de corte, DFC a
+dos caras. Básicas incluidas por cantidad con el **full-art de Theros Beyond Death**
+(decisión de Guille). fpdf2 (dep nueva, pura Python).
+
+**Ataque al sesgo de precio de EDHREC** (el score mide popularidad y el precio la
+deprime). Tres capas complementarias, NO solapadas:
+1. **Fixing como prefer**: 10 duales ABUR + 10 fetchlands en `rules.yaml` `preferred`
+   (boost 0.4, solo si la identidad contiene sus DOS colores). **Hallazgo de fondo**: el
+   sistema `preferred` NO inyectaba candidatos — solo boosteaba lo ya recomendado, así
+   que un staple price-suprimido nunca aparecía. Arreglado: los `preferred` ahora se
+   inyectan al pool de candidatos cuando la identidad casa (como `always`, sin forzar).
+   Esto cambia la composición de TODOS los mazos (más fixing/staples premium).
+2. **Sección de maybeboard "Caras y buenas"**: diff EDHREC `expensive − optimized`
+   (idea de Guille, validada con datos). Surge lo que los mazos con dinero juegan y la
+   lista optimizada infrapondera por precio (Cradle, Mox, duales, Wheel...), limpiando
+   ruido barato (< $5) y baneadas, conservando Reserved List (usd nulo). **Señala, no
+   fuerza** — no se exporta al decklist. Es la capa para lo que EDHREC NO recomienda.
+3. **Método C** (`C_WEIGHT=0.15` en cp_sat): boost de score = `price_factor(precio) ·
+   inclusion_factor(inclusión)`, solo sobre candidatos que EDHREC SÍ recomienda, para
+   que una cara-y-jugada no pierda su slot frente a una barata peor. Suelo $10, satura
+   a $100, nulo/inclusión-0 → 0. Calibrado sobre 8 comandantes (mueve 0-4 cartas, sin
+   cambiar relajación). Es solo score: no toca constraints ni Karsten. `C_WEIGHT=0` lo
+   apaga.
+
+⚠️ **Las tres capas cambian la composición del mainboard y Guille aún no las ha jugado.**
+Todas son fáciles de dial back (quitar prefer, `C_WEIGHT=0`). Pendiente su validación en
+partida. **Inconsistencia cosmética conocida**: C se aplica en cp_sat pero no en el
+re-scoring de `service.py` (panel de swap/maybeboard), así que el score mostrado de una
+carta cara puede diferir ≤0.15 entre contextos. No afecta a la legalidad (constraints es
+conteo puro). Se arregla extrayendo C a un helper compartido si molesta.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).
