@@ -44,6 +44,17 @@ def count_pips(mana_cost: str) -> dict[str, int]:
     return pips
 
 
+class TokenPart(BaseModel):
+    """A token a card can create, from Scryfall ``all_parts`` (``component:
+    token``). ``scryfall_id`` is the token printing's id, enough to fetch its
+    art; ``type_line`` (e.g. "Token Creature — Goblin") tells creature tokens
+    apart from artifact/food/treasure ones for the proxy copy-count rule."""
+
+    name: str
+    scryfall_id: str
+    type_line: str
+
+
 class Card(BaseModel):
     name: str
     oracle_id: str
@@ -72,6 +83,11 @@ class Card(BaseModel):
     # None when Scryfall ships no usd price. Lives at the card root even for
     # multi-faced cards (no per-face prices).
     price_usd: float | None = None
+    # Tokens this card can create (Scryfall ``all_parts``, ``component: token``),
+    # used to fill the empty cells of the proxy sheet. Empty for cards that make
+    # none. Non-token related parts (the card itself, meld/combo pieces) are
+    # dropped.
+    tokens: list[TokenPart] = []
 
     @classmethod
     def from_scryfall(cls, data: dict) -> "Card":
@@ -95,6 +111,16 @@ class Card(BaseModel):
         # (or an unparseable value, which Scryfall never ships) means "unknown".
         raw_price = (data.get("prices") or {}).get("usd")
         price_usd = float(raw_price) if raw_price is not None else None
+
+        tokens = [
+            TokenPart(
+                name=part.get("name") or "",
+                scryfall_id=part.get("id") or "",
+                type_line=part.get("type_line") or "",
+            )
+            for part in (data.get("all_parts") or [])
+            if part.get("component") == "token" and part.get("id")
+        ]
 
         if faces:
             oracle_text = "\n//\n".join(
@@ -124,6 +150,7 @@ class Card(BaseModel):
             image_uri_back_normal=back_images.get("normal") or "",
             image_uri_back_art_crop=back_images.get("art_crop") or "",
             price_usd=price_usd,
+            tokens=tokens,
         )
 
 

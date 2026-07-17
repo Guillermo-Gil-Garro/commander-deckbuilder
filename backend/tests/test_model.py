@@ -247,6 +247,54 @@ def test_price_usd_taken_from_root_for_multiface() -> None:
     assert Card.from_scryfall(TWO_FACED).price_usd == 12.50
 
 
+TOKEN_MAKER = {
+    "id": "eeee5555-5555-5555-5555-555555555555",
+    "oracle_id": "oracle-eeee-5555",
+    "name": "Token Maker",
+    "mana_cost": "{2}{R}",
+    "cmc": 3.0,
+    "type_line": "Creature — Goblin",
+    "oracle_text": "Make a Goblin.",
+    "colors": ["R"],
+    "color_identity": ["R"],
+    "layout": "normal",
+    "legalities": {"commander": "legal"},
+    "all_parts": [
+        {
+            "component": "combo_piece",
+            "id": "eeee5555-5555-5555-5555-555555555555",
+            "name": "Token Maker",
+            "type_line": "Creature — Goblin",
+        },
+        {
+            "component": "token",
+            "id": "70f8a1de-cd4c-4afa-bf03-0245d375d42e",
+            "name": "Goblin",
+            "type_line": "Token Creature — Goblin",
+        },
+        {
+            "component": "token",
+            "id": "cb7b5024-3a0b-4f14-977e-ba6c4c2567c9",
+            "name": "Treasure",
+            "type_line": "Token Artifact — Treasure",
+        },
+    ],
+}
+
+
+def test_tokens_parsed_from_all_parts() -> None:
+    tokens = Card.from_scryfall(TOKEN_MAKER).tokens
+    # Only the two `component: token` parts survive; the combo_piece (the card
+    # itself) is dropped.
+    assert [t.name for t in tokens] == ["Goblin", "Treasure"]
+    assert tokens[0].scryfall_id == "70f8a1de-cd4c-4afa-bf03-0245d375d42e"
+    assert tokens[1].type_line == "Token Artifact — Treasure"
+
+
+def test_no_tokens_when_all_parts_absent() -> None:
+    assert Card.from_scryfall(BEAR).tokens == []
+
+
 def test_image_uris_helper() -> None:
     assert image_uris(BEAR)["normal"] == "https://cards.scryfall.io/normal/bear.jpg"
     assert (

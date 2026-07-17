@@ -54,7 +54,10 @@ def fetch_card_image(url: str) -> bytes:
         return cache_path.read_bytes()
 
     logger.info("Downloading card image %s", url)
-    response = httpx.get(url, headers=HEADERS, timeout=_TIMEOUT)
+    # Direct CDN URLs (image_uris.normal) never redirect; the token endpoint
+    # (api.scryfall.com/cards/<id>?format=image) answers 302 to the CDN, so
+    # follow it. Following a redirect that never comes is a no-op for the rest.
+    response = httpx.get(url, headers=HEADERS, timeout=_TIMEOUT, follow_redirects=True)
     response.raise_for_status()
     content = response.content
 
