@@ -68,10 +68,12 @@ popularidad-como-calidad; la señal buena la dará la auditoría).
 Sustituto del modo secuencial: sobre el mazo construido, **señala sin forzar** (dudosas
 dentro + buenas que faltan), reusando `swap-candidates` (es el swap iniciado por el
 sistema). Diseño completo en DECISIONS.
-- 🔄 **MVP (en construcción)**: capa 1 (lista curada de condicionales, reusa `when`; caso
-  Fierce Guardianship y ciclo "gratis con comandante", predicado CMC alto) + abanico de 4
-  reemplazos (2 mismo rol / 1 mejor general / 1 refuerzo de categoría justa) + lado
-  "buenas que faltan".
+- ✅ **MVP (2026-07-18)**: `POST /audit` + panel "Auditar mazo". Capa 1 (lista curada
+  `selector/audit.py`: ciclo "gratis con comandante" con predicado CMC≥5; no reusa el DSL
+  `when`, es código self-contained más simple) + abanico de 4 reemplazos factibles (2
+  mismo rol / 1 mejor general / 1 refuerzo de categoría más justa) + lado "buenas que
+  faltan". Reusa swap-candidates/swap_is_feasible; no re-resuelve. 10 tests. Verificado en
+  Ur-Dragon (marca Fierce Guardianship, ofrece Force of Will / Toxic Deluge / refuerzo).
 - ⬜ 🔶 **Capa 2 — filler de baja sinergia**: cartas con sinergia EDHREC ≤0 fuera de una
   allowlist de staples universales. NO en el MVP (ruidosa; el trabajo es mantener la
   allowlist). Alternativa conservadora: solo `synergy` puro sin categoría real.
@@ -85,7 +87,7 @@ sistema). Diseño completo en DECISIONS.
 
 **Decisiones de jugador aún pendientes** (ninguna urgente):
 - El **resto de dudosos** que no toqué: Emry, The Locust God, Kefka, Obeka, Baral, Ketramose, Arcades, Narset (se quedan como están hasta orden).
-- **Auditoría de mazo** (sustituto del modo secuencial): señalar dudosas en mainboard y maybeboard sin forzar.
+- ~~**Auditoría de mazo**~~ MVP hecho 2026-07-18 (ver sección Auditoría arriba); pendiente capas 2/3.
 - **Inconsistencia cosmética**: el método C no se aplica en el re-scoring de `service.py` (swap/maybeboard) → el score mostrado de una carta cara puede diferir ≤0.15 entre contextos (no afecta a legalidad).
 
 **Pendientes conocidos de la Fase 5**:
