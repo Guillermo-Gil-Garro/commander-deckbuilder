@@ -74,6 +74,10 @@ class CardView(BaseModel):
     # "no back", so a caller that has nothing to say need say nothing.
     image_uri_back_normal: str = ""
     image_uri_back_art_crop: str = ""
+    # Scryfall USD price, a relative "cheap vs expensive" signal only (the group
+    # plays proxies). ``null`` when the pool card has no usd price. Published for
+    # the layers that correct EDHREC's price bias; the frontend does not show it.
+    price_usd: float | None = None
 
 
 def card_view(card: Mapping[str, Any]) -> CardView:
@@ -100,6 +104,7 @@ def card_view(card: Mapping[str, Any]) -> CardView:
         image_uri_art_crop=card.get("image_uri_art_crop"),
         image_uri_back_normal=card.get("image_uri_back_normal") or "",
         image_uri_back_art_crop=card.get("image_uri_back_art_crop") or "",
+        price_usd=card.get("price_usd"),
     )
 
 

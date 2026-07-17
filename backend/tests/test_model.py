@@ -25,6 +25,7 @@ BEAR = {
     "layout": "normal",
     "legalities": {"commander": "legal"},
     "image_uris": _images("bear"),
+    "prices": {"usd": "1.23", "usd_foil": "4.56", "eur": "0.99", "tix": "0.02"},
 }
 
 LEGENDARY_CREATURE = {
@@ -77,6 +78,8 @@ TWO_FACED = {
     "color_identity": ["U"],
     "layout": "transform",
     "legalities": {"commander": "legal"},
+    # Price lives at the root; the faces carry none.
+    "prices": {"usd": "12.50", "eur": "10.00"},
     "card_faces": [
         {
             "name": "Front Side",
@@ -227,6 +230,21 @@ def test_card_without_images_gets_empty_strings() -> None:
     card = Card.from_scryfall(IMAGELESS)
     assert card.image_uri_normal == ""
     assert card.image_uri_art_crop == ""
+
+
+def test_price_usd_parsed_from_prices() -> None:
+    card = Card.from_scryfall(BEAR)
+    assert card.price_usd == 1.23
+
+
+def test_price_usd_none_when_absent() -> None:
+    # SORCERY ships no `prices` key at all: unknown price, not zero.
+    assert Card.from_scryfall(SORCERY).price_usd is None
+
+
+def test_price_usd_taken_from_root_for_multiface() -> None:
+    # prices is never per-face: the multi-faced card reads the root usd.
+    assert Card.from_scryfall(TWO_FACED).price_usd == 12.50
 
 
 def test_image_uris_helper() -> None:

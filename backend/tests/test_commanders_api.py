@@ -29,6 +29,7 @@ COMMANDER_FIELDS = {
     "image_uri_art_crop",
     "image_uri_back_normal",
     "image_uri_back_art_crop",
+    "price_usd",
     "archetype",
 }
 

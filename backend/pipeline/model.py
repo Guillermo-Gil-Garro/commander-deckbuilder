@@ -66,6 +66,12 @@ class Card(BaseModel):
     # no back to show.
     image_uri_back_normal: str = ""
     image_uri_back_art_crop: str = ""
+    # Scryfall USD price, kept only as a RELATIVE "cheap vs expensive" signal
+    # (the group plays proxies): EDHREC popularity is depressed by price, so the
+    # later layers correct for it. usd has the best coverage of the price keys;
+    # None when Scryfall ships no usd price. Lives at the card root even for
+    # multi-faced cards (no per-face prices).
+    price_usd: float | None = None
 
     @classmethod
     def from_scryfall(cls, data: dict) -> "Card":
@@ -84,6 +90,11 @@ class Card(BaseModel):
 
         mana_cost = front.get("mana_cost") or ""
         type_line = front.get("type_line") or data.get("type_line") or ""
+
+        # prices is at the root even for multi-faced cards; a null/absent usd
+        # (or an unparseable value, which Scryfall never ships) means "unknown".
+        raw_price = (data.get("prices") or {}).get("usd")
+        price_usd = float(raw_price) if raw_price is not None else None
 
         if faces:
             oracle_text = "\n//\n".join(
@@ -112,6 +123,7 @@ class Card(BaseModel):
             image_uri_art_crop=images.get("art_crop") or "",
             image_uri_back_normal=back_images.get("normal") or "",
             image_uri_back_art_crop=back_images.get("art_crop") or "",
+            price_usd=price_usd,
         )
 
 

@@ -255,6 +255,7 @@ def test_every_deck_card_carries_the_full_card_shape(krenko_deck: dict) -> None:
         "image_uri_art_crop",
         "image_uri_back_normal",
         "image_uri_back_art_crop",
+        "price_usd",
         "categories",
         "count",
         "slot",
