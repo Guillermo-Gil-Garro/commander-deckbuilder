@@ -345,11 +345,11 @@ def test_signet_forced_for_listed_mono_exception_commander() -> None:
     assert "Sol Ring" in {e.name for e in result.mainboard}
 
 
-def test_preferred_land_injected_when_edhrec_omits_it() -> None:
-    # The core fix: a preferred dual/fetch is depressed by price and NOT in the
-    # EDHREC recommendations, so it must be injected into the candidate pool
-    # with its boost as base score. A 0.4-score land beats a basic (score 0) in
-    # the objective, so the solver takes it.
+def test_preferred_land_forced_when_edhrec_omits_it() -> None:
+    # A preferred dual/fetch is depressed by price and NOT in the EDHREC
+    # recommendations, so it is injected into the candidate pool with its boost
+    # as base score AND forced (x == 1): a proxy group treats it as an
+    # autoinclude, not a card that merely competes for a land slot.
     pool, recs = build_inputs()
     dual = make_card("Red Dual", mana_cost="", cmc=0.0, type_line="Land")
     pool.by_name[dual["name"]] = dual
@@ -361,7 +361,22 @@ def test_preferred_land_injected_when_edhrec_omits_it() -> None:
     result = build_with(pool, recs, rules=rules)
     entry = next(e for e in result.mainboard if e.name == "Red Dual")
     assert entry.score == pytest.approx(0.4)
-    assert entry.reason.startswith("tierra recomendada")
+    # Forced as an autoinclude, so the reason is the fixing-premium one, not the
+    # score-competition one a merely-injected land would get.
+    assert entry.reason == "autoinclude: fixing premium"
+
+
+def test_basics_floor_reserves_a_basic_per_identity_color() -> None:
+    # The manabase never comes out all-nonbasic: at least BASIC_FLOOR_PER_COLOR
+    # of each identity colour's basic is reserved (fetch targets, Blood-Moon
+    # insurance). The fixture commander is mono-red, so at least one Mountain.
+    from selector.cp_sat import BASIC_FLOOR_PER_COLOR
+
+    pool, recs = build_inputs()
+    result = build_with(pool, recs)
+    mountain = next((e for e in result.mainboard if e.name == "Mountain"), None)
+    assert mountain is not None
+    assert mountain.count >= BASIC_FLOOR_PER_COLOR
 
 
 def test_preferred_not_injected_when_color_predicate_misses() -> None:

@@ -243,6 +243,12 @@ def price_boost(price_usd: float | None, inclusion: float) -> float:
 
 _KARSTEN_FIXPOINT_MAX_ITER = 16
 
+# Reserve at least this many basics per identity colour. EDHREC popularity fills
+# the manabase with duals/shocks/fetches and leaves zero basics, which is fragile
+# (nothing to fetch, no Blood-Moon insurance) and reads as a bug. A small floor
+# gives every fetch a target without wasting the manabase. Tunable.
+BASIC_FLOOR_PER_COLOR = 1
+
 
 @dataclass(frozen=True)
 class _Stage:
@@ -457,7 +463,9 @@ def _reason_for(
 ) -> str:
     """Greedy-style reason for one selected card, derived from the solution."""
     if cand.name in forced:
-        return "always (rules.yaml)"
+        # Forced lands are the preferred duals/fetches (autoincludes), not the
+        # non-land `always` cards — they enter through the manabase, not a rule.
+        return "autoinclude: fixing premium" if cand.is_land else "always (rules.yaml)"
     if cand.is_land:
         # Multi-category lands: state plainly that they count toward those
         # categories (they do, for the ceilings) but never satisfy their min.
@@ -500,6 +508,7 @@ def _assemble_model(
     producers: Mapping[str, frozenset[str]],  # candidate name -> colors produced
     forced: frozenset[str] = frozenset(),  # always cards (rules.yaml): x == 1
     excluded: frozenset[str] = frozenset(),  # weak non-basic lands: x == 0
+    basic_floor: int = 0,  # minimum copies of each basic in basic_types
 ) -> tuple[cp_model.CpModel, dict[str, cp_model.IntVar], dict[str, cp_model.IntVar]]:
     """One CP-SAT model for a relaxation stage and a fixed lands lower bound."""
     model = cp_model.CpModel()
@@ -524,6 +533,11 @@ def _assemble_model(
     b: dict[str, cp_model.IntVar] = {}
     for basic_name, _color in basic_types:
         b[basic_name] = model.new_int_var(0, DECK_SIZE, f"b_{basic_name}")
+        # Reserve a basics floor per colour so the manabase is never all-nonbasic
+        # (fetch targets, Blood-Moon insurance). Hard at every stage; the amounts
+        # are well within 99, so it never causes infeasibility.
+        if basic_floor > 0:
+            model.add(b[basic_name] >= basic_floor)
 
     model.add(sum(x.values()) + sum(b.values()) == DECK_SIZE)
 
@@ -833,6 +847,22 @@ def build_deck_cpsat(
             mana_cost=card.get("mana_cost") or "",
         )
 
+    # ── preferred LANDS are autoincludes, not mere boosts ────────────────
+    # A proxy group always wants the ABUR dual / fetch over a worse land of the
+    # same colours, but a 0.4 boost only wins some of the slots under the lands
+    # cap (Ur-Dragon: 7 of 10 duals). Force every preferred card that resolved
+    # to a candidate land (identity gate already applied by preferred_boosts and
+    # the injection guards) with x == 1, the manabase-side equivalent of an
+    # `always` — from which lands are excluded by design. Non-land preferred
+    # cards keep the boost only.
+    for pref_name in boosts:
+        card = pool.resolve(pref_name)
+        if card is None:
+            continue
+        cand = candidates.get(card["name"])
+        if cand is not None and cand.is_land:
+            forced_names.add(card["name"])
+
     ordered = _sorted_candidates(candidates.values())
     forced = frozenset(forced_names)
     # Land quality gate (COMPARATIVA_EDHREC_B4): weak non-basic lands are
@@ -889,6 +919,7 @@ def build_deck_cpsat(
                 producers,
                 forced=forced,
                 excluded=excluded_lands,
+                basic_floor=BASIC_FLOOR_PER_COLOR,
             )
             solver = _make_solver(random_seed, time_limit_s)
             status = solver.solve(model)
