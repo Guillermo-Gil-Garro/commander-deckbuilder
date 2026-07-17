@@ -133,14 +133,23 @@ never:
 # PREFER — staples "permitidas" por color: bonus plano de score, jamás
 # fuerzan su entrada. Formato:
 #   - name: Solemn Simulacrum
-#     colors_any: []        # vacío = cualquier mazo
-#     boost: 0.3            # opcional (default 0.3)
+#     colors_any: []                 # vacío = cualquier mazo (contiene ALGUNO)
+#     color_identity_contains: [U,B] # opcional: la identidad contiene TODOS
+#     boost: 0.3                     # opcional (default 0.3)
+# `colors_any` y `color_identity_contains` se combinan en AND; ambos vacíos =
+# todos los mazos. Para fixing de dos colores (duales ABUR, fetchlands) el
+# criterio correcto es `color_identity_contains`: una Underground Sea no fija
+# nada en un mazo mono-U, solo cuando juega U y B.
 # Dos niveles (2026-07-14):
 #   0.4 — staples de color del seed original de always: casi siempre entran,
 #         pero un mazo con mejor uso del slot puede prescindir (caso Ur-Dragon:
 #         no arrastra todos los free spells si no protege un plan de campo).
+#         Mismo boost (premium) para duales ABUR y fetchlands: fixing de primer
+#         orden que el precio hunde en EDHREC (a menudo ni las lista).
 #   0.2 — ciclos Signet/Talismán por pareja de colores.
-# Nota: solo aparecen como candidatas en páginas EDHREC de sus colores.
+# Nota: el selector INYECTA las preferred que casan por color en el pool de
+# candidatos (con el boost como score base), aunque EDHREC no las recomiende;
+# imprescindible para los duales/fetches, deprimidos por precio.
 # ---------------------------------------------------------------------------
 preferred:
   - { name: Swords to Plowshares, colors_any: [W], boost: 0.4 }
@@ -175,6 +184,29 @@ preferred:
   - { name: Talisman of Resilience, colors_any: [B, G], boost: 0.2 }
   - { name: Talisman of Conviction, colors_any: [R, W], boost: 0.2 }
   - { name: Talisman of Curiosity, colors_any: [G, U], boost: 0.2 }
+  # ── Duales ABUR (Reserved List): fixing premium, boost 0.4. Solo preferidas
+  #    cuando la identidad contiene SUS DOS colores (color_identity_contains). ──
+  - { name: Tundra, color_identity_contains: [W, U], boost: 0.4 }
+  - { name: Underground Sea, color_identity_contains: [U, B], boost: 0.4 }
+  - { name: Badlands, color_identity_contains: [B, R], boost: 0.4 }
+  - { name: Taiga, color_identity_contains: [R, G], boost: 0.4 }
+  - { name: Savannah, color_identity_contains: [G, W], boost: 0.4 }
+  - { name: Scrubland, color_identity_contains: [W, B], boost: 0.4 }
+  - { name: Volcanic Island, color_identity_contains: [U, R], boost: 0.4 }
+  - { name: Bayou, color_identity_contains: [B, G], boost: 0.4 }
+  - { name: Plateau, color_identity_contains: [R, W], boost: 0.4 }
+  - { name: Tropical Island, color_identity_contains: [G, U], boost: 0.4 }
+  # ── Fetchlands: buscan sus dos tipos básicos, mismo criterio de dos colores. ──
+  - { name: Flooded Strand, color_identity_contains: [W, U], boost: 0.4 }
+  - { name: Polluted Delta, color_identity_contains: [U, B], boost: 0.4 }
+  - { name: Bloodstained Mire, color_identity_contains: [B, R], boost: 0.4 }
+  - { name: Wooded Foothills, color_identity_contains: [R, G], boost: 0.4 }
+  - { name: Windswept Heath, color_identity_contains: [G, W], boost: 0.4 }
+  - { name: Marsh Flats, color_identity_contains: [W, B], boost: 0.4 }
+  - { name: Scalding Tarn, color_identity_contains: [U, R], boost: 0.4 }
+  - { name: Verdant Catacombs, color_identity_contains: [B, G], boost: 0.4 }
+  - { name: Arid Mesa, color_identity_contains: [R, W], boost: 0.4 }
+  - { name: Misty Rainforest, color_identity_contains: [G, U], boost: 0.4 }
 
 # ---------------------------------------------------------------------------
 # Gobernanza — espejo del nomination_rule de banlist.yaml (mismo proceso).

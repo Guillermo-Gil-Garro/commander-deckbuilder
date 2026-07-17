@@ -83,9 +83,13 @@ def test_real_rules_yaml_loads_with_the_agreed_decision(real_rules) -> None:
     # Rediseño 2026-07-14 ("test del olvido"): solo Sol Ring y Arcane Signet
     # son always; 12 staples de color a prefer 0.4 + 20 Signets/Talismanes 0.2.
     assert set(by_name) == {"Sol Ring", "Arcane Signet"}
-    assert len(real_rules.preferred) == 32
+    # 12 staples 0.4 + 20 Signets/Talismanes 0.2 + 10 duales ABUR + 10 fetches
+    # (ambos 0.4, fixing premium hundido por precio en EDHREC).
+    assert len(real_rules.preferred) == 52
     boosts = {p.boost for p in real_rules.preferred}
     assert boosts == {0.4, 0.2}
+    preferred_names_all = {p.name for p in real_rules.preferred}
+    assert {"Underground Sea", "Misty Rainforest"} <= preferred_names_all
     preferred_names = {p.name for p in real_rules.preferred}
     assert {"Cyclonic Rift", "Toxic Deluge", "Force of Will"} <= preferred_names
     assert "Erode" not in preferred_names and "Blasphemous Act" not in preferred_names
@@ -317,6 +321,48 @@ def test_ban_beats_never_and_always() -> None:
     assert boosts == {"Sol Ring": 0.4}
     assert boost_for(boosts, "Sol Ring") == 0.4
     assert boost_for(boosts, "Arcane Signet") == 0.0
+
+
+# ── preferred: colors_any (any-of) vs color_identity_contains (all-of) ───────
+
+
+def _dual_config() -> RulesConfig:
+    return RulesConfig.model_validate(
+        {
+            "preferred": [
+                {"name": "Swords to Plowshares", "colors_any": ["W"], "boost": 0.4},
+                {
+                    "name": "Underground Sea",
+                    "color_identity_contains": ["U", "B"],
+                    "boost": 0.4,
+                },
+            ]
+        }
+    )
+
+
+def test_colors_any_matches_on_any_listed_color() -> None:
+    config = _dual_config()
+    # A mono-white deck gets the white staple.
+    assert preferred_boosts(config, ("W",)) == {"Swords to Plowshares": 0.4}
+
+
+def test_dual_preferred_only_when_identity_contains_both_colors() -> None:
+    config = _dual_config()
+    # Mono-U or mono-B: the dual is not fixing anything, so no boost.
+    assert "Underground Sea" not in preferred_boosts(config, ("U",))
+    assert "Underground Sea" not in preferred_boosts(config, ("B",))
+    # Both colors present (Dimir, or a superset like Grixis): preferred.
+    assert preferred_boosts(config, ("U", "B"))["Underground Sea"] == 0.4
+    assert preferred_boosts(config, ("U", "B", "R"))["Underground Sea"] == 0.4
+
+
+def test_both_empty_predicates_match_every_deck() -> None:
+    config = RulesConfig.model_validate(
+        {"preferred": [{"name": "Sol Ring", "boost": 0.4}]}
+    )
+    assert preferred_boosts(config, ()) == {"Sol Ring": 0.4}
+    assert preferred_boosts(config, ("G",)) == {"Sol Ring": 0.4}
 
 
 # ── selector behavior: always consumes quota, never blocks maybeboard ────────

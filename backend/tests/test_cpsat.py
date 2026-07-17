@@ -343,6 +343,47 @@ def test_signet_forced_for_listed_mono_exception_commander() -> None:
     assert "Sol Ring" in {e.name for e in result.mainboard}
 
 
+def test_preferred_land_injected_when_edhrec_omits_it() -> None:
+    # The core fix: a preferred dual/fetch is depressed by price and NOT in the
+    # EDHREC recommendations, so it must be injected into the candidate pool
+    # with its boost as base score. A 0.4-score land beats a basic (score 0) in
+    # the objective, so the solver takes it.
+    pool, recs = build_inputs()
+    dual = make_card("Red Dual", mana_cost="", cmc=0.0, type_line="Land")
+    pool.by_name[dual["name"]] = dual
+    TAGS["Red Dual"] = {"lands"}  # tagged land, but no Rec for it
+    rules = RulesConfig.model_validate(
+        {"preferred": [{"name": "Red Dual", "colors_any": ["R"], "boost": 0.4}]}
+    )
+    assert "Red Dual" not in {r.name for r in recs}  # EDHREC never lists it
+    result = build_with(pool, recs, rules=rules)
+    entry = next(e for e in result.mainboard if e.name == "Red Dual")
+    assert entry.score == pytest.approx(0.4)
+    assert entry.reason.startswith("tierra recomendada")
+
+
+def test_preferred_not_injected_when_color_predicate_misses() -> None:
+    # A dual whose two colors are not both in the identity must NOT be injected
+    # (color_identity_contains all-of): an off-color dual is not fixing.
+    pool, recs = build_inputs()  # mono-red commander
+    dual = make_card("Azorius Dual", mana_cost="", cmc=0.0, type_line="Land")
+    pool.by_name[dual["name"]] = dual
+    TAGS["Azorius Dual"] = {"lands"}
+    rules = RulesConfig.model_validate(
+        {
+            "preferred": [
+                {"name": "Azorius Dual", "color_identity_contains": ["W", "U"],
+                 "boost": 0.4}
+            ]
+        }
+    )
+    result = build_with(pool, recs, rules=rules)
+    all_names = {e.name for e in result.mainboard} | {
+        e.name for e in result.maybeboard
+    }
+    assert "Azorius Dual" not in all_names
+
+
 def test_banlist_beats_always_rule() -> None:
     pool, recs = build_inputs()
     add_rule_cards(pool)

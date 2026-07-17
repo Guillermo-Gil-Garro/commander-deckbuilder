@@ -13,8 +13,12 @@ Strict precedence: **ban > never > always > prefer**.
   general filler slot). The banlist and a matching ``never`` always win.
 - ``never``: when its ``when`` matches, the card is never auto-recommended —
   neither mainboard nor maybeboard (same treatment as the banlist watchlist).
-- ``preferred``: flat score ``boost`` when the commander identity contains
-  any color of ``colors_any`` (empty = every deck). Never forces the card in.
+- ``preferred``: flat score ``boost`` when the commander identity matches the
+  card's color predicates — ``colors_any`` (contains ANY listed color) and/or
+  ``color_identity_contains`` (contains ALL listed colors, for two-color
+  fixing like duals/fetches); both empty = every deck. Never forces the card
+  in, but the selector injects a matching preferred card into the candidate
+  pool with this boost as its base score (see ``cp_sat``).
 
 ``when`` predicates (v1) only use facts known BEFORE selection: commander
 color identity, identity size, quota archetype and commander name. Predicates
@@ -189,15 +193,26 @@ class NeverRule(BaseModel):
 
 
 class PreferredCard(BaseModel):
-    """One allowed staple: flat score boost when the deck matches its colors."""
+    """One allowed staple: flat score boost when the deck matches its colors.
+
+    Two independent, ANDed color predicates (both empty = every deck):
+
+    - ``colors_any``: identity contains ANY listed color. Right for a
+      mono-colored staple usable across shards (Swords in any W deck).
+    - ``color_identity_contains``: identity contains ALL listed colors — the
+      ``When`` semantics. Right for two-color fixing (an ABUR dual or a
+      fetchland is only fixing when the deck plays BOTH of its colors: an
+      Underground Sea does nothing in a mono-U deck).
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     name: str = Field(min_length=1)
     colors_any: tuple[str, ...] = ()  # empty = applies to every deck
+    color_identity_contains: tuple[str, ...] = ()  # empty = no all-of gate
     boost: float = Field(default=DEFAULT_PREFERRED_BOOST, gt=0)
 
-    @field_validator("colors_any")
+    @field_validator("colors_any", "color_identity_contains")
     @classmethod
     def _valid_colors(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         unknown = set(value) - set(_WUBRG)
@@ -507,20 +522,36 @@ def validate_forced_slot_budget(
     return count
 
 
+def _preferred_applies(card: PreferredCard, identity: set[str]) -> bool:
+    """Whether a preferred card's color predicates match this identity.
+
+    ``colors_any`` (any-of) and ``color_identity_contains`` (all-of) are
+    ANDed; each empty predicate is a no-op, so both empty matches every deck.
+    """
+    if card.colors_any and not (set(card.colors_any) & identity):
+        return False
+    if card.color_identity_contains and not (
+        set(card.color_identity_contains) <= identity
+    ):
+        return False
+    return True
+
+
 def preferred_boosts(
     config: RulesConfig, color_identity: Iterable[str]
 ) -> dict[str, float]:
     """``name -> boost`` for the preferred cards matching this identity.
 
-    A card matches when the identity contains any color of ``colors_any``
-    (an empty ``colors_any`` matches every deck). The boost is a flat score
-    bonus — it never forces the card in.
+    See ``_preferred_applies`` for the matching rule. The boost is a flat
+    score bonus; the selector uses it as the card's base score when the card
+    is injected into the candidate pool (see ``cp_sat``), but a preferred
+    card never *forces* its way in.
     """
     identity = set(color_identity)
     return {
         card.name: card.boost
         for card in config.preferred
-        if not card.colors_any or set(card.colors_any) & identity
+        if _preferred_applies(card, identity)
     }
 
 

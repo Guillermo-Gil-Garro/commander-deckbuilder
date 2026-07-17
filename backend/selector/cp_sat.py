@@ -710,6 +710,48 @@ def build_deck_cpsat(
                 forced_slots[full_name] = rule.quota_category
             forced_names.add(full_name)
 
+    # ── preferred cards injected into the candidate pool (rules.yaml) ─────
+    # EDHREC's popularity score is depressed by price, so premium fixing (ABUR
+    # duals, fetchlands) and pricey staples are often ABSENT from the
+    # recommendations. A boost that only reweighted existing candidates would
+    # never see them, so every preferred card whose color predicates match the
+    # identity is injected here with its boost as base score — the same pool
+    # entry an ``always`` gets, minus the ``x == 1`` forcing (prefer never
+    # forces: ban > never > always > prefer). Cards already candidates (an
+    # EDHREC rec or an always) keep their EDHREC-derived score, which already
+    # includes this boost via ``boost_for``.
+    for pref_name, boost in boosts.items():
+        card = pool.resolve(pref_name)
+        if card is None:
+            # Names are cross-checked against the pool at load
+            # (validate_rules_names); a miss here means a minimal test pool.
+            logger.debug("preferred card %r not in pool, not injected", pref_name)
+            continue
+        full_name = card["name"]
+        if full_name == commander_full_name or full_name in candidates:
+            continue
+        variants = _name_variants(full_name) | {pref_name}
+        if (
+            variants & set(banned_names)
+            or variants & set(watchlist_names)
+            or variants & never_excluded
+        ):
+            continue
+        if not set(card.get("color_identity", [])) <= commander_identity:
+            continue
+        if "Basic" in card.get("type_line", ""):
+            continue
+        categories = tagger(full_name) & set(bands) - {SYNERGY_CATEGORY}
+        if not categories:
+            categories = {SYNERGY_CATEGORY}
+        candidates[full_name] = _Candidate(
+            name=full_name,
+            score=boost,
+            categories=frozenset(categories),
+            cmc=float(card.get("cmc") or 0.0),
+            mana_cost=card.get("mana_cost") or "",
+        )
+
     ordered = _sorted_candidates(candidates.values())
     forced = frozenset(forced_names)
     # Land quality gate (COMPARATIVA_EDHREC_B4): weak non-basic lands are
