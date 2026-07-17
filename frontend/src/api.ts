@@ -91,6 +91,11 @@ export type DeckCard = {
    *  the deck views offer a front↔back flip on transforming cards. */
   image_uri_back_normal: string;
   image_uri_back_art_crop: string;
+  /** Scryfall USD price, a relative "cheap vs expensive" signal only (the group
+   *  plays proxies). `null` when the pool card has no USD price — Reserved List
+   *  staples (dual lands, Wheel of Fortune) among them. Only the "Caras y
+   *  buenas" section shows it; elsewhere the UI ignores it. */
+  price_usd: number | null;
   categories: string[];
   count: number;
   slot: string;
@@ -138,6 +143,12 @@ export type BuildResult = {
   basic_lands: DeckCard[];
   maybeboard: DeckCard[];
   new_cards: DeckCard[];
+  /** The "Caras y buenas" section: cards EDHREC's *expensive* page for this
+   *  commander runs that the *optimized* (popularity) page underweights BECAUSE
+   *  of price — not power. It does NOT mean "play these"; for a proxy group they
+   *  may be worth it, but the player decides. Each carries `price_usd` to show
+   *  (null = Reserved List). Empty when EDHREC has no expensive page. */
+  expensive_cards: DeckCard[];
   category_breakdown: Record<string, CategoryRow>;
   curve_breakdown: Record<string, CurveRow>;
   color_source_breakdown: Record<string, ColorSourceRow>;

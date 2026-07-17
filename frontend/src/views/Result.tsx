@@ -20,7 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button, ColorPips, Panel } from '../components/ui';
-import { CardTile } from '../components/cards';
+import { CardImage, CardTile } from '../components/cards';
 import { CompositionPanel, DeckView } from '../components/DeckView';
 import { categoryLabel } from '../labels';
 import { toViewCard, useMutableDeck, type ViewCard } from '../deck';
@@ -137,9 +137,69 @@ export function Result({
           ) : (
             <DeckView result={deck} whyNot={<WhyNotWidget result={deck} />} />
           )}
+          <ExpensiveCardsPanel result={deck} />
         </>
       )}
     </div>
+  );
+}
+
+// Format a Scryfall USD price for the "Caras y buenas" section. A null price is
+// a Reserved List staple (dual lands, Wheel of Fortune): no USD on record, yet
+// among the priciest cards in the format — so it is labelled, not hidden.
+function formatPrice(price: number | null): string {
+  if (price === null) return 'Reserved List';
+  return price >= 100 ? `$${Math.round(price)}` : `$${price.toFixed(2)}`;
+}
+
+// "Caras y buenas": the cards EDHREC's expensive page runs that the optimized
+// (popularity) list underweights because of price. Same visual pattern as the
+// maybeboard bench, plus the price. It only POINTS — the note says so, and
+// nothing here changes the deck.
+function ExpensiveCardsPanel({ result }: { result: BuildResult }) {
+  const cards = result.expensive_cards;
+  if (!cards || cards.length === 0) return null;
+  return (
+    <Panel>
+      <h3 className="mb-1 text-lg font-semibold">Caras y buenas</h3>
+      <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+        Cartas que los mazos con dinero de este comandante juegan y que la lista
+        optimizada infrapondera{' '}
+        <span className="font-medium">por precio, no por potencia</span> (el score
+        de EDHREC baja con el precio). Con proxies pueden valer la pena para el
+        grupo, pero es tu decisión: aquí solo se señalan, no se recomiendan.
+      </p>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        {cards.map((card) => (
+          <div key={card.oracle_id} className="flex flex-col gap-1.5">
+            <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+              <CardImage
+                card={toViewCard(card)}
+                className="aspect-[5/7] w-full object-cover"
+              />
+            </div>
+            <div className="flex items-baseline justify-between gap-1.5 px-0.5">
+              <span
+                className="truncate text-xs font-medium text-zinc-600 dark:text-zinc-300"
+                title={card.name}
+              >
+                {card.name}
+              </span>
+              <span
+                className="shrink-0 text-xs font-semibold tabular-nums text-amber-700 dark:text-amber-300"
+                title={
+                  card.price_usd === null
+                    ? 'Sin precio en Scryfall (Reserved List)'
+                    : 'Precio orientativo (Scryfall USD)'
+                }
+              >
+                {formatPrice(card.price_usd)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Panel>
   );
 }
 

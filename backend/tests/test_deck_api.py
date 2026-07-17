@@ -9,6 +9,7 @@ Every EDHREC call is monkeypatched: these tests never touch the network.
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 from typing import Iterator
 
 import pytest
@@ -17,7 +18,14 @@ from fastapi.testclient import TestClient
 from app import main as app_main
 from app import service
 from app.state import AppState
-from pipeline.edhrec import EdhrecCommanderData, EdhrecError, EdhrecNotFound
+from pipeline.edhrec import (
+    EdhrecCommanderData,
+    EdhrecError,
+    EdhrecNotFound,
+    EdhrecRecommendation,
+)
+from selector.deck_rules import archetype_for
+from selector.greedy import DeckEntry
 
 COMMANDER = "Krenko, Mob Boss"
 
@@ -262,7 +270,13 @@ def test_every_deck_card_carries_the_full_card_shape(krenko_deck: dict) -> None:
         "reason",
         "score",
     }
-    for section in ("nonbasic_cards", "basic_lands", "maybeboard", "new_cards"):
+    for section in (
+        "nonbasic_cards",
+        "basic_lands",
+        "maybeboard",
+        "new_cards",
+        "expensive_cards",
+    ):
         assert krenko_deck[section], f"{section} should not be empty for Krenko"
         for card in krenko_deck[section]:
             assert set(card) == fields
@@ -413,3 +427,157 @@ def test_a_second_build_reuses_the_edhrec_memo(
 
     assert response.status_code == 200
     assert response.json()["nonbasic_cards"] == krenko_deck["nonbasic_cards"]
+
+
+# --- the "expensive & good" section -----------------------------------------
+#
+# End-to-end shape from the real cached pages, then the filter logic unit-tested
+# against crafted diffs (no network, no solver): `_expensive_cards_section` is
+# pure given a state, a diff and a build result, so the rules are checked one by
+# one rather than through a full build whose memo would hide a mocked fetch.
+
+
+def test_the_expensive_section_is_a_priced_maybeboard(
+    krenko_deck: dict, real_app_state: AppState
+) -> None:
+    """It is a real section for Krenko, and every card is playable and priced."""
+    section = krenko_deck["expensive_cards"]
+    assert section, "Krenko has an expensive-vs-optimized diff"
+    deck_names = {card["name"] for card in _all_cards(krenko_deck)}
+    banned = real_app_state.effective_banned_names(archetype_for(real_app_state.quotas, COMMANDER))
+    for card in section:
+        assert card["reason"], "the honest 'cara y buena' note"
+        assert "Basic" not in (card["type_line"] or "")
+        assert card["name"] not in deck_names
+        assert card["name"] not in banned
+        # Price-cleaned: a kept card is either Reserved List (null) or >= floor.
+        assert card["price_usd"] is None or card["price_usd"] >= service.EXPENSIVE_PRICE_FLOOR
+
+    # Ordering: Reserved List (null) leads, then USD descending.
+    prices = [card["price_usd"] for card in section]
+    seen_priced = False
+    last = None
+    for price in prices:
+        if price is None:
+            assert not seen_priced, "null-priced (RL) cards must lead"
+        else:
+            seen_priced = True
+            if last is not None:
+                assert price <= last
+            last = price
+
+
+def _rec(name: str, *, synergy: float = 0.1, inclusion: float = 0.2) -> EdhrecRecommendation:
+    return EdhrecRecommendation(
+        name=name,
+        synergy=synergy,
+        num_decks=1,
+        potential_decks=10,
+        inclusion=inclusion,
+        categories=[],
+    )
+
+
+def _expensive_section(
+    state: AppState,
+    *,
+    optimized: list[str],
+    expensive: list[str],
+    mainboard: list[str] = (),
+) -> list[str]:
+    """Run the section builder for Krenko with crafted diffs; return the names.
+
+    Bypasses the solver and the network: the only inputs the function reads
+    from the result are ``mainboard``/``maybeboard``/``new_cards``, so a
+    lightweight stand-in is enough and the filters are exercised directly.
+    """
+    row = service.resolve_commander(state, COMMANDER)
+    bands = service.bands_for(state, row.name, {})
+    result = SimpleNamespace(
+        mainboard=[DeckEntry(name=n, categories=(), score=None, reason="", slot="ramp") for n in mainboard],
+        maybeboard=[],
+        new_cards=[],
+    )
+    section = service._expensive_cards_section(
+        state,
+        row,
+        bands,
+        EdhrecCommanderData(name=COMMANDER, slug="krenko-mob-boss", num_decks=1, recommendations=[_rec(n) for n in optimized]),
+        EdhrecCommanderData(name=COMMANDER, slug="krenko-mob-boss", num_decks=1, recommendations=[_rec(n) for n in expensive]),
+        result,  # type: ignore[arg-type]
+        "aggro",
+    )
+    return [entry.name for entry in section]
+
+
+def test_expensive_section_keeps_dear_cards_and_reserved_list_nulls(
+    real_app_state: AppState,
+) -> None:
+    """A pricey card and a null-priced Reserved List card both survive.
+
+    ``Grim Monolith`` (~$472, colourless) and ``Gauntlet of Might`` (null USD,
+    red) are on Krenko's identity and absent from the optimized list, so the
+    diff keeps them — and the null (RL) sorts ahead of the priced one.
+    """
+    names = _expensive_section(
+        real_app_state,
+        optimized=[],
+        expensive=["Grim Monolith", "Gauntlet of Might"],
+    )
+    assert names == ["Gauntlet of Might", "Grim Monolith"]
+
+
+def test_expensive_section_drops_cheap_noise(real_app_state: AppState) -> None:
+    """``Mind Stone`` (~$0.34) is the cheap-but-different card the diff must drop."""
+    names = _expensive_section(
+        real_app_state, optimized=[], expensive=["Mind Stone", "Grim Monolith"]
+    )
+    assert names == ["Grim Monolith"]
+
+
+def test_expensive_section_excludes_off_identity(real_app_state: AppState) -> None:
+    """``Underground Sea`` is null-priced and dear, but blue/black — off Krenko."""
+    names = _expensive_section(
+        real_app_state, optimized=[], expensive=["Underground Sea", "Grim Monolith"]
+    )
+    assert names == ["Grim Monolith"]
+
+
+def test_expensive_section_excludes_banned(real_app_state: AppState) -> None:
+    """``The One Ring`` (~$100, colourless) is on identity and dear, but banned."""
+    names = _expensive_section(
+        real_app_state, optimized=[], expensive=["The One Ring", "Grim Monolith"]
+    )
+    assert names == ["Grim Monolith"]
+
+
+def test_expensive_section_excludes_optimized_and_deck_cards(
+    real_app_state: AppState,
+) -> None:
+    """A card already in the optimized list or already in the 99 is not re-surfaced."""
+    names = _expensive_section(
+        real_app_state,
+        optimized=["Ruby Medallion"],  # in optimized -> not part of the diff
+        expensive=["Ruby Medallion", "Chrome Mox", "Grim Monolith"],
+        mainboard=["Chrome Mox"],  # already in the deck -> not re-surfaced
+    )
+    assert names == ["Grim Monolith"]
+
+
+def test_expensive_section_is_empty_without_an_expensive_page(
+    real_app_state: AppState,
+) -> None:
+    """No expensive page (404 -> None) yields an empty section, never an error."""
+    row = service.resolve_commander(real_app_state, COMMANDER)
+    bands = service.bands_for(real_app_state, row.name, {})
+    result = SimpleNamespace(mainboard=[], maybeboard=[], new_cards=[])
+    section = service._expensive_cards_section(
+        real_app_state,
+        row,
+        bands,
+        EdhrecCommanderData(name=COMMANDER, slug="krenko-mob-boss", num_decks=1, recommendations=[]),
+        None,
+        result,  # type: ignore[arg-type]
+        "aggro",
+    )
+    assert section == []

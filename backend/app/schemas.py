@@ -491,6 +491,20 @@ class DeckResponse(BaseModel):
     it. ``unresolved`` lists EDHREC recommendations absent from our pool,
     which were simply skipped — not an error.
 
+    ``expensive_cards`` is the "expensive & good" section: the cards EDHREC's
+    *expensive* page for this commander runs that its *optimized* (Bracket 4,
+    popularity) page does not, price-cleaned. **It does not mean "you should
+    play these".** EDHREC popularity is depressed by price, so a strong but
+    pricey card (dual lands, Gaea's Cradle, the Moxen) is underweighted by the
+    optimized list precisely *because* it is expensive — the moneyed decks
+    still run it. For a group on proxies these may be worth it; deciding is the
+    player's, not the builder's. Like ``new_cards`` and ``maybeboard`` it is a
+    post-process over the built deck: it never entered the 99 and never re-ran
+    the solver. Empty when EDHREC has no expensive page for the commander, or
+    when nothing survives the filters. Each card carries ``price_usd`` so the
+    frontend can show the price (``null`` = Reserved List: no Scryfall USD, yet
+    among the format's priciest).
+
     Absent on purpose, and not as ``null``: ``price_eur``/``budget_total``/
     ``deck_cost`` (the group plays proxies, so price is meaningless here) and
     ``is_game_changer``/``bracket``/``gc_cap`` (WotC's power policy, which the
@@ -512,6 +526,7 @@ class DeckResponse(BaseModel):
     basic_lands: list[DeckCardView]
     maybeboard: list[DeckCardView]
     new_cards: list[DeckCardView]
+    expensive_cards: list[DeckCardView]
     category_breakdown: dict[str, CategoryRow]
     curve_breakdown: dict[str, CurveRow]
     color_source_breakdown: dict[str, ColorSourceRow]

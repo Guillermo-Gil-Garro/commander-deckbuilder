@@ -123,6 +123,27 @@ logger = logging.getLogger(__name__)
 # cache and the deck all speak about the same recommendation set.
 EDHREC_VARIANT = "optimized"
 
+# EDHREC's "expensive" subpage: the cards the moneyed decks of a commander run.
+# Diffed against `optimized`, it surfaces the strong-but-pricey cards the
+# popularity-based list underweights *because* of their price. Feeds the
+# `expensive_cards` maybeboard section (see `_expensive_cards_section`).
+EDHREC_EXPENSIVE_VARIANT = "expensive"
+
+# Below this Scryfall USD the `expensive − optimized` diff is just a cheap card
+# the moneyed lists happen to run (Gruul Signet ~0.4, Explore ~0.3, Growth
+# Spiral ~0.3), not a card underweighted *for its price*; drop it. A `null`
+# price is NOT cheap: it is a Reserved List staple (dual lands, Wheel of
+# Fortune) that carries no Scryfall USD yet is among the format's priciest, so
+# nulls are always kept.
+EXPENSIVE_PRICE_FLOOR = 5.0
+# Cap on the surfaced section, in the spirit of NEW_CARDS_CAP/MAYBEBOARD_SIZE:
+# enough to show the interesting duals/rocks without turning into a price list.
+EXPENSIVE_CARDS_CAP = 12
+EXPENSIVE_CARDS_REASON = (
+    "cara y buena: el mazo con dinero la juega; la lista optimizada la "
+    "infrapondera por precio, no por potencia"
+)
+
 # The relaxed-stage warning's code. Not a Violation: no rule is broken, the
 # solver simply could not honour every quota (see errors.relaxed_stage_message).
 RELAXED_STAGE_CODE = "relaxed_stage"
@@ -310,6 +331,43 @@ def edhrec_data(state: AppState, commander_name: str) -> EdhrecCommanderData:
     return data
 
 
+def edhrec_expensive_data(
+    state: AppState, commander_name: str
+) -> EdhrecCommanderData | None:
+    """The commander's ``expensive`` EDHREC page, or ``None`` if unavailable.
+
+    Same RAM-memo → disk → network path as ``edhrec_data``, but for the
+    ``expensive`` variant and **degrading to ``None`` instead of raising**: it
+    feeds an optional maybeboard section, so a commander whose expensive page
+    is missing (404) or a transient EDHREC hiccup must leave the section empty,
+    never fail a build that already succeeded on the optimized page. Only
+    successful fetches are memoized; a 404 is not cached, so it is re-attempted
+    on the next build (rare, and cheaper than a negative-cache to reason about).
+
+    ``fetch_commander`` blocks (httpx + disk), so callers must already be off
+    the event loop — ``build_deck`` runs in the threadpool.
+    """
+    slug = slugify_commander(commander_name)
+    memoized = state.edhrec_memo.get(slug, EDHREC_EXPENSIVE_VARIANT)
+    if memoized is not None:
+        return memoized
+    try:
+        data = fetch_commander(commander_name, variant=EDHREC_EXPENSIVE_VARIANT)
+    except EdhrecNotFound as exc:
+        logger.info("No EDHREC expensive page for %r: %s", commander_name, exc)
+        return None
+    except EdhrecError as exc:
+        # The optimized page already succeeded (same host), so this is unlikely;
+        # if it happens the "expensive & good" section is simply omitted rather
+        # than sinking a deck the player asked for.
+        logger.warning(
+            "EDHREC expensive page unavailable for %r: %s", commander_name, exc
+        )
+        return None
+    state.edhrec_memo.put(slug, data, EDHREC_EXPENSIVE_VARIANT)
+    return data
+
+
 def build_deck(state: AppState, request: DeckRequest) -> DeckResponse:
     """Build a 99 + maybeboard for a commander. Blocking and CPU-bound.
 
@@ -340,7 +398,106 @@ def build_deck(state: AppState, request: DeckRequest) -> DeckResponse:
     except (SelectorError, DeckRulesError) as exc:
         logger.error("Deck build failed for %r: %s", row.name, exc)
         raise DeckBuildFailed(DECK_BUILD_INFEASIBLE) from exc
-    return _deck_response(state, row, request.dials, bands, result)
+    # Second EDHREC read, post-solver: the "expensive & good" diff. Degrades to
+    # an empty section rather than failing the build the player already got.
+    expensive = edhrec_expensive_data(state, row.name)
+    expensive_cards = _expensive_cards_section(
+        state, row, bands, data, expensive, result, archetype
+    )
+    return _deck_response(
+        state, row, request.dials, bands, result, expensive_cards
+    )
+
+
+def _expensive_cards_section(
+    state: AppState,
+    row: CommanderRow,
+    bands: Mapping[str, QuotaBand],
+    optimized: EdhrecCommanderData,
+    expensive: EdhrecCommanderData | None,
+    result: CpSatResult,
+    archetype: str,
+) -> list[DeckEntry]:
+    """The "expensive & good" diff ``expensive − optimized``, price-cleaned.
+
+    EDHREC's ``expensive`` page is what the moneyed decks of this commander
+    run; the ``optimized`` page is Bracket 4 by popularity, which underweights
+    a strong-but-pricey card *because* price depresses its play rate. The
+    difference surfaces those cards (dual lands, Gaea's Cradle, the Moxen) for
+    a proxy group to decide for itself. Pure post-process: it never enters the
+    99 and never re-runs the solver — same contract as ``new_cards``.
+
+    Subtracted from the raw name diff (raw EDHREC names, exactly the diff Guille
+    validated), each survivor then resolved against the pool and dropped unless
+    it clears every filter:
+
+    - already shown: in the 99, the maybeboard or the new-cards section;
+    - the effective (archetype-scoped) banlist and the watchlist;
+    - outside the commander's colour identity;
+    - basics (placed by the solver's counters, never a suggestion);
+    - **cheap noise**: ``price_usd`` below ``EXPENSIVE_PRICE_FLOOR``. A ``null``
+      price is kept — Reserved List staples carry no Scryfall USD yet are the
+      priciest cards in the format.
+
+    Ordered null-price first (Reserved List: the format's priciest), then by
+    price descending, then by name so the order is stable across rebuilds.
+    Capped at ``EXPENSIVE_CARDS_CAP``. Score and slot are rederived exactly as
+    the maybeboard rederives them, so the section speaks the deck's vocabulary.
+    """
+    if expensive is None:
+        return []
+
+    optimized_names = {rec.name for rec in optimized.recommendations}
+    already_shown = (
+        {entry.name for entry in result.mainboard}
+        | {entry.name for entry in result.maybeboard}
+        | {entry.name for entry in result.new_cards}
+    )
+    effective_banned = state.effective_banned_names(archetype)
+    commander_identity = frozenset(row.color_identity)
+    weights = ScoreWeights()
+    boosts = preferred_boosts(state.rules, row.color_identity)
+
+    scored: list[tuple[bool, float, str, DeckEntry]] = []
+    seen: set[str] = set()
+    for rec in expensive.recommendations:
+        if rec.name in optimized_names:
+            continue
+        card = state.pool.resolve(rec.name)
+        if card is None:
+            continue
+        name = card["name"]
+        if name in seen or name == row.name:
+            continue
+        if "Basic" in (card.get("type_line") or ""):
+            continue
+        if (
+            name in already_shown
+            or name in effective_banned
+            or name in state.watchlist_names
+        ):
+            continue
+        if not frozenset(card.get("color_identity") or ()) <= commander_identity:
+            continue
+        price = card.get("price_usd")
+        if price is not None and price < EXPENSIVE_PRICE_FLOOR:
+            continue
+        seen.add(name)
+        facts = _facts(state, card, bands)
+        category = primary_category(facts)
+        entry = DeckEntry(
+            name=name,
+            categories=tuple(sorted(facts.categories)),
+            score=weights.score(rec.synergy, rec.inclusion) + boost_for(boosts, name),
+            reason=EXPENSIVE_CARDS_REASON,
+            slot=category,
+        )
+        # (has_price, -price, name): False sorts before True, so nulls lead;
+        # -price then puts the dearest first; name is the deterministic tiebreak.
+        scored.append((price is not None, -(price or 0.0), name, entry))
+
+    scored.sort(key=lambda item: (item[0], item[1], item[2]))
+    return [entry for *_, entry in scored[:EXPENSIVE_CARDS_CAP]]
 
 
 def _deck_response(
@@ -349,6 +506,7 @@ def _deck_response(
     dials: Mapping[str, str | None],
     bands: Mapping[str, QuotaBand],
     result: CpSatResult,
+    expensive_cards: Sequence[DeckEntry],
 ) -> DeckResponse:
     """Project a solver result onto the flat wire shape. Nothing is re-decided.
 
@@ -381,6 +539,7 @@ def _deck_response(
         basic_lands=_cards(state, basics),
         maybeboard=_cards(state, result.maybeboard),
         new_cards=_cards(state, result.new_cards),
+        expensive_cards=_cards(state, expensive_cards),
         category_breakdown=_category_breakdown(bands, result),
         curve_breakdown=_curve_breakdown(state, nonbasics),
         color_source_breakdown=_color_source_breakdown(result),
