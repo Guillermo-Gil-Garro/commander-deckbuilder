@@ -264,9 +264,27 @@ banlist las marca "salvo en enchantress". Verificado: Sythis mete Smothering Tit
 de la aserción ya arreglado), **lands_matter synergy 18→24** (para que no expulse sus
 propios payoffs). **Black Market Connections → watchlist**.
 
-**PDF de proxies**: `POST /export/pdf`, 3×3 A4, cartas 63×88 mm, líneas de corte, DFC a
-dos caras. Básicas incluidas por cantidad con el **full-art de Theros Beyond Death**
-(decisión de Guille). fpdf2 (dep nueva, pura Python).
+**PDF de proxies**: `POST /export/pdf`, 3×3 A4, cartas 63×88 mm, DFC a dos caras.
+Básicas incluidas por cantidad con el **full-art de Theros Beyond Death** (decisión de
+Guille). fpdf2 (dep nueva, pura Python).
+
+**Corte (revisión 2026-07-17):** las cartas ya iban pegadas borde con borde, pero las
+guías de corte se pintaban como rejilla gris *encima* de los bordes compartidos →
+tentaban a cortar a ambos lados = doble borde. Sustituidas por **marcas de corte (ticks)
+solo en el margen**, alineadas con cada línea de la rejilla; nada dibujado sobre las
+cartas, un corte limpio por borde compartido.
+
+**Tokens en el PDF (2026-07-17):** con `include_tokens` (opt-in; el front lo manda en
+`true`) los tokens que el mazo puede generar **rellenan las celdas vacías** de la última
+página y desbordan a páginas nuevas (no se pierde ninguno). Fuente: `all_parts` de
+Scryfall (`component: token`), añadido al modelo del pipeline como `tokens` (pool
+regenerado); arte vía `api.scryfall.com/cards/<id>?format=image` (302 al CDN, el fetcher
+ahora sigue redirects). Dedup por (nombre, type_line). **Copias — regla "inteligente"
+elegida por Guille:** 1 para cualquier token que no sea criatura (Treasure/Clue/Food) y
+para criaturas puntuales (Beast Within); 2 (una derecha + una para tappear) para tokens
+de criatura que hacen ≥2 cartas o cuyo único generador implica varios/recurrente (señales
+de texto: "number of", "for each", "at the beginning"…). Fetch de token best-effort: si
+falla la imagen se omite ese token con warning, el PDF sigue.
 
 **Ataque al sesgo de precio de EDHREC** (el score mide popularidad y el precio la
 deprime). Tres capas complementarias, NO solapadas:

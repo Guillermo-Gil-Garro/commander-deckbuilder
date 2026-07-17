@@ -54,6 +54,11 @@ synergy→24; Black Market→watchlist; PDF de proxies 3×3 con básicas de Ther
 sesgo de precio en 3 capas (fixing prefer con inyección arreglada + sección "caras y
 buenas" + método C).
 
+**Retoques del PDF 2026-07-17**: guías de corte movidas a **ticks en el margen** (nada
+sobre las cartas, un corte por borde compartido); **tokens rellenando huecos** con
+`include_tokens` (fuente `all_parts` de Scryfall → campo `tokens` en el pool; copias
+inteligentes 1/2; desborda a páginas extra).
+
 **Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
 - **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
 - **3 relajaciones de wincons** (Wilhelt/aristocrats, Zhulodok+Ulalek/big_mana): hueco de tagging (drenaje y bombas no marcados `wincons`). Decidir si bajar el min o mejorar el tagging.
