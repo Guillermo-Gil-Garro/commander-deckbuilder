@@ -29,6 +29,7 @@ def make_card(
     type_line: str = "Creature — Goblin",
     color_identity: list[str] | None = None,
     oracle_text: str = "",
+    price_usd: float | None = None,
 ) -> dict:
     return {
         "name": name,
@@ -38,6 +39,7 @@ def make_card(
         "oracle_text": oracle_text,
         "colors": ["R"],
         "color_identity": ["R"] if color_identity is None else color_identity,
+        "price_usd": price_usd,
     }
 
 
@@ -642,3 +644,107 @@ def test_new_cards_cap_ten_score_order_and_determinism() -> None:
     assert scores == sorted(scores, reverse=True)
     again = build(pool, recs)
     assert [e.name for e in again.new_cards] == [e.name for e in result.new_cards]
+
+
+# ── método C: boost al score por precio suprimido (capa 3 antisesgo precio) ──
+
+
+def test_price_factor_floor_saturation_and_null() -> None:
+    from selector.cp_sat import _price_factor, C_PRICE_CAP_USD, C_PRICE_FLOOR_USD
+
+    # Suelo: por debajo (y en) el suelo, 0 (las baratas no necesitan ayuda).
+    assert _price_factor(None) == 0.0  # precio nulo -> 0
+    assert _price_factor(0.5) == 0.0
+    assert _price_factor(C_PRICE_FLOOR_USD) == 0.0
+    # Saturación: en (y por encima de) el tope, 1 (sin empujón infinito).
+    assert _price_factor(C_PRICE_CAP_USD) == pytest.approx(1.0)
+    assert _price_factor(1500.0) == pytest.approx(1.0)
+    # Creciente y estrictamente entre 0 y 1 en la zona log.
+    mid = _price_factor(30.0)
+    assert 0.0 < mid < 1.0
+    assert _price_factor(60.0) > mid  # monótona
+
+
+def test_inclusion_factor_zero_and_saturation() -> None:
+    from selector.cp_sat import _inclusion_factor, C_INCLUSION_FULL
+
+    assert _inclusion_factor(0.0) == 0.0  # inclusión 0 -> 0 (nunca sube morralla)
+    assert _inclusion_factor(-0.1) == 0.0
+    assert _inclusion_factor(C_INCLUSION_FULL) == pytest.approx(1.0)
+    assert _inclusion_factor(1.0) == pytest.approx(1.0)  # clamp por encima del tope
+    half = _inclusion_factor(C_INCLUSION_FULL / 2)
+    assert half == pytest.approx(0.5)
+
+
+def test_price_boost_ordering_expensive_played_beats_the_rest() -> None:
+    from selector.cp_sat import price_boost
+
+    expensive_played = price_boost(100.0, 0.5)  # cara Y jugada: boost máximo
+    expensive_unplayed = price_boost(100.0, 0.0)  # cara pero morralla: 0
+    cheap_played = price_boost(1.0, 0.5)  # barata jugada: 0 (bajo el suelo)
+    assert expensive_played > 0.0
+    assert expensive_unplayed == 0.0
+    assert cheap_played == 0.0
+    assert expensive_played > expensive_unplayed
+    assert expensive_played > cheap_played
+
+
+def test_c_weight_zero_disables_boost(monkeypatch) -> None:
+    import selector.cp_sat as cp_sat
+
+    monkeypatch.setattr(cp_sat, "C_WEIGHT", 0.0)
+    # Con C apagado el boost es 0 sea cual sea el precio/inclusión.
+    assert cp_sat.price_boost(100.0, 0.9) == 0.0
+    assert cp_sat.price_boost(500.0, 1.0) == 0.0
+
+
+def test_c_weight_zero_reproduces_pre_c_score(monkeypatch) -> None:
+    # Regresión: con C_WEIGHT=0 el score de un candidato caro+jugado es
+    # exactamente weights.score(synergy, inclusion), sin término C.
+    import selector.cp_sat as cp_sat
+
+    monkeypatch.setattr(cp_sat, "C_WEIGHT", 0.0)
+    pool, recs = build_inputs()
+    pricey = make_card("Pricey Staple", price_usd=120.0)
+    pool.by_name[pricey["name"]] = pricey
+    recs = recs + [Rec(name="Pricey Staple", synergy=3.0, inclusion=0.5)]
+    result = build(pool, recs)
+    entry = next(e for e in result.mainboard if e.name == "Pricey Staple")
+    assert entry.score == pytest.approx(ScoreWeights().score(3.0, 0.5))
+
+
+def test_method_c_flips_expensive_played_over_equal_cheap_card(monkeypatch) -> None:
+    # Dos candidatos de synergy compiten por un único slot (techo synergy=1).
+    # La barata tiene un pelín MÁS de score base (0.05), así que con C apagado
+    # gana ella; con C encendido, el boost de la cara+jugada (0.15) supera ese
+    # margen y entra en su lugar.
+    import selector.cp_sat as cp_sat
+
+    def make_pair() -> tuple[PoolIndex, list[Rec]]:
+        pool, recs = build_inputs()
+        cheap = make_card("Cheap Twin", cmc=3.0, price_usd=1.0)
+        pricey = make_card("Pricey Twin", cmc=3.0, price_usd=120.0)
+        pool.by_name[cheap["name"]] = cheap
+        pool.by_name[pricey["name"]] = pricey
+        return pool, recs + [
+            Rec(name="Cheap Twin", synergy=3.05, inclusion=0.5),
+            Rec(name="Pricey Twin", synergy=3.0, inclusion=0.5),
+        ]
+
+    bands = bands_fixture()
+    bands["synergy"] = QuotaBand(min=0, max=1)  # sitio para exactamente uno
+    bands["lands"] = QuotaBand(min=10, max=90)  # básicas mantienen 99 factible
+
+    pool_on, recs_on = make_pair()
+    on = build(pool_on, recs_on, bands=bands)  # C al valor por defecto (>0)
+    on_names = {e.name for e in on.mainboard}
+    assert "Pricey Twin" in on_names
+    assert "Cheap Twin" not in on_names
+    assert on.relaxation_stage == "none"  # C no causa relajación
+
+    monkeypatch.setattr(cp_sat, "C_WEIGHT", 0.0)
+    pool_off, recs_off = make_pair()
+    off = build(pool_off, recs_off, bands=bands)
+    off_names = {e.name for e in off.mainboard}
+    assert "Cheap Twin" in off_names
+    assert "Pricey Twin" not in off_names

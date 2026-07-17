@@ -81,6 +81,7 @@ objective, penalty breakdown).
 from __future__ import annotations
 
 import logging
+import math
 import re
 from dataclasses import dataclass, field, replace
 from typing import Any, Callable, Mapping, Sequence
@@ -165,6 +166,80 @@ FLOOR_PENALTY_PER_CARD = round(0.50 * SCORE_SCALE)
 # score (worst case Omnath); λ=5.0 already breaks the 2% score budget (Omnath
 # −2.4%) and λ≥10 craters it (−5.6%) by overriding real card quality.
 COLOR_SOURCE_PENALTY_SCALE = round(4.0 * SCORE_SCALE)
+
+# ── Method C: price-suppression boost (score/objective ONLY) ───────────────
+# Third and last layer of the price-bias correction (layers 1/2: `price_usd`
+# in the pool + duals/fetches injected via `preferred`; the "expensive & good"
+# maybeboard diff covers what EDHREC does NOT recommend). Layer C covers the
+# remaining gap: among the cards EDHREC DOES recommend for the commander, keep
+# an expensive-but-played card from losing its slot to a cheaper, worse one.
+#
+# EDHREC's inclusion rate is depressed by price. A card that is BOTH expensive
+# AND still played (non-trivial inclusion despite the price) is suppressed by
+# cost, not by power; expensive chaff has inclusion ≈ 0 and is left untouched.
+# The boost added to a candidate's score is
+#     C_WEIGHT · price_factor(price_usd) · inclusion_factor(inclusion)
+# It is SCORE-ONLY: it never touches a hard constraint, the bands, the Karsten
+# floor or the color model, so it cannot cause infeasibility or relaxation. Set
+# `C_WEIGHT = 0.0` to disable it and reproduce the pre-C score bit-for-bit.
+#
+# Calibration (2026-07-17): the boost MAXIMUM is C_WEIGHT (both factors saturate
+# to 1). Scores here live on the ScoreWeights scale where a synergy/inclusion
+# gap between two real candidates is typically 0.1–0.9. C_WEIGHT=0.15 makes the
+# strongest possible price nudge ≈ one sixth of a typical quality gap — same
+# order of magnitude as the fixing λ (a bought color source costs ≈0.04–0.10
+# score): enough to flip an expensive-but-played card ahead of a marginally-
+# better cheap one, never enough to drag genuine chaff over a real quality gap.
+# Empirically (sweep over Ur-Dragon, Krenko, Azusa, Selvala, Talrand, Urza,
+# Niv-Mizzet, Omnath, off vs on) C_WEIGHT=0.15 swaps 0–4 cards per deck (+2.2%
+# to +3.5% raw score), never forces expensive chaff, and never changes the
+# relaxation stage. It surfaces the intended flagships: The Great Henge in green
+# (Azusa), Force of Negation and Sensei's Divining Top in blue, Heroic
+# Intervention (Ur-Dragon), Jeska's Will (Krenko). Doubling to 0.30 roughly
+# doubles the churn (up to 6–7 swaps, +4.5% to +7.3%) and starts pulling
+# borderline pricey cards over clearly-better cheap synergy, so 0.15 is the
+# conservative setting chosen for a layer not yet playtested by the group.
+C_WEIGHT = 0.15
+# price_factor floor/cap (Scryfall USD): below the floor a card is cheap and
+# needs no help (factor 0); at/above the cap the factor saturates to 1 so a
+# $1500 Gaea's Cradle gets the same nudge as a $100 staple (no infinite push).
+# Log-scaled in between (price differences matter multiplicatively, not
+# linearly). A null/absent price is factor 0 — Reserved-List no-USD staples are
+# already handled by layers 2/3, and C deliberately does not touch them.
+C_PRICE_FLOOR_USD = 10.0
+C_PRICE_CAP_USD = 100.0
+# inclusion_factor: linear ramp saturating at C_INCLUSION_FULL. A card played in
+# ≥25% of the commander's EDHREC decks is a genuine staple for it and earns the
+# full price nudge; inclusion 0 earns nothing (chaff is never boosted), and the
+# marginal cards in between get a proportional slice. Clamped to [0, 1] so a
+# test inclusion above the cap cannot over-boost.
+C_INCLUSION_FULL = 0.25
+
+_LOG_PRICE_SPAN = math.log(C_PRICE_CAP_USD / C_PRICE_FLOOR_USD)
+
+
+def _price_factor(price_usd: float | None) -> float:
+    """0 below the floor, 1 at/above the cap, log-scaled in between (see above)."""
+    if price_usd is None or price_usd <= C_PRICE_FLOOR_USD:
+        return 0.0
+    if price_usd >= C_PRICE_CAP_USD:
+        return 1.0
+    return math.log(price_usd / C_PRICE_FLOOR_USD) / _LOG_PRICE_SPAN
+
+
+def _inclusion_factor(inclusion: float) -> float:
+    """0 at inclusion ≤ 0, 1 at inclusion ≥ C_INCLUSION_FULL, linear between."""
+    if inclusion <= 0.0:
+        return 0.0
+    return min(1.0, inclusion / C_INCLUSION_FULL)
+
+
+def price_boost(price_usd: float | None, inclusion: float) -> float:
+    """Method C score boost for a candidate (0 when C_WEIGHT is 0). See above."""
+    if C_WEIGHT <= 0.0:
+        return 0.0
+    return C_WEIGHT * _price_factor(price_usd) * _inclusion_factor(inclusion)
+
 
 _KARSTEN_FIXPOINT_MAX_ITER = 16
 
@@ -642,7 +717,13 @@ def build_deck_cpsat(
             categories = {SYNERGY_CATEGORY}
         candidates[full_name] = _Candidate(
             name=full_name,
-            score=weights.score(rec.synergy, rec.inclusion) + boost_for(boosts, full_name),
+            # Method C only applies to EDHREC-recommended candidates: it needs a
+            # real inclusion rate. Forced (always) and injected (preferred) cards
+            # below have no EDHREC recommendation, so they get no C boost — they
+            # already enter through their own mechanism.
+            score=weights.score(rec.synergy, rec.inclusion)
+            + boost_for(boosts, full_name)
+            + price_boost(card.get("price_usd"), rec.inclusion),
             categories=frozenset(categories),
             cmc=float(card.get("cmc") or 0.0),
             mana_cost=card.get("mana_cost") or "",
