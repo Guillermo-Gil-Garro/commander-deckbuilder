@@ -1,8 +1,8 @@
 // The Result view. Ported from the TFM's `views/Result.tsx`, minus what this
 // project deliberately does not have: no price/budget/deck_cost, no brackets, no
 // Game Changers, no power_weight (Guille plays with proxies and his own
-// banlist), no curve target (our solver has no curve objective) and no
-// AuditPanel (the TFM's /audit runs an ML embedding model we do not have).
+// banlist), no curve target (our solver has no curve objective). The audit here
+// is NOT the TFM's ML-embedding /audit: it is our curated-flag audit (layer 1).
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
@@ -16,21 +16,26 @@ import {
   Minus,
   Plus,
   Search,
+  Sparkles,
   TriangleAlert,
   X,
 } from 'lucide-react';
 import { Button, ColorPips, Panel } from '../components/ui';
-import { CardTile } from '../components/cards';
+import { CardImage, CardTile } from '../components/cards';
 import { CompositionPanel, DeckView } from '../components/DeckView';
 import { categoryLabel } from '../labels';
 import { toViewCard, useMutableDeck, type ViewCard } from '../deck';
 import { OpeningHand } from './OpeningHand';
 import {
+  auditDeck,
   fetchMaybeboard,
   searchCardNames,
   sequentialCandidates,
   sequentialValidate,
   whyNotCard,
+  type AuditFlag,
+  type AuditReplacement,
+  type AuditResult,
   type BuildRequest,
   type BuildResult,
   type CommanderListItem,
@@ -136,6 +141,14 @@ export function Result({
             <SwapWorkspace deck={deck} deckRefs={deckRefs} req={req} onSwap={swap} />
           ) : (
             <DeckView result={deck} whyNot={<WhyNotWidget result={deck} />} />
+          )}
+          {swapsEnabled && req && (
+            <AuditPanel
+              commander={req.commander}
+              dials={req.dials}
+              deckRefs={deckRefs}
+              onSwap={swap}
+            />
           )}
         </>
       )}
@@ -316,6 +329,236 @@ function SwapWorkspace({
         />
       )}
     </>
+  );
+}
+
+// The deck audit: run on demand, then re-run on every swap so it always reflects
+// the live deck. It only points — a replacement is applied through the same
+// validate-then-swap path as a manual swap, never blindly.
+const REPLACEMENT_LABEL: Record<AuditReplacement['kind'], string> = {
+  same_role: 'Mismo rol',
+  best_overall: 'La mejor que te falta',
+  reinforce: 'Refuerzo',
+};
+
+function AuditPanel({
+  commander,
+  dials,
+  deckRefs,
+  onSwap,
+}: {
+  commander: string;
+  dials: BuildRequest['dials'];
+  deckRefs: DeckCardRef[];
+  onSwap: (
+    outName: string,
+    chosen: DeckCard,
+    validation: SwapValidation,
+  ) => void;
+}) {
+  const [active, setActive] = useState(false);
+  const [audit, setAudit] = useState<AuditResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [applyError, setApplyError] = useState<string | null>(null);
+  const [applying, setApplying] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!active) return;
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    auditDeck({ commander, dials, deck: deckRefs })
+      .then((res) => {
+        if (!cancelled) setAudit(res);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled)
+          setError(err instanceof Error ? err.message : 'Error desconocido');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [active, commander, dials, deckRefs]);
+
+  async function applyReplacement(flaggedName: string, card: DeckCard) {
+    setApplying(`${flaggedName}=>${card.name}`);
+    setApplyError(null);
+    try {
+      const validation = await sequentialValidate({
+        commander,
+        dials,
+        deck: deckRefs,
+        out: flaggedName,
+        in: card.name,
+      });
+      if (!validation.feasible) {
+        setApplyError(
+          `Ahora mismo no se puede cambiar ${flaggedName} por ${card.name}.`,
+        );
+        return;
+      }
+      onSwap(flaggedName, card, validation);
+      // deckRefs changes → the effect re-audits automatically.
+    } catch (err: unknown) {
+      setApplyError(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      setApplying(null);
+    }
+  }
+
+  if (!active) {
+    return (
+      <Panel>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-lg font-semibold">Auditoría del mazo</h3>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              Señala cartas dudosas y buenas que te faltan. No cambia nada: tú
+              decides.
+            </p>
+          </div>
+          <Button onClick={() => setActive(true)}>
+            <Sparkles className="h-4 w-4" /> Auditar mazo
+          </Button>
+        </div>
+      </Panel>
+    );
+  }
+
+  return (
+    <Panel>
+      <div className="mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-semibold">Auditoría del mazo</h3>
+        {loading && <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />}
+      </div>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {applyError && (
+        <p className="mb-3 text-sm text-amber-600 dark:text-amber-400">
+          {applyError}
+        </p>
+      )}
+
+      {audit &&
+        audit.doubtful.length === 0 &&
+        audit.missing.length === 0 &&
+        !loading && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Nada que señalar: el mazo no tiene dudosas conocidas.
+          </p>
+        )}
+
+      {audit && audit.doubtful.length > 0 && (
+        <div className="mb-6 flex flex-col gap-4">
+          <h4 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            Dudosas
+          </h4>
+          {audit.doubtful.map((flag) => (
+            <AuditFlagRow
+              key={flag.card.name}
+              flag={flag}
+              applying={applying}
+              onApply={(card) => applyReplacement(flag.card.name, card)}
+            />
+          ))}
+        </div>
+      )}
+
+      {audit && audit.missing.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h4 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            Buenas que te faltan
+          </h4>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Las mejores cartas que este comandante quiere y no llevas. Para
+            meterlas, elige en un swap qué sacar.
+          </p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {audit.missing.map((card) => (
+              <div key={card.name} className="flex flex-col gap-1.5">
+                <div className="overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                  <CardImage
+                    card={toViewCard(card)}
+                    className="aspect-[5/7] w-full object-cover"
+                  />
+                </div>
+                <span
+                  className="truncate px-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+                  title={card.name}
+                >
+                  {card.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+function AuditFlagRow({
+  flag,
+  applying,
+  onApply,
+}: {
+  flag: AuditFlag;
+  applying: string | null;
+  onApply: (card: DeckCard) => void;
+}) {
+  return (
+    <div className="rounded-xl border border-amber-300/50 bg-amber-50/40 p-3 dark:border-amber-500/20 dark:bg-amber-500/5">
+      <div className="flex gap-3">
+        <div className="w-16 shrink-0 overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
+          <CardImage
+            card={toViewCard(flag.card)}
+            className="aspect-[5/7] w-full object-cover"
+          />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span className="font-semibold">{flag.card.name}</span>
+          </div>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
+            {flag.reason}
+          </p>
+        </div>
+      </div>
+      {flag.replacements.length > 0 && (
+        <div className="mt-3">
+          <p className="mb-1.5 text-xs font-medium text-zinc-500">Cámbiala por:</p>
+          <div className="flex flex-wrap gap-2">
+            {flag.replacements.map((rep) => (
+              <button
+                key={`${rep.kind}:${rep.card.name}`}
+                type="button"
+                onClick={() => onApply(rep.card)}
+                disabled={applying === `${flag.card.name}=>${rep.card.name}`}
+                title={rep.note}
+                className="inline-flex items-center gap-2 rounded-lg border accent-border bg-white px-3 py-2 text-left text-sm transition hover:accent-soft-bg disabled:opacity-50 dark:bg-zinc-900/80"
+              >
+                {applying === `${flag.card.name}=>${rep.card.name}` ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArrowRightLeft className="h-4 w-4 accent-text" />
+                )}
+                <span className="flex flex-col">
+                  <span className="font-semibold">{rep.card.name}</span>
+                  <span className="text-xs text-zinc-500">
+                    {REPLACEMENT_LABEL[rep.kind]} · {categoryLabel(rep.card.slot)}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

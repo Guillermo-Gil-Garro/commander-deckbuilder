@@ -198,6 +198,30 @@ export type SwapValidation = {
 
 export type Maybeboard = Record<string, DeckCard[]>;
 
+/** One suggested replacement for a flagged card. `kind` is the axis it came
+ *  from: `same_role` (its own category), `best_overall` (the best card you're
+ *  missing, any role) or `reinforce` (the thinnest category). Every one is a
+ *  feasible swap for the flagged card. */
+export type AuditReplacement = {
+  kind: 'same_role' | 'best_overall' | 'reinforce';
+  note: string;
+  card: DeckCard;
+};
+
+/** One doubtful card, why it is doubtful, and up to four feasible replacements. */
+export type AuditFlag = {
+  card: DeckCard;
+  reason: string;
+  replacements: AuditReplacement[];
+};
+
+/** The deck audit: doubtful cards and good cards the deck is missing. The audit
+ *  only points — nothing here changes the deck until the player picks a swap. */
+export type AuditResult = {
+  doubtful: AuditFlag[];
+  missing: DeckCard[];
+};
+
 /** One card on the group's banlist: the reason it is banned, plus its image so
  *  the panel can show what the card is. */
 export type BanlistCard = {
@@ -310,6 +334,16 @@ export async function fetchMaybeboard(req: {
     req,
   );
   return data.maybeboard;
+}
+
+/** Audit a deck: doubtful cards (with replacement palettes) and good cards it is
+ *  missing. Reads the live deck, so it reflects the swaps already made. */
+export async function auditDeck(req: {
+  commander: string;
+  dials: Dials;
+  deck: DeckCardRef[];
+}): Promise<AuditResult> {
+  return post<AuditResult>('/audit', req);
 }
 
 export async function whyNotCard(
