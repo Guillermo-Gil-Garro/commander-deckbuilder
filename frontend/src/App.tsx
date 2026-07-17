@@ -130,12 +130,6 @@ function Header({ onOpenBanlist }: { onOpenBanlist: () => void }) {
           <span className="text-slate-950 dark:text-zinc-50">Commander</span>{' '}
           <span className="accent-text">Deckbuilder</span>
         </h1>
-        <p className="mt-0.5 text-sm leading-6 text-zinc-700 dark:text-zinc-200">
-          Elige comandante, personaliza las{' '}
-          <span className="accent-text font-semibold">cuotas</span> y un solver
-          elige las{' '}
-          <span className="accent-text font-semibold">99 óptimas</span>.
-        </p>
       </div>
       <div className="flex shrink-0 flex-wrap items-center gap-3 lg:justify-end">
         <button
