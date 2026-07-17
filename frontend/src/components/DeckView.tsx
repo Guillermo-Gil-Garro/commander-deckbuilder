@@ -380,6 +380,8 @@ export function DeckView({
           name: card.name,
           count: card.count,
         })),
+        // Fill the last page's empty cells with the deck's tokens.
+        includeTokens: true,
       });
     } catch (error: unknown) {
       setPdfError(error instanceof Error ? error.message : 'Error desconocido');

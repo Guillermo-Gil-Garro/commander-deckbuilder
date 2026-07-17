@@ -28,6 +28,7 @@ from dataclasses import dataclass
 from io import BytesIO
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+import httpx
 from fpdf import FPDF
 
 from app.errors import (
@@ -1109,6 +1110,11 @@ def _export_entry(
 # is 189x264 mm, centred on A4 (210x297) with a 10.5 mm horizontal and 16.5 mm
 # vertical margin. Double-faced cards print both faces as two consecutive cells
 # so the proxy is actually playable.
+#
+# Nothing is drawn on the cards themselves: the cut guides are short ticks in the
+# outer margin, aligned with each grid line. A line drawn over the shared border
+# tempts a cut on each side of it (two cuts, double the border to trim); ticks in
+# the discarded margin let one guillotine pass ride the shared border cleanly.
 
 CARD_W_MM = 63.0
 CARD_H_MM = 88.0
@@ -1121,10 +1127,13 @@ BLOCK_W_MM = CARD_W_MM * GRID_COLS
 BLOCK_H_MM = CARD_H_MM * GRID_ROWS
 MARGIN_X_MM = (A4_W_MM - BLOCK_W_MM) / 2
 MARGIN_Y_MM = (A4_H_MM - BLOCK_H_MM) / 2
-# Faint grey guillotine guides on the grid borders. 0.1 mm is the thinnest line
-# that still prints; grey 200 is visible on screen but disappears once cut.
-CUT_LINE_WIDTH_MM = 0.1
-CUT_LINE_GREY = 200
+# Crop-mark ticks in the margin, aligned with each grid line. 0.1 mm is the
+# thinnest line that still prints; the ticks live on the discarded margin, so
+# a darker grey is fine (visible for alignment, thrown away with the trim). The
+# 5 mm length fits inside both margins (10.5 mm horizontal, 16.5 mm vertical).
+CROP_MARK_WIDTH_MM = 0.1
+CROP_MARK_GREY = 120
+CROP_MARK_LEN_MM = 5.0
 
 # Guille's basic lands print with the Theros Beyond Death full-art (the nyx
 # starfield), not the pool's default printing: it is the group's house look for
@@ -1161,7 +1170,9 @@ def build_proxy_pdf(
     ``SwapRequestInvalid`` -> 422), fetches every card image (disk cache, then
     Scryfall) and lays them 9 per A4 page. The commander comes first, then the
     cards in the order received, each expanded to its ``count``; a double-faced
-    card contributes two consecutive cells (front then back).
+    card contributes two consecutive cells (front then back). With
+    ``include_tokens`` the tokens the deck can create follow the cards, filling
+    the last page's empty cells and spilling to fresh pages.
 
     ``fetch_image`` defaults to the module-level ``fetch_card_image`` and is
     injectable so tests can render without touching the network.
@@ -1171,8 +1182,11 @@ def build_proxy_pdf(
 
     commander = _pool_card(state, request.commander)
     face_urls: list[str] = list(_face_urls(commander))
+    producers: list[Mapping[str, Any]] = [commander]
     for ref in request.cards:
-        urls = list(_face_urls(_pool_card(state, ref.name)))
+        card = _pool_card(state, ref.name)
+        producers.append(card)
+        urls = list(_face_urls(card))
         for _ in range(ref.count):
             face_urls.extend(urls)
 
@@ -1184,6 +1198,25 @@ def build_proxy_pdf(
         if url not in fetched:
             fetched[url] = fetch_image(url)
         faces.append(fetched[url])
+
+    # Tokens ride after the cards, filling the last page's empty cells and
+    # spilling to fresh pages. Best-effort: a card image that fails to download
+    # is a real problem (above), but a missing token image just drops that token
+    # with a warning rather than sinking the whole sheet.
+    if request.include_tokens:
+        for token in _deck_tokens_to_print(producers):
+            url = TOKEN_IMAGE_URL.format(scryfall_id=token.scryfall_id)
+            if url not in fetched:
+                try:
+                    fetched[url] = fetch_image(url)
+                except httpx.HTTPError as exc:
+                    logger.warning(
+                        "No token image for %r (%s); leaving it off the sheet",
+                        token.name,
+                        exc,
+                    )
+                    continue
+            faces.extend([fetched[url]] * token.copies)
 
     return ProxyPdf(
         filename=f"{slugify_commander(commander['name'])}_proxies.pdf",
@@ -1219,6 +1252,93 @@ def _face_urls(card: Mapping[str, Any]) -> list[str]:
     return urls
 
 
+# Scryfall serves a token's art straight from its printing id; format=image
+# answers 302 to the CDN JPEG (fetch_card_image follows the redirect), and
+# version=normal matches the 63x88 frame the rest of the sheet uses.
+TOKEN_IMAGE_URL = "https://api.scryfall.com/cards/{scryfall_id}?format=image&version=normal"
+
+# A single maker earns a second (tapped) copy of a *creature* token when its
+# text implies it makes several, or makes them turn after turn. Two or more
+# makers already show the deck leans on that token, so they skip this check.
+_MULTIPLE_TOKEN_SIGNALS = (
+    "create two",
+    "create three",
+    "create four",
+    "create five",
+    "create six",
+    "create x",
+    "number of",
+    "for each",
+    "whenever",
+    "at the beginning",
+    "populate",
+    "one or more",
+)
+
+
+@dataclass(frozen=True)
+class _TokenToPrint:
+    name: str
+    scryfall_id: str
+    copies: int
+
+
+def _token_copies(type_line: str, producer_texts: Sequence[str]) -> int:
+    """Copies to print for one token: 2 for a creature the deck leans on, else 1.
+
+    A non-creature token (Treasure, Clue, Food) is always one — you tap-sac it,
+    you never attack with it. A creature token gets two (one upright, one to sit
+    tapped) when two or more cards make it, or when its lone maker's text implies
+    several or recurring creation; a one-off like Beast Within's Beast gets one.
+    """
+    if "Creature" not in type_line:
+        return 1
+    if len(producer_texts) >= 2:
+        return 2
+    text = producer_texts[0] if producer_texts else ""
+    if any(signal in text for signal in _MULTIPLE_TOKEN_SIGNALS):
+        return 2
+    return 1
+
+
+def _deck_tokens_to_print(
+    producers: Sequence[Mapping[str, Any]],
+) -> list[_TokenToPrint]:
+    """The tokens a deck can create, deduplicated, each with its copy count.
+
+    ``producers`` is every card whose tokens count (the commander and the deck).
+    Tokens collapse by (name, type_line) so reprints of the same token become
+    one; the copy count follows ``_token_copies``. Ordered most-copies first,
+    then by name, so the tokens the deck relies on fill the first empty cells.
+    """
+    seen: dict[tuple[str, str], dict[str, Any]] = {}
+    order: list[tuple[str, str]] = []
+    for card in producers:
+        text = (card.get("oracle_text") or "").lower()
+        for tok in card.get("tokens") or ():
+            key = (tok["name"], tok["type_line"])
+            if key not in seen:
+                seen[key] = {
+                    "name": tok["name"],
+                    "scryfall_id": tok["scryfall_id"],
+                    "type_line": tok["type_line"],
+                    "texts": [],
+                }
+                order.append(key)
+            seen[key]["texts"].append(text)
+
+    tokens = [
+        _TokenToPrint(
+            name=seen[key]["name"],
+            scryfall_id=seen[key]["scryfall_id"],
+            copies=_token_copies(seen[key]["type_line"], seen[key]["texts"]),
+        )
+        for key in order
+    ]
+    tokens.sort(key=lambda t: (-t.copies, t.name))
+    return tokens
+
+
 def _render_proxy_pdf(faces: Sequence[bytes]) -> bytes:
     """Lay ``faces`` 3x3 across A4 pages, each image filling a 63x88 mm cell."""
     pdf = FPDF(orientation="P", unit="mm", format="A4")
@@ -1239,27 +1359,31 @@ def _render_proxy_pdf(faces: Sequence[bytes]) -> bytes:
             # fpdf2 embeds the JPEG straight from the bytes (no Pillow); w and h
             # both given means it fills the cell exactly, no aspect fitting.
             pdf.image(BytesIO(image_bytes), x=x, y=y, w=CARD_W_MM, h=CARD_H_MM)
-        _draw_cut_lines(pdf)
+        _draw_crop_marks(pdf)
     return bytes(pdf.output())
 
 
-def _draw_cut_lines(pdf: FPDF) -> None:
-    """Draw the faint grid over the block so the sheet cuts on straight lines.
+def _draw_crop_marks(pdf: FPDF) -> None:
+    """Draw cut-guide ticks in the margin, aligned with every grid line.
 
-    Drawn after the images and on every page (the empty cells of a short last
-    page included), so the four vertical and four horizontal borders always
-    line up for a single guillotine pass.
+    Nothing is drawn over the cards: each of the four vertical grid lines gets a
+    short tick in the top and bottom margin, and each of the four horizontal grid
+    lines a tick in the left and right margin. Drawn on every page (the empty
+    cells of a short last page included) so the guides always line up for a
+    single guillotine pass along each shared border.
     """
-    pdf.set_draw_color(CUT_LINE_GREY, CUT_LINE_GREY, CUT_LINE_GREY)
-    pdf.set_line_width(CUT_LINE_WIDTH_MM)
+    pdf.set_draw_color(CROP_MARK_GREY, CROP_MARK_GREY, CROP_MARK_GREY)
+    pdf.set_line_width(CROP_MARK_WIDTH_MM)
     top, bottom = MARGIN_Y_MM, MARGIN_Y_MM + BLOCK_H_MM
     left, right = MARGIN_X_MM, MARGIN_X_MM + BLOCK_W_MM
     for col in range(GRID_COLS + 1):
         x = MARGIN_X_MM + col * CARD_W_MM
-        pdf.line(x, top, x, bottom)
+        pdf.line(x, top - CROP_MARK_LEN_MM, x, top)
+        pdf.line(x, bottom, x, bottom + CROP_MARK_LEN_MM)
     for row in range(GRID_ROWS + 1):
         y = MARGIN_Y_MM + row * CARD_H_MM
-        pdf.line(left, y, right, y)
+        pdf.line(left - CROP_MARK_LEN_MM, y, left, y)
+        pdf.line(right, y, right + CROP_MARK_LEN_MM, y)
 
 
 def _notice(violation: Violation) -> NoticeView:

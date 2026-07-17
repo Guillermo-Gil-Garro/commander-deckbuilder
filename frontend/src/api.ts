@@ -364,11 +364,13 @@ function filenameFromDisposition(header: string | null, fallback: string): strin
 export async function exportProxyPdf(req: {
   commander: string;
   cards: { name: string; count: number }[];
+  includeTokens?: boolean;
 }): Promise<void> {
+  const { includeTokens, ...rest } = req;
   const response = await fetch(`${API_BASE}/export/pdf`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(req),
+    body: JSON.stringify({ ...rest, include_tokens: includeTokens ?? false }),
   });
   if (!response.ok) {
     let detail = `${response.status} ${response.statusText}`;

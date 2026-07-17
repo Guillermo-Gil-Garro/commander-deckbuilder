@@ -815,12 +815,17 @@ class ProxyPdfRequest(BaseModel):
     non-basic cards, never the basic lands) is the client's call, so nobody
     wants 21 identical Mountain proxies. ``cards`` may be empty, which yields a
     single-card sheet with just the commander. See ``POST /export/pdf``.
+
+    ``include_tokens`` (opt-in, since it costs a Scryfall fetch per new token)
+    appends the tokens the deck can create after the cards, filling the empty
+    cells of the last page and spilling to extra pages so no token is lost.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     commander: str = Field(min_length=1)
     cards: list[DeckCardRef] = Field(default_factory=list)
+    include_tokens: bool = False
 
 
 class ExportRequest(BaseModel):
