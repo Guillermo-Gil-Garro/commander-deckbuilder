@@ -723,6 +723,73 @@ class SwapValidateResponse(BaseModel):
     deck_size: int
 
 
+# --- audit -------------------------------------------------------------------
+
+
+class AuditRequest(BaseModel):
+    """Audit a deck in its current state. Same inputs as a swap, minus ``out``.
+
+    Carries the live ``deck`` (not just a commander) so the audit reflects the
+    swaps already made: a card the player replaced is not flagged, and the
+    replacement palette is computed against the deck as it stands.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    dials: dict[str, str | None] = Field(default_factory=dict)
+    deck: list[DeckCardRef] = Field(min_length=1)
+
+
+class ReplacementView(BaseModel):
+    """One suggested replacement for a flagged card, with why it is offered.
+
+    ``kind`` is the axis it came from: ``same_role`` (best in the flagged
+    card's own category), ``best_overall`` (highest-scored card you are
+    missing, any role — the *upgrade* axis) or ``reinforce`` (best card in the
+    category the deck is thinnest in — the *balance* axis). Every replacement is
+    a **feasible** swap for the flagged card; an axis with no legal option is
+    simply absent.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    kind: str
+    note: str
+    card: DeckCardView
+
+
+class AuditFlagView(BaseModel):
+    """One doubtful card, why it is doubtful, and what to put in its place.
+
+    ``card`` is the flagged card in full (it is in the deck). ``reason`` is the
+    curated note. ``replacements`` is the palette (up to four, deduped by name):
+    the audit only points — nothing here changes the deck until the player
+    picks a swap.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    card: DeckCardView
+    reason: str
+    replacements: list[ReplacementView]
+
+
+class AuditResponse(BaseModel):
+    """The audit of a deck: doubtful cards and good cards it is missing.
+
+    ``doubtful`` is layer 1 (curated conditionals) for now. ``missing`` is the
+    highest-scored cards the commander wants that are not in the deck — the
+    "good that's missing" side, the honest home of what the retired "expensive &
+    good" section was reaching for. Both empty is a valid, healthy answer.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    doubtful: list[AuditFlagView]
+    missing: list[DeckCardView]
+
+
 # --- banlist -----------------------------------------------------------------
 
 

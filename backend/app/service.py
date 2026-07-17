@@ -26,7 +26,7 @@ import logging
 import math
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Any, Callable, Iterable, Mapping, Sequence
+from typing import Any, Callable, Collection, Iterable, Mapping, Sequence
 
 import httpx
 from fpdf import FPDF
@@ -51,10 +51,14 @@ from app.schemas import (
     BAND_CEILING_ONLY,
     BAND_HARD,
     BAND_SOFT_NO_LOWER,
+    AuditFlagView,
+    AuditRequest,
+    AuditResponse,
     BanlistCardView,
     BanlistResponse,
     BanlistWatchlistView,
     CategoryRow,
+    ReplacementView,
     ColorSourceRow,
     CurveRow,
     DecisionView,
@@ -94,6 +98,7 @@ from rules.resolve import ResolutionError
 from quotas.lands import curve_bucket
 from quotas.resolver import resolve_bands
 from quotas.validator import CategoryStatus
+from selector.audit import flag_conditionals
 from selector.constraints import CardFacts
 from selector.cp_sat import CpSatResult, build_deck_cpsat
 from selector.deck_rules import (
@@ -925,6 +930,265 @@ def validate_swap(state: AppState, request: SwapValidateRequest) -> SwapValidate
         karsten_floor=verdict.counts_after.karsten_floor,
         deck_size=verdict.counts_after.total,
     )
+
+
+# --- audit --------------------------------------------------------------------
+#
+# The audit points at a deck; it never changes it and never re-solves. Every
+# judgement is swap-style arithmetic over the deck as it stands: curated flags
+# (selector.audit), then feasibility checks for the replacement palette. One
+# EDHREC read for the candidate universe, shared by the palette and `missing`.
+
+# How many "good that's missing" cards to surface, and the same-role palette cap.
+AUDIT_MISSING_LIMIT = 8
+_AUDIT_SAME_ROLE_SLOTS = 2
+
+
+def audit_deck(state: AppState, request: AuditRequest) -> AuditResponse:
+    """Point out a deck's doubtful cards and the good cards it is missing.
+
+    Blocking (reads EDHREC), but never runs the solver. ``doubtful`` is the
+    curated layer-1 flags, each with a feasible replacement palette; ``missing``
+    is the highest-scored cards the commander wants that are not in the deck.
+    """
+    row = resolve_commander(state, request.commander)
+    bands = bands_for(state, row.name, request.dials)
+    deck = [
+        (_facts(state, _pool_card(state, ref.name), bands), ref.count)
+        for ref in request.deck
+    ]
+    total = sum(count for _, count in deck)
+    if total != DECK_SIZE:
+        raise SwapRequestInvalid(deck_size_mismatch(total, DECK_SIZE))
+
+    archetype = archetype_for(state.quotas, row.name)
+    rule_ctx = RuleContext(
+        commander_name=row.name,
+        color_identity=frozenset(row.color_identity),
+        archetype=archetype,
+    )
+    effective_banned = state.effective_banned_names(archetype)
+    never_names = resolve_never(state.rules, rule_ctx)
+    always_names = frozenset(
+        rule.name for rule in resolve_always(state.rules, rule_ctx, effective_banned)
+    )
+    commander = _facts(state, state.pool.by_name[row.name], bands)
+
+    data = edhrec_data(state, row.name)
+    pool_candidates = _pool_candidates(state, row, bands, data)
+    score_by_name = {facts.name: score for facts, score in pool_candidates}
+
+    deck_names = {facts.name for facts, _ in deck}
+    facts_by_name = {facts.name: facts for facts, _ in deck}
+    counts: dict[str, int] = {}
+    for facts, count in deck:
+        for category in facts.categories:
+            counts[category] = counts.get(category, 0) + count
+    thin_category = _thinnest_category(counts, bands)
+
+    doubtful: list[AuditFlagView] = []
+    for flag in flag_conditionals(deck_names, commander.cmc):
+        flagged = facts_by_name.get(flag.name)
+        if flagged is None:
+            continue
+        doubtful.append(
+            AuditFlagView(
+                card=bench_card_view(
+                    state.pool.by_name[flagged.name],
+                    categories=sorted(flagged.categories),
+                    score=score_by_name.get(flagged.name, 0.0),
+                    slot=primary_category(flagged),
+                    reason=flag.reason,
+                ),
+                reason=flag.reason,
+                replacements=_replacement_palette(
+                    state,
+                    flagged=flagged,
+                    deck=deck,
+                    deck_names=deck_names,
+                    pool_candidates=pool_candidates,
+                    bands=bands,
+                    commander=commander,
+                    banned=effective_banned,
+                    never=never_names,
+                    watchlist=state.watchlist_names,
+                    always=always_names,
+                    thin_category=thin_category,
+                ),
+            )
+        )
+
+    missing = _missing_cards(
+        state,
+        deck_names=deck_names,
+        pool_candidates=pool_candidates,
+        commander=commander,
+        banned=effective_banned,
+        never=never_names,
+        watchlist=state.watchlist_names,
+    )
+    return AuditResponse(doubtful=doubtful, missing=missing)
+
+
+def _thinnest_category(
+    counts: Mapping[str, int], bands: Mapping[str, QuotaBand]
+) -> str | None:
+    """The spell category the deck is thinnest in (smallest headroom over its
+    minimum), or ``None`` if no category has a minimum. Lands and the synergy
+    filler are excluded: the audit reinforces roles, not the manabase."""
+    thin: str | None = None
+    thin_headroom: int | None = None
+    for category, band in bands.items():
+        if category in (LANDS_CATEGORY, SYNERGY_CATEGORY) or band.min <= 0:
+            continue
+        headroom = counts.get(category, 0) - band.min
+        if thin_headroom is None or headroom < thin_headroom:
+            thin_headroom = headroom
+            thin = category
+    return thin
+
+
+def _replacement_palette(
+    state: AppState,
+    *,
+    flagged: CardFacts,
+    deck: Sequence[tuple[CardFacts, int]],
+    deck_names: Collection[str],
+    pool_candidates: Sequence[tuple[CardFacts, float]],
+    bands: Mapping[str, QuotaBand],
+    commander: CardFacts,
+    banned: Collection[str],
+    never: Collection[str],
+    watchlist: Collection[str],
+    always: Collection[str],
+    thin_category: str | None,
+) -> list[ReplacementView]:
+    """Up to four feasible replacements for ``flagged``, deduped by name.
+
+    Two of the flagged card's own role, one "best you're missing" (any role,
+    the upgrade axis) and one that reinforces the thinnest category (the balance
+    axis). Every one is a feasible swap for ``flagged``; an axis with no legal,
+    unused option is dropped. Overlap between axes is allowed, the same card
+    twice is not.
+    """
+    excluded = set(banned) | set(never) | set(watchlist)
+    feasible: list[tuple[CardFacts, float]] = []
+    for facts, score in pool_candidates:
+        if facts.name == flagged.name or facts.name in deck_names:
+            continue
+        if _name_variants(facts.name) & excluded:
+            continue
+        if not facts.color_identity <= commander.color_identity:
+            continue
+        verdict = swap_is_feasible(
+            deck=deck,
+            out_card=flagged,
+            in_card=facts,
+            bands=bands,
+            commander=commander,
+            banned_names=banned,
+            never_names=never,
+            watchlist_names=watchlist,
+            always_names=always,
+        )
+        if verdict.feasible:
+            feasible.append((facts, score))
+    feasible.sort(key=lambda item: (-item[1], item[0].name))
+
+    flagged_category = primary_category(flagged)
+    used: set[str] = set()
+    slots: list[ReplacementView] = []
+
+    same_role = 0
+    for facts, score in feasible:
+        if same_role >= _AUDIT_SAME_ROLE_SLOTS:
+            break
+        if primary_category(facts) == flagged_category and facts.name not in used:
+            slots.append(_replacement_view(state, facts, score, "same_role", "Mismo rol"))
+            used.add(facts.name)
+            same_role += 1
+
+    for facts, score in feasible:
+        if facts.name not in used:
+            slots.append(
+                _replacement_view(
+                    state, facts, score, "best_overall", "La mejor carta que te falta"
+                )
+            )
+            used.add(facts.name)
+            break
+
+    if thin_category is not None and thin_category != flagged_category:
+        for facts, score in feasible:
+            if primary_category(facts) == thin_category and facts.name not in used:
+                slots.append(
+                    _replacement_view(
+                        state,
+                        facts,
+                        score,
+                        "reinforce",
+                        f"Refuerza {thin_category}, vas justo",
+                    )
+                )
+                used.add(facts.name)
+                break
+
+    return slots
+
+
+def _replacement_view(
+    state: AppState, facts: CardFacts, score: float, kind: str, note: str
+) -> ReplacementView:
+    category = primary_category(facts)
+    return ReplacementView(
+        kind=kind,
+        note=note,
+        card=bench_card_view(
+            state.pool.by_name[facts.name],
+            categories=sorted(facts.categories),
+            score=score,
+            slot=category,
+            reason=candidate_reason(category, score),
+        ),
+    )
+
+
+def _missing_cards(
+    state: AppState,
+    *,
+    deck_names: Collection[str],
+    pool_candidates: Sequence[tuple[CardFacts, float]],
+    commander: CardFacts,
+    banned: Collection[str],
+    never: Collection[str],
+    watchlist: Collection[str],
+) -> list[DeckCardView]:
+    """The highest-scored cards the commander wants that are not in the deck.
+
+    The "good that's missing" side, filtered like the maybeboard bench (drop
+    in-deck, banned, ``never``, watchlist and off-identity), best first, capped.
+    Not feasibility-checked: these are pointers, not one-for-one swaps.
+    """
+    excluded = set(banned) | set(never) | set(watchlist)
+    missing: list[DeckCardView] = []
+    for facts, score in sorted(pool_candidates, key=lambda item: (-item[1], item[0].name)):
+        if facts.name in deck_names or _name_variants(facts.name) & excluded:
+            continue
+        if not facts.color_identity <= commander.color_identity:
+            continue
+        category = primary_category(facts)
+        missing.append(
+            bench_card_view(
+                state.pool.by_name[facts.name],
+                categories=sorted(facts.categories),
+                score=score,
+                slot=category,
+                reason=candidate_reason(category, score),
+            )
+        )
+        if len(missing) >= AUDIT_MISSING_LIMIT:
+            break
+    return missing
 
 
 def _swap_context(state: AppState, request: SwapRequest) -> _SwapContext:

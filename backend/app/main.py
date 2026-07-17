@@ -35,6 +35,8 @@ from starlette.types import Scope
 from app import service
 from app.errors import POOL_UNAVAILABLE, invalid_dial_param
 from app.schemas import (
+    AuditRequest,
+    AuditResponse,
     BanlistResponse,
     CardSearchResponse,
     CommanderListResponse,
@@ -595,6 +597,30 @@ def validate_swap(
     """
     state = _state(request)
     return service.validate_swap(state, payload)
+
+
+@app.post("/audit")
+async def audit(request: Request, payload: AuditRequest) -> AuditResponse:
+    """Point out a deck's doubtful cards and the good cards it is missing.
+
+    The audit **only points** — nothing here changes the deck. It reads the
+    ``deck`` you send (post-swaps), so it reflects the deck as it stands.
+
+    ``doubtful`` is the curated layer-1 flags: cards whose value depends on a
+    deck property no cheap signal captures (today, the "free if you control your
+    commander" cycle under a high-CMC commander). Each carries a replacement
+    palette of up to four **feasible** swaps — two of the same role, the best
+    card you're missing (any role) and one that reinforces your thinnest
+    category. ``missing`` is the highest-scored cards the commander wants that
+    are not in the deck.
+
+    Both lists empty is a valid, healthy answer. Reads EDHREC (like the
+    maybeboard); never runs the solver. 404 for an unknown commander, 422 for a
+    card outside the pool or a deck that is not 99, 502 if EDHREC is
+    unreachable, 503 if the pool never loaded.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.audit_deck, state, payload)
 
 
 @app.post("/export", response_class=PlainTextResponse)
