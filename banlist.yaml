@@ -187,6 +187,8 @@ watchlist:
     reason: "Patrón Rhystic blanco moderno; menos canteo que el trío baneado — vigilada, no auto-recomendada (2026-07-14)."
   - name: Underworld Breach
     reason: "Enabler de finales no-juego vía storm; en B4 con proxies cierra partidas de la nada (2026-07-14)."
+  - name: Black Market Connections
+    reason: "Motor de ventaja/tesoros/vida repetible en negro; potente y de las que el diff de precio de EDHREC marca. Vigilada, no auto-recomendada (2026-07-17)."
 
 # ---------------------------------------------------------------------------
 # Explícitamente legales (para que conste en acta; evita reabrir debates)

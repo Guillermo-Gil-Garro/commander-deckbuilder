@@ -303,7 +303,7 @@ def test_real_banlist_loads_and_resolves(real_index: NameIndex) -> None:
     # Rules snapshot (11) minus no overlapping exceptions + 16 manual cards.
     assert len(resolved.banned) == 27
     assert len(resolved.banned_as_commander) == 3
-    assert len(resolved.watchlist) == 6
+    assert len(resolved.watchlist) == 7
     assert len(resolved.explicitly_legal) == 15
 
     demonic_tutor = real_index.resolve("Demonic Tutor")
