@@ -313,6 +313,71 @@ re-scoring de `service.py` (panel de swap/maybeboard), así que el score mostrad
 carta cara puede diferir ≤0.15 entre contextos. No afecta a la legalidad (constraints es
 conteo puro). Se arregla extrayendo C a un helper compartido si molesta.
 
+## 2026-07-17 (noche) — Feedback de Ur-Dragon: manabase forzada, capa 2 retirada, diseño de auditoría
+
+Guille revisó Ur-Dragon en la web y dio feedback carta a carta. Verificado contra el
+build real (39 tierras, tope de banda [34,39], **0 básicas**):
+
+**Hallazgos:**
+- Las duales ABUR entran por score+boost, no garantizado: **7 de 10** en el mainboard, 3
+  (Scrubland/Tundra/Underground Sea) perdieron su hueco contra el tope de 39 frente a sus
+  shocks del mismo color. El boost 0.4 de `preferred` no basta. Autoinclude = forzar, no
+  boostear: era un error de implementación (lo hice como boost).
+- **Cero básicas** con 10 fetches: funciona de milagro (los fetches buscan duales/shocks
+  con tipo básico) pero frágil y raro. La popularidad EDHREC no reserva slots de básica.
+- **"Caras y buenas" saca staples genéricos, no tech del comandante** (Wheel, Gaea's
+  Cradle, Mox Opal, Force of Negation): el diff `expensive − optimized` escora a poder
+  universal, no a sinergia. Su único acierto (las duales) desaparece al forzarlas.
+- **Fierce Guardianship en mainboard**: counter gratis solo con el comandante en juego,
+  inútil con un comandante de CMC 9. EDHREC lo ranquea top y ni el score ni el tagger ven
+  ese matiz.
+
+**Decisiones:**
+1. **Manabase — forzar duales/fetches + reservar básicas** (aprobado). Los `preferred`
+   que son TIERRA pasan de boost a forzados (`x==1`, duro en toda etapa, como banlist);
+   los no-tierra siguen con boost. Hereda el gate de identidad ya existente (⊇ sus DOS
+   colores, gate conservador y correcto de "en los mazos de sus colores"). Suelo de
+   básicas: ≥1 por color de la identidad (tunable). **Cruza la frontera de diseño
+   "rules.yaml es no-tierras / la manabase posee las tierras" — aprobado explícitamente.**
+   Cambia la composición de TODOS los mazos multicolor.
+2. **Retirar "Caras y buenas" (capa 2)**. El sesgo de precio no es de precio: es usar
+   *popularidad* EDHREC como señal de calidad. La señal de calidad de verdad es la
+   auditoría (abajo), que señala lo bueno por ser bueno, no por caro. La sección era un
+   parche débil; su único valor (duales) lo cubre el forzado. Se deja de calcular en el
+   backend y se oculta en el front (reversible; la fontanería queda).
+3. **Fierce Guardianship y similares → a la auditoría**, no a borrado manual.
+
+### Diseño de la auditoría (sustituto del modo secuencial: señalar sin forzar)
+
+Sobre un mazo YA construido, dos salidas simétricas: **dudosas dentro** y **buenas que
+faltan**. Señal = calidad/sinergia, NO popularidad ni precio. Como el mazo está fijo en
+99, la auditoría **es el swap-workspace pero iniciado por el sistema**: reusa
+`swap-candidates`, solo añade "qué señalar y por qué".
+
+**Capas de detección de dudosas (de barata a cara):**
+- **Capa 1 — lista curada de condicionales (MVP, se implementa ahora).** Cartas cuyo
+  valor depende de una propiedad del mazo, con predicado de debilidad, reusando la
+  maquinaria `when` de rules.yaml. Caso principal: el ciclo "gratis si controlas tu
+  comandante" (Fierce Guardianship, Deflecting Swat, Deadly Rollick, Flawless Maneuver…,
+  ~8-10 cartas) con predicado *comandante CMC alto* (≈≥5). Si el mazo la lleva y el
+  predicado casa → flag ámbar con motivo. Precisa pero curada (solo caza lo enumerado).
+- **Capa 2 — filler de baja sinergia (PENDIENTE, no ahora).** Cartas con sinergia EDHREC
+  ≤0 fuera de una allowlist de staples universales. Ruidosa: el trabajo real es mantener
+  la allowlist. Alternativa conservadora: solo cartas que caen en `synergy` puro (sin
+  categoría real). Ver ROADMAP.
+- **Capa 3 — auditoría LLM (PENDIENTE, proyecto aparte).** Pase LLM cacheado sobre
+  comandante+mazo: la lectura de calidad genérica y con matiz, la buena de verdad. Ver
+  ROADMAP.
+
+**Abanico de reemplazos** (al marcar una carta, menú de hasta 4, solape permitido, todos
+swaps FACTIBLES por la carta que se corta — si uno deja el mazo ilegal, ese slot va vacío):
+- **2× mismo rol**: top-2 de su categoría fuera del mazo, por sinergia.
+- **1× mejor en general**: mayor score del solver (sinergia+inclusión) fuera del mazo,
+  del rol que sea (eje "upgrade", ignora necesidades del mazo).
+- **1× refuerzo**: top de la categoría con mayor déficit vs su banda (eje "balance",
+  respeta el hueco). Ej. Farewell si vas justo de board wipe.
+- Cada slot etiquetado con su porqué; dedupe suave (no repetir la misma carta).
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

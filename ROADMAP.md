@@ -59,6 +59,25 @@ sobre las cartas, un corte por borde compartido); **tokens rellenando huecos** c
 `include_tokens` (fuente `all_parts` de Scryfall → campo `tokens` en el pool; copias
 inteligentes 1/2; desborda a páginas extra).
 
+**Feedback Ur-Dragon 2026-07-17 (noche)** (ver DECISIONS): manabase **fuerza** las
+duales/fetches como autoinclude (preferred-lands → `x==1`) y **reserva ≥1 básica/color**
+(arregla "duales fuera / cero básicas"); **capa 2 "Caras y buenas" retirada** (era
+popularidad-como-calidad; la señal buena la dará la auditoría).
+
+### Auditoría de mazo — feature en curso (MVP 2026-07-17)
+Sustituto del modo secuencial: sobre el mazo construido, **señala sin forzar** (dudosas
+dentro + buenas que faltan), reusando `swap-candidates` (es el swap iniciado por el
+sistema). Diseño completo en DECISIONS.
+- 🔄 **MVP (en construcción)**: capa 1 (lista curada de condicionales, reusa `when`; caso
+  Fierce Guardianship y ciclo "gratis con comandante", predicado CMC alto) + abanico de 4
+  reemplazos (2 mismo rol / 1 mejor general / 1 refuerzo de categoría justa) + lado
+  "buenas que faltan".
+- ⬜ 🔶 **Capa 2 — filler de baja sinergia**: cartas con sinergia EDHREC ≤0 fuera de una
+  allowlist de staples universales. NO en el MVP (ruidosa; el trabajo es mantener la
+  allowlist). Alternativa conservadora: solo `synergy` puro sin categoría real.
+- ⬜ 🔶 **Capa 3 — auditoría LLM**: pase LLM cacheado sobre comandante+mazo, la lectura de
+  calidad genérica con matiz. Proyecto aparte, la buena de verdad.
+
 **Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
 - **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
 - **3 relajaciones de wincons** (Wilhelt/aristocrats, Zhulodok+Ulalek/big_mana): hueco de tagging (drenaje y bombas no marcados `wincons`). Decidir si bajar el min o mejorar el tagging.
