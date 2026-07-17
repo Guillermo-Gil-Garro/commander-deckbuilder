@@ -399,15 +399,14 @@ def build_deck(state: AppState, request: DeckRequest) -> DeckResponse:
     except (SelectorError, DeckRulesError) as exc:
         logger.error("Deck build failed for %r: %s", row.name, exc)
         raise DeckBuildFailed(DECK_BUILD_INFEASIBLE) from exc
-    # Second EDHREC read, post-solver: the "expensive & good" diff. Degrades to
-    # an empty section rather than failing the build the player already got.
-    expensive = edhrec_expensive_data(state, row.name)
-    expensive_cards = _expensive_cards_section(
-        state, row, bands, data, expensive, result, archetype
-    )
-    return _deck_response(
-        state, row, request.dials, bands, result, expensive_cards
-    )
+    # The "expensive & good" section (EDHREC expensive − optimized) is retired:
+    # Ur-Dragon showed the diff surfaces generic power staples, not commander
+    # tech, and its only good picks (the ABUR duals) now enter the mainboard as
+    # forced autoincludes. Its intent — surfacing good-but-missing cards by
+    # quality, not price — moves to the deck audit. The plumbing below
+    # (`edhrec_expensive_data`, `_expensive_cards_section`) is left dormant so it
+    # is one call to bring back; the second EDHREC fetch is skipped meanwhile.
+    return _deck_response(state, row, request.dials, bands, result, ())
 
 
 def _expensive_cards_section(

@@ -270,12 +270,13 @@ def test_every_deck_card_carries_the_full_card_shape(krenko_deck: dict) -> None:
         "reason",
         "score",
     }
+    # `expensive_cards` is retired from the build (always empty), so it is not
+    # in this non-empty shape check — see test_the_expensive_section_is_retired.
     for section in (
         "nonbasic_cards",
         "basic_lands",
         "maybeboard",
         "new_cards",
-        "expensive_cards",
     ):
         assert krenko_deck[section], f"{section} should not be empty for Krenko"
         for card in krenko_deck[section]:
@@ -429,42 +430,18 @@ def test_a_second_build_reuses_the_edhrec_memo(
     assert response.json()["nonbasic_cards"] == krenko_deck["nonbasic_cards"]
 
 
-# --- the "expensive & good" section -----------------------------------------
+# --- the "expensive & good" section (retired from the build) -----------------
 #
-# End-to-end shape from the real cached pages, then the filter logic unit-tested
-# against crafted diffs (no network, no solver): `_expensive_cards_section` is
-# pure given a state, a diff and a build result, so the rules are checked one by
-# one rather than through a full build whose memo would hide a mocked fetch.
+# The section is retired from `/build` (Ur-Dragon showed the expensive−optimized
+# diff surfaces generic staples, not commander tech; its good picks — the duals —
+# now enter the mainboard as forced autoincludes). The filter logic is kept
+# dormant and still unit-tested against crafted diffs below, so bringing it back
+# is one call; the build itself must return an empty section.
 
 
-def test_the_expensive_section_is_a_priced_maybeboard(
-    krenko_deck: dict, real_app_state: AppState
-) -> None:
-    """It is a real section for Krenko, and every card is playable and priced."""
-    section = krenko_deck["expensive_cards"]
-    assert section, "Krenko has an expensive-vs-optimized diff"
-    deck_names = {card["name"] for card in _all_cards(krenko_deck)}
-    banned = real_app_state.effective_banned_names(archetype_for(real_app_state.quotas, COMMANDER))
-    for card in section:
-        assert card["reason"], "the honest 'cara y buena' note"
-        assert "Basic" not in (card["type_line"] or "")
-        assert card["name"] not in deck_names
-        assert card["name"] not in banned
-        # Price-cleaned: a kept card is either Reserved List (null) or >= floor.
-        assert card["price_usd"] is None or card["price_usd"] >= service.EXPENSIVE_PRICE_FLOOR
-
-    # Ordering: Reserved List (null) leads, then USD descending.
-    prices = [card["price_usd"] for card in section]
-    seen_priced = False
-    last = None
-    for price in prices:
-        if price is None:
-            assert not seen_priced, "null-priced (RL) cards must lead"
-        else:
-            seen_priced = True
-            if last is not None:
-                assert price <= last
-            last = price
+def test_the_expensive_section_is_retired_from_the_build(krenko_deck: dict) -> None:
+    """A build no longer ships the section: it is retired, not just empty by luck."""
+    assert krenko_deck["expensive_cards"] == []
 
 
 def _rec(name: str, *, synergy: float = 0.1, inclusion: float = 0.2) -> EdhrecRecommendation:
