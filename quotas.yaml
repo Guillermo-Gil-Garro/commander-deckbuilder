@@ -231,6 +231,9 @@ commanders:
     archetype: artifacts             # Guille 2026-07-18: es un mazo de artefactos
                                      # (relanza artefactos, mill para alimentarlos),
                                      # no de tumba. Arquetipo artifacts creado hoy.
+  "Sai, Master Thopterist":
+    archetype: artifacts             # 2026-07-18: go-wide de thopters por cada
+                                     # artefacto lanzado; sac outlet de artefactos.
   # Nombre canónico completo (regla de dos pasos): la app busca aquí por el
   # nombre del pool, así que un "Sephiroth, Fabled SOLDIER" a secas NO casaría
   # y caería al default en silencio. Ídem Etali y Kefka más abajo.
@@ -272,6 +275,12 @@ commanders:
     archetype: midrange
   "Olivia, Crimson Bride":
     archetype: graveyard
+  "Osgir, the Reconstructor":
+    archetype: artifacts             # 2026-07-18: recursión y doblado de artefactos
+                                     # desde el cementerio; artefactos-matter puro.
+  "Jhoira, Weatherlight Captain":
+    archetype: artifacts             # 2026-07-18: motor de robo por históricos
+                                     # (artefactos + leyendas); mazo artefacto-céntrico.
   "Etali, Primal Conqueror // Etali, Primal Sickness":
     archetype: midrange
   "Minsc & Boo, Timeless Heroes":
@@ -314,6 +323,9 @@ commanders:
                                      # no como criatura-bomba vestida de auras. On-theme:
                                      # ver la excepción de banlist para enchantress
                                      # (Rhystic/Remora/Smothering Tithe legales aquí).
+  "Sydri, Galvanic Genius":
+    archetype: artifacts             # 2026-07-18: anima artefactos como criaturas y
+                                     # los usa de removal recurrente; artefactos-matter.
   "Kefka, Court Mage // Kefka, Ruler of Ruin":
     archetype: control               # DUDOSO: descarte simétrico + robo. Stax suave.
   "Obeka, Brute Chronologist":
@@ -367,6 +379,10 @@ commanders:
     archetype: midrange
 
   # --- 4 y 5 colores ---
+  "Breya, Etherium Shaper":
+    archetype: artifacts             # 2026-07-18: thopters + sac outlets de artefactos
+                                     # para drenar/combear; artefactos-aristócratas,
+                                     # pero el motor es el paquete de artefactos.
   "Omnath, Locus of Creation":
     archetype: lands_matter
   "The Ur-Dragon":

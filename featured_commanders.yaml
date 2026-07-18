@@ -22,6 +22,8 @@ featured:
     description: "Duplica el molido y vacía las bibliotecas rivales."
   - name: Emry, Lurker of the Loch         # U
     description: "Relanza artefactos desde tu cementerio, turno tras turno."
+  - name: Sai, Master Thopterist           # U
+    description: "Cada artefacto crea un thopter volador; inunda el cielo y sacrifícalos."
   - name: Sephiroth, Fabled SOLDIER        # B
     description: "Sacrifica tus propias criaturas para robar y drenar a la mesa."
   - name: K'rrik, Son of Yawgmoth          # B
@@ -52,6 +54,10 @@ featured:
     description: "Juega cartas exiliadas de tu biblioteca y acumula tesoros."
   - name: Olivia, Crimson Bride            # BR
     description: "Ataca reanimando criaturas del cementerio directas al combate."
+  - name: Osgir, the Reconstructor         # RW
+    description: "Recupera artefactos del cementerio y los duplica en fichas gigantes."
+  - name: Jhoira, Weatherlight Captain     # UR
+    description: "Cada artefacto o leyenda que lanzas te roba una carta: motor imparable."
   - name: Etali, Primal Conqueror          # RG
     description: "Rampa hasta un dinosaurio que lanza gratis los hechizos de todos."
   - name: Minsc & Boo, Timeless Heroes     # RG
@@ -86,6 +92,8 @@ featured:
     description: "Gana vida desde el mando y traduce cada punto en robo y drenaje."
   - name: Zur the Enchanter                # WUB
     description: "Busca encantamientos al atacar y se vuelve intocable y letal."
+  - name: Sydri, Galvanic Genius           # WUB
+    description: "Anima tus artefactos y los usa para destruir todo lo que toca."
   - name: Kefka, Court Mage                # UBR
     description: "Obliga a todos a descartar y robas por cada tipo de carta tirada."
   - name: Obeka, Brute Chronologist        # UBR
@@ -120,6 +128,8 @@ featured:
     description: "Crece con cada criatura y abarata bichos enormes hasta ser gratis."
 
   # 4 y 5 colores
+  - name: Breya, Etherium Shaper           # WUBR
+    description: "Fabrica thopters y los sacrifica para drenar y rematar a toda la mesa."
   - name: Omnath, Locus of Creation        # WURG
     description: "Cada tierra que juegas da vida, maná y luego daño a los rivales."
   - name: The Ur-Dragon                    # WUBRG

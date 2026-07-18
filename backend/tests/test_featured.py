@@ -182,8 +182,8 @@ def test_real_featured_commanders_load() -> None:
     resolved = resolve_banlist(load_banlist(), index)
     featured = load_featured(resolved_banlist=resolved, name_index=index)
 
-    assert len(featured) == 56  # +Kona, Rescue Beastie (2026-07-18)
-    assert len({c.oracle_id for c in featured}) == 56
+    assert len(featured) == 61  # +5 artifacts commanders (2026-07-18)
+    assert len({c.oracle_id for c in featured}) == 61
     names = {c.name for c in featured}
     assert "Krenko, Mob Boss" in names
     assert all(c.oracle_id not in resolved.banned_as_commander for c in featured)
@@ -193,7 +193,7 @@ def test_real_featured_commanders_load() -> None:
 
 
 def test_every_featured_commander_has_an_explicit_archetype() -> None:
-    """The picker's playstyle filter needs a real archetype for all 56.
+    """The picker's playstyle filter needs a real archetype for all 61.
 
     Guards the canonical-name trap: quotas.yaml is keyed by pool name, so a
     double-faced commander listed by its front face only (``Kefka, Court Mage``

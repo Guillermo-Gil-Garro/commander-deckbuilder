@@ -529,7 +529,7 @@ def test_budget_holds_for_all_featured_commanders(real_rules, real_pool) -> None
         (REPO_ROOT / "featured_commanders.yaml").read_text(encoding="utf-8")
     )
     featured = raw["featured"]
-    assert len(featured) == 56  # +Kona, Rescue Beastie (2026-07-18)
+    assert len(featured) == 61  # +5 artifacts commanders (2026-07-18)
     max_count = 0
     for entry in featured:
         name = entry["name"]

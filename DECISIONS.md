@@ -398,6 +398,13 @@ Guille:
   big_mana acomoda. (No es artifacts pese a "trampear permanentes": es rampa-verde-a-bombas.)
 - Baral/control, Ketramose/midrange, Locust God/spellslinger, Kefka/control (stax es
   provisional), Arcades/midrange: **se dejan** (borderline defendibles).
+- **+5 comandantes de artifacts** (petición de Guille, "Jhoira, Osgir, Breya…"):
+  **Osgir** (RW, recursión/doblado de artefactos), **Breya** (WUBR, thopters +
+  sac-aristócratas), **Jhoira, Weatherlight Captain** (UR, motor de robo por históricos),
+  **Sai, Master Thopterist** (U, go-wide de thopters), **Sydri** (WUB, anima artefactos
+  como removal). Todos → arquetipo `artifacts`, todos OPTIMAL stage=none, tierras en banda.
+  Descartados: Jhoira of the Ghitu (storm, no artefactos) y Arcum (combo puro). Featured
+  pasa de 56 a **61**.
 
 **Coste de meter `stax` en el tagger** (preguntó Guille): es el mismo playbook que
 `protection` (ya hecho una vez). No es un tweak de código: (1) añadir `stax` a `CATEGORIES`
