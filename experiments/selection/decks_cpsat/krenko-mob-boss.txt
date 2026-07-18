@@ -1,7 +1,7 @@
 # Krenko, Mob Boss — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.04s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
-# Objetivo: 64.9637 (score bruto 65.8020, penalizaciones escaladas 838308)
+# Construido en 0.05s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
+# Objetivo: 66.5255 (score bruto 67.3638, penalizaciones escaladas 838308)
 # Fixing color (fuentes/objetivo): R: 25/38 (déficit 13)
 
 ## Resumen de cuotas
@@ -24,45 +24,47 @@ synergy       35  [ 0-35]    in_range
 ## Mainboard (99)
 
 ### lands (34)
-1x Three Tree City                            score 0.75  [lands/ramp]  tierra recomendada, score 0.75 (cuenta en ramp, pero no cubre su mínimo)
+1x Three Tree City                            score 0.82  [lands/ramp]  tierra recomendada, score 0.82 (cuenta en ramp, pero no cubre su mínimo)
+1x Cavern of Souls                            score 0.70  [lands]  tierra recomendada, score 0.70
 1x Den of the Bugbear                         score 0.61  [lands]  tierra recomendada, score 0.61
-1x Cavern of Souls                            score 0.59  [lands]  tierra recomendada, score 0.59
 1x Castle Embereth                            score 0.58  [lands]  tierra recomendada, score 0.58
 1x Arena of Glory                             score 0.52  [lands]  tierra recomendada, score 0.52
+1x Nykthos, Shrine to Nyx                     score 0.50  [lands/ramp]  tierra recomendada, score 0.50 (cuenta en ramp, pero no cubre su mínimo)
 1x Path of Ancestry                           score 0.48  [lands]  tierra recomendada, score 0.48
-1x Nykthos, Shrine to Nyx                     score 0.39  [lands/ramp]  tierra recomendada, score 0.39 (cuenta en ramp, pero no cubre su mínimo)
-1x Ancient Tomb                               score 0.28  [lands/ramp]  tierra recomendada, score 0.28 (cuenta en ramp, pero no cubre su mínimo)
+1x Ancient Tomb                               score 0.40  [lands/ramp]  tierra recomendada, score 0.40 (cuenta en ramp, pero no cubre su mínimo)
 1x War Room                                   score 0.24  [card_draw/lands]  tierra recomendada, score 0.24 (cuenta en card_draw, pero no cubre su mínimo)
+1x Valakut, the Molten Pinnacle               score 0.22  [lands/removal]  tierra recomendada, score 0.22 (cuenta en removal, pero no cubre su mínimo)
 1x Goblin Burrows                             score 0.22  [lands]  tierra recomendada, score 0.22
-1x Valakut, the Molten Pinnacle               score 0.19  [lands/removal]  tierra recomendada, score 0.19 (cuenta en removal, pero no cubre su mínimo)
 1x Forgotten Cave                             score 0.18  [lands]  tierra recomendada, score 0.18
-1x Hall of the Bandit Lord                    score 0.14  [lands]  tierra recomendada, score 0.14
+1x Hall of the Bandit Lord                    score 0.16  [lands]  tierra recomendada, score 0.16
+1x Urza's Saga                                score 0.14  [lands]  tierra recomendada, score 0.14
+1x Valakut Awakening // Valakut Stoneforge    score 0.13  [card_draw/lands]  tierra recomendada, score 0.13 (cuenta en card_draw, pero no cubre su mínimo)
 1x Command Beacon                             score 0.13  [lands]  tierra recomendada, score 0.13
 1x Buried Ruin                                score 0.12  [lands]  tierra recomendada, score 0.12
-1x Valakut Awakening // Valakut Stoneforge    score 0.12  [card_draw/lands]  tierra recomendada, score 0.12 (cuenta en card_draw, pero no cubre su mínimo)
 1x Great Furnace                              score 0.12  [lands]  tierra recomendada, score 0.12
-1x Urza's Saga                                score 0.10  [lands]  tierra recomendada, score 0.10
-1x Bloodstained Mire                          score 0.10  [lands]  tierra recomendada, score 0.10
+1x Gemstone Caverns                           score 0.11  [lands]  tierra recomendada, score 0.11
+1x Bloodstained Mire                          score 0.11  [lands]  tierra recomendada, score 0.11
+1x Wooded Foothills                           score 0.11  [lands]  tierra recomendada, score 0.11
+1x Arid Mesa                                  score 0.10  [lands]  tierra recomendada, score 0.10
 1x Amonkhet Raceway                           score 0.10  [lands]  tierra recomendada, score 0.10
-1x Wooded Foothills                           score 0.10  [lands]  tierra recomendada, score 0.10
+1x Scalding Tarn                              score 0.10  [lands]  tierra recomendada, score 0.10
 1x Sandstone Needle                           score 0.10  [lands/ramp]  tierra recomendada, score 0.10 (cuenta en ramp, pero no cubre su mínimo)
-1x Arid Mesa                                  score 0.09  [lands]  tierra recomendada, score 0.09
 1x Reliquary Tower                            score 0.09  [lands]  tierra recomendada, score 0.09
 1x Rogue's Passage                            score 0.09  [lands]  tierra recomendada, score 0.09
-1x Gemstone Caverns                           score 0.08  [lands]  tierra recomendada, score 0.08
-1x Shinka, the Bloodsoaked Keep               score 0.05  [lands]  tierra recomendada, score 0.05
+1x Shatterskull Smashing // Shatterskull, the Hammer Pass score 0.08  [lands/removal]  tierra recomendada, score 0.08 (cuenta en removal, pero no cubre su mínimo)
+1x Shinka, the Bloodsoaked Keep               score 0.06  [lands]  tierra recomendada, score 0.06
 1x Smoldering Crater                          score 0.05  [lands]  tierra recomendada, score 0.05
-6x Mountain                                   score  --   [lands]  básica x6 (asignada por el solver)
+4x Mountain                                   score  --   [lands]  básica x4 (asignada por el solver)
 
 ### ramp (8)
 1x Skirk Prospector                           score 1.64  [ramp]  ramp (cuota), score 1.64
 1x Sol Ring                                   score 1.00  [ramp]  always (rules.yaml)
 1x Howlsquad Heavy                            score 0.93  [ramp]  ramp (cuota), score 0.93
-1x Ashnod's Altar                             score 0.66  [ramp]  ramp (cuota), score 0.66
-1x Ruby Medallion                             score 0.66  [ramp]  ramp (cuota), score 0.66
-1x Mana Echoes                                score 0.51  [ramp]  ramp (cuota), score 0.51
-1x Patriar's Seal                             score 0.51  [ramp]  ramp (cuota), score 0.51
-1x Phyrexian Altar                            score 0.49  [ramp]  relleno por score 0.49
+1x Ashnod's Altar                             score 0.68  [ramp]  ramp (cuota), score 0.68
+1x Ruby Medallion                             score 0.68  [ramp]  ramp (cuota), score 0.68
+1x Mana Echoes                                score 0.63  [ramp]  ramp (cuota), score 0.63
+1x Phyrexian Altar                            score 0.60  [ramp]  ramp (cuota), score 0.60
+1x Patriar's Seal                             score 0.51  [ramp]  relleno por score 0.51
 
 ### card_draw (8)
 1x Skullclamp                                 score 1.30  [card_draw]  card_draw (cuota), score 1.30
@@ -74,7 +76,7 @@ synergy       35  [ 0-35]    in_range
 1x Dark-Dweller Oracle                        score 0.27  [card_draw]  card_draw (cuota), score 0.27
 1x Thrill of Possibility                      score 0.23  [card_draw]  card_draw (cuota), score 0.23
 
-### removal (10)
+### removal (9)
 1x Goblin Bombardment                         score 1.51  [removal]  removal (cuota), score 1.51
 1x Pashalik Mons                              score 1.41  [removal]  removal (cuota), score 1.41
 1x Goblin Trashmaster                         score 1.27  [removal]  removal (cuota), score 1.27
@@ -82,58 +84,58 @@ synergy       35  [ 0-35]    in_range
 1x Goblin War Strike                          score 1.07  [removal]  removal (cuota), score 1.07
 1x Siege-Gang Commander                       score 1.03  [removal]  removal (cuota), score 1.03
 1x Chaos Warp                                 score 0.98  [removal]  relleno por score 0.98
-1x Thornbite Staff                            score 0.82  [removal]  relleno por score 0.82
-1x Goblin Sharpshooter                        score 0.71  [removal]  relleno por score 0.71
-1x Massive Raid                               score 0.55  [removal]  relleno por score 0.55
+1x Thornbite Staff                            score 0.85  [removal]  relleno por score 0.85
+1x Goblin Sharpshooter                        score 0.77  [removal]  relleno por score 0.77
 
 ### board_wipe (1)
 1x Blasphemous Act                            score 0.39  [board_wipe]  board_wipe (cuota), score 0.39
 
-### synergy (38)
+### synergy (39)
 1x Goblin Warchief                            score 1.69  [synergy]  relleno por score 1.69
 1x Goblin Matron                              score 1.66  [synergy]  relleno por score 1.66
 1x Goblin Chieftain                           score 1.59  [synergy]  relleno por score 1.59
 1x Impact Tremors                             score 1.57  [synergy]  relleno por score 1.57
 1x Goblin Recruiter                           score 1.45  [synergy]  relleno por score 1.45
 1x Brightstone Ritual                         score 1.42  [synergy]  relleno por score 1.42
-1x Goblin King                                score 1.38  [synergy]  relleno por score 1.38
+1x Goblin King                                score 1.40  [synergy]  relleno por score 1.40
 1x Conspicuous Snoop                          score 1.37  [synergy]  relleno por score 1.37
-1x Blood Moon                                 score 1.25  [synergy]  relleno por score 1.25
+1x Blood Moon                                 score 1.25  [stax]  relleno por score 1.25
 1x Goblin Chirurgeon                          score 1.20  [synergy]  relleno por score 1.20
-1x Muxus, Goblin Grandee                      score 1.10  [synergy]  relleno por score 1.10
+1x Muxus, Goblin Grandee                      score 1.12  [synergy]  relleno por score 1.12
+1x Purphoros, God of the Forge                score 1.11  [synergy]  relleno por score 1.11
 1x Krenko, Tin Street Kingpin                 score 1.09  [synergy]  relleno por score 1.09
-1x Kiki-Jiki, Mirror Breaker                  score 1.04  [synergy]  relleno por score 1.04
-1x Purphoros, God of the Forge                score 1.04  [synergy]  relleno por score 1.04
+1x Kiki-Jiki, Mirror Breaker                  score 1.08  [synergy]  relleno por score 1.08
 1x Goblin Lackey                              score 1.01  [synergy]  relleno por score 1.01
 1x Battle Hymn                                score 0.99  [synergy]  relleno por score 0.99
 1x Shared Animosity                           score 0.96  [synergy]  relleno por score 0.96
 1x General Kreat, the Boltbringer             score 0.96  [synergy]  relleno por score 0.96
+1x Deflecting Swat                            score 0.94  [protection]  protection (cuota), score 0.94
+1x Hexing Squelcher                           score 0.92  [protection]  relleno por score 0.92
 1x Warren Instigator                          score 0.91  [synergy]  relleno por score 0.91
-1x Lightning Greaves                          score 0.90  [protection]  protection (cuota), score 0.90
+1x Lightning Greaves                          score 0.90  [protection]  relleno por score 0.90
+1x Thousand-Year Elixir                       score 0.89  [synergy]  relleno por score 0.89
 1x Krenko's Command                           score 0.88  [synergy]  relleno por score 0.88
-1x Hexing Squelcher                           score 0.88  [protection]  relleno por score 0.88
-1x Thousand-Year Elixir                       score 0.87  [synergy]  relleno por score 0.87
-1x Deflecting Swat                            score 0.81  [protection]  relleno por score 0.81
 1x Rundvelt Hordemaster                       score 0.80  [synergy]  relleno por score 0.80
 1x Sting, the Glinting Dagger                 score 0.77  [synergy]  relleno por score 0.77
 1x Dragon Fodder                              score 0.70  [synergy]  relleno por score 0.70
 1x Goblin Piledriver                          score 0.67  [synergy]  relleno por score 0.67
-1x Umbral Mantle                              score 0.65  [synergy]  relleno por score 0.65
+1x Umbral Mantle                              score 0.66  [synergy]  relleno por score 0.66
 1x Marvin, Murderous Mimic                    score 0.64  [synergy]  relleno por score 0.64
+1x Coat of Arms                               score 0.64  [synergy]  relleno por score 0.64
+1x Moggcatcher                                score 0.63  [synergy]  relleno por score 0.63
 1x Legion Warboss                             score 0.63  [synergy]  relleno por score 0.63
 1x Goro-Goro, Disciple of Ryusei              score 0.63  [synergy]  relleno por score 0.63
 1x Treasure Nabber                            score 0.62  [synergy]  relleno por score 0.62
-1x Moggcatcher                                score 0.61  [synergy]  relleno por score 0.61
-1x Coat of Arms                               score 0.59  [synergy]  relleno por score 0.59
 1x Boggart Shenanigans                        score 0.57  [synergy]  relleno por score 0.57
+1x Jeska's Will                               score 0.57  [synergy]  relleno por score 0.57
 1x Hordeling Outburst                         score 0.57  [synergy]  relleno por score 0.57
 1x Goblin Instigator                          score 0.57  [synergy]  relleno por score 0.57
 
 ## Maybeboard (15)
 1x Swiftfoot Boots                            score 0.72  [protection]  fuera: cuota llena en protection
+1x Massive Raid                               score 0.55  [removal]  fuera: cuota llena en removal
 1x Gempalm Incinerator                        score 0.53  [removal]  fuera: cuota llena en removal
 1x Battle Cry Goblin                          score 0.51  [synergy]  fuera: cuota llena en synergy
-1x Jeska's Will                               score 0.48  [synergy]  fuera: cuota llena en synergy
 1x Goblin Grenade                             score 0.47  [removal]  fuera: cuota llena en removal
 1x Fervor                                     score 0.47  [synergy]  fuera: cuota llena en synergy
 1x Legion Loyalist                            score 0.46  [synergy]  fuera: cuota llena en synergy
@@ -144,7 +146,7 @@ synergy       35  [ 0-35]    in_range
 1x Torch Courier                              score 0.43  [synergy]  fuera: cuota llena en synergy
 1x Throne of the God-Pharaoh                  score 0.41  [synergy]  fuera: cuota llena en synergy
 1x Rising of the Day                          score 0.41  [synergy]  fuera: cuota llena en synergy
-1x Raid Bombardment                           score 0.39  [synergy]  fuera: cuota llena en synergy
+1x Imperial Recruiter                         score 0.39  [synergy]  fuera: cuota llena en synergy
 
 ## Cartas nuevas (arranque en frío) (5)
 # Lista 'New Cards' de EDHREC que no entró al mainboard; el score

@@ -83,14 +83,17 @@ sistema). Diseño completo en DECISIONS.
 **Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
 - **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
 - **3 relajaciones de wincons** (Wilhelt/aristocrats, Zhulodok+Ulalek/big_mana): hueco de tagging (drenaje y bombas no marcados `wincons`). Decidir si bajar el min o mejorar el tagging.
-- **stax** es provisional (sin etiqueta de pieza de stax → casi control). Mejora al añadir esa categoría al tagger.
+- ~~**stax** es provisional (sin etiqueta de pieza de stax → casi control)~~ RESUELTO
+  2026-07-18: categoría `stax` añadida al tagger (rúbrica v4, 118 etiquetas). El
+  arquetipo stax ahora fuerza suelo 3 de prisión; Winter y Thalia+Gitrog OPTIMAL
+  stage=none. Bandas iniciales, calibrar con más partidas.
 
 **Decisiones de jugador aún pendientes** (ninguna urgente):
 - ~~El **resto de dudosos**~~ revisados 2026-07-18 (ver DECISIONS): arquetipo `artifacts`
   nuevo (Emry+Urza), Narset +protección, Obeka −wincons, Kona añadida (big_mana). Baral/
-  Ketramose/Locust/Kefka/Arcades se dejan. Pendiente: capa `stax` en el tagger (coste
-  estimado en DECISIONS), y crear más comandantes de `artifacts` si se quieren (Jhoira,
-  Osgir, Breya… no están en la lista aún).
+  Ketramose/Locust/Kefka/Arcades se dejan. ~~Pendiente: capa `stax` en el tagger~~ HECHO
+  2026-07-18 (rúbrica v4, 118 etiquetas). ~~crear más comandantes de `artifacts`~~ HECHO
+  2026-07-18 (Osgir, Breya, Jhoira WC, Sai, Sydri añadidos; featured 56→61).
 - ~~**Auditoría de mazo**~~ MVP hecho 2026-07-18 (ver sección Auditoría arriba); pendiente capas 2/3.
 - **Inconsistencia cosmética**: el método C no se aplica en el re-scoring de `service.py` (swap/maybeboard) → el score mostrado de una carta cara puede diferir ≤0.15 entre contextos (no afecta a legalidad).
 

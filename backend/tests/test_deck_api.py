@@ -338,6 +338,7 @@ def test_the_category_breakdown_fuses_counts_bands_and_statuses(
         "board_wipe",
         "wincons",
         "protection",
+        "stax",
         "synergy",
     }
     for row in breakdown.values():

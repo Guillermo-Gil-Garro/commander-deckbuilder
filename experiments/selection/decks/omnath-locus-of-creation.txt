@@ -5,11 +5,11 @@
 categoría      n  banda      estado
 lands         38  [38-42]    in_range  (suelo Karsten: 35, objetivo: 38)
 ramp          18  [12-18]    in_range
-card_draw     10  [ 9-12]    in_range
+card_draw      9  [ 9-12]    in_range
 removal       11  [ 6-11]    in_range
-board_wipe     3  [ 2- 4]    in_range
-wincons        3  [ 2- 4]    in_range
-synergy       18  [ 0-18]    in_range
+board_wipe     2  [ 2- 4]    in_range
+wincons        2  [ 2- 4]    in_range
+synergy       20  [ 0-24]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -17,14 +17,14 @@ synergy       18  [ 0-18]    in_range
 ## Mainboard (99)
 
 ### lands (38)
-1x Misty Rainforest                           score 1.10  [lands]  tierra recomendada, score 1.10
-1x Windswept Heath                            score 1.09  [lands]  tierra recomendada, score 1.09
-1x Wooded Foothills                           score 1.08  [lands]  tierra recomendada, score 1.08
-1x Scalding Tarn                              score 1.03  [lands]  tierra recomendada, score 1.03
-1x Arid Mesa                                  score 1.03  [lands]  tierra recomendada, score 1.03
+1x Misty Rainforest                           score 1.50  [lands]  tierra recomendada, score 1.50
+1x Windswept Heath                            score 1.49  [lands]  tierra recomendada, score 1.49
+1x Wooded Foothills                           score 1.48  [lands]  tierra recomendada, score 1.48
+1x Scalding Tarn                              score 1.43  [lands]  tierra recomendada, score 1.43
+1x Arid Mesa                                  score 1.43  [lands]  tierra recomendada, score 1.43
+1x Flooded Strand                             score 1.42  [lands]  tierra recomendada, score 1.42
 1x Stomping Ground                            score 1.02  [lands]  tierra recomendada, score 1.02
 1x Field of the Dead                          score 1.02  [lands]  tierra recomendada, score 1.02
-1x Flooded Strand                             score 1.02  [lands]  tierra recomendada, score 1.02
 1x Breeding Pool                              score 0.99  [lands]  tierra recomendada, score 0.99
 1x Temple Garden                              score 0.95  [lands]  tierra recomendada, score 0.95
 1x Command Tower                              score 0.88  [lands]  tierra recomendada, score 0.88
@@ -34,9 +34,15 @@ synergy       18  [ 0-18]    in_range
 1x Fabled Passage                             score 0.79  [lands]  tierra recomendada, score 0.79
 1x Simic Growth Chamber                       score 0.72  [lands]  tierra recomendada, score 0.72
 1x Ketria Triome                              score 0.71  [lands]  tierra recomendada, score 0.71
+1x Taiga                                      score 0.65  [lands]  tierra recomendada, score 0.65
+1x Savannah                                   score 0.64  [lands]  tierra recomendada, score 0.64
+1x Tropical Island                            score 0.64  [lands]  tierra recomendada, score 0.64
 1x Verdant Catacombs                          score 0.63  [lands]  tierra recomendada, score 0.63
 1x Yavimaya, Cradle of Growth                 score 0.62  [lands]  tierra recomendada, score 0.62
 1x Gruul Turf                                 score 0.60  [lands]  tierra recomendada, score 0.60
+1x Tundra                                     score 0.60  [lands]  tierra recomendada, score 0.60
+1x Plateau                                    score 0.59  [lands]  tierra recomendada, score 0.59
+1x Volcanic Island                            score 0.59  [lands]  tierra recomendada, score 0.59
 1x Spara's Headquarters                       score 0.58  [lands]  tierra recomendada, score 0.58
 1x Prismatic Vista                            score 0.57  [lands]  tierra recomendada, score 0.57
 1x Selesnya Sanctuary                         score 0.56  [lands]  tierra recomendada, score 0.56
@@ -49,12 +55,6 @@ synergy       18  [ 0-18]    in_range
 1x Izzet Boilerworks                          score 0.36  [lands]  tierra recomendada, score 0.36
 1x Exotic Orchard                             score 0.33  [lands]  tierra recomendada, score 0.33
 1x Evolving Wilds                             score 0.33  [lands]  tierra recomendada, score 0.33
-1x Azorius Chancery                           score 0.33  [lands]  tierra recomendada, score 0.33
-1x Boros Garrison                             score 0.33  [lands]  tierra recomendada, score 0.33
-1x Terramorphic Expanse                       score 0.28  [lands]  tierra recomendada, score 0.28
-1x Vesuva                                     score 0.27  [lands]  tierra recomendada, score 0.27
-1x Bala Ged Recovery // Bala Ged Sanctuary    score 0.25  [lands]  tierra recomendada, score 0.25
-1x Taiga                                      score 0.25  [lands]  tierra recomendada, score 0.25
 
 ### ramp (16)
 1x Lotus Cobra                                score 1.39  [ramp]  ramp (cuota), score 1.39
@@ -74,7 +74,7 @@ synergy       18  [ 0-18]    in_range
 1x Kodama of the East Tree                    score 0.64  [ramp]  relleno por score 0.64
 1x Arcane Signet                              score 0.44  [ramp]  always (rules.yaml)
 
-### card_draw (9)
+### card_draw (8)
 1x Tatyova, Benthic Druid                     score 1.29  [card_draw]  card_draw (cuota), score 1.29
 1x Omnath, Locus of the Roil                  score 0.78  [card_draw/removal]  card_draw (cuota), score 0.78
 1x Sylvan Library                             score 0.64  [card_draw]  card_draw (cuota), score 0.64
@@ -83,7 +83,6 @@ synergy       18  [ 0-18]    in_range
 1x Tireless Tracker                           score 0.35  [card_draw]  card_draw (cuota), score 0.35
 1x Cultivator Colossus                        score 0.30  [card_draw/ramp]  card_draw (cuota), score 0.30
 1x Courser of Kruphix                         score 0.30  [card_draw]  card_draw (cuota), score 0.30
-1x Augur of Autumn                            score 0.27  [card_draw]  relleno por score 0.27
 
 ### removal (9)
 1x Swords to Plowshares                       score 1.15  [removal]  removal (cuota), score 1.15
@@ -96,17 +95,15 @@ synergy       18  [ 0-18]    in_range
 1x Chaos Warp                                 score 0.49  [removal]  relleno por score 0.49
 1x Beast Within                               score 0.45  [removal]  relleno por score 0.45
 
-### board_wipe (3)
+### board_wipe (2)
 1x Cyclonic Rift                              score 1.32  [board_wipe/removal]  board_wipe (cuota), score 1.32
 1x Farewell                                   score 0.29  [board_wipe]  board_wipe (cuota), score 0.29
-1x Dragonback Assault                         score 0.25  [board_wipe]  relleno por score 0.25
 
-### wincons (3)
+### wincons (2)
 1x Moraug, Fury of Akoum                      score 0.63  [wincons]  wincons (cuota), score 0.63
 1x Finale of Devastation                      score 0.39  [wincons]  wincons (cuota), score 0.39
-1x Craterhoof Behemoth                        score 0.30  [wincons]  relleno por score 0.30
 
-### synergy (21)
+### synergy (24)
 1x Ancient Greenwarden                        score 1.29  [synergy]  relleno por score 1.29
 1x Scute Swarm                                score 1.25  [synergy]  relleno por score 1.25
 1x Crop Rotation                              score 1.16  [synergy]  relleno por score 1.16
@@ -117,7 +114,7 @@ synergy       18  [ 0-18]    in_range
 1x Scapeshift                                 score 0.75  [synergy]  relleno por score 0.75
 1x Deflecting Swat                            score 0.72  [protection]  relleno por score 0.72
 1x Rampaging Baloths                          score 0.70  [synergy]  relleno por score 0.70
-1x Elesh Norn, Mother of Machines             score 0.66  [synergy]  relleno por score 0.66
+1x Elesh Norn, Mother of Machines             score 0.66  [stax]  relleno por score 0.66
 1x Traveling Chocobo                          score 0.63  [synergy]  relleno por score 0.63
 1x Teferi's Protection                        score 0.61  [protection]  relleno por score 0.61
 1x Tannuk, Memorial Ensign                    score 0.57  [synergy]  relleno por score 0.57
@@ -128,6 +125,9 @@ synergy       18  [ 0-18]    in_range
 1x Roil Elemental                             score 0.48  [synergy]  relleno por score 0.48
 1x Mossborn Hydra                             score 0.45  [synergy]  relleno por score 0.45
 1x Eternal Witness                            score 0.42  [synergy]  relleno por score 0.42
+1x Eladamri's Call                            score 0.39  [synergy]  relleno por score 0.39
+1x Zendikar's Roil                            score 0.34  [synergy]  relleno por score 0.34
+1x Greensleeves, Maro-Sorcerer                score 0.32  [synergy]  relleno por score 0.32
 
 ## Maybeboard (15)
 1x Boseiju, Who Endures                       score 0.60  [lands/removal]  fuera por score 0.60

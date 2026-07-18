@@ -1,21 +1,23 @@
 # Rúbrica de producción — etiquetado funcional LLM
 
-**Versión: v3** (2026-07-14). Cambios de v3: nueva categoría `protection`
-(decisión de Guille 2026-07-14; recomendada por el informe
-`experiments/selection/COMPARATIVA_EDHREC_B4.md`). El resto de categorías no
-cambia respecto a v2. Las etiquetas generadas con esta rúbrica llevan
-`rubric_version: "v3"` en `data/tags/llm_tags.jsonl`; las entradas `v2`
-existentes siguen siendo válidas (solo les falta evaluar `protection`).
+**Versión: v4** (2026-07-18). Cambios de v4: nueva categoría `stax` (prisión /
+negación de recursos; decisión de Guille 2026-07-18, para que los mazos de
+prisión —Winter, Thalia+Gitrog, Grand Arbiter, Kefka— cuenten sus piezas en
+lugar de que caigan en `synergy`/`none`). El resto de categorías no cambia
+respecto a v3. Las etiquetas generadas con esta rúbrica llevan
+`rubric_version: "v4"` en `data/tags/llm_tags.jsonl`; las entradas v2/v3
+existentes siguen siendo válidas (solo les falta evaluar `stax`).
 
-Historial: v2 (2026-07-13) unificó el criterio MDFC con el ground truth
-(aprobado por Guille), reforzó las wincons implícitas y resolvió los casos
-frontera de `llm_notes.md`. v1 implícita:
+Historial: v3 (2026-07-14) añadió `protection` (recomendada por el informe
+`experiments/selection/COMPARATIVA_EDHREC_B4.md`). v2 (2026-07-13) unificó el
+criterio MDFC con el ground truth (aprobado por Guille), reforzó las wincons
+implícitas y resolvió los casos frontera de `llm_notes.md`. v1 implícita:
 `experiments/tagging/methods/llm_rubric.md`.
 
 Vocabulario cerrado: `lands`, `ramp`, `card_draw`, `removal`, `board_wipe`,
-`wincons`, `protection`, `synergy`. Multi-etiqueta permitida; lista vacía = none.
-Principio rector: la etiqueta refleja para qué mete un jugador la carta en el
-mazo; no se etiquetan efectos marginales.
+`wincons`, `protection`, `stax`, `synergy`. Multi-etiqueta permitida; lista
+vacía = none. Principio rector: la etiqueta refleja para qué mete un jugador la
+carta en el mazo; no se etiquetan efectos marginales.
 
 ## lands
 
@@ -156,6 +158,59 @@ comandante) o a sí mismo frente a removal/wipes ajenos.
 - Multi-etiqueta con lo existente como siempre: si además el paquete es
   inequívoco, añade `synergy` (p. ej. protección estrictamente tribal);
   Lightning Greaves en un mazo cualquiera es solo protection.
+
+## stax **[v4, nueva categoría]**
+
+Para qué la mete un jugador: **restringir o negar de forma persistente los
+recursos o las acciones de los oponentes** (prisión), rompiendo la paridad a su
+favor. El eje es la NEGACIÓN CONTINUA, no la interacción puntual: un efecto de
+un solo uso no es stax (es `removal`, `board_wipe`, o nada).
+
+Criterio operativo: el efecto está en mesa (permanente estático/activado) o es
+un castigo recurrente, y limita lo que los rivales pueden hacer con maná,
+hechizos, destapar, atacar, robar, buscar, ETBs o habilidades.
+
+- Sí: **impuestos** — hechizos o acciones ajenas cuestan más maná o vida
+  (Thalia, Guardian of Thraben; Sphere of Resistance; Thorn of Amethyst;
+  Trinisphere; Kambal, Consul of Allocation; Esper Sentinel). Si además te da
+  recurso, multi-etiqueta (Esper Sentinel = stax|card_draw).
+- Sí: **negación de destapar / bloqueo de recursos** persistente (Winter Orb,
+  Static Orb, Stasis, Rising Waters, Root Maze, Kismet, Blind Obedience,
+  Authority of the Consuls: "entran tappeadas").
+- Sí: **límite de acciones por turno** (Archon of Emeria, Drannith Magistrate,
+  Ethersworn Canonist, Eidolon of Rhetoric, Rule of Law, Deafening Silence,
+  Teferi, Time Raveler: solo a velocidad de conjuro).
+- Sí: **negación de robar / buscar** ajenas (Aven Mindcensor, Leonin Arbiter,
+  Opposition Agent, Stranglehold, Ashiok Dream Render, Narset Parter of Veils,
+  Hullbreacher, Notion Thief). Si roban ellos también → stax|card_draw.
+- Sí: **negación de ETBs / triggers** (Torpor Orb, Hushbringer, Tocatli Honor
+  Guard) y de **habilidades activadas** (Cursed Totem, Linvala Keeper of
+  Silence, Damping Sphere, Pithing Needle, Phyrexian Revoker).
+- Sí: **negación de maná** amplia o simétrica-que-rompes: Blood Moon, Magus of
+  the Moon, Back to Basics, Contamination, Overburden; destrucción MASIVA de
+  tierras como plan de prisión (Armageddon, Ravages of War, Catastrophe,
+  Cataclysm → stax|board_wipe). Un Strip Mine / destrucción de UNA tierra es
+  `removal`, no stax.
+- Sí: **pillow fort** — "no pueden atacar/bloquear salvo que paguen / a menos
+  que…" persistente (Ghostly Prison, Propaganda, Windborn Muse, Norn's Annex,
+  Archangel of Tithes, Sphere of Safety, Silent Arbiter, Dueling Grounds).
+  Un Fog puntual NO es stax.
+- Sí: **motores de sacrificio forzado** recurrentes (Smokestack, Tangle Wire,
+  Braids Cabal Minion). Un edicto de un solo uso sigue siendo `removal`; un
+  sacrificio masivo de una vez es `board_wipe`.
+- No: **contrahechizos** — siguen siendo `removal` (regla transversal), aunque
+  nieguen de facto.
+- No: efectos que te dan recurso SIN restringir al rival (Rhystic Study,
+  Smothering Tithe): el rival paga opcional y tú ganas → `card_draw`/`ramp`,
+  no stax.
+- No: descarte de mano (sin categoría), fog / prevención de daño (`none`),
+  hexproof/protección a lo tuyo (`protection`).
+- No por defecto: odio de cementerio estrecho de un solo propósito
+  (Grafdigger's Cage, Rest in Peace, Soulless Jailer): es hate de nicho, no
+  prisión de recursos amplia. Etiqueta stax solo si además restringe recursos
+  generales.
+- Multi-etiqueta como siempre: Cataclysm = stax|board_wipe; Esper Sentinel =
+  stax|card_draw; una pieza de stax estrictamente tribal añade `synergy`.
 
 ## synergy
 

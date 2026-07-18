@@ -64,7 +64,7 @@ def test_merge_batch_conflicting_labels_is_an_error(tmp_path: Path) -> None:
 
 
 def test_merge_batch_rejects_unknown_labels(tmp_path: Path) -> None:
-    bad = [{"oracle_id": "oid-x", "name": "X", "labels": ["stax"]}]
+    bad = [{"oracle_id": "oid-x", "name": "X", "labels": ["bogus"]}]
     with pytest.raises(TagStoreError, match="unknown labels"):
         merge_batch(_write_jsonl(tmp_path / "bad.jsonl", bad), tmp_path / "s.jsonl")
 
@@ -119,7 +119,7 @@ def test_add_label_rejects_unknown_label(tmp_path: Path) -> None:
     store_path = tmp_path / "llm_tags.jsonl"
     merge_batch(_write_jsonl(tmp_path / "batch.jsonl", BATCH), store_path)
     with pytest.raises(TagStoreError, match="unknown label"):
-        add_label("oid-bolt", "stax", "v3", store_path)
+        add_label("oid-bolt", "bogus", "v3", store_path)
 
 
 # ---------------------------------------------------------------- tagger

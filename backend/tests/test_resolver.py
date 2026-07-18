@@ -17,6 +17,7 @@ MIDRANGE = {
     "board_wipe": [3, 5],
     "wincons": [2, 4],
     "protection": [1, 3],
+    "stax": [0, 3],
     "synergy": 28,
 }
 
@@ -28,6 +29,7 @@ AGGRO = {
     "board_wipe": [1, 3],
     "wincons": [2, 4],
     "protection": [1, 3],
+    "stax": [0, 2],
     "synergy": 35,
 }
 
@@ -72,6 +74,7 @@ def test_no_commander_uses_default_archetype() -> None:
         "board_wipe": (3, 5),
         "wincons": (2, 4),
         "protection": (1, 3),
+        "stax": (0, 3),
         "synergy": (0, 28),
     }
 

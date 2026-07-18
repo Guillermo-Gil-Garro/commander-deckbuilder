@@ -9,7 +9,7 @@ card_draw     10  [ 8-11]    in_range
 removal       11  [ 6-11]    in_range
 board_wipe     1  [ 1- 3]    in_range
 wincons        0  [ 0- 4]    in_range
-synergy       35  [ 0-35]    in_range
+synergy       34  [ 0-35]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -93,7 +93,7 @@ synergy       35  [ 0-35]    in_range
 1x Brightstone Ritual                         score 1.42  [synergy]  relleno por score 1.42
 1x Goblin King                                score 1.38  [synergy]  relleno por score 1.38
 1x Conspicuous Snoop                          score 1.37  [synergy]  relleno por score 1.37
-1x Blood Moon                                 score 1.25  [synergy]  relleno por score 1.25
+1x Blood Moon                                 score 1.25  [stax]  relleno por score 1.25
 1x Goblin Chirurgeon                          score 1.20  [synergy]  relleno por score 1.20
 1x Muxus, Goblin Grandee                      score 1.10  [synergy]  relleno por score 1.10
 1x Krenko, Tin Street Kingpin                 score 1.09  [synergy]  relleno por score 1.09
@@ -127,19 +127,19 @@ synergy       35  [ 0-35]    in_range
 ## Maybeboard (15)
 1x Swiftfoot Boots                            score 0.72  [protection]  fuera: cuota llena en protection
 1x Gempalm Incinerator                        score 0.53  [removal]  fuera: cuota llena en removal
-1x Battle Cry Goblin                          score 0.51  [synergy]  fuera: cuota llena en synergy
+1x Battle Cry Goblin                          score 0.51  [synergy]  fuera por score 0.51
 1x Phyrexian Altar                            score 0.49  [ramp]  fuera: cuota llena en ramp
-1x Jeska's Will                               score 0.48  [synergy]  fuera: cuota llena en synergy
+1x Jeska's Will                               score 0.48  [synergy]  fuera por score 0.48
 1x Goblin Grenade                             score 0.47  [removal]  fuera: cuota llena en removal
-1x Fervor                                     score 0.47  [synergy]  fuera: cuota llena en synergy
-1x Legion Loyalist                            score 0.46  [synergy]  fuera: cuota llena en synergy
-1x Mogg War Marshal                           score 0.46  [synergy]  fuera: cuota llena en synergy
-1x Mass Hysteria                              score 0.45  [synergy]  fuera: cuota llena en synergy
-1x Beetleback Chief                           score 0.43  [synergy]  fuera: cuota llena en synergy
-1x Torch Courier                              score 0.43  [synergy]  fuera: cuota llena en synergy
-1x Throne of the God-Pharaoh                  score 0.41  [synergy]  fuera: cuota llena en synergy
-1x Rising of the Day                          score 0.41  [synergy]  fuera: cuota llena en synergy
-1x Raid Bombardment                           score 0.39  [synergy]  fuera: cuota llena en synergy
+1x Fervor                                     score 0.47  [synergy]  fuera por score 0.47
+1x Legion Loyalist                            score 0.46  [synergy]  fuera por score 0.46
+1x Mogg War Marshal                           score 0.46  [synergy]  fuera por score 0.46
+1x Mass Hysteria                              score 0.45  [synergy]  fuera por score 0.45
+1x Beetleback Chief                           score 0.43  [synergy]  fuera por score 0.43
+1x Torch Courier                              score 0.43  [synergy]  fuera por score 0.43
+1x Throne of the God-Pharaoh                  score 0.41  [synergy]  fuera por score 0.41
+1x Rising of the Day                          score 0.41  [synergy]  fuera por score 0.41
+1x Raid Bombardment                           score 0.39  [synergy]  fuera por score 0.39
 
 ## Cartas nuevas (arranque en frío) (5)
 # Lista 'New Cards' de EDHREC que no entró al mainboard; el score

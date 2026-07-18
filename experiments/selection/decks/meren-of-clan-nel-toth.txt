@@ -17,14 +17,15 @@ synergy       27  [ 0-30]    in_range
 ## Mainboard (99)
 
 ### lands (34)
+1x Verdant Catacombs                          score 1.36  [lands]  tierra recomendada, score 1.36
 1x Phyrexian Tower                            score 1.18  [lands]  tierra recomendada, score 1.18
 1x Overgrown Tomb                             score 1.15  [lands]  tierra recomendada, score 1.15
 1x Command Tower                              score 1.01  [lands]  tierra recomendada, score 1.01
-1x Verdant Catacombs                          score 0.96  [lands]  tierra recomendada, score 0.96
 1x High Market                                score 0.90  [lands]  tierra recomendada, score 0.90
 1x Undergrowth Stadium                        score 0.88  [lands]  tierra recomendada, score 0.88
 1x Llanowar Wastes                            score 0.85  [lands]  tierra recomendada, score 0.85
 1x Urborg, Tomb of Yawgmoth                   score 0.84  [lands]  tierra recomendada, score 0.84
+1x Bayou                                      score 0.82  [lands]  tierra recomendada, score 0.82
 1x Woodland Cemetery                          score 0.78  [lands]  tierra recomendada, score 0.78
 1x Nurturing Peatland                         score 0.64  [lands]  tierra recomendada, score 0.64
 1x Underground Mortuary                       score 0.64  [lands]  tierra recomendada, score 0.64
@@ -37,7 +38,6 @@ synergy       27  [ 0-30]    in_range
 1x Ancient Tomb                               score 0.48  [lands/ramp]  tierra recomendada, score 0.48
 1x Takenuma, Abandoned Mire                   score 0.46  [lands]  tierra recomendada, score 0.46
 1x Bojuka Bog                                 score 0.46  [lands]  tierra recomendada, score 0.46
-1x Bayou                                      score 0.42  [lands]  tierra recomendada, score 0.42
 1x Blooming Marsh                             score 0.41  [lands]  tierra recomendada, score 0.41
 1x Windswept Heath                            score 0.41  [lands]  tierra recomendada, score 0.41
 1x Wooded Foothills                           score 0.41  [lands]  tierra recomendada, score 0.41
@@ -85,7 +85,7 @@ synergy       27  [ 0-30]    in_range
 1x Grave Pact                                 score 0.72  [removal]  removal (cuota), score 0.72
 1x Deadly Rollick                             score 0.69  [removal]  removal (cuota), score 0.69
 1x Cankerbloom                                score 0.66  [removal]  relleno por score 0.66
-1x Sheoldred, Whispering One                  score 0.65  [removal]  relleno por score 0.65
+1x Sheoldred, Whispering One                  score 0.65  [removal/stax]  relleno por score 0.65
 1x Abrupt Decay                               score 0.59  [removal]  relleno por score 0.59
 1x Walking Ballista                           score 0.59  [removal]  relleno por score 0.59
 1x Fleshbag Marauder                          score 0.57  [removal]  relleno por score 0.57
@@ -133,7 +133,7 @@ synergy       27  [ 0-30]    in_range
 1x Reclamation Sage                           score 0.56  [removal]  fuera: cuota llena en removal
 1x Ravenous Chupacabra                        score 0.53  [removal]  fuera: cuota llena en removal
 1x Boseiju, Who Endures                       score 0.50  [lands/removal]  fuera por score 0.50
-1x Dictate of Erebos                          score 0.50  [removal]  fuera: cuota llena en removal
+1x Dictate of Erebos                          score 0.50  [removal/stax]  fuera por score 0.50
 1x Necromancy                                 score 0.47  [synergy]  fuera por score 0.47
 1x Twilight Diviner                           score 0.47  [synergy]  fuera por score 0.47
 1x Syr Konrad, the Grim                       score 0.47  [synergy]  fuera por score 0.47

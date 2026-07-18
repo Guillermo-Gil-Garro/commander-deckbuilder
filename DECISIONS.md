@@ -414,6 +414,21 @@ real: llamadas LLM cacheadas sobre ~5.283 cartas + revisar la cola de auditoría
 rindió 168 etiquetas, stax sería de escala parecida); (4) bandas de stax por arquetipo +
 regenerar; (5) tests. Moderado, no gratis: es una campaña de tagging, no una línea.
 
+**EJECUTADO 2026-07-18** — campaña `stax` completa (rúbrica v4). Definición: negación
+PERSISTENTE de recursos/acciones ajenas (prisión), no interacción puntual. Contrahechizos
+siguen siendo `removal`; Rhystic/Smothering Tithe siguen ramp/draw (te dan recurso, no
+restringen). Scanner `find_stax_candidates.py` (recall-oriented; enters-tapped filtra
+taplands propias por is_land_card): 410 candidatos del store. Etiquetado en paralelo (6+1
+subagentes con la rúbrica embebida) → **118 etiquetas stax** aplicadas al store vía
+`add_label` (v4). Bandas por arquetipo: min 0 en todos salvo el arquetipo `stax` (suelo
+que fuerza la identidad de prisión). **Calibración con datos**: suelo del arquetipo stax
+puesto en **3** (no 4) porque el pool EDHREC B4 de Winter solo reúne 3 piezas; Thalia+
+Gitrog llega a 5. Ambos OPTIMAL stage=none tras el ajuste. Grand Arbiter/Oloro cuentan 5,
+Baral 3 (control tolera stax, no lo exige). Las 8 relajaciones que quedan en el barrido de
+61 son por wincons/board_wipe/card_draw (limitaciones preexistentes de pool), NO por stax
+(`add_label` solo añade etiquetas, nunca reduce otras cuentas; stax min 0 en esos
+arquetipos). RUBRIC_VERSION v3→v4; CATEGORIES ahora 9 (stax entre protection y synergy).
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).
