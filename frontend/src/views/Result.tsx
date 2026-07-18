@@ -10,12 +10,10 @@ import {
   ArrowRightLeft,
   Crown,
   Hand,
-  HelpCircle,
   Info,
   Loader2,
   Minus,
   Plus,
-  Search,
   Sparkles,
   TriangleAlert,
   X,
@@ -29,10 +27,8 @@ import { OpeningHand } from './OpeningHand';
 import {
   auditDeck,
   fetchMaybeboard,
-  searchCardNames,
   sequentialCandidates,
   sequentialValidate,
-  whyNotCard,
   type AuditFlag,
   type AuditReplacement,
   type AuditResult,
@@ -46,7 +42,6 @@ import {
   type Notice,
   type SwapCandidates,
   type SwapValidation,
-  type WhyNotResult,
 } from '../api';
 
 // Human-readable, honest explanation of each relaxation stage. Surfacing this
@@ -140,7 +135,7 @@ export function Result({
           {swapsEnabled && req ? (
             <SwapWorkspace deck={deck} deckRefs={deckRefs} req={req} onSwap={swap} />
           ) : (
-            <DeckView result={deck} whyNot={<WhyNotWidget result={deck} />} />
+            <DeckView result={deck} />
           )}
           {swapsEnabled && req && (
             <AuditPanel
@@ -301,7 +296,6 @@ function SwapWorkspace({
     <>
       <DeckView
         result={deck}
-        whyNot={<WhyNotWidget result={deck} />}
         onCardClick={startSwap}
         activeOutName={outName}
       />
@@ -908,179 +902,6 @@ function CurvePanel({ curve }: { curve: Record<string, CurveRow> }) {
         </div>
       </div>
     </Panel>
-  );
-}
-
-function WhyNotWidget({ result }: { result: BuildResult }) {
-  const [name, setName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [answer, setAnswer] = useState<WhyNotResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  // Typeahead state.
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
-  const [highlight, setHighlight] = useState(0);
-  const boxRef = useRef<HTMLDivElement>(null);
-  // Tracks the query a chosen suggestion came from, so picking it doesn't
-  // immediately re-trigger the fetch effect and re-open the dropdown.
-  const chosenRef = useRef<string | null>(null);
-
-  // Debounced suggestion fetch. Stale responses are dropped via `active`.
-  useEffect(() => {
-    const query = name.trim();
-    if (chosenRef.current === name) return;
-    if (!query) {
-      setSuggestions([]);
-      setOpen(false);
-      return;
-    }
-    let active = true;
-    const timer = setTimeout(() => {
-      searchCardNames(query, 20)
-        .then((names) => {
-          if (!active) return;
-          setSuggestions(names);
-          setOpen(names.length > 0);
-          setHighlight(0);
-        })
-        .catch(() => {
-          if (active) setSuggestions([]);
-        });
-    }, 160);
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [name]);
-
-  // Close the dropdown on outside click.
-  useEffect(() => {
-    function onClick(event: MouseEvent) {
-      if (boxRef.current && !boxRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', onClick);
-    return () => document.removeEventListener('mousedown', onClick);
-  }, []);
-
-  function choose(card: string) {
-    chosenRef.current = card;
-    setName(card);
-    setOpen(false);
-    setSuggestions([]);
-    void ask(card);
-  }
-
-  async function ask(cardName?: string) {
-    const card = (cardName ?? name).trim();
-    if (!card) return;
-    setLoading(true);
-    setError(null);
-    setAnswer(null);
-    setOpen(false);
-    try {
-      setAnswer(await whyNotCard(result.commander_name, card));
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (!open || suggestions.length === 0) {
-      if (event.key === 'Enter') void ask();
-      return;
-    }
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      setHighlight((h) => (h + 1) % suggestions.length);
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      setHighlight((h) => (h - 1 + suggestions.length) % suggestions.length);
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-      choose(suggestions[highlight]);
-    } else if (event.key === 'Escape') {
-      setOpen(false);
-    }
-  }
-
-  return (
-    <div className="mb-5 rounded-lg border border-black/10 bg-white/60 p-3.5 dark:border-white/10 dark:bg-zinc-950/30">
-      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-        <HelpCircle className="h-4 w-4 text-zinc-400" />
-        ¿Por qué no esta carta?
-      </div>
-      <div className="flex flex-wrap items-stretch gap-2">
-        <div ref={boxRef} className="relative min-w-[240px] flex-1">
-          <span className="accent-focus flex items-center gap-2 rounded-lg border border-black/10 bg-white px-3.5 py-2.5 text-zinc-950 transition dark:border-white/10 dark:bg-zinc-950/70 dark:text-zinc-100">
-            <Search className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" />
-            <input
-              value={name}
-              onChange={(event) => {
-                chosenRef.current = null;
-                setName(event.target.value);
-              }}
-              onFocus={() => suggestions.length > 0 && setOpen(true)}
-              onKeyDown={onKeyDown}
-              placeholder="Escribe el nombre de una carta…"
-              role="combobox"
-              aria-expanded={open}
-              aria-autocomplete="list"
-              className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
-            />
-          </span>
-          {open && suggestions.length > 0 && (
-            <ul
-              role="listbox"
-              className="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-black/10 bg-white py-1 shadow-2xl dark:border-white/10 dark:bg-zinc-900"
-            >
-              {suggestions.map((card, index) => (
-                <li key={card} role="option" aria-selected={index === highlight}>
-                  <button
-                    type="button"
-                    onMouseEnter={() => setHighlight(index)}
-                    onMouseDown={(event) => {
-                      // mousedown so it fires before the input blur closes the list.
-                      event.preventDefault();
-                      choose(card);
-                    }}
-                    className={`block w-full px-3.5 py-1.5 text-left text-sm ${
-                      index === highlight
-                        ? 'accent-soft-bg accent-text'
-                        : 'text-zinc-700 dark:text-zinc-200'
-                    }`}
-                  >
-                    {card}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <Button variant="secondary" onClick={() => void ask()} disabled={loading}>
-          {loading ? 'Consultando…' : 'Consultar'}
-        </Button>
-      </div>
-      {error && (
-        <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">{error}</p>
-      )}
-      {answer && (
-        <p
-          className={`mt-2 text-sm ${
-            answer.eligible
-              ? 'text-emerald-700 dark:text-emerald-300'
-              : 'text-amber-700 dark:text-amber-300'
-          }`}
-        >
-          <span className="font-semibold">{answer.card_name}:</span>{' '}
-          {answer.reason}
-        </p>
-      )}
-    </div>
   );
 }
 

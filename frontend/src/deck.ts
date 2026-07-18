@@ -28,11 +28,29 @@ const LANDS_CATEGORY = 'lands';
 const CURVE_TOP_BUCKET = 7;
 
 /** A card plus what the API's response shape told us about it: whether it came
- *  from `basic_lands[]`. Carried explicitly because `count` cannot say so. */
-export type ViewCard = DeckCard & { basic: boolean };
+ *  from `basic_lands[]`, and whether it is the commander (shown in its own group,
+ *  never swappable). Carried explicitly because `count` cannot say so. */
+export type ViewCard = DeckCard & { basic: boolean; commander?: boolean };
 
 export function toViewCard(card: DeckCard, basic = false): ViewCard {
   return { ...card, basic };
+}
+
+/** The commander as a view card so it can live inside the deck in its own group.
+ *  `CardView` carries no score/categories/count — a commander has no EDHREC
+ *  synergy score with itself and is not a quota slot, so those are neutral. */
+export function commanderCard(deck: BuildResult): ViewCard {
+  return {
+    ...deck.commander,
+    price_usd: null,
+    categories: [],
+    count: 1,
+    slot: 'commander',
+    reason: '',
+    score: null,
+    basic: false,
+    commander: true,
+  };
 }
 
 /** The whole deck as view cards: non-basics then basics, each tagged. */

@@ -3,32 +3,12 @@
 // the export delegated to the API.
 
 import { useMemo, useState, type ReactNode } from 'react';
-import {
-  Download,
-  Grid2x2,
-  LayoutList,
-  Loader2,
-  Printer,
-  Sparkles,
-  Tags,
-} from 'lucide-react';
+import { Grid2x2, LayoutList, Loader2, Printer, Tags } from 'lucide-react';
 import { Button, Panel } from './ui';
-import {
-  CardFlipButton,
-  CardImage,
-  CardTile,
-  ManaCost,
-  ScoreBadge,
-  SCORE_TOOLTIP,
-} from './cards';
+import { CardTile, ManaCost, ScoreBadge } from './cards';
 import { categoryLabel } from '../labels';
-import { deckCards, type ViewCard } from '../deck';
-import {
-  exportDeck,
-  exportProxyPdf,
-  type BuildResult,
-  type CategoryRow,
-} from '../api';
+import { commanderCard, deckCards, type ViewCard } from '../deck';
+import { exportProxyPdf, type BuildResult, type CategoryRow } from '../api';
 
 // Spanish labels for the primary card type (derived from type_line), MTGGoldfish-style.
 const TYPE_LABELS: Record<string, string> = {
@@ -80,7 +60,7 @@ function primaryType(typeLine: string | null): string {
   return 'Other';
 }
 
-// Our eight categories, in the order labels.ts declares them. One list serves as
+// Our nine categories, in the order labels.ts declares them. One list serves as
 // both the assignment priority and the display order.
 //
 // `lands` FIRST is deliberate and differs from the TFM (which sank it): a land
@@ -96,10 +76,12 @@ const CATEGORY_PRIORITY = [
   'board_wipe',
   'wincons',
   'protection',
+  'stax',
   'synergy',
 ] as const;
 
 const UNCATEGORIZED = '__uncategorized__';
+const COMMANDER_GROUP = '__commander__';
 
 function primaryCategory(categories: string[]): string {
   for (const c of CATEGORY_PRIORITY) {
@@ -111,43 +93,6 @@ function primaryCategory(categories: string[]): string {
 function categoryGroupLabel(code: string): string {
   if (code === UNCATEGORIZED) return 'Sin categoría';
   return categoryLabel(code);
-}
-
-// Download the decklist the API renders. The Archidekt format lives in the
-// backend: re-implementing it here would be a second copy to keep in sync.
-// `slot` is the section the player is actually looking at, which is what
-// /export asks the client for — hence primaryCategory, not the build's `slot`
-// (after a swap the two can disagree, and the player's view wins).
-async function downloadDecklist(result: BuildResult): Promise<void> {
-  const cards = deckCards(result);
-  // `maybeboard`/`new_cards` are the build's original lists and do not move when
-  // the player swaps. A card swapped IN would otherwise be exported twice — once
-  // in the deck and again in the sideboard — so drop what is already in the deck.
-  const inDeck = new Set(cards.map((card) => card.name));
-  const text = await exportDeck({
-    commander: result.commander_name,
-    deck: cards.map((card) => ({
-      name: card.name,
-      count: card.count,
-      slot: primaryCategory(card.categories),
-    })),
-    maybeboard: result.maybeboard
-      .filter((card) => !inDeck.has(card.name))
-      .map((card) => ({ name: card.name })),
-    new_cards: result.new_cards
-      .filter((card) => !inDeck.has(card.name))
-      .map((card) => ({ name: card.name })),
-  });
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  const slug = result.commander_name.replace(/[^a-z0-9]+/gi, '_').toLowerCase();
-  link.href = url;
-  link.download = `${slug}_decklist.txt`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
 }
 
 export function CompositionPanel({ result }: { result: BuildResult }) {
@@ -261,7 +206,13 @@ function groupCount(cards: ViewCard[]): number {
 // NOTE: both axes are a PARTITION of the 99 — each card lands in exactly one
 // group, so the headers sum to 99. That is why the category headers do NOT
 // match the composition panel, which counts a card in every category it has.
-function groupCards(cards: ViewCard[], sort: SortAxis): CardGroup[] {
+// The commander is prepended as its own group in BOTH axes: it is the deck's
+// centrepiece, not a spell type or a quota slot.
+function groupCards(
+  cards: ViewCard[],
+  sort: SortAxis,
+  commander: ViewCard,
+): CardGroup[] {
   const sorted = [...cards].sort(
     (a, b) => (b.score ?? 0) - (a.score ?? 0) || a.name.localeCompare(b.name),
   );
@@ -276,17 +227,29 @@ function groupCards(cards: ViewCard[], sort: SortAxis): CardGroup[] {
     else buckets.set(key, [card]);
   }
 
+  const commanderGroup: CardGroup = {
+    key: COMMANDER_GROUP,
+    label: 'Comandante',
+    cards: [commander],
+  };
+
   if (sort === 'type') {
-    return TYPE_ORDER.filter((t) => buckets.has(t)).map((t) => ({
-      key: t,
-      label: TYPE_LABELS[t] ?? t,
-      cards: buckets.get(t)!,
-    }));
+    return [
+      commanderGroup,
+      ...TYPE_ORDER.filter((t) => buckets.has(t)).map((t) => ({
+        key: t,
+        label: TYPE_LABELS[t] ?? t,
+        cards: buckets.get(t)!,
+      })),
+    ];
   }
   const order = [...CATEGORY_PRIORITY, UNCATEGORIZED];
-  return order
-    .filter((c) => buckets.has(c))
-    .map((c) => ({ key: c, label: categoryGroupLabel(c), cards: buckets.get(c)! }));
+  return [
+    commanderGroup,
+    ...order
+      .filter((c) => buckets.has(c))
+      .map((c) => ({ key: c, label: categoryGroupLabel(c), cards: buckets.get(c)! })),
+  ];
 }
 
 function ToggleGroup<T extends string>({
@@ -331,14 +294,11 @@ function ToggleGroup<T extends string>({
 
 export function DeckView({
   result,
-  whyNot,
   showExport = true,
   onCardClick,
   activeOutName = null,
 }: {
   result: BuildResult;
-  // Optional Result-only widget rendered above the views.
-  whyNot?: ReactNode;
   showExport?: boolean;
   // Swap entry point: when set, non-basic deck cards become clickable.
   // `activeOutName` is the card currently marked to leave (highlighted red).
@@ -347,23 +307,18 @@ export function DeckView({
 }) {
   const [sort, setSort] = useState<SortAxis>('type');
   const [display, setDisplay] = useState<DisplayAxis>('list');
-  const [exportError, setExportError] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
-  const groups = useMemo(() => groupCards(deckCards(result), sort), [result, sort]);
-  const basicsTotal = result.basic_lands.reduce((sum, b) => sum + b.count, 0);
-
-  async function onExport() {
-    setExportError(null);
-    try {
-      await downloadDecklist(result);
-    } catch (error: unknown) {
-      setExportError(
-        error instanceof Error ? error.message : 'Error desconocido',
-      );
-    }
-  }
+  const groups = useMemo(
+    () => groupCards(deckCards(result), sort, commanderCard(result)),
+    [result, sort],
+  );
+  // Commander + the 99 = a legal Commander deck.
+  const totalCards =
+    result.nonbasic_cards.reduce((sum, c) => sum + c.count, 0) +
+    result.basic_lands.reduce((sum, b) => sum + b.count, 0) +
+    1;
 
   // The proxy sheet: the commander, every non-basic card (each once) and the
   // basic lands by their count (Guille prints the whole deck). The backend swaps
@@ -394,14 +349,13 @@ export function DeckView({
     <Panel>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-lg font-semibold">
-          Mazo · {result.nonbasic_cards.length} no-básicas
-          {basicsTotal > 0 && ` + ${basicsTotal} básicas`}
+          Mazo · {totalCards} cartas
+          <span className="ml-2 text-sm font-normal text-zinc-500 dark:text-zinc-400">
+            comandante + 99
+          </span>
         </h3>
         {showExport && (
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="secondary" onClick={() => void onExport()}>
-              <Download className="h-4 w-4" /> Exportar
-            </Button>
             <Button
               variant="secondary"
               onClick={() => void onExportPdf()}
@@ -420,11 +374,6 @@ export function DeckView({
           </div>
         )}
       </div>
-      {exportError && (
-        <p className="mb-4 text-sm text-rose-700 dark:text-rose-300">
-          No se pudo exportar ({exportError}).
-        </p>
-      )}
       {pdfError && (
         <p className="mb-4 text-sm text-rose-700 dark:text-rose-300">
           No se pudo generar el PDF ({pdfError}).
@@ -460,12 +409,7 @@ export function DeckView({
             ]}
           />
         </div>
-        <span className="ml-auto text-xs text-zinc-500 dark:text-zinc-400">
-          Score de EDHREC (sinergia e inclusión), no calidad
-        </span>
       </div>
-
-      {whyNot}
 
       {display === 'list' ? (
         <ListView
@@ -473,14 +417,8 @@ export function DeckView({
           onCardClick={onCardClick}
           activeOutName={activeOutName}
         />
-      ) : sort === 'type' ? (
-        <VisualGridView
-          groups={groups}
-          onCardClick={onCardClick}
-          activeOutName={activeOutName}
-        />
       ) : (
-        <VisualStacksView
+        <VisualGridView
           groups={groups}
           onCardClick={onCardClick}
           activeOutName={activeOutName}
@@ -500,7 +438,7 @@ type SwapProps = {
 // The TFM tested `count === undefined`; our API sets `count` on every card, so
 // the flag from `basic_lands[]` is the test (see deck.ts).
 function isSwapSource(card: ViewCard, onCardClick?: (card: ViewCard) => void): boolean {
-  return onCardClick !== undefined && !card.basic;
+  return onCardClick !== undefined && !card.basic && !card.commander;
 }
 
 // ── LIST view (MTGGoldfish-style): rows grouped by section, image on hover ──
@@ -611,134 +549,6 @@ function SwapTileButton({
   );
 }
 
-// ── VISUAL + CATEGORY (Archidekt-style stacks): overlapped columns, hover-cascade ──
-function VisualStacksView({
-  groups,
-  onCardClick,
-  activeOutName,
-}: { groups: CardGroup[] } & SwapProps) {
-  return (
-    <div className="grid grid-cols-2 gap-x-2 gap-y-7 sm:grid-cols-3 lg:grid-cols-5">
-      {groups.map((group) => (
-        <StackColumn
-          key={group.key}
-          group={group}
-          onCardClick={onCardClick}
-          activeOutName={activeOutName}
-        />
-      ))}
-    </div>
-  );
-}
-
-// Archidekt-style tight stack. STACK_PEEK is how much of each card shows while
-// stacked: just its TITLE STRIP (name top-left, mana cost top-right). An MTG
-// modern frame's title bar is ~9% of the card height.
-const STACK_CARD_W = 280;
-const STACK_CARD_H = Math.round((STACK_CARD_W * 7) / 5);
-const STACK_PEEK = Math.round(STACK_CARD_H * 0.099);
-
-function StackColumn({
-  group,
-  onCardClick,
-  activeOutName,
-}: { group: CardGroup } & SwapProps) {
-  const [hovered, setHovered] = useState<number | null>(null);
-  // Which cards are showing their back face, by oracle_id (double-faced only).
-  const [flipped, setFlipped] = useState<Set<string>>(new Set());
-  function toggleFlip(oracleId: string) {
-    setFlipped((current) => {
-      const next = new Set(current);
-      if (next.has(oracleId)) next.delete(oracleId);
-      else next.add(oracleId);
-      return next;
-    });
-  }
-  // When a card is hovered, every card BELOW it cascades down by the revealed
-  // amount so the hovered card is shown in full (Archidekt behaviour).
-  const reveal = STACK_CARD_H - STACK_PEEK;
-  const totalHeight =
-    group.cards.length > 0
-      ? STACK_PEEK * (group.cards.length - 1) +
-        STACK_CARD_H +
-        (hovered !== null ? reveal : 0)
-      : 0;
-
-  return (
-    <div className="mx-auto w-full" style={{ maxWidth: STACK_CARD_W }}>
-      <div className="mb-2 flex items-baseline gap-2">
-        <h4 className="truncate text-lg font-extrabold tracking-tight accent-text">
-          {group.label}
-        </h4>
-        <span className="text-sm tabular-nums text-zinc-400 dark:text-zinc-500">
-          {groupCount(group.cards)}
-        </span>
-      </div>
-      <div className="relative" style={{ height: totalHeight }}>
-        {group.cards.map((card, index) => {
-          const shifted = hovered !== null && index > hovered;
-          const top = STACK_PEEK * index + (shifted ? reveal : 0);
-          const isHovered = hovered === index;
-          const clickable = isSwapSource(card, onCardClick);
-          const active = card.name === activeOutName;
-          return (
-            <div
-              key={card.oracle_id}
-              className={`absolute left-0 right-0 transition-[top] duration-300 ease-out ${
-                clickable ? 'cursor-pointer' : ''
-              }`}
-              style={{ top, zIndex: isHovered ? 50 : index }}
-              onMouseEnter={() => setHovered(index)}
-              onMouseLeave={() => setHovered((h) => (h === index ? null : h))}
-              onClick={clickable ? () => onCardClick!(card) : undefined}
-            >
-              <div
-                className={`relative overflow-hidden rounded-lg ring-1 transition ${
-                  active
-                    ? 'shadow-2xl ring-2 ring-rose-500'
-                    : isHovered
-                      ? 'accent-ring shadow-2xl'
-                      : 'ring-black/10 dark:ring-white/10'
-                }`}
-              >
-                <CardImage
-                  card={card}
-                  showBack={flipped.has(card.oracle_id)}
-                  className="aspect-[5/7] w-full object-cover"
-                />
-                {isHovered && Boolean(card.image_uri_back_normal) && (
-                  <CardFlipButton
-                    showBack={flipped.has(card.oracle_id)}
-                    onToggle={() => toggleFlip(card.oracle_id)}
-                  />
-                )}
-                {card.basic && (
-                  <span className="pointer-events-none absolute bottom-2 right-2 rounded-lg bg-black/80 px-3 py-1.5 text-2xl font-extrabold tabular-nums text-white shadow-lg ring-1 ring-white/25">
-                    ×{card.count}
-                  </span>
-                )}
-                {/* Score stays subtle: only on the fully-shown (hovered) card, in
-                    the BOTTOM corner so it never covers a title strip. */}
-                {isHovered && !card.basic && card.score !== null && (
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-end gap-1 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-1.5 pb-1 pt-5 text-[11px] font-semibold tabular-nums text-white">
-                    <span
-                      title={SCORE_TOOLTIP}
-                      className="inline-flex items-center gap-0.5 opacity-90"
-                    >
-                      <Sparkles className="h-2.5 w-2.5 opacity-70" aria-hidden="true" />
-                      {card.score.toFixed(2)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 function CardRow({
   card,
   onCardClick,
@@ -749,8 +559,8 @@ function CardRow({
   active?: boolean;
 }) {
   // Basic land: just "×N name" + hover art, no score/categories (a basic has no
-  // EDHREC score — the API sends null).
-  const clickable = onCardClick !== undefined && !card.basic;
+  // EDHREC score — the API sends null). The commander is never a swap source.
+  const clickable = onCardClick !== undefined && !card.basic && !card.commander;
   return (
     <div
       role={clickable ? 'button' : undefined}

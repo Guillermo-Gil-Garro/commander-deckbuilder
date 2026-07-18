@@ -6,7 +6,7 @@
 
 import type { DialPosition } from './api';
 
-/** The eight functional categories the quotas are expressed in. */
+/** The nine functional categories the quotas are expressed in. */
 export const CATEGORY_LABELS: Record<string, string> = {
   lands: 'Tierras',
   ramp: 'Ramp',
@@ -15,6 +15,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   board_wipe: 'Boardwipe',
   wincons: 'Wincons',
   protection: 'Protección',
+  stax: 'Stax',
   synergy: 'Sinergia',
 };
 
@@ -31,6 +32,7 @@ export const CATEGORY_HELP: Record<string, string> = {
   wincons: 'Cartas que cierran la partida.',
   protection:
     'Proteger tus permanentes o a ti (hexproof, indestructible, etc.).',
+  stax: 'Prisión: negar recursos o acciones del rival (impuestos, no destapar, etc.).',
   synergy: 'Cartas afines al comandante que no caen en los roles anteriores.',
 };
 
@@ -97,13 +99,18 @@ export const ARCHETYPE_LABELS: Record<string, string> = {
   lands_matter: 'Lands matter',
   enchantress: 'Enchantress',
   voltron: 'Voltron',
+  aristocrats: 'Aristócratas',
+  mill: 'Mill',
+  big_mana: 'Big mana',
+  stax: 'Stax',
+  artifacts: 'Artefactos',
 };
 
 export function archetypeLabel(code: string): string {
   return ARCHETYPE_LABELS[code] ?? code;
 }
 
-/** The eight archetypes, ordered for the filter row. */
+/** The archetypes (quotas.yaml), ordered for the filter row. */
 export const ARCHETYPE_OPTIONS: string[] = [
   'aggro',
   'control',
@@ -113,4 +120,9 @@ export const ARCHETYPE_OPTIONS: string[] = [
   'lands_matter',
   'enchantress',
   'voltron',
+  'aristocrats',
+  'mill',
+  'big_mana',
+  'stax',
+  'artifacts',
 ];
