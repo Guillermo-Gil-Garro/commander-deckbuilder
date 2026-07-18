@@ -62,7 +62,7 @@ export function ArtPicker({
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  const lowresOnly = data !== null && data.prints.every((p) => !p.highres);
+  const hasLowres = data !== null && data.prints.some((p) => !p.highres);
 
   return (
     <div
@@ -81,9 +81,8 @@ export function ArtPicker({
             <h3 className="text-lg font-semibold">{cardName}</h3>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
               Elige la edición a mostrar e imprimir.
-              {lowresOnly
-                ? ' Esta carta no tiene ningún escaneo en alta resolución; se muestra lo que hay.'
-                : ' Solo se listan ediciones en alta resolución.'}
+              {hasLowres &&
+                ' Las marcadas «baja res» son escaneos reales pero blandos.'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -135,8 +134,15 @@ export function ArtPicker({
                       loading="lazy"
                       className="aspect-[5/7] w-full object-cover"
                     />
-                    <span className="absolute left-1.5 top-1.5 rounded bg-black/75 px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
-                      {print.lang}
+                    <span className="absolute left-1.5 top-1.5 flex items-center gap-1">
+                      <span className="rounded bg-black/75 px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
+                        {print.lang}
+                      </span>
+                      {!print.highres && (
+                        <span className="rounded bg-amber-500/90 px-1.5 py-0.5 text-[0.65rem] font-bold text-black ring-1 ring-white/25">
+                          baja res
+                        </span>
+                      )}
                     </span>
                     {active && (
                       <span className="absolute bottom-1.5 right-1.5 rounded bg-black/75 px-1.5 py-0.5 text-[0.65rem] font-semibold text-white ring-1 ring-white/25">

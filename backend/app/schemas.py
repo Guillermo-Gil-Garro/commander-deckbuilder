@@ -904,10 +904,10 @@ class ProxyPdfRequest(BaseModel):
 class CardPrintView(BaseModel):
     """One printing of a card, as the art/language picker consumes it.
 
-    ``highres`` is Scryfall's own ``image_status == "highres_scan"`` verdict.
-    The picker shows only high-res printings unless a card has none at all —
-    that filtering happens server-side (see ``service.card_prints``), so what
-    arrives here is already the list to display.
+    Every row is a real scan (placeholder/missing printings are dropped at the
+    fetcher). ``image_status`` is Scryfall's own quality verdict —
+    ``highres_scan`` or ``lowres`` — and ``highres`` is its boolean shorthand;
+    the picker badges low-res rows so choosing one is informed, never blind.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -918,6 +918,7 @@ class CardPrintView(BaseModel):
     collector_number: str
     lang: str
     released_at: str
+    image_status: str
     highres: bool
     image_uri_normal: str
     image_uri_back_normal: str

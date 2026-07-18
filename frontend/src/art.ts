@@ -15,7 +15,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchPrintDefaults, type BuildResult, type CardPrint } from './api';
 
 const MANUAL_KEY = 'art-overrides-v1';
-const DEFAULTS_KEY = 'print-defaults-v1';
+// v2 (2026-07-18): the default policy started admitting low-res Spanish scans,
+// so v1's cached answers (null where only soft Spanish existed) are stale.
+const DEFAULTS_KEY = 'print-defaults-v2';
 /** PrintDefaultsRequest cap, mirrored: the backend rejects bigger batches. */
 const CHUNK = 25;
 

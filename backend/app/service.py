@@ -1409,13 +1409,18 @@ def _default_print(
 ) -> CardPrintView | None:
     """The printing the default-art policy picks, or None to keep the pool's.
 
-    Policy (Guille, 2026-07-18): the newest **Spanish high-res** scan wins;
-    without one, keep the pool's English art if that printing is itself
-    high-res, else fall back to the newest **English high-res**. ``prints``
-    arrives newest-first from the fetcher, so "first match" is "newest".
+    Policy (Guille, 2026-07-18; low-res Spanish admitted same day — the
+    high-res-only cut left almost no Spanish cards): the newest **Spanish
+    high-res** scan wins; else the newest **Spanish low-res** (a real scan,
+    just soft — placeholders never got this far); else keep the pool's English
+    art if that printing is itself high-res, else the newest **English
+    high-res**. ``prints`` arrives newest-first, so "first match" is "newest".
     """
     for row in prints:
         if row.lang == "es" and row.highres:
+            return row
+    for row in prints:
+        if row.lang == "es":
             return row
     pool_row = next((r for r in prints if r.scryfall_id == pool_scryfall_id), None)
     if pool_row is not None and pool_row.highres:
@@ -1427,22 +1432,20 @@ def _default_print(
 
 
 def card_prints(state: AppState, oracle_id: str) -> CardPrintsResponse:
-    """The printings gallery for one card, high-res-only when possible.
+    """The printings gallery for one card: every real scan, quality labelled.
 
-    Only high-res printings are listed unless the card has none at all —
-    then everything Scryfall has is shown so the picker is never empty for a
-    card that does have *some* art. Blocking (Scryfall on a cold cache): call
-    through a threadpool.
+    All rows are genuine scans (the fetcher drops placeholder/missing
+    printings); low-res ones carry ``highres=False`` and the picker badges
+    them, so choosing soft art is a visible decision rather than a trap.
+    Blocking (Scryfall on a cold cache): call through a threadpool.
     """
     card = _card_by_oracle_id(state, oracle_id)
     rows = _print_rows(oracle_id)
-    highres = [row for row in rows if row.highres]
-    shown = highres if highres else rows
     default = _default_print(rows, card.get("scryfall_id") or "")
     return CardPrintsResponse(
         oracle_id=oracle_id,
         name=card["name"],
-        prints=shown,
+        prints=rows,
         default_scryfall_id=default.scryfall_id if default else None,
     )
 

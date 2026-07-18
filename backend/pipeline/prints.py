@@ -75,12 +75,22 @@ def _face_images(card: dict[str, Any]) -> tuple[str, str]:
     return front, back
 
 
+# Real scans, by Scryfall's own verdict. `placeholder`/`missing` printings are
+# stock filler images, not the card: they are dropped at normalization so no
+# downstream policy can ever pick one.
+_REAL_SCANS = ("highres_scan", "lowres")
+
+
 def _normalize(card: dict[str, Any]) -> dict[str, Any] | None:
     """One Scryfall card object -> the picker's printing row, or None to skip.
 
-    A printing without a front image cannot be shown or printed, so it is
-    dropped here rather than handled downstream.
+    A printing without a front image cannot be shown or printed, and a
+    placeholder "scan" is not the card's art at all — both are dropped here
+    rather than handled downstream.
     """
+    image_status = card.get("image_status") or ""
+    if image_status not in _REAL_SCANS:
+        return None
     front, back = _face_images(card)
     if not front:
         return None
@@ -91,9 +101,8 @@ def _normalize(card: dict[str, Any]) -> dict[str, Any] | None:
         "collector_number": card.get("collector_number") or "",
         "lang": card.get("lang") or "en",
         "released_at": card.get("released_at") or "",
-        # highres_scan is Scryfall's own verdict; everything else (lowres,
-        # placeholder) is what Guille wants hidden unless nothing better exists.
-        "highres": card.get("image_status") == "highres_scan",
+        "image_status": image_status,
+        "highres": image_status == "highres_scan",
         "image_uri_normal": front,
         "image_uri_back_normal": back,
     }
@@ -155,7 +164,12 @@ def fetch_prints(oracle_id: str) -> list[dict[str, Any]]:
     cache_path = _cache_path(oracle_id)
     if cache_path.exists():
         try:
-            return json.loads(cache_path.read_text(encoding="utf-8"))
+            rows = json.loads(cache_path.read_text(encoding="utf-8"))
+            # Schema check: rows cached before `image_status` existed may hide
+            # placeholder "scans" the current policies must never pick.
+            if all("image_status" in row for row in rows):
+                return rows
+            logger.info("Prints cache %s predates image_status; refetching", cache_path)
         except (OSError, json.JSONDecodeError) as exc:
             logger.warning("Corrupt prints cache %s (%s); refetching", cache_path, exc)
 

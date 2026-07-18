@@ -253,8 +253,9 @@ export type WhyNotResult = {
   reason: string;
 };
 
-/** One printing of a card, as the art/language picker consumes it. The server
- *  already filtered the gallery (high-res only, unless a card has none). */
+/** One printing of a card, as the art/language picker consumes it. Every row
+ *  is a real scan (the backend drops placeholders); `highres: false` means a
+ *  soft (low-res) scan, which the picker badges. */
 export type CardPrint = {
   scryfall_id: string;
   set_code: string;
@@ -262,6 +263,7 @@ export type CardPrint = {
   collector_number: string;
   lang: string;
   released_at: string;
+  image_status: string;
   highres: boolean;
   image_uri_normal: string;
   image_uri_back_normal: string;

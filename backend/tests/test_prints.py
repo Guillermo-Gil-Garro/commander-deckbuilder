@@ -46,6 +46,7 @@ def _row(
         "collector_number": "1",
         "lang": lang,
         "released_at": released_at,
+        "image_status": "highres_scan" if highres else "lowres",
         "highres": highres,
         "image_uri_normal": f"https://cards.scryfall.io/normal/front/{scryfall_id}.jpg",
         "image_uri_back_normal": back,
@@ -69,25 +70,36 @@ def test_newest_spanish_highres_wins() -> None:
     assert chosen is not None and chosen.scryfall_id == "es-new"
 
 
-def test_no_spanish_and_highres_pool_art_stays() -> None:
+def test_spanish_lowres_beats_english_highres() -> None:
+    # The high-res-only cut left almost no Spanish cards (Guille 2026-07-18):
+    # a real-but-soft Spanish scan now wins over keeping the English art.
     prints = _views(_row("en-pool"), _row("es-lo", lang="es", highres=False))
+    chosen = _default_print(prints, pool_scryfall_id="en-pool")
+    assert chosen is not None and chosen.scryfall_id == "es-lo"
+
+
+def test_spanish_highres_still_beats_spanish_lowres() -> None:
+    prints = _views(
+        _row("es-lo", lang="es", highres=False, released_at="2025-06-01"),
+        _row("es-hi", lang="es", released_at="2020-01-01"),
+    )
+    chosen = _default_print(prints, pool_scryfall_id="whatever")
+    assert chosen is not None and chosen.scryfall_id == "es-hi"
+
+
+def test_no_spanish_and_highres_pool_art_stays() -> None:
+    prints = _views(_row("en-pool"), _row("en-other", released_at="2025-01-01"))
     assert _default_print(prints, pool_scryfall_id="en-pool") is None
 
 
-def test_lowres_pool_art_falls_back_to_english_highres() -> None:
-    prints = _views(
-        _row("en-hi"),
-        _row("en-pool", highres=False),
-        _row("es-lo", lang="es", highres=False),
-    )
+def test_no_spanish_and_lowres_pool_art_falls_back_to_english_highres() -> None:
+    prints = _views(_row("en-hi"), _row("en-pool", highres=False))
     chosen = _default_print(prints, pool_scryfall_id="en-pool")
     assert chosen is not None and chosen.scryfall_id == "en-hi"
 
 
-def test_nothing_highres_keeps_pool_art() -> None:
-    prints = _views(
-        _row("en-lo", highres=False), _row("es-lo", lang="es", highres=False)
-    )
+def test_nothing_highres_and_no_spanish_keeps_pool_art() -> None:
+    prints = _views(_row("en-lo", highres=False))
     assert _default_print(prints, pool_scryfall_id="en-lo") is None
 
 
@@ -108,6 +120,35 @@ def test_cached_prints_are_served_without_network(
 
     monkeypatch.setattr(prints_module.httpx, "get", boom)
     assert prints_module.fetch_prints("some-oracle-id") == rows
+
+
+def test_stale_cache_without_image_status_is_refetched(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Rows cached before `image_status` existed may hide placeholders."""
+    monkeypatch.setattr(prints_module, "CACHE_DIR", tmp_path)
+    old_row = {k: v for k, v in _row("old-id").items() if k != "image_status"}
+    (tmp_path / "oid.json").write_text(json.dumps([old_row]), encoding="utf-8")
+
+    fetched: list[str] = []
+
+    def fake_download(oracle_id: str) -> list[dict]:
+        fetched.append(oracle_id)
+        return [_row("fresh-id")]
+
+    monkeypatch.setattr(prints_module, "_download_prints", fake_download)
+    rows = prints_module.fetch_prints("oid")
+    assert fetched == ["oid"]
+    assert rows[0]["scryfall_id"] == "fresh-id"
+
+
+def test_normalize_drops_placeholder_scans() -> None:
+    card = {
+        "id": "x",
+        "image_status": "placeholder",
+        "image_uris": {"normal": "stock.jpg"},
+    }
+    assert prints_module._normalize(card) is None
 
 
 def test_face_images_prefers_top_level_then_card_faces() -> None:
@@ -138,7 +179,7 @@ def _krenko_oracle_id(state: AppState) -> str:
     return card["oracle_id"]
 
 
-def test_gallery_lists_only_highres_when_any_exists(
+def test_gallery_lists_every_real_scan_with_quality_flags(
     client: TestClient, real_app_state: AppState, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     rows = [_row("hi-1"), _row("lo-1", highres=False), _row("hi-es", lang="es")]
@@ -146,19 +187,11 @@ def test_gallery_lists_only_highres_when_any_exists(
     oid = _krenko_oracle_id(real_app_state)
     body = client.get(f"/cards/{oid}/prints").json()
     assert body["name"] == COMMANDER
-    assert [p["scryfall_id"] for p in body["prints"]] == ["hi-1", "hi-es"]
+    # Low-res scans are shown too (badged client-side), placeholders never
+    # reach this layer (the fetcher drops them at normalization).
+    assert [p["scryfall_id"] for p in body["prints"]] == ["hi-1", "lo-1", "hi-es"]
+    assert [p["highres"] for p in body["prints"]] == [True, False, True]
     assert body["default_scryfall_id"] == "hi-es"
-
-
-def test_gallery_falls_back_to_everything_when_no_highres(
-    client: TestClient, real_app_state: AppState, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    rows = [_row("lo-1", highres=False), _row("lo-2", lang="es", highres=False)]
-    monkeypatch.setattr(service, "fetch_prints", lambda oid: rows)
-    oid = _krenko_oracle_id(real_app_state)
-    body = client.get(f"/cards/{oid}/prints").json()
-    assert [p["scryfall_id"] for p in body["prints"]] == ["lo-1", "lo-2"]
-    assert body["default_scryfall_id"] is None
 
 
 def test_unknown_oracle_id_is_404(client: TestClient) -> None:
