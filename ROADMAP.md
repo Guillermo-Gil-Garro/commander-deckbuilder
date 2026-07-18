@@ -74,15 +74,21 @@ sistema). Diseño completo en DECISIONS.
   mismo rol / 1 mejor general / 1 refuerzo de categoría más justa) + lado "buenas que
   faltan". Reusa swap-candidates/swap_is_feasible; no re-resuelve. 10 tests. Verificado en
   Ur-Dragon (marca Fierce Guardianship, ofrece Force of Will / Toxic Deluge / refuerzo).
-- ⬜ 🔶 **Capa 2 — filler de baja sinergia**: cartas con sinergia EDHREC ≤0 fuera de una
-  allowlist de staples universales. NO en el MVP (ruidosa; el trabajo es mantener la
-  allowlist). Alternativa conservadora: solo `synergy` puro sin categoría real.
+- ✅ **Capa 2 — filler de baja sinergia** (2026-07-18): sinergia EDHREC ≤0 **y** inclusión
+  global <25%. La barra de inclusión sustituye la allowlist curada (Sol Ring/Swords la
+  pasan solos: se auto-mantiene). Tierras, capa-1 y always exentos; sin dato EDHREC no hay
+  veredicto. Calibración en vivo: ~1 flag por mazo (señal, no ruido). Umbrales tunables en
+  `selector/audit.py`.
 - ⬜ 🔶 **Capa 3 — auditoría LLM**: pase LLM cacheado sobre comandante+mazo, la lectura de
-  calidad genérica con matiz. Proyecto aparte, la buena de verdad.
+  calidad genérica con matiz. Proyecto aparte, la buena de verdad. Pendiente de decisión
+  de diseño de Guille (runtime con API key vs offline batch por comandante).
 
 **Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
 - **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
-- **3 relajaciones de wincons** (Wilhelt/aristocrats, Zhulodok+Ulalek/big_mana): hueco de tagging (drenaje y bombas no marcados `wincons`). Decidir si bajar el min o mejorar el tagging.
+- ~~**Relajaciones de wincons/board_wipe/card_draw** (8 comandantes)~~ CERRADO 2026-07-18:
+  titanes Eldrazi etiquetados `wincons` (fiel a rúbrica: annihilator = reloj del plan) +
+  6 overrides honestos con motivo inline (Talrand, Wilhelt, Etali, Winota, Kinnan, Lumra).
+  **Los 61 destacados construyen OPTIMAL stage=none — cero relajaciones.**
 - **stax**: la categoría/etiqueta se probó (rúbrica v4, 118 etiquetas) y se **revirtió**
   el 2026-07-18 (decisión de Guille + feedback de partida): forzaba piezas de prisión flojas
   y las buenas ya entran por score en synergy. El ARQUETIPO stax se queda (moldea por bandas,
@@ -99,7 +105,10 @@ sistema). Diseño completo en DECISIONS.
 - **Inconsistencia cosmética**: el método C no se aplica en el re-scoring de `service.py` (swap/maybeboard) → el score mostrado de una carta cara puede diferir ≤0.15 entre contextos (no afecta a legalidad).
 
 **Pendientes conocidos de la Fase 5**:
-- Los encabezados por categoría del DeckView **no cuadran** con el panel de composición (p.ej. Ramp 8 vs 12): el panel cuenta multi-pertenencia (una tierra que rampea suma en Tierras y en Ramp) y la agrupación tiene que elegir un grupo por carta. Es inherente y está dicho en la UI; si se quiere que cuadren hay que elegir una de las dos semánticas. 🔶
+- ~~Los encabezados por categoría del DeckView no cuadran con el panel de composición~~
+  CERRADO 2026-07-18: son dos semánticas correctas (partición vs multi-pertenencia); la UI
+  ahora lo explica justo al agrupar por categoría. No se unifica: cuadrarlas rompería una
+  de las dos lecturas.
 - El maybeboard y el `color_source_breakdown` **no se reoptimizan** al swapear (avisado en ámbar en la UI).
 - Una carta que solo cubre `protection` sigue con `slot=synergy` (el `FILL_ORDER` vive en `greedy.py`, congelado). Por eso el DeckView agrupa por `categories`, no por `slot`.
 
