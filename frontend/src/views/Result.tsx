@@ -21,6 +21,8 @@ import {
 import { Button, ColorPips, Panel } from '../components/ui';
 import { CardImage, CardTile } from '../components/cards';
 import { CompositionPanel, DeckView } from '../components/DeckView';
+import { ArtPicker } from '../components/ArtPicker';
+import { artOverridesForExport, useArtOverrides, withArt } from '../art';
 import { categoryLabel } from '../labels';
 import { toViewCard, useMutableDeck, type ViewCard } from '../deck';
 import { OpeningHand } from './OpeningHand';
@@ -84,16 +86,31 @@ export function Result({
   // Swaps are offered only for a real, feasible deck with a known build request.
   const swapsEnabled = !isInfeasible && req !== null;
 
+  // Card art: Spanish-by-default resolution plus the user's manual picks.
+  // `shownDeck` is the deck with those printings applied — every view renders
+  // it, while the swap/audit logic keeps working on `deck` (names and counts
+  // are identical; only image URLs differ).
+  const { resolved, setManual, clearManual, manualIds } = useArtOverrides(
+    isInfeasible ? null : deck,
+  );
+  const shownDeck = useMemo(() => withArt(deck, resolved), [deck, resolved]);
+  const pdfArtOverrides = useMemo(
+    () => artOverridesForExport(deck, resolved),
+    [deck, resolved],
+  );
+  const [artCard, setArtCard] = useState<ViewCard | null>(null);
+
   // The 99 cards for the opening-hand modal: non-basics plus each basic repeated
-  // `count` times. Derived from the live deck so swaps are reflected.
+  // `count` times. Derived from the shown deck so swaps and art choices are
+  // both reflected.
   const handDeck = useMemo(
     () => [
-      ...deck.nonbasic_cards.map((card) => toViewCard(card, false)),
-      ...deck.basic_lands.flatMap((basic) =>
+      ...shownDeck.nonbasic_cards.map((card) => toViewCard(card, false)),
+      ...shownDeck.basic_lands.flatMap((basic) =>
         Array.from({ length: basic.count }, () => toViewCard(basic, true)),
       ),
     ],
-    [deck.nonbasic_cards, deck.basic_lands],
+    [shownDeck.nonbasic_cards, shownDeck.basic_lands],
   );
 
   return (
@@ -117,6 +134,24 @@ export function Result({
         <OpeningHand deck={handDeck} onClose={() => setHandOpen(false)} />
       )}
 
+      {artCard && (
+        <ArtPicker
+          oracleId={artCard.oracle_id}
+          cardName={artCard.name}
+          activeScryfallId={resolved[artCard.oracle_id]?.scryfall_id ?? null}
+          hasManual={manualIds.has(artCard.oracle_id)}
+          onPick={(print) => {
+            setManual(artCard.oracle_id, print);
+            setArtCard(null);
+          }}
+          onReset={() => {
+            clearManual(artCard.oracle_id);
+            setArtCard(null);
+          }}
+          onClose={() => setArtCard(null)}
+        />
+      )}
+
       <ResultHeader result={deck} commander={commander} />
 
       {isInfeasible ? (
@@ -133,9 +168,21 @@ export function Result({
           </div>
           <CurvePanel curve={deck.curve_breakdown} />
           {swapsEnabled && req ? (
-            <SwapWorkspace deck={deck} deckRefs={deckRefs} req={req} onSwap={swap} />
+            <SwapWorkspace
+              deck={deck}
+              displayDeck={shownDeck}
+              deckRefs={deckRefs}
+              req={req}
+              onSwap={swap}
+              onArtSelect={setArtCard}
+              pdfArtOverrides={pdfArtOverrides}
+            />
           ) : (
-            <DeckView result={deck} />
+            <DeckView
+              result={shownDeck}
+              onArtSelect={setArtCard}
+              pdfArtOverrides={pdfArtOverrides}
+            />
           )}
           {swapsEnabled && req && (
             <AuditPanel
@@ -156,14 +203,22 @@ export function Result({
 // never runs for an INFEASIBLE build.
 function SwapWorkspace({
   deck,
+  displayDeck,
   deckRefs,
   req,
   onSwap,
+  onArtSelect,
+  pdfArtOverrides,
 }: {
   deck: BuildResult;
+  /** `deck` with the art picker's printings applied — what the views render.
+   *  All swap logic stays on `deck` (identical names/counts). */
+  displayDeck: BuildResult;
   deckRefs: DeckCardRef[];
   req: BuildRequest;
   onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void;
+  onArtSelect: (card: ViewCard) => void;
+  pdfArtOverrides: Record<string, string>;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -295,9 +350,11 @@ function SwapWorkspace({
   return (
     <>
       <DeckView
-        result={deck}
+        result={displayDeck}
         onCardClick={startSwap}
         activeOutName={outName}
+        onArtSelect={onArtSelect}
+        pdfArtOverrides={pdfArtOverrides}
       />
 
       <MaybeboardPanel

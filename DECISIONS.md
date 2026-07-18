@@ -458,3 +458,26 @@ dregs y sin forzarla las buenas ya entran por score. `protection` es la siguient
 - Motor de recomendación: se decide por experimentos (Fase 2).
 - Selector: experimento CP-SAT vs greedy (Fase 3).
 - Stack: FastAPI + React, HF Space con Docker. Datos: Scryfall bulk + EDHREC.
+
+## 2026-07-18 — Arte de cartas: español por defecto + selector de ediciones
+
+Decisión de Guille: las cartas se muestran e imprimen **en español** cuando existe un
+escaneo español en alta resolución; si no, se mantiene el arte inglés del pool (o el
+inglés high-res más reciente si el del pool no lo es). El usuario puede elegir cualquier
+edición desde un selector (botón paleta en cada carta); el selector **solo lista
+ediciones high-res** salvo que la carta no tenga ninguna (una edición concreta sin
+high-res se busca fuera del sistema). **Lo elegido en la UI es lo que exporta el PDF.**
+
+Cómo: `pipeline/prints.py` busca en Scryfall todas las impresiones físicas es/en de un
+oracle_id (`unique=prints`, `include_multilingual`, `-is:digital`; el criterio high-res
+es `image_status == "highres_scan"` de Scryfall — no hace falta juzgar a ojo) con caché
+disco `data/cache/prints/` (borrar un fichero = refrescarlo tras un set nuevo).
+Endpoints: `GET /cards/{oracle_id}/prints` (galería filtrada) y `POST
+/cards/prints/defaults` (batch ≤25, política es-hi → pool-si-hi → en-hi). El frontend
+(`art.ts`) resuelve defaults por chunks tras el build (el mazo aparece ya y va pasando a
+español según resuelve; localStorage cachea defaults y elecciones manuales — las
+manuales son globales: un Sol Ring elegido aplica a todos los mazos). El PDF recibe
+`art_overrides` (name → scryfall_id, nunca URLs: el id se resuelve contra el endpoint de
+imagen del propio Scryfall) y un override explícito gana incluso a las básicas Theros.
+La primera resolución de un mazo frío tarda unos segundos (una búsqueda Scryfall por
+carta, throttled); después es instantánea.

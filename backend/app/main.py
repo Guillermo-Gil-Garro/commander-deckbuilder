@@ -38,6 +38,7 @@ from app.schemas import (
     AuditRequest,
     AuditResponse,
     BanlistResponse,
+    CardPrintsResponse,
     CardSearchResponse,
     CommanderListResponse,
     CommandersResponse,
@@ -47,6 +48,8 @@ from app.schemas import (
     HealthResponse,
     MaybeboardRequest,
     MaybeboardResponse,
+    PrintDefaultsRequest,
+    PrintDefaultsResponse,
     ProxyPdfRequest,
     SequentialStartResponse,
     StructureResponse,
@@ -133,7 +136,9 @@ _ERROR_STATUS: tuple[tuple[type[service.ServiceError], int], ...] = (
     (service.InvalidDials, 422),
     (service.DeckBuildFailed, 422),
     (service.SwapRequestInvalid, 422),
+    (service.CardNotFound, 404),
     (service.EdhrecUnavailable, 502),
+    (service.PrintsUnavailable, 502),
 )
 
 
@@ -681,6 +686,35 @@ async def export_pdf(request: Request, payload: ProxyPdfRequest) -> Response:
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{proxy.filename}"'},
     )
+
+
+@app.get("/cards/{oracle_id}/prints")
+async def card_prints(request: Request, oracle_id: str) -> CardPrintsResponse:
+    """The printings gallery for one card (art / language picker).
+
+    Spanish and English physical printings, high-res-only unless the card has
+    no high-res scan at all, newest first, plus the printing the default
+    policy (Spanish high-res, else English high-res) resolves to. Backed by a
+    disk cache; a cold card costs one Scryfall search, hence the threadpool.
+    404 for an unknown oracle_id, 502 when Scryfall is unreachable.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.card_prints, state, oracle_id)
+
+
+@app.post("/cards/prints/defaults")
+async def prints_defaults(
+    request: Request, payload: PrintDefaultsRequest
+) -> PrintDefaultsResponse:
+    """Default (Spanish-first) printing for a batch of cards.
+
+    The client calls this after a build, in chunks, to swap the deck's art to
+    Spanish where a high-res Spanish scan exists. ``null`` for a card means
+    "keep the art you already have". Cold cards each cost one Scryfall search
+    (hence the cap and the threadpool); cached cards answer instantly.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.print_defaults, state, payload)
 
 
 class SPAStaticFiles(StaticFiles):

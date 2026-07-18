@@ -57,6 +57,8 @@ from app.schemas import (
     BanlistCardView,
     BanlistResponse,
     BanlistWatchlistView,
+    CardPrintsResponse,
+    CardPrintView,
     CategoryRow,
     ReplacementView,
     ColorSourceRow,
@@ -69,6 +71,8 @@ from app.schemas import (
     MaybeboardRequest,
     MaybeboardResponse,
     NoticeView,
+    PrintDefaultsRequest,
+    PrintDefaultsResponse,
     ProxyPdfRequest,
     SequentialStartResponse,
     StructureResponse,
@@ -85,6 +89,7 @@ from app.schemas import (
 )
 from app.state import AppState, CommanderRow
 from pipeline.card_images import fetch_card_image
+from pipeline.prints import PrintsError, fetch_prints
 from pipeline.edhrec import (
     EdhrecCommanderData,
     EdhrecError,
@@ -187,6 +192,14 @@ class SwapRequestInvalid(ServiceError):
     This is a request that cannot be evaluated at all: an unknown card, an
     ``out`` the deck does not hold, a deck that is not 99 cards.
     """
+
+
+class CardNotFound(ServiceError):
+    """No pool card with that oracle_id (the prints endpoints)."""
+
+
+class PrintsUnavailable(ServiceError):
+    """Scryfall's printings search is down or unreadable. Ours, not the player's."""
 
 
 def resolve_commander(state: AppState, name: str) -> CommanderRow:
@@ -1365,6 +1378,103 @@ def _export_entry(
     )
 
 
+# --- card printings (art / language picker) ----------------------------------
+
+
+def _card_by_oracle_id(state: AppState, oracle_id: str) -> Mapping[str, Any]:
+    """The pool card with that oracle_id, or ``CardNotFound``.
+
+    A linear scan over the pool (~31k rows, a few ms). Deliberate: the prints
+    endpoints are click-driven and batched, so an oracle_id index on the
+    frozen ``AppState`` would be a core change for no felt difference.
+    """
+    for card in state.pool.cards():
+        if card.get("oracle_id") == oracle_id:
+            return card
+    raise CardNotFound(f"No hay ninguna carta con oracle_id {oracle_id!r}")
+
+
+def _print_rows(oracle_id: str) -> list[CardPrintView]:
+    try:
+        return [CardPrintView(**row) for row in fetch_prints(oracle_id)]
+    except PrintsError as exc:
+        raise PrintsUnavailable(
+            "No se pudieron consultar las ediciones en Scryfall; "
+            "inténtalo de nuevo en un momento"
+        ) from exc
+
+
+def _default_print(
+    prints: Sequence[CardPrintView], pool_scryfall_id: str
+) -> CardPrintView | None:
+    """The printing the default-art policy picks, or None to keep the pool's.
+
+    Policy (Guille, 2026-07-18): the newest **Spanish high-res** scan wins;
+    without one, keep the pool's English art if that printing is itself
+    high-res, else fall back to the newest **English high-res**. ``prints``
+    arrives newest-first from the fetcher, so "first match" is "newest".
+    """
+    for row in prints:
+        if row.lang == "es" and row.highres:
+            return row
+    pool_row = next((r for r in prints if r.scryfall_id == pool_scryfall_id), None)
+    if pool_row is not None and pool_row.highres:
+        return None
+    for row in prints:
+        if row.lang == "en" and row.highres:
+            return row
+    return None
+
+
+def card_prints(state: AppState, oracle_id: str) -> CardPrintsResponse:
+    """The printings gallery for one card, high-res-only when possible.
+
+    Only high-res printings are listed unless the card has none at all —
+    then everything Scryfall has is shown so the picker is never empty for a
+    card that does have *some* art. Blocking (Scryfall on a cold cache): call
+    through a threadpool.
+    """
+    card = _card_by_oracle_id(state, oracle_id)
+    rows = _print_rows(oracle_id)
+    highres = [row for row in rows if row.highres]
+    shown = highres if highres else rows
+    default = _default_print(rows, card.get("scryfall_id") or "")
+    return CardPrintsResponse(
+        oracle_id=oracle_id,
+        name=card["name"],
+        prints=shown,
+        default_scryfall_id=default.scryfall_id if default else None,
+    )
+
+
+def print_defaults(
+    state: AppState, request: PrintDefaultsRequest
+) -> PrintDefaultsResponse:
+    """Resolve the default (Spanish-first) printing for a batch of cards.
+
+    One pool pass validates the whole batch; an unknown oracle_id is a 404
+    for the lot (the client only ever sends ids it got from us, so a miss is
+    a bug worth surfacing, not skipping). Blocking on a cold cache — each
+    unseen card costs one Scryfall search — so call through a threadpool.
+    """
+    wanted = set(request.oracle_ids)
+    cards: dict[str, Mapping[str, Any]] = {}
+    for card in state.pool.cards():
+        oid = card.get("oracle_id")
+        if oid in wanted:
+            cards[oid] = card
+    missing = wanted - set(cards)
+    if missing:
+        raise CardNotFound(
+            f"No hay ninguna carta con oracle_id {sorted(missing)[0]!r}"
+        )
+    defaults: dict[str, CardPrintView | None] = {}
+    for oid in request.oracle_ids:
+        rows = _print_rows(oid)
+        defaults[oid] = _default_print(rows, cards[oid].get("scryfall_id") or "")
+    return PrintDefaultsResponse(defaults=defaults)
+
+
 # --- proxy PDF export --------------------------------------------------------
 #
 # A print-and-cut proxy sheet: real-size cards laid 3x3 on A4 portrait, glued
@@ -1444,12 +1554,15 @@ def build_proxy_pdf(
         fetch_image = fetch_card_image
 
     commander = _pool_card(state, request.commander)
-    face_urls: list[str] = list(_face_urls(commander))
+    overrides = request.art_overrides
+    face_urls: list[str] = list(
+        _face_urls(commander, override_id=overrides.get(commander["name"]))
+    )
     producers: list[Mapping[str, Any]] = [commander]
     for ref in request.cards:
         card = _pool_card(state, ref.name)
         producers.append(card)
-        urls = list(_face_urls(card))
+        urls = list(_face_urls(card, override_id=overrides.get(card["name"])))
         for _ in range(ref.count):
             face_urls.extend(urls)
 
@@ -1487,7 +1600,7 @@ def build_proxy_pdf(
     )
 
 
-def _face_urls(card: Mapping[str, Any]) -> list[str]:
+def _face_urls(card: Mapping[str, Any], override_id: str | None = None) -> list[str]:
     """The image URLs to print for one card: front, then back for a DFC.
 
     A double-faced card (``image_uri_back_normal`` non-empty: Kefka, Etali)
@@ -1495,15 +1608,27 @@ def _face_urls(card: Mapping[str, Any]) -> list[str]:
     for (a null ``image_uri_normal``) yields nothing and is skipped with a
     warning — there is no image to draw.
 
-    Basic lands are overridden to the Theros Beyond Death full-art
+    ``override_id`` is the art picker's chosen printing (a scryfall_id, never a
+    URL — the id resolves through Scryfall's own image endpoint, so a client
+    cannot point the fetcher anywhere else). It wins over everything, including
+    the Theros basics override: an explicit choice IS the house style for that
+    card. Whether the printing is double-faced follows the pool card — a DFC's
+    printings are all DFCs.
+
+    Basic lands otherwise get the Theros Beyond Death full-art
     (``THEROS_BASIC_IMAGES``): the group prints its manabase in that frame, not
     in whatever printing the pool happens to store. Basics are single-faced, so
     that override replaces the front and there is no back to add.
     """
+    if override_id:
+        urls = [PRINT_IMAGE_URL.format(scryfall_id=override_id)]
+        if card.get("image_uri_back_normal"):
+            urls.append(PRINT_IMAGE_URL.format(scryfall_id=override_id) + "&face=back")
+        return urls
     theros = THEROS_BASIC_IMAGES.get(card.get("name") or "")
     if theros is not None:
         return [theros]
-    urls: list[str] = []
+    urls = []
     front = card.get("image_uri_normal")
     if front:
         urls.append(front)
@@ -1515,10 +1640,12 @@ def _face_urls(card: Mapping[str, Any]) -> list[str]:
     return urls
 
 
-# Scryfall serves a token's art straight from its printing id; format=image
+# Scryfall serves any printing's art straight from its id; format=image
 # answers 302 to the CDN JPEG (fetch_card_image follows the redirect), and
-# version=normal matches the 63x88 frame the rest of the sheet uses.
+# version=normal matches the 63x88 frame the rest of the sheet uses. Used for
+# tokens and for the art picker's chosen printings (+"&face=back" for backs).
 TOKEN_IMAGE_URL = "https://api.scryfall.com/cards/{scryfall_id}?format=image&version=normal"
+PRINT_IMAGE_URL = TOKEN_IMAGE_URL
 
 # A single maker earns a second (tapped) copy of a *creature* token when its
 # text implies it makes several, or makes them turn after turn. Two or more

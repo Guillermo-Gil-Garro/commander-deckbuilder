@@ -253,6 +253,27 @@ export type WhyNotResult = {
   reason: string;
 };
 
+/** One printing of a card, as the art/language picker consumes it. The server
+ *  already filtered the gallery (high-res only, unless a card has none). */
+export type CardPrint = {
+  scryfall_id: string;
+  set_code: string;
+  set_name: string;
+  collector_number: string;
+  lang: string;
+  released_at: string;
+  highres: boolean;
+  image_uri_normal: string;
+  image_uri_back_normal: string;
+};
+
+export type CardPrints = {
+  oracle_id: string;
+  name: string;
+  prints: CardPrint[];
+  default_scryfall_id: string | null;
+};
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, init);
   if (!response.ok) {
@@ -384,6 +405,28 @@ export async function exportDeck(req: {
 }
 
 /** Pull the `filename="…"` out of a Content-Disposition header, or fall back. */
+/** The printings gallery for one card (already high-res-filtered server-side). */
+export async function fetchCardPrints(oracleId: string): Promise<CardPrints> {
+  return request<CardPrints>(`/cards/${encodeURIComponent(oracleId)}/prints`);
+}
+
+/** Default (Spanish-first) printing for up to 25 cards. `null` for a card means
+ *  "keep the art you already have". Cold cards cost the backend one Scryfall
+ *  search each, so the first resolution of a deck takes a few seconds. */
+export async function fetchPrintDefaults(
+  oracleIds: string[],
+): Promise<Record<string, CardPrint | null>> {
+  const data = await request<{ defaults: Record<string, CardPrint | null> }>(
+    '/cards/prints/defaults',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oracle_ids: oracleIds }),
+    },
+  );
+  return data.defaults;
+}
+
 function filenameFromDisposition(header: string | null, fallback: string): string {
   const match = header?.match(/filename="?([^";]+)"?/i);
   return match ? match[1] : fallback;
@@ -399,12 +442,19 @@ export async function exportProxyPdf(req: {
   commander: string;
   cards: { name: string; count: number }[];
   includeTokens?: boolean;
+  /** Art picker choices: card name -> chosen printing's scryfall_id. The PDF
+   *  prints those printings instead of the pool's default art. */
+  artOverrides?: Record<string, string>;
 }): Promise<void> {
-  const { includeTokens, ...rest } = req;
+  const { includeTokens, artOverrides, ...rest } = req;
   const response = await fetch(`${API_BASE}/export/pdf`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...rest, include_tokens: includeTokens ?? false }),
+    body: JSON.stringify({
+      ...rest,
+      include_tokens: includeTokens ?? false,
+      art_overrides: artOverrides ?? {},
+    }),
   });
   if (!response.ok) {
     let detail = `${response.status} ${response.statusText}`;

@@ -3,7 +3,7 @@
 // price is irrelevant) and runs his own banlist, so this project has neither.
 
 import { useState } from 'react';
-import { FlipHorizontal2, Sparkles } from 'lucide-react';
+import { FlipHorizontal2, Palette, Sparkles } from 'lucide-react';
 import type { ViewCard } from '../deck';
 
 // Parse a Scryfall mana-cost string ("{2}{R}{R}", "{W/U}", "{X}") into the symbol
@@ -138,15 +138,58 @@ export function CardFlipButton({
   );
 }
 
+// Corner control to open the art/language picker for a card. Same span-not-
+// button rationale as CardFlipButton: it lives inside clickable tiles and must
+// never bubble into a swap. Sits top-LEFT (the flip control owns top-right).
+export function CardArtButton({
+  onOpen,
+  className,
+}: {
+  onOpen: () => void;
+  className?: string;
+}) {
+  const label = 'Cambiar la edición / idioma de la carta';
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      aria-label={label}
+      title={label}
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        onOpen();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          event.stopPropagation();
+          onOpen();
+        }
+      }}
+      className={`absolute left-2 top-2 z-10 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-black/65 text-white opacity-0 ring-1 ring-white/25 backdrop-blur transition hover:bg-black/85 focus-visible:opacity-100 group-hover/tile:opacity-100 ${className ?? ''}`}
+    >
+      <Palette className="h-4 w-4" aria-hidden="true" />
+    </span>
+  );
+}
+
 // EDHREC-style tile: the full card image (5:7) with the score below. Basic lands
 // show a ×N badge instead and omit the score — a basic has no EDHREC score (the
-// API sends `score: null` for them).
-export function CardTile({ card }: { card: ViewCard }) {
+// API sends `score: null` for them). `onArtSelect` (deck views only) reveals the
+// art-picker corner button on hover.
+export function CardTile({
+  card,
+  onArtSelect,
+}: {
+  card: ViewCard;
+  onArtSelect?: (card: ViewCard) => void;
+}) {
   const [showBack, setShowBack] = useState(false);
   const hasBack = Boolean(card.image_uri_back_normal);
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+      <div className="group/tile relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
         <CardImage
           card={card}
           showBack={showBack}
@@ -157,6 +200,9 @@ export function CardTile({ card }: { card: ViewCard }) {
             showBack={showBack}
             onToggle={() => setShowBack((value) => !value)}
           />
+        )}
+        {onArtSelect && !card.basic && (
+          <CardArtButton onOpen={() => onArtSelect(card)} />
         )}
         {card.basic && (
           <span className="absolute bottom-2 right-2 rounded-lg bg-black/80 px-3 py-1.5 text-2xl font-extrabold tabular-nums text-white shadow-lg ring-1 ring-white/25">

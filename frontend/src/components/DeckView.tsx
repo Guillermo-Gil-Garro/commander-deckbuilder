@@ -3,7 +3,7 @@
 // the export delegated to the API.
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { Grid2x2, LayoutList, Loader2, Printer, Tags } from 'lucide-react';
+import { Grid2x2, LayoutList, Loader2, Palette, Printer, Tags } from 'lucide-react';
 import { Button, Panel } from './ui';
 import { CardTile, ManaCost, ScoreBadge } from './cards';
 import { categoryLabel } from '../labels';
@@ -296,6 +296,8 @@ export function DeckView({
   showExport = true,
   onCardClick,
   activeOutName = null,
+  onArtSelect,
+  pdfArtOverrides,
 }: {
   result: BuildResult;
   showExport?: boolean;
@@ -303,6 +305,11 @@ export function DeckView({
   // `activeOutName` is the card currently marked to leave (highlighted red).
   onCardClick?: (card: ViewCard) => void;
   activeOutName?: string | null;
+  // Art picker entry point: when set, cards grow a corner button to change
+  // their printing/language.
+  onArtSelect?: (card: ViewCard) => void;
+  // name -> chosen printing scryfall_id; the proxy PDF prints those.
+  pdfArtOverrides?: Record<string, string>;
 }) {
   const [sort, setSort] = useState<SortAxis>('type');
   const [display, setDisplay] = useState<DisplayAxis>('list');
@@ -336,6 +343,8 @@ export function DeckView({
         })),
         // Fill the last page's empty cells with the deck's tokens.
         includeTokens: true,
+        // What you see is what you print: the art picker's choices.
+        artOverrides: pdfArtOverrides,
       });
     } catch (error: unknown) {
       setPdfError(error instanceof Error ? error.message : 'Error desconocido');
@@ -415,22 +424,25 @@ export function DeckView({
           groups={groups}
           onCardClick={onCardClick}
           activeOutName={activeOutName}
+          onArtSelect={onArtSelect}
         />
       ) : (
         <VisualGridView
           groups={groups}
           onCardClick={onCardClick}
           activeOutName={activeOutName}
+          onArtSelect={onArtSelect}
         />
       )}
     </Panel>
   );
 }
 
-// Shared swap-affordance props threaded from DeckView to the card renderers.
+// Shared swap/art-affordance props threaded from DeckView to the card renderers.
 type SwapProps = {
   onCardClick?: (card: ViewCard) => void;
   activeOutName?: string | null;
+  onArtSelect?: (card: ViewCard) => void;
 };
 
 // Whether a card is a clickable swap source: a non-basic, when a handler is set.
@@ -445,6 +457,7 @@ function ListView({
   groups,
   onCardClick,
   activeOutName,
+  onArtSelect,
 }: { groups: CardGroup[] } & SwapProps) {
   return (
     <div className="gap-x-6 lg:columns-2">
@@ -465,6 +478,7 @@ function ListView({
                 card={card}
                 onCardClick={onCardClick}
                 active={card.name === activeOutName}
+                onArtSelect={onArtSelect}
               />
             ))}
           </div>
@@ -479,6 +493,7 @@ function VisualGridView({
   groups,
   onCardClick,
   activeOutName,
+  onArtSelect,
 }: { groups: CardGroup[] } & SwapProps) {
   return (
     <div className="flex flex-col gap-6">
@@ -500,9 +515,14 @@ function VisualGridView({
                   card={card}
                   active={card.name === activeOutName}
                   onClick={() => onCardClick!(card)}
+                  onArtSelect={onArtSelect}
                 />
               ) : (
-                <CardTile key={card.oracle_id} card={card} />
+                <CardTile
+                  key={card.oracle_id}
+                  card={card}
+                  onArtSelect={onArtSelect}
+                />
               ),
             )}
           </div>
@@ -522,10 +542,12 @@ function SwapTileButton({
   card,
   active,
   onClick,
+  onArtSelect,
 }: {
   card: ViewCard;
   active: boolean;
   onClick: () => void;
+  onArtSelect?: (card: ViewCard) => void;
 }) {
   return (
     <div
@@ -543,7 +565,7 @@ function SwapTileButton({
         active ? 'ring-2 ring-rose-500' : 'cursor-pointer hover:accent-ring'
       }`}
     >
-      <CardTile card={card} />
+      <CardTile card={card} onArtSelect={onArtSelect} />
     </div>
   );
 }
@@ -552,10 +574,12 @@ function CardRow({
   card,
   onCardClick,
   active = false,
+  onArtSelect,
 }: {
   card: ViewCard;
   onCardClick?: (card: ViewCard) => void;
   active?: boolean;
+  onArtSelect?: (card: ViewCard) => void;
 }) {
   // Basic land: just "×N name" + hover art, no score/categories (a basic has no
   // EDHREC score — the API sends null). The commander is never a swap source.
@@ -602,9 +626,31 @@ function CardRow({
           ))}
         </div>
       )}
-      {!card.basic && card.score !== null && (
+      {!card.basic && (card.score !== null || onArtSelect) && (
         <span className="ml-auto flex items-center gap-2.5">
-          <ScoreBadge score={card.score} />
+          {onArtSelect && (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="Cambiar la edición / idioma de la carta"
+              title="Cambiar la edición / idioma de la carta"
+              onClick={(event) => {
+                event.stopPropagation();
+                onArtSelect(card);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onArtSelect(card);
+                }
+              }}
+              className="accent-focus inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-zinc-400 opacity-0 transition hover:bg-zinc-200/70 hover:text-zinc-700 group-hover:opacity-100 focus-visible:opacity-100 dark:hover:bg-zinc-700/60 dark:hover:text-zinc-200"
+            >
+              <Palette className="h-4 w-4" aria-hidden="true" />
+            </span>
+          )}
+          {card.score !== null && <ScoreBadge score={card.score} />}
         </span>
       )}
 

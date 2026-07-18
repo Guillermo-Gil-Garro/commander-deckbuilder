@@ -893,6 +893,74 @@ class ProxyPdfRequest(BaseModel):
     commander: str = Field(min_length=1)
     cards: list[DeckCardRef] = Field(default_factory=list)
     include_tokens: bool = False
+    # Art picker (2026-07-18): card name -> chosen printing's scryfall_id. The
+    # server resolves the id through Scryfall's own image endpoint — the client
+    # never sends URLs, so there is nothing to spoof. Names missing here print
+    # with the pool's default art; basics keep the Theros house style unless
+    # explicitly overridden.
+    art_overrides: dict[str, str] = Field(default_factory=dict)
+
+
+class CardPrintView(BaseModel):
+    """One printing of a card, as the art/language picker consumes it.
+
+    ``highres`` is Scryfall's own ``image_status == "highres_scan"`` verdict.
+    The picker shows only high-res printings unless a card has none at all —
+    that filtering happens server-side (see ``service.card_prints``), so what
+    arrives here is already the list to display.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    scryfall_id: str
+    set_code: str
+    set_name: str
+    collector_number: str
+    lang: str
+    released_at: str
+    highres: bool
+    image_uri_normal: str
+    image_uri_back_normal: str
+
+
+class CardPrintsResponse(BaseModel):
+    """``GET /cards/{oracle_id}/prints``: the printings gallery for one card.
+
+    ``default_scryfall_id`` is the printing the es-highres -> en-highres policy
+    resolves to, or null when the pool's own art already is that answer.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    oracle_id: str
+    name: str
+    prints: list[CardPrintView]
+    default_scryfall_id: str | None
+
+
+class PrintDefaultsRequest(BaseModel):
+    """``POST /cards/prints/defaults``: resolve default (Spanish) art in batch.
+
+    Capped so one request stays bounded even on a cold cache (each uncached
+    card costs a Scryfall search); the client chunks the deck.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    oracle_ids: list[str] = Field(min_length=1, max_length=25)
+
+
+class PrintDefaultsResponse(BaseModel):
+    """Per-card default printing under the es-highres -> en-highres policy.
+
+    A card resolves to ``null`` when the pool's default art is already the
+    right answer (no Spanish high-res scan exists) — the client then simply
+    keeps the art it got from the build.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    defaults: dict[str, CardPrintView | None]
 
 
 class ExportRequest(BaseModel):
