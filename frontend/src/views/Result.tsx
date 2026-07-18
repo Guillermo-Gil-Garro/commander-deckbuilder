@@ -99,7 +99,17 @@ export function Result({
     [deck, resolved],
   );
   const [artCard, setArtCard] = useState<ViewCard | null>(null);
+  // The audit panel's activation: its own button, or the deck-header shortcut
+  // (which also scrolls the panel into view).
   const [auditOpen, setAuditOpen] = useState(false);
+  const auditRef = useRef<HTMLDivElement>(null);
+  function openAudit() {
+    setAuditOpen(true);
+    // Next frame, so the activated panel exists before we scroll to it.
+    requestAnimationFrame(() => {
+      auditRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  }
 
   // The 99 cards for the opening-hand modal: non-basics plus each basic repeated
   // `count` times. Derived from the shown deck so swaps and art choices are
@@ -167,6 +177,19 @@ export function Result({
             <ConstraintsPanel result={deck} swapped={swapped} />
             <CompositionPanel result={deck} />
           </div>
+          {swapsEnabled && req && (
+            <div ref={auditRef} className="scroll-mt-4">
+              <AuditPanel
+                commander={req.commander}
+                dials={req.dials}
+                deckRefs={deckRefs}
+                deckCards={deck.nonbasic_cards}
+                onSwap={swap}
+                active={auditOpen}
+                onActivate={() => setAuditOpen(true)}
+              />
+            </div>
+          )}
           <CurvePanel curve={deck.curve_breakdown} />
           {swapsEnabled && req ? (
             <SwapWorkspace
@@ -177,23 +200,13 @@ export function Result({
               onSwap={swap}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
-              onAudit={() => setAuditOpen(true)}
+              onAudit={openAudit}
             />
           ) : (
             <DeckView
               result={shownDeck}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
-            />
-          )}
-          {auditOpen && swapsEnabled && req && (
-            <AuditModal
-              commander={req.commander}
-              dials={req.dials}
-              deckRefs={deckRefs}
-              deckCards={deck.nonbasic_cards}
-              onSwap={swap}
-              onClose={() => setAuditOpen(false)}
             />
           )}
         </>
@@ -278,7 +291,9 @@ function SwapWorkspace({
       dials: req.dials,
       deck: deckRefsRef.current,
       out: outName,
-      limit: 20,
+      // A short, strong list (Guille 2026-07-19): 8 fills two 4-wide modal
+      // rows; more options just meant more scrolling past worse cards.
+      limit: 8,
     })
       .then((res) => {
         if (!cancelled) setCands(res);
@@ -409,13 +424,14 @@ const REPLACEMENT_LABEL: Record<AuditReplacement['kind'], string> = {
 // room to disagree with the suggestion, not the whole 60-card haystack.
 const PLACING_OUT_LIMIT = 9;
 
-function AuditModal({
+function AuditPanel({
   commander,
   dials,
   deckRefs,
   deckCards,
   onSwap,
-  onClose,
+  active,
+  onActivate,
 }: {
   commander: string;
   dials: BuildRequest['dials'];
@@ -427,7 +443,9 @@ function AuditModal({
     chosen: DeckCard,
     validation: SwapValidation,
   ) => void;
-  onClose: () => void;
+  /** Controlled activation, so the deck-header shortcut can open it too. */
+  active: boolean;
+  onActivate: () => void;
 }) {
   const [audit, setAudit] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -439,6 +457,7 @@ function AuditModal({
   const [placing, setPlacing] = useState<DeckCard | null>(null);
 
   useEffect(() => {
+    if (!active) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -456,15 +475,7 @@ function AuditModal({
     return () => {
       cancelled = true;
     };
-  }, [commander, dials, deckRefs]);
-
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') onClose();
-    }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [active, commander, dials, deckRefs]);
 
   async function applySwapPair(outName: string, chosen: DeckCard) {
     setApplying(`${outName}=>${chosen.name}`);
@@ -509,33 +520,32 @@ function AuditModal({
       .slice(0, PLACING_OUT_LIMIT);
   }, [placing, deckCards]);
 
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Auditoría del mazo"
-      onClick={onClose}
-      className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm sm:p-6"
-    >
-      <div
-        onClick={(event) => event.stopPropagation()}
-        className="surface flex max-h-[92vh] w-full max-w-6xl flex-col gap-4 overflow-y-auto rounded-lg p-5 sm:p-7"
-      >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <h3 className="inline-flex items-center gap-2 text-lg font-semibold">
-            <Sparkles className="h-5 w-5 accent-text" /> Auditoría del mazo
-          </h3>
-          {loading && <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />}
+  if (!active) {
+    return (
+      <Panel>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-lg font-semibold">Auditoría del mazo</h3>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              Señala cartas dudosas y buenas que te faltan. No cambia nada: tú
+              decides.
+            </p>
+          </div>
+          <Button onClick={onActivate}>
+            <Sparkles className="h-4 w-4" /> Auditar mazo
+          </Button>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Cerrar"
-          className="accent-focus inline-flex h-9 w-9 items-center justify-center rounded-lg border border-black/10 bg-white text-zinc-600 transition hover:bg-zinc-100 dark:border-white/10 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:bg-zinc-800"
-        >
-          <X className="h-4 w-4" />
-        </button>
+      </Panel>
+    );
+  }
+
+  return (
+    <Panel>
+      <div className="mb-4 flex items-center gap-2">
+        <h3 className="inline-flex items-center gap-2 text-lg font-semibold">
+          <Sparkles className="h-5 w-5 accent-text" /> Auditoría del mazo
+        </h3>
+        {loading && <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />}
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -675,8 +685,7 @@ function AuditModal({
           )}
         </div>
       )}
-      </div>
-    </div>
+    </Panel>
   );
 }
 
@@ -1158,7 +1167,7 @@ function SwapCandidatesModal({
     >
       <div
         onClick={(event) => event.stopPropagation()}
-        className="surface flex max-h-[92vh] w-full max-w-6xl flex-col gap-4 overflow-y-auto rounded-lg p-5 pb-28 sm:p-7 sm:pb-28"
+        className="surface flex max-h-[92vh] w-full max-w-4xl flex-col gap-4 overflow-y-auto rounded-lg p-5 pb-28 sm:p-7 sm:pb-28"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
@@ -1195,7 +1204,7 @@ function SwapCandidatesModal({
             No hay alternativas factibles para esta carta.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {candidates.map((card) => (
               <BenchTile
                 key={card.oracle_id}
