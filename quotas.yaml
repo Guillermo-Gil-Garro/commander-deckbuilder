@@ -225,6 +225,9 @@ commanders:
                                      # Guille lo quiere storm/hechizos: spellslinger.
   "Talrand, Sky Summoner":
     archetype: spellslinger
+    overrides:
+      wincons: [0, 4]              # 2026-07-18: su wincon es el ejército de drakes
+                                   # (el comandante); su pool B4 no trae carta-wincon.
   "Bruvac the Grandiloquent":
     archetype: mill                  # mill: dobla el molido rival; board_wipe bajo
                                      # (mono-U no tiene barridos que valgan).
@@ -249,6 +252,9 @@ commanders:
     archetype: lands_matter
   "Lumra, Bellow of the Woods":
     archetype: lands_matter
+    overrides:
+      board_wipe: [1, 4]           # 2026-07-18: mono-G apenas barre; su pool B4 solo
+                                   # trae Season of Gathering.
   "Titania, Protector of Argoth":
     archetype: lands_matter
   "Selvala, Heart of the Wilds":
@@ -269,6 +275,10 @@ commanders:
   "Wilhelt, the Rotcleaver":
     archetype: aristocrats           # aristocrats: zombis que mueren para reciclarse
                                      # en cartas y drenaje.
+    overrides:
+      wincons: [0, 5]              # 2026-07-18: su matar es drenaje de paquete (Gray
+                                   # Merchant, Diregraf) que la rúbrica archiva como
+                                   # synergy a propósito; no hay carta-wincon en su pool.
   "Captain N'ghathrod":
     archetype: mill                  # mill: ataca para moler y roba lo molido del
                                      # cementerio rival.
@@ -284,6 +294,9 @@ commanders:
                                      # (artefactos + leyendas); mazo artefacto-céntrico.
   "Etali, Primal Conqueror // Etali, Primal Sickness":
     archetype: midrange
+    overrides:
+      wincons: [1, 4]              # 2026-07-18: su wincon es su propia cara flip
+                                   # (Primal Sickness, veneno); el pool trae 1 carta-wincon.
   "Minsc & Boo, Timeless Heroes":
     archetype: aggro
   "Sythis, Harvest's Hand":
@@ -306,10 +319,16 @@ commanders:
     archetype: graveyard
   "Winota, Joiner of Forces":
     archetype: aggro
+    overrides:
+      card_draw: [4, 11]           # 2026-07-18: Winota no roba, trampea del library
+                                   # (su trigger ES la ventaja); su pool trae 4 de robo.
   "Hakbal of the Surging Soul":
     archetype: aggro
   "Kinnan, Bonder Prodigy":
     archetype: midrange              # rampa de permanentes no-tierra: lands_matter no.
+    overrides:
+      board_wipe: [1, 5]           # 2026-07-18: Simic combo-ramp apenas barre; su
+                                   # pool B4 solo trae Cyclonic Rift.
   "Aesi, Tyrant of Gyre Strait":
     archetype: lands_matter
   "Volo, Guide to Monsters":

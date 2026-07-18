@@ -2291,7 +2291,7 @@
 {"oracle_id": "56c558f3-535d-49aa-a2de-54e0bb598483", "name": "Isolation Cell", "labels": [], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "c46718dc-24dc-4b77-b455-aa4c89570b8d", "name": "Isperia, Supreme Judge", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "65114758-9a75-43a7-96e8-0aa68faa6b24", "name": "Isshin, Two Heavens as One", "labels": [], "rubric_version": "v2", "source": "llm"}
-{"oracle_id": "b11187ab-f8a8-422b-b550-4495f96de0f2", "name": "It That Betrays", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "b11187ab-f8a8-422b-b550-4495f96de0f2", "name": "It That Betrays", "labels": ["wincons"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "c14ac951-329d-452b-be75-5c72166cd9c7", "name": "It That Heralds the End", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "f976a244-1240-4430-9182-bb8d6d932ea0", "name": "Itzquinth, Firstborn of Gishath", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "d847542b-7522-43ec-91b0-f0aba5d7dddd", "name": "Ivora, Insatiable Heir", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
@@ -4810,9 +4810,9 @@
 {"oracle_id": "597bce51-af89-4d13-9a97-667b4f4f4694", "name": "Ulamog's Crusher", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "2afefaab-c614-4fca-afba-d8d206d9a8b9", "name": "Ulamog's Dreadsire", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "bd213210-42d1-49af-9959-08188abe692a", "name": "Ulamog's Nullifier", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
-{"oracle_id": "0bfa4512-e35a-4c93-b324-80ec659f5a97", "name": "Ulamog, the Ceaseless Hunger", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
-{"oracle_id": "97836c48-8777-4b4e-98fb-e99204f38bdd", "name": "Ulamog, the Defiler", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
-{"oracle_id": "b817bc56-9b4d-4c50-bafa-3c652b99578f", "name": "Ulamog, the Infinite Gyre", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0bfa4512-e35a-4c93-b324-80ec659f5a97", "name": "Ulamog, the Ceaseless Hunger", "labels": ["removal", "wincons"], "rubric_version": "v3", "source": "llm"}
+{"oracle_id": "97836c48-8777-4b4e-98fb-e99204f38bdd", "name": "Ulamog, the Defiler", "labels": ["removal", "wincons"], "rubric_version": "v3", "source": "llm"}
+{"oracle_id": "b817bc56-9b4d-4c50-bafa-3c652b99578f", "name": "Ulamog, the Infinite Gyre", "labels": ["removal", "wincons"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "4a9e73b7-8c8b-4489-b670-ce49c2c8a46a", "name": "Ulcerate", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "baa337ce-edc6-4ee5-a898-68e9dbb4ab93", "name": "Ultima, Origin of Oblivion", "labels": ["ramp", "removal"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "43d79ee6-8ba1-4ec9-9bb2-907ed8401a2f", "name": "Ultimo, Civilization's End", "labels": ["removal"], "rubric_version": "v2", "source": "llm"}
