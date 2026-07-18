@@ -144,12 +144,12 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "lands": (35, 39),
         "ramp": (10, 15),
         "card_draw": (8, 12),
-        "removal": (7, 12),
+        "removal": (8, 14),
         "board_wipe": (2, 5),
         "wincons": (1, 3),
         "protection": (2, 4),
-        "stax": (3, 9),  # min>0 forces the prison identity (3 after calibration)
-        "synergy": (0, 18),
+        "stax": (2, 8),  # floor 2 after Guille's play feedback (was 3, forced dregs)
+        "synergy": (0, 22),
     },
     "artifacts": {  # added 2026-07-18: rocks are the ramp; big artifact package
         "lands": (33, 38),

@@ -429,6 +429,16 @@ Baral 3 (control tolera stax, no lo exige). Las 8 relajaciones que quedan en el 
 (`add_label` solo añade etiquetas, nunca reduce otras cuentas; stax min 0 en esos
 arquetipos). RUBRIC_VERSION v3→v4; CATEGORIES ahora 9 (stax entre protection y synergy).
 
+**Recalibrado 2026-07-18 (feedback de partida de Guille)**: el suelo del arquetipo stax
+baja de 3 a **2** y se revierten synergy (18→22) y removal ([7,12]→[8,14]). Motivo: con
+suelo 3, EDHREC B4 infravalora el stax (es nicho) y el solver rascaba el fondo — Winter
+metía Chains of Mephistopheles (score 0.18, la peor carta del mazo) robando slot a Dauthi
+Voidwalker/Tinybones (0.55). Con suelo 2 solo entran las 2 mejores piezas y el resto se
+gana el slot por score: Winter pasa a Oppression+Painful Quandary (Chains fuera);
+Thalia+Gitrog queda con sus 3 mejores (Drana and Linvala, Collector Ouphe, Elesh Norn),
+cae Armageddon (0.45)/Thalia (0.36). Lección: en categorías que EDHREC infravalora, un
+suelo alto fuerza dregs; mejor suelo bajo + dejar que el score decida.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

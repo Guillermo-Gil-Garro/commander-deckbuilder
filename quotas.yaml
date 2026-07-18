@@ -141,20 +141,20 @@ archetypes:
     stax: [0, 2]
     synergy: 22
 
-  stax:                # prison/castigo: la identidad del mazo. min>0 fuerza el plan de
-                       # prisión (única banda de stax con suelo). v4 (2026-07-18) le da
-                       # por fin etiqueta propia; bandas iniciales, calibrar con datos.
+  stax:                # prison/castigo: la identidad del mazo, con etiqueta propia
+                       # desde v4 (2026-07-18). Bandas iniciales, calibrar con datos.
     lands: [35, 39]
     ramp: [10, 15]
     card_draw: [8, 12]
-    removal: [7, 12]    # bajado 1 (de 8): el hueco lo ocupan las piezas de stax
+    removal: [8, 14]
     board_wipe: [2, 5]
     wincons: [1, 3]
     protection: [2, 4]
-    stax: [3, 9]        # el plan: prisión de recursos. Suelo 3 tras calibrar con
-                        # datos (2026-07-18): Winter solo reúne 3 piezas en su pool
-                        # EDHREC B4; Thalia+Gitrog llega a 5. Suelo 4 relajaba Winter.
-    synergy: 18         # bajado de 22: las piezas de stax dejan de caer en synergy
+    stax: [2, 8]        # suelo 2 tras feedback de partida de Guille (2026-07-18): el
+                        # suelo 3 forzaba piezas flojas (Chains of Mephistopheles score
+                        # 0.18 en Winter) robando slots a sinergia mejor. Con suelo 2
+                        # solo entran las 2 mejores; el resto se gana el slot por score.
+    synergy: 22
   artifacts:           # artefactos-matter: piezas baratas + payoffs; los mana
                        # rocks son la rampa (por eso ramp alto y tierras algo más
                        # bajas), robo alto vía artefactos, synergy holgado para el
