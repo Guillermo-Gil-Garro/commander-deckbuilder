@@ -1,22 +1,28 @@
-"""Curated deck-audit flags — layer 1 of the audit (see DECISIONS 2026-07-17).
+"""Deck-audit flags: curated conditionals (layer 1) and low-synergy filler
+(layer 2). See DECISIONS 2026-07-17/18.
 
-A small, hand-maintained list of *conditional* cards: cards whose value depends
-on a property of the deck, which no cheap automatic signal captures. EDHREC
-synergy cannot tell a "weak here" generic (Fierce Guardianship under a 9-mana
-commander) from a "good anywhere" generic (Swords to Plowshares) — both score
-~0 synergy. So the honest move for the known cases is to curate them with a
-predicate.
+**Layer 1** is a small, hand-maintained list of *conditional* cards: cards
+whose value depends on a property of the deck, which no cheap automatic signal
+captures. EDHREC synergy cannot tell a "weak here" generic (Fierce
+Guardianship under a 9-mana commander) from a "good anywhere" generic (Swords
+to Plowshares) — both score ~0 synergy. So the known cases are curated with a
+predicate. The one case today is the "free if you control your commander"
+cycle: cast for {0} only while the commander is out, which a high-CMC
+commander rarely is in time.
 
-The one case that matters today is the "free if you control your commander"
-cycle: those spells are cast for {0} only while the commander is on the
-battlefield, which a high-CMC commander rarely is when you need the free mode.
-Layers 2 (low-synergy filler, needs a staples allowlist) and 3 (LLM audit) are
-deferred; see ROADMAP.
+**Layer 2** flags probable filler with two EDHREC signals instead of a
+hand-kept allowlist: a card is doubtful when its *synergy* with this commander
+is at or below zero AND its global *inclusion* is low — the staples a curated
+allowlist would have listed (Sol Ring, Swords) clear the inclusion bar by
+themselves, so the list maintains itself. Lands are out of scope (the manabase
+is Karsten's business), and cards with no EDHREC data give no verdict.
+
+Layer 3 (LLM audit) is deferred; see ROADMAP.
 """
 
 from __future__ import annotations
 
-from collections.abc import Collection
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass
 
 # A commander at or above this converted mana cost is rarely on the battlefield
@@ -63,4 +69,55 @@ def flag_conditionals(
         for name in _FREE_WITH_COMMANDER:
             if name in names:
                 flags.append(ConditionalFlag(name=name, reason=reason))
+    return flags
+
+
+# Layer 2 thresholds, both tunable. A card is probable filler when its EDHREC
+# synergy with THIS commander is at or below FILLER_SYNERGY_MAX and its global
+# inclusion is under STAPLE_INCLUSION_MIN — high-inclusion cards are the
+# staples a hand-kept allowlist would have listed (Sol Ring ~0.8, Swords ~0.25),
+# so the allowlist maintains itself.
+FILLER_SYNERGY_MAX = 0.0
+STAPLE_INCLUSION_MIN = 0.25
+
+
+def flag_low_synergy_filler(
+    deck_card_names: Collection[str],
+    *,
+    synergy_by_name: Mapping[str, float],
+    inclusion_by_name: Mapping[str, float],
+    land_names: Collection[str],
+    protected_names: Collection[str] = (),
+) -> list[ConditionalFlag]:
+    """Layer-2 flags: probable filler in ``deck_card_names``, stable order.
+
+    A deck card is flagged when EDHREC knows it for this commander (both maps
+    are keyed by canonical pool name) and it is low-synergy AND low-inclusion.
+    ``land_names`` are exempt (the manabase is the Karsten module's business,
+    not filler), and so are ``protected_names`` (forced ``always`` cards: the
+    player's own rules outrank a statistical hunch). Cards absent from the
+    maps yield no verdict — no signal, no flag.
+    """
+    protected = set(protected_names)
+    lands = set(land_names)
+    flags: list[ConditionalFlag] = []
+    for name in sorted(deck_card_names):
+        if name in lands or name in protected:
+            continue
+        synergy = synergy_by_name.get(name)
+        inclusion = inclusion_by_name.get(name)
+        if synergy is None or inclusion is None:
+            continue
+        if synergy <= FILLER_SYNERGY_MAX and inclusion < STAPLE_INCLUSION_MIN:
+            flags.append(
+                ConditionalFlag(
+                    name=name,
+                    reason=(
+                        f"Sinergia {synergy:+.2f} con tu comandante y solo un "
+                        f"{inclusion:.0%} de los mazos que podrían jugarla la "
+                        f"juegan: probablemente es relleno. Mira el banquillo "
+                        f"por algo con más razón de estar."
+                    ),
+                )
+            )
     return flags

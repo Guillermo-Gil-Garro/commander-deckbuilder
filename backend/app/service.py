@@ -103,7 +103,7 @@ from rules.resolve import ResolutionError
 from quotas.lands import curve_bucket
 from quotas.resolver import resolve_bands
 from quotas.validator import CategoryStatus
-from selector.audit import flag_conditionals
+from selector.audit import flag_conditionals, flag_low_synergy_filler
 from selector.constraints import CardFacts
 from selector.cp_sat import CpSatResult, build_deck_cpsat
 from selector.deck_rules import (
@@ -999,8 +999,30 @@ def audit_deck(state: AppState, request: AuditRequest) -> AuditResponse:
             counts[category] = counts.get(category, 0) + count
     thin_category = _thinnest_category(counts, bands)
 
+    # Layer-2 signals, keyed by canonical pool name (recs use EDHREC's names).
+    synergy_by_name: dict[str, float] = {}
+    inclusion_by_name: dict[str, float] = {}
+    for rec in data.recommendations:
+        card = state.pool.resolve(rec.name)
+        if card is not None:
+            synergy_by_name[card["name"]] = rec.synergy
+            inclusion_by_name[card["name"]] = rec.inclusion
+    land_names = {facts.name for facts, _ in deck if facts.is_land}
+
+    layer1 = flag_conditionals(deck_names, commander.cmc)
+    layer1_names = {flag.name for flag in layer1}
+    layer2 = flag_low_synergy_filler(
+        deck_names,
+        synergy_by_name=synergy_by_name,
+        inclusion_by_name=inclusion_by_name,
+        land_names=land_names,
+        # Layer 1 already explains these better; always-forced cards are the
+        # player's own rules and outrank a statistical hunch.
+        protected_names=layer1_names | always_names,
+    )
+
     doubtful: list[AuditFlagView] = []
-    for flag in flag_conditionals(deck_names, commander.cmc):
+    for flag in [*layer1, *layer2]:
         flagged = facts_by_name.get(flag.name)
         if flagged is None:
             continue

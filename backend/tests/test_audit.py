@@ -16,7 +16,13 @@ from app import main as app_main
 from app import service
 from app.state import AppState
 from quotas.config import QuotaBand
-from selector.audit import FREE_SPELL_COMMANDER_CMC, flag_conditionals
+from selector.audit import (
+    FILLER_SYNERGY_MAX,
+    FREE_SPELL_COMMANDER_CMC,
+    STAPLE_INCLUSION_MIN,
+    flag_conditionals,
+    flag_low_synergy_filler,
+)
 
 
 # --- layer 1: curated conditional flags (pure) -------------------------------
@@ -51,6 +57,60 @@ def test_multiple_cycle_cards_flagged_in_a_stable_order() -> None:
         "Fierce Guardianship",
         "Deflecting Swat",
     ]
+
+
+# --- layer 2: low-synergy filler (pure) --------------------------------------
+
+
+def _filler_kwargs(**over):
+    base = {
+        "synergy_by_name": {"Filler Card": -0.1, "Sol Ring": -0.05, "Tech Card": 0.4},
+        "inclusion_by_name": {"Filler Card": 0.05, "Sol Ring": 0.8, "Tech Card": 0.1},
+        "land_names": set(),
+        "protected_names": (),
+    }
+    base.update(over)
+    return base
+
+
+def test_low_synergy_low_inclusion_is_flagged() -> None:
+    flags = flag_low_synergy_filler({"Filler Card"}, **_filler_kwargs())
+    assert [f.name for f in flags] == ["Filler Card"]
+    assert "relleno" in flags[0].reason
+
+
+def test_high_inclusion_staple_is_not_flagged() -> None:
+    # Sol Ring: ~0 synergy everywhere, but the inclusion bar IS the allowlist.
+    assert flag_low_synergy_filler({"Sol Ring"}, **_filler_kwargs()) == []
+
+
+def test_high_synergy_tech_is_not_flagged() -> None:
+    assert flag_low_synergy_filler({"Tech Card"}, **_filler_kwargs()) == []
+
+
+def test_lands_are_exempt() -> None:
+    kwargs = _filler_kwargs(land_names={"Filler Card"})
+    assert flag_low_synergy_filler({"Filler Card"}, **kwargs) == []
+
+
+def test_protected_names_are_exempt() -> None:
+    kwargs = _filler_kwargs(protected_names={"Filler Card"})
+    assert flag_low_synergy_filler({"Filler Card"}, **kwargs) == []
+
+
+def test_no_edhrec_data_gives_no_verdict() -> None:
+    assert flag_low_synergy_filler({"Unknown Card"}, **_filler_kwargs()) == []
+
+
+def test_thresholds_are_inclusive_exclusive_as_documented() -> None:
+    kwargs = _filler_kwargs(
+        synergy_by_name={"A": FILLER_SYNERGY_MAX, "B": FILLER_SYNERGY_MAX + 0.01},
+        inclusion_by_name={"A": STAPLE_INCLUSION_MIN - 0.01, "B": 0.0},
+    )
+    # A: synergy AT the max (inclusive) and inclusion under the bar -> flagged.
+    # B: synergy above the max -> clean, however low its inclusion.
+    flags = flag_low_synergy_filler({"A", "B"}, **kwargs)
+    assert [f.name for f in flags] == ["A"]
 
 
 # --- thinnest category (pure) ------------------------------------------------
