@@ -462,11 +462,15 @@ dregs y sin forzarla las buenas ya entran por score. `protection` es la siguient
 ## 2026-07-18 — Arte de cartas: español por defecto + selector de ediciones
 
 Decisión de Guille: las cartas se muestran e imprimen **en español** cuando existe un
-escaneo español en alta resolución; si no, se mantiene el arte inglés del pool (o el
-inglés high-res más reciente si el del pool no lo es). El usuario puede elegir cualquier
-edición desde un selector (botón paleta en cada carta); el selector **solo lista
-ediciones high-res** salvo que la carta no tenga ninguna (una edición concreta sin
-high-res se busca fuera del sistema). **Lo elegido en la UI es lo que exporta el PDF.**
+escaneo español; si no, se mantiene el arte inglés del pool (o el inglés high-res más
+reciente si el del pool no lo es). Orden del default (ajustado el mismo día — el corte
+high-res-only dejaba casi nada en español, la mayoría de escaneos españoles de Scryfall
+son blandos): **es high-res → es low-res → pool si high-res → en high-res**. Los
+`placeholder`/`missing` de Scryfall (imágenes de relleno, no escaneos) se descartan en el
+fetcher y ninguna política puede elegirlos. El selector (botón paleta en cada carta)
+lista **todos los escaneos reales** con badge «baja res» en los blandos — elegir calidad
+baja es una decisión visible, no una trampa. **Lo elegido en la UI es lo que exporta el
+PDF.** Las elecciones manuales son globales entre mazos y persisten (localStorage).
 
 Cómo: `pipeline/prints.py` busca en Scryfall todas las impresiones físicas es/en de un
 oracle_id (`unique=prints`, `include_multilingual`, `-is:digital`; el criterio high-res
