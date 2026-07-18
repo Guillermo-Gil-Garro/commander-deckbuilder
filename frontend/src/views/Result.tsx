@@ -99,6 +99,7 @@ export function Result({
     [deck, resolved],
   );
   const [artCard, setArtCard] = useState<ViewCard | null>(null);
+  const [auditOpen, setAuditOpen] = useState(false);
 
   // The 99 cards for the opening-hand modal: non-basics plus each basic repeated
   // `count` times. Derived from the shown deck so swaps and art choices are
@@ -166,15 +167,6 @@ export function Result({
             <ConstraintsPanel result={deck} swapped={swapped} />
             <CompositionPanel result={deck} />
           </div>
-          {swapsEnabled && req && (
-            <AuditPanel
-              commander={req.commander}
-              dials={req.dials}
-              deckRefs={deckRefs}
-              deckCards={deck.nonbasic_cards}
-              onSwap={swap}
-            />
-          )}
           <CurvePanel curve={deck.curve_breakdown} />
           {swapsEnabled && req ? (
             <SwapWorkspace
@@ -185,12 +177,23 @@ export function Result({
               onSwap={swap}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
+              onAudit={() => setAuditOpen(true)}
             />
           ) : (
             <DeckView
               result={shownDeck}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
+            />
+          )}
+          {auditOpen && swapsEnabled && req && (
+            <AuditModal
+              commander={req.commander}
+              dials={req.dials}
+              deckRefs={deckRefs}
+              deckCards={deck.nonbasic_cards}
+              onSwap={swap}
+              onClose={() => setAuditOpen(false)}
             />
           )}
         </>
@@ -210,6 +213,7 @@ function SwapWorkspace({
   onSwap,
   onArtSelect,
   pdfArtOverrides,
+  onAudit,
 }: {
   deck: BuildResult;
   /** `deck` with the art picker's printings applied — what the views render.
@@ -220,6 +224,7 @@ function SwapWorkspace({
   onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void;
   onArtSelect: (card: ViewCard) => void;
   pdfArtOverrides: Record<string, string>;
+  onAudit: () => void;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -356,18 +361,25 @@ function SwapWorkspace({
         activeOutName={outName}
         onArtSelect={onArtSelect}
         pdfArtOverrides={pdfArtOverrides}
+        onAudit={onAudit}
       />
 
-      <MaybeboardPanel
-        bench={bench}
-        outCard={outCard}
-        cands={cands}
-        candsLoading={candsLoading}
-        candsError={candsError}
-        selectedInName={inCard?.name ?? null}
-        onChooseIn={setInCard}
-        onCancel={cancelSwap}
-      />
+      {/* Bench only: the active-swap candidates render as a modal instead
+          (below), so the player never has to scroll past 100 cards to see
+          what they are swapping. */}
+      <MaybeboardPanel bench={bench} />
+
+      {outCard && (
+        <SwapCandidatesModal
+          outCard={outCard}
+          cands={cands}
+          loading={candsLoading}
+          error={candsError}
+          selectedInName={inCard?.name ?? null}
+          onChooseIn={setInCard}
+          onCancel={cancelSwap}
+        />
+      )}
 
       {outCard && inCard && (
         <SwapTray
@@ -393,12 +405,17 @@ const REPLACEMENT_LABEL: Record<AuditReplacement['kind'], string> = {
   reinforce: 'Refuerzo',
 };
 
-function AuditPanel({
+// How many out-candidates the placing picker shows. Guided freedom: enough
+// room to disagree with the suggestion, not the whole 60-card haystack.
+const PLACING_OUT_LIMIT = 9;
+
+function AuditModal({
   commander,
   dials,
   deckRefs,
   deckCards,
   onSwap,
+  onClose,
 }: {
   commander: string;
   dials: BuildRequest['dials'];
@@ -410,8 +427,8 @@ function AuditPanel({
     chosen: DeckCard,
     validation: SwapValidation,
   ) => void;
+  onClose: () => void;
 }) {
-  const [active, setActive] = useState(false);
   const [audit, setAudit] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -422,7 +439,6 @@ function AuditPanel({
   const [placing, setPlacing] = useState<DeckCard | null>(null);
 
   useEffect(() => {
-    if (!active) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -440,7 +456,15 @@ function AuditPanel({
     return () => {
       cancelled = true;
     };
-  }, [active, commander, dials, deckRefs]);
+  }, [commander, dials, deckRefs]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
 
   async function applySwapPair(outName: string, chosen: DeckCard) {
     setApplying(`${outName}=>${chosen.name}`);
@@ -471,41 +495,47 @@ function AuditPanel({
 
   // Out-candidates for the card being placed: same-slot cards first (they
   // compete for the same job), then the rest; worst score first within each
-  // tier — the weakest link is the natural cut.
+  // tier — the weakest link is the natural cut. Capped: guided freedom, not
+  // the whole haystack. The first one is the recommendation.
   const outCandidates = useMemo(() => {
     if (!placing) return [];
     const slot = placing.slot;
-    return [...deckCards].sort((a, b) => {
-      const aSame = a.categories.includes(slot) ? 0 : 1;
-      const bSame = b.categories.includes(slot) ? 0 : 1;
-      return aSame - bSame || (a.score ?? 0) - (b.score ?? 0);
-    });
+    return [...deckCards]
+      .sort((a, b) => {
+        const aSame = a.categories.includes(slot) ? 0 : 1;
+        const bSame = b.categories.includes(slot) ? 0 : 1;
+        return aSame - bSame || (a.score ?? 0) - (b.score ?? 0);
+      })
+      .slice(0, PLACING_OUT_LIMIT);
   }, [placing, deckCards]);
 
-  if (!active) {
-    return (
-      <Panel>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="text-lg font-semibold">Auditoría del mazo</h3>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Señala cartas dudosas y buenas que te faltan. No cambia nada: tú
-              decides.
-            </p>
-          </div>
-          <Button onClick={() => setActive(true)}>
-            <Sparkles className="h-4 w-4" /> Auditar mazo
-          </Button>
-        </div>
-      </Panel>
-    );
-  }
-
   return (
-    <Panel>
-      <div className="mb-4 flex items-center gap-2">
-        <h3 className="text-lg font-semibold">Auditoría del mazo</h3>
-        {loading && <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Auditoría del mazo"
+      onClick={onClose}
+      className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm sm:p-6"
+    >
+      <div
+        onClick={(event) => event.stopPropagation()}
+        className="surface flex max-h-[92vh] w-full max-w-6xl flex-col gap-4 overflow-y-auto rounded-lg p-5 sm:p-7"
+      >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <h3 className="inline-flex items-center gap-2 text-lg font-semibold">
+            <Sparkles className="h-5 w-5 accent-text" /> Auditoría del mazo
+          </h3>
+          {loading && <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="accent-focus inline-flex h-9 w-9 items-center justify-center rounded-lg border border-black/10 bg-white text-zinc-600 transition hover:bg-zinc-100 dark:border-white/10 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -601,8 +631,9 @@ function AuditPanel({
                 peor puntuadas antes. El cambio se valida antes de aplicarse.
               </p>
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9">
-                {outCandidates.map((card) => {
+                {outCandidates.map((card, index) => {
                   const busy = applying === `${card.name}=>${placing.name}`;
+                  const suggested = index === 0;
                   return (
                     <button
                       key={card.oracle_id}
@@ -610,13 +641,20 @@ function AuditPanel({
                       onClick={() => void applySwapPair(card.name, placing)}
                       disabled={applying !== null}
                       title={`Sacar ${card.name}`}
-                      className="accent-focus group relative flex flex-col gap-1 rounded-lg text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60"
+                      className={`accent-focus group relative flex flex-col gap-1 rounded-lg text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60 ${
+                        suggested ? 'ring-2 ring-emerald-500/70' : ''
+                      }`}
                     >
                       <div className="relative overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
                         <CardImage
                           card={toViewCard(card)}
                           className="aspect-[5/7] w-full object-cover"
                         />
+                        {suggested && (
+                          <span className="absolute left-1 top-1 rounded bg-emerald-600/90 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
+                            Sugerida
+                          </span>
+                        )}
                         {busy && (
                           <span className="absolute inset-0 flex items-center justify-center bg-black/50">
                             <Loader2 className="h-5 w-5 animate-spin text-white" />
@@ -637,9 +675,20 @@ function AuditPanel({
           )}
         </div>
       )}
-    </Panel>
+      </div>
+    </div>
   );
 }
+
+// Chip colours per replacement kind — the sequential mode's visual grammar:
+// every tile in the row is the same size, its role told by the header chip.
+const REPLACEMENT_CHIP: Record<AuditReplacement['kind'], string> = {
+  same_role:
+    'bg-amber-500/15 text-amber-700 ring-amber-400/40 dark:text-amber-200',
+  best_overall:
+    'bg-violet-500/15 text-violet-700 ring-violet-400/40 dark:text-violet-200',
+  reinforce: 'bg-sky-500/15 text-sky-700 ring-sky-400/40 dark:text-sky-200',
+};
 
 function AuditFlagRow({
   flag,
@@ -652,65 +701,63 @@ function AuditFlagRow({
 }) {
   return (
     <div className="rounded-xl border border-amber-300/50 bg-amber-50/40 p-4 dark:border-amber-500/20 dark:bg-amber-500/5">
-      <div className="flex flex-wrap gap-4">
-        <div className="w-36 shrink-0 overflow-hidden rounded-xl ring-1 ring-black/10 sm:w-44 dark:ring-white/10">
+      <div className="mb-3 flex items-start gap-2">
+        <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+        <p className="text-sm text-zinc-700 dark:text-zinc-200">
+          <span className="font-semibold">{flag.card.name}:</span> {flag.reason}
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {/* The flagged card, same size as its alternatives (sequential-mode
+            grammar): the chip says which one is currently in the deck. */}
+        <div className="flex flex-col overflow-hidden rounded-xl border border-rose-400/50 bg-white/60 dark:bg-zinc-950/40">
+          <span className="flex items-center justify-center gap-1 bg-rose-500/15 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-rose-700 dark:text-rose-200">
+            Actual · {categoryLabel(flag.card.slot)}
+          </span>
           <CardImage
             card={toViewCard(flag.card)}
             className="aspect-[5/7] w-full object-cover"
           />
+          <span className="truncate px-2 py-1.5 text-xs font-semibold">
+            {flag.card.name}
+          </span>
         </div>
-        <div className="min-w-[240px] flex-1">
-          <div className="flex items-center gap-2">
-            <TriangleAlert className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-            <span className="font-semibold">{flag.card.name}</span>
-          </div>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
-            {flag.reason}
-          </p>
-          {flag.replacements.length > 0 && (
-            <div className="mt-4">
-              <p className="mb-2 text-xs font-medium text-zinc-500">
-                Cámbiala por:
-              </p>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {flag.replacements.map((rep) => {
-                  const busy = applying === `${flag.card.name}=>${rep.card.name}`;
-                  return (
-                    <button
-                      key={`${rep.kind}:${rep.card.name}`}
-                      type="button"
-                      onClick={() => onApply(rep.card)}
-                      disabled={applying !== null}
-                      title={rep.note}
-                      className="accent-focus flex flex-col gap-1.5 rounded-xl text-left transition hover:accent-ring hover:ring-2 disabled:opacity-60"
-                    >
-                      <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
-                        <CardImage
-                          card={toViewCard(rep.card)}
-                          className="aspect-[5/7] w-full object-cover"
-                        />
-                        {busy && (
-                          <span className="absolute inset-0 flex items-center justify-center bg-black/50">
-                            <Loader2 className="h-6 w-6 animate-spin text-white" />
-                          </span>
-                        )}
-                      </div>
-                      <span className="px-0.5">
-                        <span className="block truncate text-xs font-semibold">
-                          {rep.card.name}
-                        </span>
-                        <span className="block truncate text-[0.7rem] text-zinc-500">
-                          {REPLACEMENT_LABEL[rep.kind]} ·{' '}
-                          {categoryLabel(rep.card.slot)}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+        {flag.replacements.map((rep) => {
+          const busy = applying === `${flag.card.name}=>${rep.card.name}`;
+          return (
+            <button
+              key={`${rep.kind}:${rep.card.name}`}
+              type="button"
+              onClick={() => onApply(rep.card)}
+              disabled={applying !== null}
+              title={rep.note}
+              className="accent-focus flex flex-col overflow-hidden rounded-xl border border-black/10 bg-white/60 text-left transition hover:accent-ring hover:ring-2 disabled:opacity-60 dark:border-white/10 dark:bg-zinc-950/40"
+            >
+              <span
+                className={`flex items-center justify-center gap-1 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ring-0 ${REPLACEMENT_CHIP[rep.kind]}`}
+              >
+                {REPLACEMENT_LABEL[rep.kind]} · {categoryLabel(rep.card.slot)}
+              </span>
+              <span className="relative block">
+                <CardImage
+                  card={toViewCard(rep.card)}
+                  className="aspect-[5/7] w-full object-cover"
+                />
+                {busy && (
+                  <span className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <Loader2 className="h-6 w-6 animate-spin text-white" />
+                  </span>
+                )}
+              </span>
+              <span className="flex items-center justify-between gap-2 px-2 py-1.5">
+                <span className="truncate text-xs font-semibold">
+                  {rep.card.name}
+                </span>
+                <ArrowRightLeft className="h-3.5 w-3.5 shrink-0 accent-text" />
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -1069,35 +1116,51 @@ function CurvePanel({ curve }: { curve: Record<string, CurveRow> }) {
   );
 }
 
-// The maybeboard bench. Two modes: a standing bench (best non-selected cards per
-// role) when no swap is in progress, and the same-role candidates for the card
-// marked to leave once a swap starts.
-function MaybeboardPanel({
-  bench,
+// The active-swap candidates as an overlay (Guille 2026-07-19: the below-deck
+// panel forced a scroll past 100 cards; a popup like the opening hand does not).
+// The confirm tray (fixed bottom, higher z) floats over it, so choosing and
+// confirming happen without leaving the modal.
+function SwapCandidatesModal({
   outCard,
   cands,
-  candsLoading,
-  candsError,
+  loading,
+  error,
   selectedInName,
   onChooseIn,
   onCancel,
 }: {
-  bench: Maybeboard | null;
-  outCard: DeckCard | null;
+  outCard: DeckCard;
   cands: SwapCandidates | null;
-  candsLoading: boolean;
-  candsError: string | null;
+  loading: boolean;
+  error: string | null;
   selectedInName: string | null;
   onChooseIn: (card: DeckCard) => void;
   onCancel: () => void;
 }) {
-  if (outCard) {
-    // One flat list: we have a single scorer, so there is no synergy/power split
-    // to de-duplicate the way the TFM had to.
-    const candidates = cands?.candidates ?? [];
-    return (
-      <Panel>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') onCancel();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onCancel]);
+
+  // One flat list: we have a single scorer, so there is no synergy/power split
+  // to de-duplicate the way the TFM had to.
+  const candidates = cands?.candidates ?? [];
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Cambiando ${outCard.name}`}
+      onClick={onCancel}
+      className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm sm:p-6"
+    >
+      <div
+        onClick={(event) => event.stopPropagation()}
+        className="surface flex max-h-[92vh] w-full max-w-6xl flex-col gap-4 overflow-y-auto rounded-lg p-5 pb-28 sm:p-7 sm:pb-28"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
             <ArrowRightLeft className="h-5 w-5 accent-text" />
             Cambiando{' '}
@@ -1109,9 +1172,9 @@ function MaybeboardPanel({
             <X className="h-4 w-4" /> Cancelar cambio
           </Button>
         </div>
-        <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-300">
+        <p className="text-sm text-zinc-600 dark:text-zinc-300">
           Alternativas que mantienen el mazo válido. Pulsa una para previsualizar
-          el cambio.
+          el cambio y confírmalo abajo.
           {cands && cands.feasible_count > candidates.length && (
             <span className="ml-1 text-zinc-500 dark:text-zinc-400">
               Se muestran {candidates.length} de {cands.feasible_count}{' '}
@@ -1119,13 +1182,13 @@ function MaybeboardPanel({
             </span>
           )}
         </p>
-        {candsLoading ? (
+        {loading ? (
           <p className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
             <Loader2 className="h-4 w-4 animate-spin" /> Buscando alternativas…
           </p>
-        ) : candsError ? (
+        ) : error ? (
           <p className="text-sm text-amber-700 dark:text-amber-300">
-            No se pudieron cargar las alternativas ({candsError}).
+            No se pudieron cargar las alternativas ({error}).
           </p>
         ) : candidates.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -1143,10 +1206,18 @@ function MaybeboardPanel({
             ))}
           </div>
         )}
-      </Panel>
-    );
-  }
+      </div>
+    </div>
+  );
+}
 
+// The maybeboard bench: best non-selected cards per role. The active-swap
+// candidates live in SwapCandidatesModal, not here.
+function MaybeboardPanel({
+  bench,
+}: {
+  bench: Maybeboard | null;
+}) {
   // Standing bench: best non-selected cards grouped by role.
   const roles = bench
     ? Object.entries(bench).filter(([, cards]) => cards.length > 0)
@@ -1252,7 +1323,7 @@ function SwapTray({
 }) {
   const blocked = validation !== null && !validation.feasible;
   return (
-    <div className="fixed inset-x-4 bottom-4 z-40 mx-auto max-w-3xl rounded-xl border border-black/10 bg-white/95 p-4 shadow-2xl backdrop-blur dark:border-white/15 dark:bg-zinc-900/95">
+    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-xl border border-black/10 bg-white/95 p-4 shadow-2xl backdrop-blur dark:border-white/15 dark:bg-zinc-900/95">
       <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
         <div className="flex flex-1 items-center justify-center gap-3 sm:justify-start">
           <SwapSide card={inCard} kind="in" />

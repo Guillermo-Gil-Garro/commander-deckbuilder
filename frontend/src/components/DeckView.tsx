@@ -3,7 +3,15 @@
 // the export delegated to the API.
 
 import { useMemo, useState, type ReactNode } from 'react';
-import { Grid2x2, LayoutList, Loader2, Palette, Printer, Tags } from 'lucide-react';
+import {
+  Grid2x2,
+  LayoutList,
+  Loader2,
+  Palette,
+  Printer,
+  Sparkles,
+  Tags,
+} from 'lucide-react';
 import { Button, Panel } from './ui';
 import { CardTile, ManaCost, ScoreBadge } from './cards';
 import { categoryLabel } from '../labels';
@@ -298,6 +306,7 @@ export function DeckView({
   activeOutName = null,
   onArtSelect,
   pdfArtOverrides,
+  onAudit,
 }: {
   result: BuildResult;
   showExport?: boolean;
@@ -310,6 +319,8 @@ export function DeckView({
   onArtSelect?: (card: ViewCard) => void;
   // name -> chosen printing scryfall_id; the proxy PDF prints those.
   pdfArtOverrides?: Record<string, string>;
+  // Audit entry point: when set, an "Auditar mazo" button joins the header.
+  onAudit?: () => void;
 }) {
   const [sort, setSort] = useState<SortAxis>('type');
   const [display, setDisplay] = useState<DisplayAxis>('list');
@@ -364,6 +375,11 @@ export function DeckView({
         </h3>
         {showExport && (
           <div className="flex flex-wrap items-center gap-2">
+            {onAudit && (
+              <Button variant="secondary" onClick={onAudit}>
+                <Sparkles className="h-4 w-4" /> Auditar mazo
+              </Button>
+            )}
             <Button
               variant="secondary"
               onClick={() => void onExportPdf()}
