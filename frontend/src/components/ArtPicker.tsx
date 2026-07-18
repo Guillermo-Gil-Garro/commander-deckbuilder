@@ -5,15 +5,21 @@
 // across decks. A printing the user wants that has no high-res scan is out of
 // scope on purpose: they hunt that image outside the system.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Loader2, RotateCcw, X } from 'lucide-react';
 import { Button } from './ui';
 import { fetchCardPrints, type CardPrint, type CardPrints } from '../api';
 
-// The label a printing shows under its thumbnail: language, set, year.
+// The label a printing shows under its thumbnail: set and year.
 function printCaption(print: CardPrint): string {
   const year = print.released_at.slice(0, 4);
   return `${print.set_name}${year ? ` · ${year}` : ''}`;
+}
+
+// High-res first, then soft scans; ties keep the newest-first order the
+// backend sends. A stable sort, so "newest" survives within each tier.
+function byResolution(prints: CardPrint[]): CardPrint[] {
+  return [...prints].sort((a, b) => Number(b.highres) - Number(a.highres));
 }
 
 export function ArtPicker({
@@ -64,6 +70,18 @@ export function ArtPicker({
 
   const hasLowres = data !== null && data.prints.some((p) => !p.highres);
 
+  // Spanish first (the house default), then English; each tier sorted high-res
+  // before soft, newest first within a tier.
+  const sections = useMemo(() => {
+    if (!data) return [];
+    const spanish = byResolution(data.prints.filter((p) => p.lang === 'es'));
+    const english = byResolution(data.prints.filter((p) => p.lang !== 'es'));
+    return [
+      { key: 'es', label: 'Español', prints: spanish },
+      { key: 'en', label: 'Inglés', prints: english },
+    ].filter((section) => section.prints.length > 0);
+  }, [data]);
+
   return (
     <div
       role="dialog"
@@ -82,7 +100,7 @@ export function ArtPicker({
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
               Elige la edición a mostrar e imprimir.
               {hasLowres &&
-                ' Las marcadas «baja res» son escaneos reales pero blandos.'}
+                ' «Baja res» es el veredicto de Scryfall (conservador): a tamaño de carta, muchas se imprimen perfectamente bien.'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -115,48 +133,55 @@ export function ArtPicker({
             Scryfall no tiene ediciones imprimibles de esta carta.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {data.prints.map((print) => {
-              const active = print.scryfall_id === activeScryfallId;
-              return (
-                <button
-                  key={print.scryfall_id}
-                  type="button"
-                  onClick={() => onPick(print)}
-                  className={`accent-focus group flex flex-col gap-1 rounded-xl text-left transition ${
-                    active ? 'ring-2 accent-ring' : 'hover:accent-ring hover:ring-2'
-                  }`}
-                >
-                  <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
-                    <img
-                      src={print.image_uri_normal}
-                      alt={`${cardName} — ${print.set_name}`}
-                      loading="lazy"
-                      className="aspect-[5/7] w-full object-cover"
-                    />
-                    <span className="absolute left-1.5 top-1.5 flex items-center gap-1">
-                      <span className="rounded bg-black/75 px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
-                        {print.lang}
+          sections.map((section) => (
+            <div key={section.key}>
+              <div className="mb-2 flex items-baseline gap-2 border-b border-black/10 pb-1 dark:border-white/10">
+                <h4 className="text-base font-extrabold tracking-tight accent-text">
+                  {section.label}
+                </h4>
+                <span className="text-sm tabular-nums text-zinc-400 dark:text-zinc-500">
+                  {section.prints.length}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {section.prints.map((print) => {
+                  const active = print.scryfall_id === activeScryfallId;
+                  return (
+                    <button
+                      key={print.scryfall_id}
+                      type="button"
+                      onClick={() => onPick(print)}
+                      className={`accent-focus group flex flex-col gap-1 rounded-xl text-left transition ${
+                        active ? 'ring-2 accent-ring' : 'hover:accent-ring hover:ring-2'
+                      }`}
+                    >
+                      <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                        <img
+                          src={print.image_uri_normal}
+                          alt={`${cardName} — ${print.set_name}`}
+                          loading="lazy"
+                          className="aspect-[5/7] w-full object-cover"
+                        />
+                        {!print.highres && (
+                          <span className="absolute left-1.5 top-1.5 rounded bg-amber-500/90 px-1.5 py-0.5 text-[0.65rem] font-bold text-black ring-1 ring-white/25">
+                            baja res
+                          </span>
+                        )}
+                        {active && (
+                          <span className="absolute bottom-1.5 right-1.5 rounded bg-black/75 px-1.5 py-0.5 text-[0.65rem] font-semibold text-white ring-1 ring-white/25">
+                            En uso
+                          </span>
+                        )}
+                      </div>
+                      <span className="truncate px-0.5 text-[0.7rem] text-zinc-500 dark:text-zinc-400">
+                        {printCaption(print)}
                       </span>
-                      {!print.highres && (
-                        <span className="rounded bg-amber-500/90 px-1.5 py-0.5 text-[0.65rem] font-bold text-black ring-1 ring-white/25">
-                          baja res
-                        </span>
-                      )}
-                    </span>
-                    {active && (
-                      <span className="absolute bottom-1.5 right-1.5 rounded bg-black/75 px-1.5 py-0.5 text-[0.65rem] font-semibold text-white ring-1 ring-white/25">
-                        En uso
-                      </span>
-                    )}
-                  </div>
-                  <span className="truncate px-0.5 text-[0.7rem] text-zinc-500 dark:text-zinc-400">
-                    {printCaption(print)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))
         )}
       </div>
     </div>

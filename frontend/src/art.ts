@@ -157,6 +157,23 @@ export function withArt(
   return { ...deck, nonbasic_cards: nonbasics, commander };
 }
 
+/** The art cache as a plain read (no hook, no network): Spanish defaults with
+ *  the user's manual picks on top. For surfaces outside the deck (the Setup's
+ *  commander picker) that should show already-known art without triggering any
+ *  resolution — an unknown card simply keeps its stock image. */
+export function readArtCache(): Record<string, CardPrint> {
+  const map: Record<string, CardPrint> = {};
+  const defaults = readStore<DefaultsMap>(DEFAULTS_KEY) ?? {};
+  for (const [id, print] of Object.entries(defaults)) {
+    if (print) map[id] = print;
+  }
+  const manual = readStore<ManualMap>(MANUAL_KEY) ?? {};
+  for (const [id, print] of Object.entries(manual)) {
+    map[id] = print;
+  }
+  return map;
+}
+
 /** The export map the PDF endpoint wants: card NAME -> chosen scryfall_id,
  *  covering the commander and every non-basic with an override in effect. */
 export function artOverridesForExport(

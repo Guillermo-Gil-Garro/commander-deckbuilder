@@ -23,6 +23,7 @@ import { ParamsIcon } from '../components/icons';
 import { CardFlipButton } from '../components/cards';
 import { DialBar } from '../components/dials';
 import { type CommanderListItem, type Dials } from '../api';
+import { readArtCache } from '../art';
 import { DIALS, archetypeLabel, ARCHETYPE_OPTIONS } from '../labels';
 
 // Page size tuned to the card grid (fills ~3 rows per page).
@@ -81,13 +82,31 @@ export function Setup({
     });
   }
 
+  // Known art choices (Spanish defaults + manual picks) applied to the picker
+  // previews. Read once per mount: the cache only changes inside the deck view,
+  // and coming back here is a re-mount.
+  const artCache = useMemo(() => readArtCache(), []);
+  const withChosenArt = useMemo(
+    () =>
+      commanders.map((commander) => {
+        const print = artCache[commander.oracle_id];
+        if (!print) return commander;
+        return {
+          ...commander,
+          image_uri_normal: print.image_uri_normal,
+          image_uri_back_normal: print.image_uri_back_normal,
+        };
+      }),
+    [commanders, artCache],
+  );
+
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
     const wanted = identityFilter;
     // Colorless (C) is exclusive: it only ever describes an empty color identity.
     const wantColorless = wanted.has('C');
     const wantedColors = [...wanted].filter((c) => c !== 'C');
-    return commanders.filter((commander) => {
+    return withChosenArt.filter((commander) => {
       if (needle && !commander.name.toLowerCase().includes(needle)) return false;
       if (archetypeFilter && curatedArchetype(commander) !== archetypeFilter) {
         return false;
@@ -107,7 +126,7 @@ export function Setup({
       }
       return true;
     });
-  }, [commanders, search, identityFilter, archetypeFilter]);
+  }, [withChosenArt, search, identityFilter, archetypeFilter]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
