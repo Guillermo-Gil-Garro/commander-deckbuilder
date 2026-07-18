@@ -169,7 +169,7 @@ def test_commanders_are_sorted_by_name(real_app_state: AppState) -> None:
 
 
 def test_featured_are_loaded_in_file_order(real_app_state: AppState) -> None:
-    assert len(real_app_state.featured) == 55
+    assert len(real_app_state.featured) == 56  # +Kona, Rescue Beastie (2026-07-18)
 
 
 def test_tagger_reads_the_store(real_app_state: AppState) -> None:

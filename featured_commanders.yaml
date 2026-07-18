@@ -36,6 +36,8 @@ featured:
     description: "Sacrifica tus tierras para fabricar elementales 5/3 y recuperarlas."
   - name: Selvala, Heart of the Wilds      # G
     description: "Tu bicho más grande genera maná a raudales para encadenar gigantes."
+  - name: Kona, Rescue Beastie             # G
+    description: "Tápala y baja gratis un permanente gordo de la mano cada turno."
   - name: Zhulodok, Void Gorger            # incoloro
     description: "Eldrazis colosales que encadenan cascadas y arrasan al caer."
 

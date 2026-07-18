@@ -378,6 +378,35 @@ swaps FACTIBLES por la carta que se corta — si uno deja el mazo ilegal, ese sl
   respeta el hueco). Ej. Farewell si vas justo de board wipe.
 - Cada slot etiquetado con su porqué; dedupe suave (no repetir la misma carta).
 
+## 2026-07-18 — Dudosos revisados, arquetipo artifacts, Kona
+
+Revisados los 8 comandantes dudosos contra builds reales: **7/8 construían OPTIMAL
+limpio** (arquetipo mecánicamente correcto; el cambio sería de sabor). Decisiones de
+Guille:
+
+- **Arquetipo `artifacts` nuevo**: piezas baratas + payoffs; los mana rocks son la rampa
+  (ramp [10,16] alto, tierras [33,38] algo más bajas), robo alto, synergy 34 holgado para
+  el paquete de artefactos. **Reorganización**: Emry (de graveyard) y Urza (de control) →
+  artifacts. Ambos OPTIMAL limpio.
+- **Narset**: sube protección con override `[3,5]` (de spellslinger [2,4]) — el mazo
+  depende de que sobreviva y conecte.
+- **Obeka**: baja el suelo de wincons con override `[0,4]` — no lleva wincons dedicados
+  (plan = caja de "terminar el turno"); antes relajaba a `soft_category_floors`, ahora
+  OPTIMAL limpio.
+- **Kona, Rescue Beastie** añadida (featured + quotas) → **big_mana**. Mono-verde que
+  trampea un permanente/turno de la mano si está tappeada; suelo Karsten 40, que solo
+  big_mana acomoda. (No es artifacts pese a "trampear permanentes": es rampa-verde-a-bombas.)
+- Baral/control, Ketramose/midrange, Locust God/spellslinger, Kefka/control (stax es
+  provisional), Arcades/midrange: **se dejan** (borderline defendibles).
+
+**Coste de meter `stax` en el tagger** (preguntó Guille): es el mismo playbook que
+`protection` (ya hecho una vez). No es un tweak de código: (1) añadir `stax` a `CATEGORIES`
+(`quotas/config.py` + `tags/store.py`) y decidir su semántica de banda; (2) definir `stax`
+en `RUBRIC.md`; (3) **re-etiquetar el pool con el LLM** para la nueva etiqueta (el coste
+real: llamadas LLM cacheadas sobre ~5.283 cartas + revisar la cola de auditoría; protection
+rindió 168 etiquetas, stax sería de escala parecida); (4) bandas de stax por arquetipo +
+regenerar; (5) tests. Moderado, no gratis: es una campaña de tagging, no una línea.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

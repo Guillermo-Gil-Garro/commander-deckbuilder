@@ -86,7 +86,11 @@ sistema). Diseño completo en DECISIONS.
 - **stax** es provisional (sin etiqueta de pieza de stax → casi control). Mejora al añadir esa categoría al tagger.
 
 **Decisiones de jugador aún pendientes** (ninguna urgente):
-- El **resto de dudosos** que no toqué: Emry, The Locust God, Kefka, Obeka, Baral, Ketramose, Arcades, Narset (se quedan como están hasta orden).
+- ~~El **resto de dudosos**~~ revisados 2026-07-18 (ver DECISIONS): arquetipo `artifacts`
+  nuevo (Emry+Urza), Narset +protección, Obeka −wincons, Kona añadida (big_mana). Baral/
+  Ketramose/Locust/Kefka/Arcades se dejan. Pendiente: capa `stax` en el tagger (coste
+  estimado en DECISIONS), y crear más comandantes de `artifacts` si se quieren (Jhoira,
+  Osgir, Breya… no están en la lista aún).
 - ~~**Auditoría de mazo**~~ MVP hecho 2026-07-18 (ver sección Auditoría arriba); pendiente capas 2/3.
 - **Inconsistencia cosmética**: el método C no se aplica en el re-scoring de `service.py` (swap/maybeboard) → el score mostrado de una carta cara puede diferir ≤0.15 entre contextos (no afecta a legalidad).
 

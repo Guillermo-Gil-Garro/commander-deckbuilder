@@ -139,6 +139,16 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "protection": (2, 4),
         "synergy": (0, 22),
     },
+    "artifacts": {  # added 2026-07-18: rocks are the ramp; big artifact package
+        "lands": (33, 38),
+        "ramp": (10, 16),
+        "card_draw": (9, 13),
+        "removal": (7, 12),
+        "board_wipe": (2, 4),
+        "wincons": (2, 4),
+        "protection": (1, 3),
+        "synergy": (0, 34),
+    },
 }
 
 EXPECTED_DIAL_DELTAS = {
@@ -222,9 +232,10 @@ def test_real_yaml_defaults_and_commanders() -> None:
         "Omnath, Locus of Creation": "lands_matter",
     }.items():
         assert config.commanders[name].archetype == archetype
-    # The rest of the section is the 55 featured commanders (2026-07-15); the
-    # per-commander mapping itself lives in the YAML, not duplicated here.
-    assert len(config.commanders) == 55
+    # The rest of the section is the featured commanders (2026-07-15); the
+    # per-commander mapping itself lives in the YAML, not duplicated here. 56
+    # since Kona, Rescue Beastie was added 2026-07-18.
+    assert len(config.commanders) == 56
     assert all(
         cmd.archetype in config.archetypes for cmd in config.commanders.values()
     )

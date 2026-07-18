@@ -523,13 +523,13 @@ def test_budget_validator_raises_over_budget() -> None:
     assert validate_forced_slot_budget(config, ctx(), {"Sol Ring"}) == 1
 
 
-def test_budget_holds_for_all_55_featured_commanders(real_rules, real_pool) -> None:
+def test_budget_holds_for_all_featured_commanders(real_rules, real_pool) -> None:
     quotas = load_quotas()
     raw = yaml.safe_load(
         (REPO_ROOT / "featured_commanders.yaml").read_text(encoding="utf-8")
     )
     featured = raw["featured"]
-    assert len(featured) == 55
+    assert len(featured) == 56  # +Kona, Rescue Beastie (2026-07-18)
     max_count = 0
     for entry in featured:
         name = entry["name"]
