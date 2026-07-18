@@ -417,6 +417,13 @@ export function DeckView({
             ]}
           />
         </div>
+        {sort === 'category' && (
+          <span className="basis-full text-xs text-zinc-500 dark:text-zinc-400">
+            Cada carta aparece en un solo grupo (su rol principal); el panel de
+            composición la cuenta en todas sus categorías, por eso sus números
+            son mayores.
+          </span>
+        )}
       </div>
 
       {display === 'list' ? (
