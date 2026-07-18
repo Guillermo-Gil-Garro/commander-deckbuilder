@@ -166,6 +166,15 @@ export function Result({
             <ConstraintsPanel result={deck} swapped={swapped} />
             <CompositionPanel result={deck} />
           </div>
+          {swapsEnabled && req && (
+            <AuditPanel
+              commander={req.commander}
+              dials={req.dials}
+              deckRefs={deckRefs}
+              deckCards={deck.nonbasic_cards}
+              onSwap={swap}
+            />
+          )}
           <CurvePanel curve={deck.curve_breakdown} />
           {swapsEnabled && req ? (
             <SwapWorkspace
@@ -182,14 +191,6 @@ export function Result({
               result={shownDeck}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
-            />
-          )}
-          {swapsEnabled && req && (
-            <AuditPanel
-              commander={req.commander}
-              dials={req.dials}
-              deckRefs={deckRefs}
-              onSwap={swap}
             />
           )}
         </>
@@ -396,11 +397,14 @@ function AuditPanel({
   commander,
   dials,
   deckRefs,
+  deckCards,
   onSwap,
 }: {
   commander: string;
   dials: BuildRequest['dials'];
   deckRefs: DeckCardRef[];
+  /** The live non-basics: the out-candidates when placing a missing card. */
+  deckCards: DeckCard[];
   onSwap: (
     outName: string,
     chosen: DeckCard,
@@ -413,6 +417,9 @@ function AuditPanel({
   const [error, setError] = useState<string | null>(null);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [applying, setApplying] = useState<string | null>(null);
+  // Reverse swap: the missing card the player wants IN; they then pick what
+  // leaves. Cleared when the swap lands (the audit re-runs on the new deck).
+  const [placing, setPlacing] = useState<DeckCard | null>(null);
 
   useEffect(() => {
     if (!active) return;
@@ -435,24 +442,25 @@ function AuditPanel({
     };
   }, [active, commander, dials, deckRefs]);
 
-  async function applyReplacement(flaggedName: string, card: DeckCard) {
-    setApplying(`${flaggedName}=>${card.name}`);
+  async function applySwapPair(outName: string, chosen: DeckCard) {
+    setApplying(`${outName}=>${chosen.name}`);
     setApplyError(null);
     try {
       const validation = await sequentialValidate({
         commander,
         dials,
         deck: deckRefs,
-        out: flaggedName,
-        in: card.name,
+        out: outName,
+        in: chosen.name,
       });
       if (!validation.feasible) {
         setApplyError(
-          `Ahora mismo no se puede cambiar ${flaggedName} por ${card.name}.`,
+          `Ahora mismo no se puede cambiar ${outName} por ${chosen.name}.`,
         );
         return;
       }
-      onSwap(flaggedName, card, validation);
+      onSwap(outName, chosen, validation);
+      setPlacing(null);
       // deckRefs changes → the effect re-audits automatically.
     } catch (err: unknown) {
       setApplyError(err instanceof Error ? err.message : 'Error desconocido');
@@ -460,6 +468,19 @@ function AuditPanel({
       setApplying(null);
     }
   }
+
+  // Out-candidates for the card being placed: same-slot cards first (they
+  // compete for the same job), then the rest; worst score first within each
+  // tier — the weakest link is the natural cut.
+  const outCandidates = useMemo(() => {
+    if (!placing) return [];
+    const slot = placing.slot;
+    return [...deckCards].sort((a, b) => {
+      const aSame = a.categories.includes(slot) ? 0 : 1;
+      const bSame = b.categories.includes(slot) ? 0 : 1;
+      return aSame - bSame || (a.score ?? 0) - (b.score ?? 0);
+    });
+  }, [placing, deckCards]);
 
   if (!active) {
     return (
@@ -513,7 +534,7 @@ function AuditPanel({
               key={flag.card.name}
               flag={flag}
               applying={applying}
-              onApply={(card) => applyReplacement(flag.card.name, card)}
+              onApply={(card) => void applySwapPair(flag.card.name, card)}
             />
           ))}
         </div>
@@ -525,27 +546,95 @@ function AuditPanel({
             Buenas que te faltan
           </h4>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Las mejores cartas que este comandante quiere y no llevas. Para
-            meterlas, elige en un swap qué sacar.
+            Las mejores cartas que este comandante quiere y no llevas. Haz clic
+            en una para meterla eligiendo qué sale del mazo.
           </p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {audit.missing.map((card) => (
-              <div key={card.name} className="flex flex-col gap-1.5">
-                <div className="overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
-                  <CardImage
-                    card={toViewCard(card)}
-                    className="aspect-[5/7] w-full object-cover"
-                  />
-                </div>
-                <span
-                  className="truncate px-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300"
-                  title={card.name}
+            {audit.missing.map((card) => {
+              const isPlacing = placing?.name === card.name;
+              return (
+                <button
+                  key={card.name}
+                  type="button"
+                  onClick={() => setPlacing(isPlacing ? null : card)}
+                  aria-pressed={isPlacing}
+                  className={`accent-focus flex flex-col gap-1.5 rounded-xl text-left transition ${
+                    isPlacing
+                      ? 'ring-2 accent-ring'
+                      : 'cursor-pointer hover:accent-ring hover:ring-2'
+                  }`}
                 >
-                  {card.name}
-                </span>
-              </div>
-            ))}
+                  <div className="overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                    <CardImage
+                      card={toViewCard(card)}
+                      className="aspect-[5/7] w-full object-cover"
+                    />
+                  </div>
+                  <span
+                    className="truncate px-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+                    title={card.name}
+                  >
+                    {card.name}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+
+          {placing && (
+            <div className="mt-4 rounded-xl border accent-border bg-white/60 p-4 dark:bg-zinc-950/30">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <h5 className="flex items-center gap-2 text-sm font-semibold">
+                  <ArrowRightLeft className="h-4 w-4 accent-text" />
+                  Meter{' '}
+                  <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-emerald-700 ring-1 ring-emerald-400/40 dark:text-emerald-200">
+                    {placing.name}
+                  </span>
+                  — elige qué sale
+                </h5>
+                <Button variant="secondary" onClick={() => setPlacing(null)}>
+                  <X className="h-4 w-4" /> Cancelar
+                </Button>
+              </div>
+              <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
+                Primero las de su mismo rol ({categoryLabel(placing.slot)}),
+                peor puntuadas antes. El cambio se valida antes de aplicarse.
+              </p>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9">
+                {outCandidates.map((card) => {
+                  const busy = applying === `${card.name}=>${placing.name}`;
+                  return (
+                    <button
+                      key={card.oracle_id}
+                      type="button"
+                      onClick={() => void applySwapPair(card.name, placing)}
+                      disabled={applying !== null}
+                      title={`Sacar ${card.name}`}
+                      className="accent-focus group relative flex flex-col gap-1 rounded-lg text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60"
+                    >
+                      <div className="relative overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
+                        <CardImage
+                          card={toViewCard(card)}
+                          className="aspect-[5/7] w-full object-cover"
+                        />
+                        {busy && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/50">
+                            <Loader2 className="h-5 w-5 animate-spin text-white" />
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className="truncate text-[0.65rem] text-zinc-500 dark:text-zinc-400"
+                        title={card.name}
+                      >
+                        {card.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </Panel>
@@ -562,15 +651,15 @@ function AuditFlagRow({
   onApply: (card: DeckCard) => void;
 }) {
   return (
-    <div className="rounded-xl border border-amber-300/50 bg-amber-50/40 p-3 dark:border-amber-500/20 dark:bg-amber-500/5">
-      <div className="flex gap-3">
-        <div className="w-16 shrink-0 overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
+    <div className="rounded-xl border border-amber-300/50 bg-amber-50/40 p-4 dark:border-amber-500/20 dark:bg-amber-500/5">
+      <div className="flex flex-wrap gap-4">
+        <div className="w-36 shrink-0 overflow-hidden rounded-xl ring-1 ring-black/10 sm:w-44 dark:ring-white/10">
           <CardImage
             card={toViewCard(flag.card)}
             className="aspect-[5/7] w-full object-cover"
           />
         </div>
-        <div className="min-w-0">
+        <div className="min-w-[240px] flex-1">
           <div className="flex items-center gap-2">
             <TriangleAlert className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
             <span className="font-semibold">{flag.card.name}</span>
@@ -578,37 +667,51 @@ function AuditFlagRow({
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
             {flag.reason}
           </p>
+          {flag.replacements.length > 0 && (
+            <div className="mt-4">
+              <p className="mb-2 text-xs font-medium text-zinc-500">
+                Cámbiala por:
+              </p>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {flag.replacements.map((rep) => {
+                  const busy = applying === `${flag.card.name}=>${rep.card.name}`;
+                  return (
+                    <button
+                      key={`${rep.kind}:${rep.card.name}`}
+                      type="button"
+                      onClick={() => onApply(rep.card)}
+                      disabled={applying !== null}
+                      title={rep.note}
+                      className="accent-focus flex flex-col gap-1.5 rounded-xl text-left transition hover:accent-ring hover:ring-2 disabled:opacity-60"
+                    >
+                      <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                        <CardImage
+                          card={toViewCard(rep.card)}
+                          className="aspect-[5/7] w-full object-cover"
+                        />
+                        {busy && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/50">
+                            <Loader2 className="h-6 w-6 animate-spin text-white" />
+                          </span>
+                        )}
+                      </div>
+                      <span className="px-0.5">
+                        <span className="block truncate text-xs font-semibold">
+                          {rep.card.name}
+                        </span>
+                        <span className="block truncate text-[0.7rem] text-zinc-500">
+                          {REPLACEMENT_LABEL[rep.kind]} ·{' '}
+                          {categoryLabel(rep.card.slot)}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      {flag.replacements.length > 0 && (
-        <div className="mt-3">
-          <p className="mb-1.5 text-xs font-medium text-zinc-500">Cámbiala por:</p>
-          <div className="flex flex-wrap gap-2">
-            {flag.replacements.map((rep) => (
-              <button
-                key={`${rep.kind}:${rep.card.name}`}
-                type="button"
-                onClick={() => onApply(rep.card)}
-                disabled={applying === `${flag.card.name}=>${rep.card.name}`}
-                title={rep.note}
-                className="inline-flex items-center gap-2 rounded-lg border accent-border bg-white px-3 py-2 text-left text-sm transition hover:accent-soft-bg disabled:opacity-50 dark:bg-zinc-900/80"
-              >
-                {applying === `${flag.card.name}=>${rep.card.name}` ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <ArrowRightLeft className="h-4 w-4 accent-text" />
-                )}
-                <span className="flex flex-col">
-                  <span className="font-semibold">{rep.card.name}</span>
-                  <span className="text-xs text-zinc-500">
-                    {REPLACEMENT_LABEL[rep.kind]} · {categoryLabel(rep.card.slot)}
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -700,16 +803,20 @@ function RelaxationBanner({ stage }: { stage: string }) {
   );
 }
 
-// The API's own notices, verbatim. `warnings` are things worth knowing;
-// `unresolved` are cards it could not resolve. Neither is invented here.
+// The API's own notices, verbatim. `warnings` are Notice objects; `unresolved`
+// are raw EDHREC name strings (occasionally empty — EDHREC noise, filtered
+// out so the banner never shows a blank bullet or renders for nothing).
 function NoticeList({
   notices,
   kind,
 }: {
-  notices: Notice[];
+  notices: (Notice | string)[];
   kind: 'warning' | 'unresolved';
 }) {
-  if (notices.length === 0) return null;
+  const messages = notices
+    .map((notice) => (typeof notice === 'string' ? notice : notice.message))
+    .filter((message) => message && message.trim().length > 0);
+  if (messages.length === 0) return null;
   return (
     <div className="flex items-start gap-3 rounded-lg border border-amber-300/70 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-100">
       <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0" />
@@ -718,8 +825,8 @@ function NoticeList({
           {kind === 'warning' ? 'Avisos del solver' : 'Cartas sin resolver'}
         </p>
         <ul className="mt-1 list-inside list-disc">
-          {notices.map((notice, index) => (
-            <li key={`${notice.code}-${index}`}>{notice.message}</li>
+          {messages.map((message, index) => (
+            <li key={`${kind}-${index}`}>{message}</li>
           ))}
         </ul>
       </div>

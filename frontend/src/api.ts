@@ -160,7 +160,9 @@ export type BuildResult = {
   solve_time_seconds: number;
   infeasible_reason: string | null;
   warnings: Notice[];
-  unresolved: Notice[];
+  /** EDHREC recommendations our pool could not resolve — raw name strings,
+   *  not Notice objects (and occasionally an empty string from EDHREC). */
+  unresolved: string[];
 };
 
 /** How the deck travels to the API: by NAME, not oracle_id (unlike the TFM).
