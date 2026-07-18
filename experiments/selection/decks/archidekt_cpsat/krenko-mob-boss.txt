@@ -61,7 +61,7 @@
 1x Boggart Shenanigans [Synergy]
 1x Jeska's Will [Synergy]
 1x Hordeling Outburst [Synergy]
-1x Goblin Instigator [Synergy]
+1x Massive Raid [Removal]
 1x Arena of Glory [Lands]
 1x Patriar's Seal [Ramp]
 1x Nykthos, Shrine to Nyx [Lands]
@@ -91,14 +91,13 @@
 1x Sandstone Needle [Lands]
 1x Reliquary Tower [Lands]
 1x Rogue's Passage [Lands]
-1x Shatterskull Smashing // Shatterskull, the Hammer Pass [Lands]
 1x Shinka, the Bloodsoaked Keep [Lands]
 1x Smoldering Crater [Lands]
-4x Mountain [Lands]
+5x Mountain [Lands]
 
 # Sideboard
 1x Swiftfoot Boots
-1x Massive Raid
+1x Goblin Instigator
 1x Gempalm Incinerator
 1x Battle Cry Goblin
 1x Goblin Grenade

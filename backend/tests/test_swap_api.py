@@ -268,7 +268,6 @@ def test_a_feasible_swap_is_200_and_carries_the_full_traffic_light(
         "board_wipe",
         "wincons",
         "protection",
-        "stax",
         "synergy",
     }
     assert body["karsten_floor"] > 0

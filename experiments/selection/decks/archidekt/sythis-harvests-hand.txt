@@ -38,6 +38,7 @@
 1x Alseid of Life's Bounty [Synergy]
 1x Flickering Ward [Synergy]
 1x Ghostly Prison [Synergy]
+1x Authority of the Consuls [Synergy]
 1x Dryad of the Ilysian Grove [Ramp]
 1x Hallowed Haunting [Synergy]
 1x Herald of the Pantheon [Synergy]
@@ -49,6 +50,7 @@
 1x Burgeoning [Ramp]
 1x Carpet of Flowers [Ramp]
 1x Eladamri's Call [Synergy]
+1x Stony Silence [Synergy]
 1x Ethereal Armor [Synergy]
 1x Crop Rotation [Synergy]
 1x All That Glitters [Synergy]
@@ -62,8 +64,6 @@
 1x Land Tax [Synergy]
 1x Gauntlets of Light [Synergy]
 1x Calix, Guided by Fate [Synergy]
-1x Grand Abolisher [Synergy]
-1x Karmic Justice [Removal]
 1x Hall of Heliod's Generosity [Lands]
 1x Windswept Heath [Lands]
 1x Temple Garden [Lands]
@@ -89,6 +89,7 @@
 1x Marsh Flats [Lands]
 1x Verdant Catacombs [Lands]
 1x Misty Rainforest [Lands]
+1x Eiganjo, Seat of the Empire [Lands]
 1x Arid Mesa [Lands]
 1x Valgavoth's Lair [Lands]
 1x Razorverge Thicket [Lands]
@@ -97,18 +98,17 @@
 1x Temple of Plenty [Lands]
 1x Gemstone Caverns [Lands]
 1x Shifting Woodland [Lands]
-1x Mana Confluence [Lands]
 
 # Sideboard
-1x Authority of the Consuls
 1x Serra's Sanctum
 1x Greater Auramancy
-1x Stony Silence
 1x Teferi's Protection
 1x Heroic Intervention
 1x Privileged Position
 1x Nykthos, Shrine to Nyx
 1x Starfield Mystic
+1x Grand Abolisher
+1x Karmic Justice
 1x Overgrowth
 1x Swift Reconfiguration
 1x Composer of Spring

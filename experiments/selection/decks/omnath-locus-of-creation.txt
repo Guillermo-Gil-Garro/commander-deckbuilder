@@ -9,7 +9,7 @@ card_draw      9  [ 9-12]    in_range
 removal       11  [ 6-11]    in_range
 board_wipe     2  [ 2- 4]    in_range
 wincons        2  [ 2- 4]    in_range
-synergy       20  [ 0-24]    in_range
+synergy       21  [ 0-24]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -114,7 +114,7 @@ synergy       20  [ 0-24]    in_range
 1x Scapeshift                                 score 0.75  [synergy]  relleno por score 0.75
 1x Deflecting Swat                            score 0.72  [protection]  relleno por score 0.72
 1x Rampaging Baloths                          score 0.70  [synergy]  relleno por score 0.70
-1x Elesh Norn, Mother of Machines             score 0.66  [stax]  relleno por score 0.66
+1x Elesh Norn, Mother of Machines             score 0.66  [synergy]  relleno por score 0.66
 1x Traveling Chocobo                          score 0.63  [synergy]  relleno por score 0.63
 1x Teferi's Protection                        score 0.61  [protection]  relleno por score 0.61
 1x Tannuk, Memorial Ensign                    score 0.57  [synergy]  relleno por score 0.57

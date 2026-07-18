@@ -6,7 +6,7 @@
 
 import type { DialPosition } from './api';
 
-/** The nine functional categories the quotas are expressed in. */
+/** The eight functional categories the quotas are expressed in. */
 export const CATEGORY_LABELS: Record<string, string> = {
   lands: 'Tierras',
   ramp: 'Ramp',
@@ -15,7 +15,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   board_wipe: 'Boardwipe',
   wincons: 'Wincons',
   protection: 'Protección',
-  stax: 'Stax',
   synergy: 'Sinergia',
 };
 
@@ -32,7 +31,6 @@ export const CATEGORY_HELP: Record<string, string> = {
   wincons: 'Cartas que cierran la partida.',
   protection:
     'Proteger tus permanentes o a ti (hexproof, indestructible, etc.).',
-  stax: 'Prisión: negar recursos o acciones del rival (impuestos, no destapar, etc.).',
   synergy: 'Cartas afines al comandante que no caen en los roles anteriores.',
 };
 

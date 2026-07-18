@@ -1,7 +1,7 @@
 # Krenko, Mob Boss — selector CP-SAT (prototipo Fase 3)
 # Construido en 0.05s | mainboard: 99 cartas
 # Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
-# Objetivo: 66.5255 (score bruto 67.3638, penalizaciones escaladas 838308)
+# Objetivo: 66.4271 (score bruto 67.2654, penalizaciones escaladas 838308)
 # Fixing color (fuentes/objetivo): R: 25/38 (déficit 13)
 
 ## Resumen de cuotas
@@ -51,10 +51,9 @@ synergy       35  [ 0-35]    in_range
 1x Sandstone Needle                           score 0.10  [lands/ramp]  tierra recomendada, score 0.10 (cuenta en ramp, pero no cubre su mínimo)
 1x Reliquary Tower                            score 0.09  [lands]  tierra recomendada, score 0.09
 1x Rogue's Passage                            score 0.09  [lands]  tierra recomendada, score 0.09
-1x Shatterskull Smashing // Shatterskull, the Hammer Pass score 0.08  [lands/removal]  tierra recomendada, score 0.08 (cuenta en removal, pero no cubre su mínimo)
 1x Shinka, the Bloodsoaked Keep               score 0.06  [lands]  tierra recomendada, score 0.06
 1x Smoldering Crater                          score 0.05  [lands]  tierra recomendada, score 0.05
-4x Mountain                                   score  --   [lands]  básica x4 (asignada por el solver)
+5x Mountain                                   score  --   [lands]  básica x5 (asignada por el solver)
 
 ### ramp (8)
 1x Skirk Prospector                           score 1.64  [ramp]  ramp (cuota), score 1.64
@@ -76,7 +75,7 @@ synergy       35  [ 0-35]    in_range
 1x Dark-Dweller Oracle                        score 0.27  [card_draw]  card_draw (cuota), score 0.27
 1x Thrill of Possibility                      score 0.23  [card_draw]  card_draw (cuota), score 0.23
 
-### removal (9)
+### removal (10)
 1x Goblin Bombardment                         score 1.51  [removal]  removal (cuota), score 1.51
 1x Pashalik Mons                              score 1.41  [removal]  removal (cuota), score 1.41
 1x Goblin Trashmaster                         score 1.27  [removal]  removal (cuota), score 1.27
@@ -86,11 +85,12 @@ synergy       35  [ 0-35]    in_range
 1x Chaos Warp                                 score 0.98  [removal]  relleno por score 0.98
 1x Thornbite Staff                            score 0.85  [removal]  relleno por score 0.85
 1x Goblin Sharpshooter                        score 0.77  [removal]  relleno por score 0.77
+1x Massive Raid                               score 0.55  [removal]  relleno por score 0.55
 
 ### board_wipe (1)
 1x Blasphemous Act                            score 0.39  [board_wipe]  board_wipe (cuota), score 0.39
 
-### synergy (39)
+### synergy (38)
 1x Goblin Warchief                            score 1.69  [synergy]  relleno por score 1.69
 1x Goblin Matron                              score 1.66  [synergy]  relleno por score 1.66
 1x Goblin Chieftain                           score 1.59  [synergy]  relleno por score 1.59
@@ -99,7 +99,7 @@ synergy       35  [ 0-35]    in_range
 1x Brightstone Ritual                         score 1.42  [synergy]  relleno por score 1.42
 1x Goblin King                                score 1.40  [synergy]  relleno por score 1.40
 1x Conspicuous Snoop                          score 1.37  [synergy]  relleno por score 1.37
-1x Blood Moon                                 score 1.25  [stax]  relleno por score 1.25
+1x Blood Moon                                 score 1.25  [synergy]  relleno por score 1.25
 1x Goblin Chirurgeon                          score 1.20  [synergy]  relleno por score 1.20
 1x Muxus, Goblin Grandee                      score 1.12  [synergy]  relleno por score 1.12
 1x Purphoros, God of the Forge                score 1.11  [synergy]  relleno por score 1.11
@@ -129,11 +129,10 @@ synergy       35  [ 0-35]    in_range
 1x Boggart Shenanigans                        score 0.57  [synergy]  relleno por score 0.57
 1x Jeska's Will                               score 0.57  [synergy]  relleno por score 0.57
 1x Hordeling Outburst                         score 0.57  [synergy]  relleno por score 0.57
-1x Goblin Instigator                          score 0.57  [synergy]  relleno por score 0.57
 
 ## Maybeboard (15)
 1x Swiftfoot Boots                            score 0.72  [protection]  fuera: cuota llena en protection
-1x Massive Raid                               score 0.55  [removal]  fuera: cuota llena en removal
+1x Goblin Instigator                          score 0.57  [synergy]  fuera: cuota llena en synergy
 1x Gempalm Incinerator                        score 0.53  [removal]  fuera: cuota llena en removal
 1x Battle Cry Goblin                          score 0.51  [synergy]  fuera: cuota llena en synergy
 1x Goblin Grenade                             score 0.47  [removal]  fuera: cuota llena en removal

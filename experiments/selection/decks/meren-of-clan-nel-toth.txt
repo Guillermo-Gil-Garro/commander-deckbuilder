@@ -85,7 +85,7 @@ synergy       27  [ 0-30]    in_range
 1x Grave Pact                                 score 0.72  [removal]  removal (cuota), score 0.72
 1x Deadly Rollick                             score 0.69  [removal]  removal (cuota), score 0.69
 1x Cankerbloom                                score 0.66  [removal]  relleno por score 0.66
-1x Sheoldred, Whispering One                  score 0.65  [removal/stax]  relleno por score 0.65
+1x Sheoldred, Whispering One                  score 0.65  [removal]  relleno por score 0.65
 1x Abrupt Decay                               score 0.59  [removal]  relleno por score 0.59
 1x Walking Ballista                           score 0.59  [removal]  relleno por score 0.59
 1x Fleshbag Marauder                          score 0.57  [removal]  relleno por score 0.57
@@ -133,7 +133,7 @@ synergy       27  [ 0-30]    in_range
 1x Reclamation Sage                           score 0.56  [removal]  fuera: cuota llena en removal
 1x Ravenous Chupacabra                        score 0.53  [removal]  fuera: cuota llena en removal
 1x Boseiju, Who Endures                       score 0.50  [lands/removal]  fuera por score 0.50
-1x Dictate of Erebos                          score 0.50  [removal/stax]  fuera por score 0.50
+1x Dictate of Erebos                          score 0.50  [removal]  fuera: cuota llena en removal
 1x Necromancy                                 score 0.47  [synergy]  fuera por score 0.47
 1x Twilight Diviner                           score 0.47  [synergy]  fuera por score 0.47
 1x Syr Konrad, the Grim                       score 0.47  [synergy]  fuera por score 0.47

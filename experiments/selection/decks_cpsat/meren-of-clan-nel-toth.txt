@@ -90,7 +90,7 @@ synergy       28  [ 0-30]    in_range
 1x Assassin's Trophy                          score 0.88  [removal]  removal (cuota), score 0.88
 1x Grave Pact                                 score 0.80  [removal]  removal (cuota), score 0.80
 1x Deadly Rollick                             score 0.74  [removal]  removal (cuota), score 0.74
-1x Sheoldred, Whispering One                  score 0.70  [removal/stax]  relleno por score 0.70
+1x Sheoldred, Whispering One                  score 0.70  [removal]  relleno por score 0.70
 1x Cankerbloom                                score 0.66  [removal]  relleno por score 0.66
 1x Walking Ballista                           score 0.60  [removal]  relleno por score 0.60
 1x Abrupt Decay                               score 0.59  [removal]  relleno por score 0.59
@@ -140,7 +140,7 @@ synergy       28  [ 0-30]    in_range
 1x Fleshbag Marauder                          score 0.57  [removal]  fuera: cuota llena en removal
 1x Reclamation Sage                           score 0.56  [removal]  fuera: cuota llena en removal
 1x Ravenous Chupacabra                        score 0.53  [removal]  fuera: cuota llena en removal
-1x Dictate of Erebos                          score 0.53  [removal/stax]  fuera por score 0.53
+1x Dictate of Erebos                          score 0.53  [removal]  fuera: cuota llena en removal
 1x Orcish Bowmasters                          score 0.50  [removal]  fuera: cuota llena en removal
 1x Wood Elves                                 score 0.48  [ramp]  fuera: cuota llena en ramp
 1x Green Sun's Zenith                         score 0.47  [synergy]  fuera por score 0.47

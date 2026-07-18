@@ -27,7 +27,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (3, 5),
         "wincons": (2, 4),
         "protection": (1, 3),
-        "stax": (0, 3),
         "synergy": (0, 28),
     },
     "aggro": {
@@ -38,7 +37,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (1, 3),
         "wincons": (0, 4),
         "protection": (1, 3),
-        "stax": (0, 2),
         "synergy": (0, 35),
     },
     "control": {
@@ -49,7 +47,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (4, 6),
         "wincons": (1, 3),
         "protection": (2, 4),
-        "stax": (0, 5),
         "synergy": (0, 20),
     },
     "spellslinger": {
@@ -60,7 +57,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (2, 4),
         "protection": (2, 4),
-        "stax": (0, 3),
         "synergy": (0, 30),
     },
     "voltron": {
@@ -71,7 +67,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (1, 3),
         "wincons": (0, 2),
         "protection": (3, 6),
-        "stax": (0, 2),
         "synergy": (0, 30),
     },
     "graveyard": {
@@ -82,7 +77,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (2, 4),
         "protection": (1, 3),
-        "stax": (0, 2),
         "synergy": (0, 30),
     },
     "enchantress": {
@@ -93,7 +87,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (1, 3),
         "protection": (2, 4),
-        "stax": (0, 4),
         "synergy": (0, 32),
     },
     "lands_matter": {
@@ -104,7 +97,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (2, 4),
         "protection": (1, 3),
-        "stax": (0, 2),
         "synergy": (0, 24),  # raised from 18 (Guille 2026-07-16): keep land payoffs
     },
     "aristocrats": {  # added 2026-07-17: sac for value + drain
@@ -115,7 +107,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (3, 5),
         "protection": (1, 3),
-        "stax": (0, 3),
         "synergy": (0, 33),
     },
     "mill": {  # added 2026-07-17: grind opponents' libraries
@@ -126,7 +117,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (1, 3),
         "wincons": (2, 5),
         "protection": (2, 4),
-        "stax": (0, 3),
         "synergy": (0, 24),
     },
     "big_mana": {  # added 2026-07-17: ramp hard to bombs (not via lands)
@@ -137,10 +127,9 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (2, 5),
         "protection": (2, 4),
-        "stax": (0, 2),
         "synergy": (0, 22),
     },
-    "stax": {  # prison/tax; stax tag added by rubric v4 (2026-07-18)
+    "stax": {  # prison archetype (the stax card label was trialled and reverted)
         "lands": (35, 39),
         "ramp": (10, 15),
         "card_draw": (8, 12),
@@ -148,7 +137,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 5),
         "wincons": (1, 3),
         "protection": (2, 4),
-        "stax": (2, 8),  # floor 2 after Guille's play feedback (was 3, forced dregs)
         "synergy": (0, 22),
     },
     "artifacts": {  # added 2026-07-18: rocks are the ramp; big artifact package
@@ -159,7 +147,6 @@ EXPECTED_BANDS: dict[str, dict[str, tuple[int, int]]] = {
         "board_wipe": (2, 4),
         "wincons": (2, 4),
         "protection": (1, 3),
-        "stax": (0, 4),
         "synergy": (0, 34),
     },
 }
@@ -187,7 +174,6 @@ def minimal_payload() -> dict[str, Any]:
                 "board_wipe": [3, 5],
                 "wincons": [2, 4],
                 "protection": [1, 3],
-                "stax": [0, 3],
                 "synergy": 28,
             }
         },

@@ -32,6 +32,7 @@
 1x Ghostly Prison [Synergy]
 1x Authority of the Consuls [Synergy]
 1x Command Tower [Lands]
+1x Aura of Silence [Removal]
 1x Seal of Cleansing [Removal]
 1x Walking Ballista [Removal]
 1x Dryad of the Ilysian Grove [Ramp]
@@ -51,8 +52,8 @@
 1x Whip Silk [Synergy]
 1x Replenish [Synergy]
 1x Boseiju, Who Endures [Lands]
-1x Carpet of Flowers [Ramp]
 1x Eladamri's Call [Synergy]
+1x Stony Silence [Synergy]
 1x Ethereal Armor [Synergy]
 1x Yavimaya, Cradle of Growth [Lands]
 1x Sunpetal Grove [Lands]
@@ -61,6 +62,7 @@
 1x All That Glitters [Synergy]
 1x Rest in Peace [Synergy]
 1x Song of the Dryads [Removal]
+1x Nykthos, Shrine to Nyx [Lands]
 1x Ancestral Mask [Synergy]
 1x Moon-Blessed Cleric [Synergy]
 1x Branchloft Pathway // Boulderloft Pathway [Lands]
@@ -74,7 +76,6 @@
 1x Grand Abolisher [Synergy]
 1x Gauntlets of Light [Synergy]
 1x Mirri's Guile [Synergy]
-1x Concordant Crossroads [Synergy]
 1x Hushwood Verge [Lands]
 1x Wooded Bastion [Lands]
 1x Misty Rainforest [Lands]
@@ -94,27 +95,26 @@
 1x Winds of Rath [Board Wipe]
 1x Arcane Signet [Ramp]
 1x Gemstone Caverns [Lands]
-1x Temple of Plenty [Lands]
 1x Kor Spiritdancer [Card Draw]
 1x Forest [Lands]
 1x Plains [Lands]
 
 # Sideboard
-1x Aura of Silence
 1x Solitary Confinement
 1x Teferi's Protection
-1x Stony Silence
-1x Nykthos, Shrine to Nyx
+1x Carpet of Flowers
 1x Heroic Intervention
 1x Mirari's Wake
 1x Privileged Position
 1x Starfield Mystic
+1x Concordant Crossroads
 1x Karmic Justice
 1x Flawless Maneuver
 1x Overgrowth
 1x Swift Reconfiguration
 1x Composer of Spring
 1x Birds of Paradise
+1x Enduring Vitality
 # --- cartas nuevas ---
 1x Jennifer Walters // The Sensational She-Hulk
 1x Gathering Place

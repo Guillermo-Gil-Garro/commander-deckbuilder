@@ -83,10 +83,11 @@ sistema). Diseño completo en DECISIONS.
 **Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
 - **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
 - **3 relajaciones de wincons** (Wilhelt/aristocrats, Zhulodok+Ulalek/big_mana): hueco de tagging (drenaje y bombas no marcados `wincons`). Decidir si bajar el min o mejorar el tagging.
-- ~~**stax** es provisional (sin etiqueta de pieza de stax → casi control)~~ RESUELTO
-  2026-07-18: categoría `stax` añadida al tagger (rúbrica v4, 118 etiquetas). El
-  arquetipo stax ahora fuerza suelo 3 de prisión; Winter y Thalia+Gitrog OPTIMAL
-  stage=none. Bandas iniciales, calibrar con más partidas.
+- **stax**: la categoría/etiqueta se probó (rúbrica v4, 118 etiquetas) y se **revirtió**
+  el 2026-07-18 (decisión de Guille + feedback de partida): forzaba piezas de prisión flojas
+  y las buenas ya entran por score en synergy. El ARQUETIPO stax se queda (moldea por bandas,
+  no por categoría). Ver DECISIONS. Regla que queda: una categoría solo vale si su suelo
+  carga peso; `protection` es la siguiente a vigilar.
 
 **Decisiones de jugador aún pendientes** (ninguna urgente):
 - ~~El **resto de dudosos**~~ revisados 2026-07-18 (ver DECISIONS): arquetipo `artifacts`

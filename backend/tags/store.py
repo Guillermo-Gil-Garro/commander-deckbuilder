@@ -27,10 +27,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_STORE_PATH = REPO_ROOT / "data" / "tags" / "llm_tags.jsonl"
 DEFAULT_POOL_PATH = REPO_ROOT / "data" / "processed" / "cards.jsonl"
 
-RUBRIC_VERSION = "v4"
+RUBRIC_VERSION = "v3"
 
 # Canonical label vocabulary and order (quotas.config.CATEGORIES parity).
-# "protection" added by rubric v3 (2026-07-14); "stax" by rubric v4 (2026-07-18).
+# "protection" added by rubric v3 (2026-07-14). (A v4 `stax` label was trialled
+# 2026-07-18 and reverted: it forced weak prison pieces the deck did not want.)
 CATEGORIES = (
     "lands",
     "ramp",
@@ -39,7 +40,6 @@ CATEGORIES = (
     "board_wipe",
     "wincons",
     "protection",
-    "stax",
     "synergy",
 )
 SOURCES = ("llm", "human")

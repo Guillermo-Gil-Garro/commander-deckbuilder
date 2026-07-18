@@ -1,6 +1,6 @@
 # Omnath, Locus of Creation — selector CP-SAT (prototipo Fase 3)
-# Construido en 0.03s | mainboard: 99 cartas
-# Solver: status OPTIMAL, 0.02s de resolución, etapa de relajación: none
+# Construido en 0.04s | mainboard: 99 cartas
+# Solver: status OPTIMAL, 0.03s de resolución, etapa de relajación: none
 # Objetivo: 72.7852 (score bruto 75.9320, penalizaciones escaladas 3146781)
 # Fixing color (fuentes/objetivo): G: 21/38 (déficit 17), R: 19/32 (déficit 13), U: 20/32 (déficit 12), W: 18/24 (déficit 6)
 
@@ -12,7 +12,7 @@ card_draw      9  [ 9-12]    in_range
 removal       11  [ 6-11]    in_range
 board_wipe     2  [ 2- 4]    in_range
 wincons        2  [ 2- 4]    in_range
-synergy       16  [ 0-24]    in_range
+synergy       17  [ 0-24]    in_range
 
 # Nota: una carta multicategoría cuenta en todas sus categorías,
 # por eso la suma de conteos puede superar 99.
@@ -125,7 +125,7 @@ synergy       16  [ 0-24]    in_range
 1x Scapeshift                                 score 0.85  [synergy]  relleno por score 0.85
 1x Deflecting Swat                            score 0.83  [protection]  protection (cuota), score 0.83
 1x Teferi's Protection                        score 0.72  [protection]  relleno por score 0.72
-1x Elesh Norn, Mother of Machines             score 0.71  [stax]  relleno por score 0.71
+1x Elesh Norn, Mother of Machines             score 0.71  [synergy]  relleno por score 0.71
 1x Rampaging Baloths                          score 0.70  [synergy]  relleno por score 0.70
 1x Traveling Chocobo                          score 0.67  [synergy]  relleno por score 0.67
 1x Heroic Intervention                        score 0.59  [protection]  relleno por score 0.59

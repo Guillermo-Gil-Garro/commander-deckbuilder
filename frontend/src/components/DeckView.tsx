@@ -60,7 +60,7 @@ function primaryType(typeLine: string | null): string {
   return 'Other';
 }
 
-// Our nine categories, in the order labels.ts declares them. One list serves as
+// Our eight categories, in the order labels.ts declares them. One list serves as
 // both the assignment priority and the display order.
 //
 // `lands` FIRST is deliberate and differs from the TFM (which sank it): a land
@@ -76,7 +76,6 @@ const CATEGORY_PRIORITY = [
   'board_wipe',
   'wincons',
   'protection',
-  'stax',
   'synergy',
 ] as const;
 

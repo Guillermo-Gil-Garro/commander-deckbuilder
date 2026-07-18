@@ -26,7 +26,6 @@ archetypes:
     board_wipe: [3, 5]
     wincons: [2, 4]
     protection: [1, 3]
-    stax: [0, 3]       # stax añadida 2026-07-18: techo bajo, min 0 (no fuerza prisión)
     synergy: 28
 
   aggro:               # aggro / go-wide
@@ -37,7 +36,6 @@ archetypes:
     board_wipe: [1, 3]
     wincons: [0, 4]    # min 0 (2026-07-14): en aggro el ejército ES la wincon
     protection: [1, 3]
-    stax: [0, 2]
     synergy: 35
 
   control:             # control (puede llevar algo de prisión, pero el plan es interacción)
@@ -48,7 +46,6 @@ archetypes:
     board_wipe: [4, 6]
     wincons: [1, 3]
     protection: [2, 4]
-    stax: [0, 5]       # techo generoso: control tolera piezas de prisión, no las exige
     synergy: 20
 
   spellslinger:
@@ -59,7 +56,6 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [2, 4]
     protection: [2, 4]
-    stax: [0, 3]
     synergy: 30
 
   voltron:             # la wincon es el comandante; equipos/auras viven en synergy
@@ -70,7 +66,6 @@ archetypes:
     board_wipe: [1, 3]
     wincons: [0, 2]
     protection: [3, 6]  # proteger al comandante es el plan
-    stax: [0, 2]
     synergy: 30
 
   graveyard:           # motor de tumba
@@ -81,7 +76,6 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [2, 4]
     protection: [1, 3]
-    stax: [0, 2]
     synergy: 30
 
   enchantress:         # encantamientos-matter (Sythis); robo alto vía enchantresses
@@ -92,7 +86,6 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [1, 3]
     protection: [2, 4]
-    stax: [0, 4]       # pillow fort de encantamientos (Ghostly Prison, Sphere of Safety)
     synergy: 32
 
   lands_matter:
@@ -103,7 +96,6 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [2, 4]
     protection: [1, 3]
-    stax: [0, 2]
     synergy: 24    # Guille 2026-07-16: subido de 18. Con 18 el techo de sinergia
                    # expulsaba los propios payoffs de tierras (Scapeshift, Life from
                    # the Loam) para meter más tierras/rampa; con 24 caben.
@@ -116,7 +108,6 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [3, 5]
     protection: [1, 3]
-    stax: [0, 3]
     synergy: 33
 
   mill:                # moler la biblioteca rival; board_wipe bajo (mono-U no tiene barridos)
@@ -127,7 +118,6 @@ archetypes:
     board_wipe: [1, 3]
     wincons: [2, 5]
     protection: [2, 4]
-    stax: [0, 3]
     synergy: 24
 
   big_mana:            # rampar durísimo a bombas vía vida/criaturas/devoción (no tierras)
@@ -138,11 +128,13 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [2, 5]
     protection: [2, 4]
-    stax: [0, 2]
     synergy: 22
 
-  stax:                # prison/castigo: la identidad del mazo, con etiqueta propia
-                       # desde v4 (2026-07-18). Bandas iniciales, calibrar con datos.
+  stax:                # prison/castigo. Es un arquetipo (Winter, Thalia+Gitrog): moldea
+                       # el mazo por sus bandas, no por una categoría propia. La etiqueta
+                       # de carta `stax` se probó y se retiró (2026-07-18): forzaba piezas
+                       # de prisión flojas que el mazo no quería; las buenas ya entran por
+                       # score en synergy. Cerca de control con menos wincons.
     lands: [35, 39]
     ramp: [10, 15]
     card_draw: [8, 12]
@@ -150,10 +142,6 @@ archetypes:
     board_wipe: [2, 5]
     wincons: [1, 3]
     protection: [2, 4]
-    stax: [2, 8]        # suelo 2 tras feedback de partida de Guille (2026-07-18): el
-                        # suelo 3 forzaba piezas flojas (Chains of Mephistopheles score
-                        # 0.18 en Winter) robando slots a sinergia mejor. Con suelo 2
-                        # solo entran las 2 mejores; el resto se gana el slot por score.
     synergy: 22
   artifacts:           # artefactos-matter: piezas baratas + payoffs; los mana
                        # rocks son la rampa (por eso ramp alto y tierras algo más
@@ -166,7 +154,6 @@ archetypes:
     board_wipe: [2, 4]
     wincons: [2, 4]
     protection: [1, 3]
-    stax: [0, 4]       # esferas de impuestos son artefactos (Sphere of Resistance...)
     synergy: 34
 
 # Diales de la UI: desplazan la banda resultante ±delta (low resta, high suma).

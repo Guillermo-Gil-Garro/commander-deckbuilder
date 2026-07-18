@@ -439,6 +439,20 @@ Thalia+Gitrog queda con sus 3 mejores (Drana and Linvala, Collector Ouphe, Elesh
 cae Armageddon (0.45)/Thalia (0.36). Lección: en categorías que EDHREC infravalora, un
 suelo alto fuerza dregs; mejor suelo bajo + dejar que el score decida.
 
+**REVERTIDA 2026-07-18 (decisión de Guille)**: la categoría/etiqueta `stax` se retira por
+completo. Razonamiento de Guille: si un mazo es de prisión, las buenas piezas de stax ya
+entran por score vía `synergy`; la etiqueta no hace falta. El dato lo confirmó: tras bajar
+el suelo a 2, la banda apenas ataba, y su única aportación era cosmética (fila "Stax N" +
+swap por categoría). Se elimina de `CATEGORIES` (config + store), de las bandas de todos
+los arquetipos, de la rúbrica (vuelve a v3), del frontend (categoría; el ARQUETIPO stax se
+queda) y las 118 etiquetas se quitan del store (87 cartas vuelven a `none`). **Regla
+general que queda (criterio para futuras categorías)**: una categoría solo se gana el sitio
+si su SUELO carga peso — lands/ramp/card_draw/removal/board_wipe/wincons evitan mazos
+degenerados; una etiqueta "de tema" que EDHREC infravalora no aporta, porque forzarla mete
+dregs y sin forzarla las buenas ya entran por score. `protection` es la siguiente a vigilar
+(su suelo sí ata en voltron/Narset, así que de momento se queda). El arquetipo `stax`
+(Winter, Thalia+Gitrog) sigue existiendo: moldea por sus bandas, no por una categoría.
+
 ## Decisiones cerradas de partida (charter)
 - Cuotas [min, max] por categoría funcional, dependientes de comandante/arquetipo; tierras por método Karsten.
 - Motor de recomendación: se decide por experimentos (Fase 2).

@@ -23,7 +23,6 @@ CATEGORY_LABELS: dict[str, str] = {
     "board_wipe": "Board Wipe",
     "wincons": "Wincons",
     "protection": "Protection",
-    "stax": "Stax",
     "synergy": "Synergy",
 }
 
