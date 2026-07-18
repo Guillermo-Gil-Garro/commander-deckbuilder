@@ -79,9 +79,10 @@ sistema). Diseño completo en DECISIONS.
   pasan solos: se auto-mantiene). Tierras, capa-1 y always exentos; sin dato EDHREC no hay
   veredicto. Calibración en vivo: ~1 flag por mazo (señal, no ruido). Umbrales tunables en
   `selector/audit.py`.
-- ⬜ 🔶 **Capa 3 — auditoría LLM**: pase LLM cacheado sobre comandante+mazo, la lectura de
-  calidad genérica con matiz. Proyecto aparte, la buena de verdad. Pendiente de decisión
-  de diseño de Guille (runtime con API key vs offline batch por comandante).
+- ⬜ **Capa 3 — auditoría LLM**: pase LLM cacheado sobre comandante+mazo, la lectura de
+  calidad genérica con matiz. **Pospuesta a después de Fase 6** (decisión de Guille
+  2026-07-18): capas 1+2 dan señal limpia; la arquitectura (runtime con API key vs
+  offline batch) se decidirá con la app ya desplegada.
 
 **Pendiente de VALIDACIÓN EN PARTIDA de Guille** (todo fácil de dial back):
 - **Las 3 capas de precio cambian la composición del mainboard** — jugarlas antes de dar por buenas. `C_WEIGHT=0` y quitar el prefer las revierten.
