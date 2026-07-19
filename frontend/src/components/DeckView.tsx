@@ -11,6 +11,8 @@ import {
   Printer,
   Sparkles,
   Tags,
+  TriangleAlert,
+  X,
 } from 'lucide-react';
 import { Button, Panel } from './ui';
 import { CardTile, ManaCost, ScoreBadge } from './cards';
@@ -299,6 +301,113 @@ function ToggleGroup<T extends string>({
   );
 }
 
+// A composition issue the export gate warns about, derived purely from the live
+// `category_breakdown` (no fetch). `obligation` = below a real floor (e.g. lands
+// under the Karsten minimum): the deck is illegal/broken and should be fixed.
+// `recommendation` = over a ceiling: allowed, but worth a trim.
+type CompositionIssue = {
+  category: string;
+  level: 'obligation' | 'recommendation';
+  message: string;
+};
+
+function compositionIssues(result: BuildResult): CompositionIssue[] {
+  const issues: CompositionIssue[] = [];
+  for (const [category, row] of Object.entries(result.category_breakdown)) {
+    if (row.within_band) continue;
+    const label = categoryLabel(category);
+    if (row.count < row.lo) {
+      issues.push({
+        category,
+        level: 'obligation',
+        message: `${label}: ${row.count}, por debajo del mínimo (${row.lo}).`,
+      });
+    } else if (row.count > row.hi) {
+      issues.push({
+        category,
+        level: 'recommendation',
+        message: `${label}: ${row.count}, por encima del máximo (${row.hi}).`,
+      });
+    }
+  }
+  // Obligations first: the modal leads with what actually breaks the deck.
+  return issues.sort((a, b) =>
+    a.level === b.level ? 0 : a.level === 'obligation' ? -1 : 1,
+  );
+}
+
+// The export safety net, shown only when the deck sits outside its bands. It
+// separates obligations (below a floor — the deck is broken) from
+// recommendations (over a ceiling — a trim), and never blocks: the player can
+// always export anyway, they are just no longer doing it unwarned.
+function ExportGuardModal({
+  issues,
+  onCancel,
+  onExportAnyway,
+}: {
+  issues: CompositionIssue[];
+  onCancel: () => void;
+  onExportAnyway: () => void;
+}) {
+  const obligations = issues.filter((i) => i.level === 'obligation');
+  const recommendations = issues.filter((i) => i.level === 'recommendation');
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Revisar antes de exportar"
+      onClick={onCancel}
+      className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+    >
+      <div
+        onClick={(event) => event.stopPropagation()}
+        className="surface flex w-full max-w-lg flex-col gap-4 rounded-lg p-6"
+      >
+        <h3 className="flex items-center gap-2 text-lg font-semibold">
+          <TriangleAlert className="h-5 w-5 text-amber-500" />
+          Revisa el mazo antes de exportar
+        </h3>
+        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+          Has cambiado el mazo y ahora su composición se sale de lo previsto.
+          Puedes exportar igualmente, pero conviene revisarlo.
+        </p>
+        {obligations.length > 0 && (
+          <div>
+            <p className="mb-1 text-sm font-semibold text-rose-700 dark:text-rose-300">
+              Deberías arreglar
+            </p>
+            <ul className="list-inside list-disc text-sm text-zinc-700 dark:text-zinc-200">
+              {obligations.map((issue) => (
+                <li key={issue.category}>{issue.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {recommendations.length > 0 && (
+          <div>
+            <p className="mb-1 text-sm font-semibold text-amber-700 dark:text-amber-300">
+              Recomendado revisar
+            </p>
+            <ul className="list-inside list-disc text-sm text-zinc-700 dark:text-zinc-200">
+              {recommendations.map((issue) => (
+                <li key={issue.category}>{issue.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button onClick={onCancel}>
+            <X className="h-4 w-4" /> Revisar el mazo
+          </Button>
+          <Button variant="secondary" onClick={onExportAnyway}>
+            <Printer className="h-4 w-4" /> Exportar igualmente
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function DeckView({
   result,
   showExport = true,
@@ -326,6 +435,10 @@ export function DeckView({
   const [display, setDisplay] = useState<DisplayAxis>('list');
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  // Export safety net: re-evaluate composition on the way out, so nobody prints
+  // a deck below its minimums (or over a ceiling) without being warned first.
+  const [confirmExport, setConfirmExport] = useState(false);
+  const issues = useMemo(() => compositionIssues(result), [result]);
 
   const groups = useMemo(
     () => groupCards(deckCards(result), sort, commanderCard(result)),
@@ -382,7 +495,9 @@ export function DeckView({
             )}
             <Button
               variant="secondary"
-              onClick={() => void onExportPdf()}
+              onClick={() =>
+                issues.length > 0 ? setConfirmExport(true) : void onExportPdf()
+              }
               disabled={pdfLoading}
             >
               {pdfLoading ? (
@@ -398,6 +513,17 @@ export function DeckView({
           </div>
         )}
       </div>
+
+      {confirmExport && (
+        <ExportGuardModal
+          issues={issues}
+          onCancel={() => setConfirmExport(false)}
+          onExportAnyway={() => {
+            setConfirmExport(false);
+            void onExportPdf();
+          }}
+        />
+      )}
       {pdfError && (
         <p className="mb-4 text-sm text-rose-700 dark:text-rose-300">
           No se pudo generar el PDF ({pdfError}).
