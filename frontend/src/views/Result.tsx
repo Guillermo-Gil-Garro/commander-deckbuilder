@@ -466,13 +466,31 @@ function SwapWorkspace({
     [deck.nonbasic_cards, deck.basic_lands],
   );
 
+  // Reverse flow for the bench: click a maybeboard card to bring it in, then
+  // pick what to cut for it (the same PlacingModal the audit uses).
+  const {
+    placingIn,
+    setPlacingIn,
+    outs: placeOuts,
+    loading: placeLoading,
+    error: placeError,
+    applying: placeApplying,
+    applyError: placeApplyError,
+    applySwapPair: applyPlace,
+  } = useReversePlacing(req.commander, req.dials, deckRefs, onSwap);
+
   function startSwap(card: ViewCard) {
+    setPlacingIn(null); // one flow at a time
     setOutName(card.name);
     setInCard(null);
   }
   function cancelSwap() {
     setOutName(null);
     setInCard(null);
+  }
+  function placeFromBench(card: DeckCard) {
+    cancelSwap(); // one flow at a time
+    setPlacingIn(card);
   }
   function confirmSwap() {
     if (outName && inCard && validation?.feasible) {
@@ -496,7 +514,21 @@ function SwapWorkspace({
       {/* Bench only: the active-swap candidates render as a modal instead
           (below), so the player never has to scroll past 100 cards to see
           what they are swapping. */}
-      <MaybeboardPanel bench={bench} />
+      <MaybeboardPanel bench={bench} onPlaceIn={placeFromBench} />
+
+      {placingIn && (
+        <PlacingModal
+          placingName={placingIn.name}
+          placingSlot={placingIn.slot}
+          outs={placeOuts?.outs ?? []}
+          loading={placeLoading}
+          error={placeError}
+          applyError={placeApplyError}
+          applying={placeApplying}
+          onPick={(card) => void applyPlace(card.name, placingIn)}
+          onCancel={() => setPlacingIn(null)}
+        />
+      )}
 
       {outCard && (
         <SwapCandidatesModal
@@ -555,6 +587,7 @@ function PlacingModal({
   outs,
   loading = false,
   error = null,
+  applyError = null,
   applying,
   onPick,
   onCancel,
@@ -564,6 +597,8 @@ function PlacingModal({
   outs: DeckCard[];
   loading?: boolean;
   error?: string | null;
+  /** A rejected-swap message (e.g. validation said no), shown in the modal. */
+  applyError?: string | null;
   /** The `out=>in` key currently applying, so the picked tile shows a spinner. */
   applying: string | null;
   onPick: (outCard: DeckCard) => void;
@@ -607,6 +642,11 @@ function PlacingModal({
           puntuadas antes. La primera es la recomendada. El cambio se valida
           antes de aplicarse.
         </p>
+        {applyError && (
+          <p className="text-sm text-amber-600 dark:text-amber-400">
+            {applyError}
+          </p>
+        )}
         {loading ? (
           <p className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
             <Loader2 className="h-4 w-4 animate-spin" /> Buscando qué conviene
@@ -883,22 +923,16 @@ function AuditPanel({
   );
 }
 
-// Advanced mode's reverse flow: search any legal card to bring IN, and the
-// system recommends which deck cards to cut for it (same feasibility + ranking
-// as the audit's placing picker, but for a card you chose, not one it flagged).
-function AdvancedAddPanel({
-  commander,
-  dials,
-  deckRefs,
-  deckNames,
-  onSwap,
-}: {
-  commander: string;
-  dials: BuildRequest['dials'];
-  deckRefs: DeckCardRef[];
-  deckNames: Set<string>;
-  onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void;
-}) {
+// Reverse placing: pick a card to bring IN, fetch the deck cards worth cutting
+// for it (/swap/outs), and apply the chosen swap through the validated path.
+// Shared by the maybeboard bench and the advanced "meter una carta concreta"
+// panel — clicking a bench card and searching one land in the same flow.
+function useReversePlacing(
+  commander: string,
+  dials: BuildRequest['dials'],
+  deckRefs: DeckCardRef[],
+  onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void,
+) {
   const [placingIn, setPlacingIn] = useState<DeckCard | null>(null);
   const [outs, setOuts] = useState<SwapOuts | null>(null);
   const [loading, setLoading] = useState(false);
@@ -957,6 +991,45 @@ function AdvancedAddPanel({
     }
   }
 
+  return {
+    placingIn,
+    setPlacingIn,
+    outs,
+    loading,
+    error,
+    applying,
+    applyError,
+    applySwapPair,
+  };
+}
+
+// Advanced mode's reverse flow: search any legal card to bring IN, and the
+// system recommends which deck cards to cut for it (same feasibility + ranking
+// as the audit's placing picker, but for a card you chose, not one it flagged).
+function AdvancedAddPanel({
+  commander,
+  dials,
+  deckRefs,
+  deckNames,
+  onSwap,
+}: {
+  commander: string;
+  dials: BuildRequest['dials'];
+  deckRefs: DeckCardRef[];
+  deckNames: Set<string>;
+  onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void;
+}) {
+  const {
+    placingIn,
+    setPlacingIn,
+    outs,
+    loading,
+    error,
+    applying,
+    applyError,
+    applySwapPair,
+  } = useReversePlacing(commander, dials, deckRefs, onSwap);
+
   return (
     <Panel>
       <h3 className="mb-1 flex items-center gap-2 text-lg font-semibold">
@@ -974,12 +1047,6 @@ function AdvancedAddPanel({
         placeholder="Busca la carta que quieres meter…"
       />
 
-      {applyError && (
-        <p className="mt-3 text-sm text-amber-600 dark:text-amber-400">
-          {applyError}
-        </p>
-      )}
-
       {placingIn && (
         <PlacingModal
           placingName={placingIn.name}
@@ -987,6 +1054,7 @@ function AdvancedAddPanel({
           outs={outs?.outs ?? []}
           loading={loading}
           error={error}
+          applyError={applyError}
           applying={applying}
           onPick={(card) => void applySwapPair(card.name, placingIn)}
           onCancel={() => setPlacingIn(null)}
@@ -1715,8 +1783,11 @@ function SwapCandidatesModal({
 // candidates live in SwapCandidatesModal, not here.
 function MaybeboardPanel({
   bench,
+  onPlaceIn,
 }: {
   bench: Maybeboard | null;
+  /** Click a bench card to bring it in: opens the "elige qué sale" picker. */
+  onPlaceIn: (card: DeckCard) => void;
 }) {
   // Standing bench: best non-selected cards grouped by role.
   const roles = bench
@@ -1726,8 +1797,9 @@ function MaybeboardPanel({
     <Panel>
       <h3 className="mb-1 text-lg font-semibold">Banquillo (maybeboard)</h3>
       <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-        Las mejores cartas que se quedaron fuera, por rol. Para cambiar una carta,
-        haz clic en cualquier carta del mazo de arriba.
+        Las mejores cartas que se quedaron fuera, por rol. Haz clic en una para
+        meterla (te diremos qué sacar), o en una carta del mazo de arriba para
+        cambiarla.
       </p>
       {!bench ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -1751,7 +1823,22 @@ function MaybeboardPanel({
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
                 {cards.map((card) => (
-                  <CardTile key={card.oracle_id} card={toViewCard(card)} />
+                  <div
+                    key={card.oracle_id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => onPlaceIn(card)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        onPlaceIn(card);
+                      }
+                    }}
+                    title={`Meter ${card.name}`}
+                    className="accent-focus block cursor-pointer rounded-xl transition hover:accent-ring hover:ring-2"
+                  >
+                    <CardTile card={toViewCard(card)} />
+                  </div>
                 ))}
               </div>
             </div>
