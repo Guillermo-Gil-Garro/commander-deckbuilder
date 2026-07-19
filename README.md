@@ -1,3 +1,16 @@
+---
+title: Commander Deckbuilder
+emoji: 🐉
+colorFrom: green
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
+<!-- The YAML above configures the Hugging Face Docker Space (build ./Dockerfile,
+     serve on 7860); it must stay at the very top of README.md. -->
+
 # Commander Deckbuilder
 
 Aplicación para construir mazos de Commander: selecciona un comandante, genera una base de 99 cartas y ajústala con swaps validados en vivo.

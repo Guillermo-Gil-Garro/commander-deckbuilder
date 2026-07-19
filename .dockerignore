@@ -5,11 +5,14 @@
 .git
 .gitignore
 
-# Data: 182 MB of Scryfall/EDHREC cache and the 16 MB processed pool are
-# gitignored artifacts and are NOT part of the image (see the Dockerfile's
-# note on the degraded start). data/tags/ IS needed and stays.
-data/cache
-data/processed
+# Data: most of the Scryfall/EDHREC cache is dev-only weight. The image needs
+# three things (see the Dockerfile): the processed pool (Git LFS), the
+# precached EDHREC pages for the featured commanders, and data/tags/ (kept).
+# Everything else under data/cache (prints, raw/archetype pages) is excluded.
+data/cache/*
+!data/cache/edhrec
+data/processed/*
+!data/processed/cards.jsonl
 
 # Built inside the image by stage 1; a local copy is stale weight.
 frontend/node_modules

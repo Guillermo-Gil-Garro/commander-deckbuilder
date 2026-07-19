@@ -37,15 +37,24 @@ RUN pip install --no-cache-dir -e ./backend
 COPY banlist.yaml quotas.yaml rules.yaml featured_commanders.yaml ./
 COPY data/tags/llm_tags.jsonl data/tags/llm_tags.jsonl
 
+# The EDHREC popularity ranking (committed, ~70 KB): without it the commander
+# picker degrades to alphabetical order.
+COPY data/edhrec_ranking.json data/edhrec_ranking.json
+
+# The card pool (26 MB, Git LFS) — the app starts *degraded* without it, so it
+# ships in the image (Fase 6). Refresh = rebuild the LFS file and redeploy.
+COPY data/processed/cards.jsonl data/processed/cards.jsonl
+
+# Precached EDHREC pages for the 61 featured commanders, so their first build is
+# instant and does not depend on egress to json.edhrec.com. Non-featured
+# commanders still fetch on demand at request time.
+COPY data/cache/edhrec data/cache/edhrec
+
 COPY --from=frontend-build /build/frontend/dist frontend/dist
 
-# data/processed/cards.jsonl (16 MB) is gitignored and excluded from the build
-# context, so it is NOT in this image: the Space starts *degraded* on purpose —
-# /health reports {"status":"degraded","cards_loaded":0} and every deck
-# endpoint answers 503 with an explicit message. That is the intended,
-# diagnosable failure until Fase 6 ships the pool. Create the layout and let
-# the pipeline (or an upload) fill it in.
-RUN mkdir -p data/cache data/processed && chown -R appuser:appuser data
+# data/cache must be writable by the runtime user: on-demand EDHREC pages and
+# Scryfall print/image lookups are cached here at request time.
+RUN mkdir -p data/cache/prints data/processed && chown -R appuser:appuser data
 
 USER appuser
 WORKDIR /app/backend
