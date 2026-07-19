@@ -304,6 +304,10 @@ commanders:
   "Ketramose, the New Dawn":
     archetype: midrange              # DUDOSO: motor de robo por exilio; mazo de
                                      # desgaste. Alt: control.
+    overrides:
+      card_draw: [7, 12]           # 2026-07-19: roba por exilio (el comandante),
+                                   # no con hechizos dedicados; el suelo de 9
+                                   # forzaba relleno (Insatiable Avarice 0.07).
   "Athreos, God of Passage":
     archetype: aristocrats           # aristocrats: sacrificar y recursión con castigo
                                      # de vida a la mesa.
@@ -311,12 +315,24 @@ commanders:
     archetype: spellslinger          # DUDOSO: robo masivo -> ejército de insectos.
                                      # Los slots son robo/wheels (spellslinger), pero
                                      # gana yendo ancho (aggro).
+    overrides:
+      wincons: [0, 4]              # 2026-07-19: gana con el ejército de insectos
+                                   # (el comandante), como Talrand; el suelo forzaba
+                                   # Psychic Corrosion 0.11.
   "Niv-Mizzet, Parun":
     archetype: spellslinger
+    overrides:
+      wincons: [0, 4]              # 2026-07-19: gana con Niv + robo/daño, no con
+                                   # carta-wincon; el suelo forzaba Rite of the
+                                   # Dragoncaller 0.06.
   "Lathril, Blade of the Elves":
     archetype: aggro
   "Meren of Clan Nel Toth":
     archetype: graveyard
+    overrides:
+      card_draw: [7, 13]           # 2026-07-19: su ventaja es recursión de tumba,
+                                   # no robo puro; el suelo de 9 forzaba relleno
+                                   # (Deadly Dispute 0.11).
   "Winota, Joiner of Forces":
     archetype: aggro
     overrides:
@@ -358,6 +374,10 @@ commanders:
   "Korvold, Fae-Cursed King":
     archetype: aristocrats           # aristocrats: sacrifica permanentes propios
                                      # (tesoros) para robar y engordar.
+    overrides:
+      card_draw: [7, 13]           # 2026-07-19: Korvold ES el motor de robo
+                                   # (sac->carta); el suelo de 9 forzaba relleno
+                                   # (Big Score 0.16).
   "Winter, Misanthropic Guide":
     archetype: stax                  # stax: prison + castigo de mano llena (el
                                      # delirium es medio, no el plan).
@@ -367,6 +387,10 @@ commanders:
   "Arcades, the Strategist":
     archetype: midrange              # DUDOSO: muros que roban; defensivo y luego ataca
                                      # con resistencia. Alt: control.
+    overrides:
+      wincons: [1, 4]              # 2026-07-19: gana con muros con daño y su robo es
+                                   # el comandante; el suelo forzaba Finale of
+                                   # Devastation 0.16.
   "Thalia and The Gitrog Monster":
     archetype: stax                  # stax: castigo (impuestos de Thalia) + motor de
                                      # sacrificio de tierras del Gitrog.
@@ -380,6 +404,10 @@ commanders:
                                      # el mazo depende de que Narset sobreviva y ataque.
   "Muldrotha, the Gravetide":
     archetype: graveyard
+    overrides:
+      wincons: [1, 4]              # 2026-07-19: gana por inevitabilidad/valor de
+                                   # tumba, no con carta-wincon; el suelo forzaba
+                                   # Finale of Devastation 0.09.
   "Glarb, Calamity's Augur":
     archetype: midrange              # DUDOSO: juega desde lo alto de la biblioteca,
                                      # no desde la tumba, pese al surveil.
@@ -389,6 +417,10 @@ commanders:
     archetype: midrange              # DUDOSO: ataca para trampear gordos y pide
                                      # protección como un voltron, pero su curva
                                      # (suelo Karsten 39) tampoco cabe en aggro.
+    overrides:
+      wincons: [1, 4]              # 2026-07-19: su wincon son los gordos trampeados
+                                   # (tagged synergy); el suelo forzaba Liliana's
+                                   # Contract 0.14.
   "Isshin, Two Heavens as One":
     archetype: aggro
   "Flubs, the Fool":
