@@ -17,6 +17,7 @@ const API_ROUTES = [
   '/structure',
   '/build',
   '/sequential',
+  '/swap',
   '/maybeboard',
   '/audit',
   '/export',

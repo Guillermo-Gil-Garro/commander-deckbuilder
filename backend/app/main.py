@@ -55,6 +55,7 @@ from app.schemas import (
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
+    SwapReplacementsResponse,
     SwapValidateRequest,
     SwapValidateResponse,
     WhyNotResponse,
@@ -546,6 +547,24 @@ async def swap_candidates(
     """
     state = _state(request)
     return await run_in_threadpool(service.swap_candidates_for, state, payload)
+
+
+@app.post("/swap/replacements")
+async def swap_replacements(
+    request: Request, payload: SwapCandidatesRequest
+) -> SwapReplacementsResponse:
+    """Audit-style, role-aware replacements for the card marked ``out``.
+
+    Same inputs as ``/sequential/candidates``, but the answer is the audit's
+    palette (up to two same-role, the best card you're missing, one that
+    reinforces the thinnest category) instead of a flat top-N ranking — the
+    guidance the audit gives its doubtful cards, applied wherever a card is
+    removed. ``feasible_count`` is the total number of legal swaps; ``limit``
+    is ignored (the palette is at most four). Same error codes as
+    ``/sequential/candidates``.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.swap_replacements_for, state, payload)
 
 
 @app.post("/maybeboard")

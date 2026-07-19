@@ -336,6 +336,23 @@ export async function sequentialCandidates(
   return post<SwapCandidates>('/sequential/candidates', req);
 }
 
+/** `/swap/replacements`. The audit's role-aware palette (same_role /
+ *  best_overall / reinforce) for a manually chosen out card, instead of a flat
+ *  top-N ranking. `feasible_count` is the total number of legal swaps. */
+export type SwapReplacements = {
+  current: DeckCard;
+  replacements: AuditReplacement[];
+  feasible_count: number;
+};
+
+/** Audit-style replacements for the card marked to leave: the same guidance the
+ *  audit gives its doubtful cards, applied wherever a card is removed. */
+export async function swapReplacements(
+  req: SwapCandidatesRequest,
+): Promise<SwapReplacements> {
+  return post<SwapReplacements>('/swap/replacements', req);
+}
+
 /** Validate one prospective swap. The response is the source of truth for the
  *  post-swap category verdicts — the client must not re-derive them. */
 export async function sequentialValidate(req: {

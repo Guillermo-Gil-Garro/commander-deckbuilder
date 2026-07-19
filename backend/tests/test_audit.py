@@ -204,6 +204,52 @@ def test_audit_flags_a_free_spell_and_offers_a_palette(
     assert all(m["name"] not in deck_names for m in audit["missing"])
 
 
+def test_swap_replacements_offers_the_audit_palette_for_any_card(
+    client: TestClient, ur_dragon_deck: dict
+) -> None:
+    """A manually chosen out card gets the audit's role-aware palette, not a
+    flat top-N ranking (Guille 2026-07-19)."""
+    out = ur_dragon_deck["nonbasic_cards"][0]["name"]
+    response = client.post(
+        "/swap/replacements",
+        json={"commander": COMMANDER, "deck": _refs(ur_dragon_deck), "out": out},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+
+    assert body["current"]["name"] == out
+    replacements = body["replacements"]
+    assert replacements, "there should be at least one feasible replacement"
+    assert len(replacements) <= 4  # the palette is at most four
+    assert {r["kind"] for r in replacements} <= {
+        "same_role",
+        "best_overall",
+        "reinforce",
+    }
+    offered = [r["card"]["name"] for r in replacements]
+    assert len(offered) == len(set(offered)), "the palette is deduped by name"
+    deck_names = {c["name"] for c in ur_dragon_deck["nonbasic_cards"]} | {
+        c["name"] for c in ur_dragon_deck["basic_lands"]
+    }
+    assert all(name not in deck_names for name in offered)
+    # feasible_count is the full legal-swap total, never below what is shown.
+    assert body["feasible_count"] >= len(replacements)
+
+
+def test_swap_replacements_rejects_a_card_not_in_the_deck(
+    client: TestClient, ur_dragon_deck: dict
+) -> None:
+    response = client.post(
+        "/swap/replacements",
+        json={
+            "commander": COMMANDER,
+            "deck": _refs(ur_dragon_deck),
+            "out": "Black Lotus",  # legal card, but not in this deck
+        },
+    )
+    assert response.status_code == 422
+
+
 def test_audit_rejects_a_deck_that_is_not_99(client: TestClient) -> None:
     """A short deck is a 422 before any EDHREC read — a coherence error."""
     response = client.post(

@@ -29,8 +29,8 @@ import { OpeningHand } from './OpeningHand';
 import {
   auditDeck,
   fetchMaybeboard,
-  sequentialCandidates,
   sequentialValidate,
+  swapReplacements,
   type AuditFlag,
   type AuditReplacement,
   type AuditResult,
@@ -42,7 +42,7 @@ import {
   type DeckCardRef,
   type Maybeboard,
   type Notice,
-  type SwapCandidates,
+  type SwapReplacements,
   type SwapValidation,
 } from '../api';
 
@@ -242,7 +242,7 @@ function SwapWorkspace({
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
   const [outName, setOutName] = useState<string | null>(null);
-  const [cands, setCands] = useState<SwapCandidates | null>(null);
+  const [cands, setCands] = useState<SwapReplacements | null>(null);
   const [candsLoading, setCandsLoading] = useState(false);
   const [candsError, setCandsError] = useState<string | null>(null);
   const [inCard, setInCard] = useState<DeckCard | null>(null);
@@ -276,7 +276,10 @@ function SwapWorkspace({
     };
   }, [req, deckRefs]);
 
-  // Fetch the same-role, feasible candidates for the card marked to leave.
+  // Fetch the audit-style, role-aware replacements for the card marked to
+  // leave. Same guidance the audit gives its doubtful cards (Guille 2026-07-19),
+  // not a flat top-N ranking: up to two same-role, the best card missing and one
+  // that reinforces the thinnest category.
   useEffect(() => {
     if (!outName) {
       setCands(null);
@@ -286,14 +289,11 @@ function SwapWorkspace({
     setCandsLoading(true);
     setCandsError(null);
     setCands(null);
-    sequentialCandidates({
+    swapReplacements({
       commander: req.commander,
       dials: req.dials,
       deck: deckRefsRef.current,
       out: outName,
-      // A short, strong list (Guille 2026-07-19): 8 fills two 4-wide modal
-      // rows; more options just meant more scrolling past worse cards.
-      limit: 8,
     })
       .then((res) => {
         if (!cancelled) setCands(res);
@@ -421,8 +421,10 @@ const REPLACEMENT_LABEL: Record<AuditReplacement['kind'], string> = {
 };
 
 // How many out-candidates the placing picker shows. Guided freedom: enough
-// room to disagree with the suggestion, not the whole 60-card haystack.
-const PLACING_OUT_LIMIT = 9;
+// room to disagree with the suggestion, not the whole 60-card haystack. Ten
+// fills two clean rows of five (Guille 2026-07-19: nine crammed in one row read
+// as tiny thumbnails).
+const PLACING_OUT_LIMIT = 10;
 
 function AuditPanel({
   commander,
@@ -640,7 +642,7 @@ function AuditPanel({
                 Primero las de su mismo rol ({categoryLabel(placing.slot)}),
                 peor puntuadas antes. El cambio se valida antes de aplicarse.
               </p>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {outCandidates.map((card, index) => {
                   const busy = applying === `${card.name}=>${placing.name}`;
                   const suggested = index === 0;
@@ -1139,7 +1141,7 @@ function SwapCandidatesModal({
   onCancel,
 }: {
   outCard: DeckCard;
-  cands: SwapCandidates | null;
+  cands: SwapReplacements | null;
   loading: boolean;
   error: string | null;
   selectedInName: string | null;
@@ -1154,9 +1156,9 @@ function SwapCandidatesModal({
     return () => document.removeEventListener('keydown', onKey);
   }, [onCancel]);
 
-  // One flat list: we have a single scorer, so there is no synergy/power split
-  // to de-duplicate the way the TFM had to.
-  const candidates = cands?.candidates ?? [];
+  // Audit-style palette: same-role, best-you're-missing, reinforce. The chip on
+  // each tile says which axis it came from — the same grammar as the audit rows.
+  const replacements = cands?.replacements ?? [];
   return (
     <div
       role="dialog"
@@ -1182,12 +1184,12 @@ function SwapCandidatesModal({
           </Button>
         </div>
         <p className="text-sm text-zinc-600 dark:text-zinc-300">
-          Alternativas que mantienen el mazo válido. Pulsa una para previsualizar
-          el cambio y confírmalo abajo.
-          {cands && cands.feasible_count > candidates.length && (
+          Las mejores alternativas por rol, como en la auditoría: mismo rol, la
+          mejor que te falta y un refuerzo. Todas dejan el mazo válido. Pulsa una
+          para previsualizar el cambio y confírmalo abajo.
+          {cands && cands.feasible_count > replacements.length && (
             <span className="ml-1 text-zinc-500 dark:text-zinc-400">
-              Se muestran {candidates.length} de {cands.feasible_count}{' '}
-              factibles.
+              Hay {cands.feasible_count} cambios factibles en total.
             </span>
           )}
         </p>
@@ -1199,20 +1201,59 @@ function SwapCandidatesModal({
           <p className="text-sm text-amber-700 dark:text-amber-300">
             No se pudieron cargar las alternativas ({error}).
           </p>
-        ) : candidates.length === 0 ? (
+        ) : replacements.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             No hay alternativas factibles para esta carta.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {candidates.map((card) => (
-              <BenchTile
-                key={card.oracle_id}
-                card={card}
-                selected={card.name === selectedInName}
-                onClick={() => onChooseIn(card)}
+          // Current card + up to four suggestions: five tiles, one row, same
+          // sequential-mode grammar as the audit (Guille 2026-07-19).
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            <div className="flex flex-col overflow-hidden rounded-xl border border-rose-400/50 bg-white/60 dark:bg-zinc-950/40">
+              <span className="flex items-center justify-center gap-1 bg-rose-500/15 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-rose-700 dark:text-rose-200">
+                Actual · {categoryLabel(outCard.slot)}
+              </span>
+              <CardImage
+                card={toViewCard(outCard)}
+                className="aspect-[5/7] w-full object-cover"
               />
-            ))}
+              <span className="truncate px-2 py-1.5 text-xs font-semibold">
+                {outCard.name}
+              </span>
+            </div>
+            {replacements.map((rep) => {
+              const selected = rep.card.name === selectedInName;
+              return (
+                <button
+                  key={`${rep.kind}:${rep.card.name}`}
+                  type="button"
+                  onClick={() => onChooseIn(rep.card)}
+                  aria-pressed={selected}
+                  title={rep.note}
+                  className={`accent-focus flex flex-col overflow-hidden rounded-xl border bg-white/60 text-left transition hover:accent-ring hover:ring-2 dark:bg-zinc-950/40 ${
+                    selected
+                      ? 'border-transparent ring-2 accent-ring'
+                      : 'border-black/10 dark:border-white/10'
+                  }`}
+                >
+                  <span
+                    className={`flex items-center justify-center gap-1 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide ring-0 ${REPLACEMENT_CHIP[rep.kind]}`}
+                  >
+                    {REPLACEMENT_LABEL[rep.kind]} · {categoryLabel(rep.card.slot)}
+                  </span>
+                  <CardImage
+                    card={toViewCard(rep.card)}
+                    className="aspect-[5/7] w-full object-cover"
+                  />
+                  <span className="flex items-center justify-between gap-2 px-2 py-1.5">
+                    <span className="truncate text-xs font-semibold">
+                      {rep.card.name}
+                    </span>
+                    <ArrowRightLeft className="h-3.5 w-3.5 shrink-0 accent-text" />
+                  </span>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
@@ -1268,40 +1309,6 @@ function MaybeboardPanel({
         </div>
       )}
     </Panel>
-  );
-}
-
-// A clickable bench/candidate tile: a CardTile that selects this card as the one
-// to bring in. The selected card gets an accent ring.
-function BenchTile({
-  card,
-  selected,
-  onClick,
-}: {
-  card: DeckCard;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    // A div, not a button: CardTile hosts a flip control for double-faced cards,
-    // and nesting a button inside a button lets the inner click reach the outer.
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          onClick();
-        }
-      }}
-      aria-pressed={selected}
-      className={`accent-focus block rounded-xl text-left transition ${
-        selected ? 'accent-ring' : 'cursor-pointer hover:accent-ring'
-      }`}
-    >
-      <CardTile card={toViewCard(card)} />
-    </div>
   );
 }
 

@@ -78,6 +78,7 @@ from app.schemas import (
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
+    SwapReplacementsResponse,
     SwapRequest,
     SwapValidateRequest,
     SwapValidateResponse,
@@ -832,6 +833,63 @@ def swap_candidates_for(
     )
 
 
+def swap_replacements_for(
+    state: AppState, request: SwapCandidatesRequest
+) -> SwapReplacementsResponse:
+    """Audit-style, role-aware replacements for a manually chosen out card.
+
+    The same palette the audit offers for a *doubtful* card — up to two of the
+    out card's own role, the best card the deck is missing, and one that
+    reinforces the thinnest category — applied to whatever card the player marks
+    to leave. This is deliberately not the flat score ranking of
+    ``swap_candidates_for``: Guille (2026-07-19) wanted the audit's guidance
+    everywhere a card can be removed, not a generic top-N list.
+
+    Blocking (reads EDHREC), never runs the solver.
+    """
+    ctx = _swap_context(state, request)
+    data = edhrec_data(state, ctx.row.name)
+    pool_candidates = _pool_candidates(state, ctx.row, ctx.bands, data)
+    score_by_name = {facts.name: score for facts, score in pool_candidates}
+
+    deck_names = {facts.name for facts, _ in ctx.deck}
+    counts: dict[str, int] = {}
+    for facts, count in ctx.deck:
+        for category in facts.categories:
+            counts[category] = counts.get(category, 0) + count
+    thin_category = _thinnest_category(counts, ctx.bands)
+
+    feasible = _feasible_replacements(
+        flagged=ctx.out_card,
+        deck=ctx.deck,
+        deck_names=deck_names,
+        pool_candidates=pool_candidates,
+        bands=ctx.bands,
+        commander=ctx.commander,
+        banned=state.effective_banned_names(ctx.archetype),
+        never=ctx.never_names,
+        watchlist=state.watchlist_names,
+        always=ctx.always_names,
+    )
+    replacements = _replacement_palette(
+        state, flagged=ctx.out_card, feasible=feasible, thin_category=thin_category
+    )
+
+    out_category = primary_category(ctx.out_card)
+    out_score = score_by_name.get(ctx.out_card.name, 0.0)
+    return SwapReplacementsResponse(
+        current=bench_card_view(
+            state.pool.by_name[ctx.out_card.name],
+            categories=sorted(ctx.out_card.categories),
+            score=out_score,
+            slot=out_category,
+            reason=candidate_reason(out_category, out_score),
+        ),
+        replacements=replacements,
+        feasible_count=len(feasible),
+    )
+
+
 def maybeboard_for(state: AppState, request: MaybeboardRequest) -> MaybeboardResponse:
     """The bench for a deck in its current state, grouped by category.
 
@@ -1026,6 +1084,18 @@ def audit_deck(state: AppState, request: AuditRequest) -> AuditResponse:
         flagged = facts_by_name.get(flag.name)
         if flagged is None:
             continue
+        feasible = _feasible_replacements(
+            flagged=flagged,
+            deck=deck,
+            deck_names=deck_names,
+            pool_candidates=pool_candidates,
+            bands=bands,
+            commander=commander,
+            banned=effective_banned,
+            never=never_names,
+            watchlist=state.watchlist_names,
+            always=always_names,
+        )
         doubtful.append(
             AuditFlagView(
                 card=bench_card_view(
@@ -1039,15 +1109,7 @@ def audit_deck(state: AppState, request: AuditRequest) -> AuditResponse:
                 replacements=_replacement_palette(
                     state,
                     flagged=flagged,
-                    deck=deck,
-                    deck_names=deck_names,
-                    pool_candidates=pool_candidates,
-                    bands=bands,
-                    commander=commander,
-                    banned=effective_banned,
-                    never=never_names,
-                    watchlist=state.watchlist_names,
-                    always=always_names,
+                    feasible=feasible,
                     thin_category=thin_category,
                 ),
             )
@@ -1083,8 +1145,7 @@ def _thinnest_category(
     return thin
 
 
-def _replacement_palette(
-    state: AppState,
+def _feasible_replacements(
     *,
     flagged: CardFacts,
     deck: Sequence[tuple[CardFacts, int]],
@@ -1096,16 +1157,10 @@ def _replacement_palette(
     never: Collection[str],
     watchlist: Collection[str],
     always: Collection[str],
-    thin_category: str | None,
-) -> list[ReplacementView]:
-    """Up to four feasible replacements for ``flagged``, deduped by name.
-
-    Two of the flagged card's own role, one "best you're missing" (any role,
-    the upgrade axis) and one that reinforces the thinnest category (the balance
-    axis). Every one is a feasible swap for ``flagged``; an axis with no legal,
-    unused option is dropped. Overlap between axes is allowed, the same card
-    twice is not.
-    """
+) -> list[tuple[CardFacts, float]]:
+    """Every candidate that is a feasible one-for-one swap for ``flagged``,
+    best score first. Shared by the audit palette and the manual-swap picker so
+    both offer the *same* role-aware, quota-valid replacements."""
     excluded = set(banned) | set(never) | set(watchlist)
     feasible: list[tuple[CardFacts, float]] = []
     for facts, score in pool_candidates:
@@ -1129,7 +1184,23 @@ def _replacement_palette(
         if verdict.feasible:
             feasible.append((facts, score))
     feasible.sort(key=lambda item: (-item[1], item[0].name))
+    return feasible
 
+
+def _replacement_palette(
+    state: AppState,
+    *,
+    flagged: CardFacts,
+    feasible: Sequence[tuple[CardFacts, float]],
+    thin_category: str | None,
+) -> list[ReplacementView]:
+    """Up to four replacements for ``flagged``, picked from ``feasible``.
+
+    Two of the flagged card's own role, one "best you're missing" (any role,
+    the upgrade axis) and one that reinforces the thinnest category (the balance
+    axis). An axis with no legal, unused option is dropped. Overlap between axes
+    is allowed, the same card twice is not.
+    """
     flagged_category = primary_category(flagged)
     used: set[str] = set()
     slots: list[ReplacementView] = []

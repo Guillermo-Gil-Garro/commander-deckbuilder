@@ -759,6 +759,22 @@ class ReplacementView(BaseModel):
     card: DeckCardView
 
 
+class SwapReplacementsResponse(BaseModel):
+    """Audit-style, role-aware replacements for a manually chosen out card.
+
+    The same palette the audit offers for a doubtful card (see
+    ``ReplacementView``), but for whatever card the player marks to leave —
+    not a flat score ranking. ``feasible_count`` is the total number of legal
+    swaps, so the UI can say "4 sugerencias de 31 factibles".
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    current: DeckCardView
+    replacements: list[ReplacementView]
+    feasible_count: int
+
+
 class AuditFlagView(BaseModel):
     """One doubtful card, why it is doubtful, and what to put in its place.
 
