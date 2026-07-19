@@ -115,9 +115,11 @@ sistema). Diseño completo en DECISIONS.
 
 **Del TFM se descarta** (decisión de Guille): presupuesto y `price_eur` (juegan con proxies), brackets y Game Changers (política de WotC, no la banlist del grupo), slider Sinergia↔Potencia y columna "power" (el TFM tiene dos scorers ML; nosotros uno), `/audit` y los badges "Revisar" (usan embeddings de coherencia que no tenemos), y `curve_breakdown.target`/`deviation` (nuestro solver no tiene objetivo de curva).
 
-## Fase 6 — Despliegue
-- ⬜ HF Space Docker (FastAPI + build React), datos precacheados, refresco manual
-- ⬜ **`cards.jsonl` (16MB) está gitignorado → el Space arrancaría degradado.** Opción más simple: `RUN python -m pipeline.build` en el Dockerfile (rebuild = refresco manual). Alternativas: storage persistente del Space, o git-lfs
-- ⬜ Gemelo del anterior: `data/cache/edhrec/` también gitignorado → cada comandante paga su primer fetch (~1s). Decidir si versionar los 55 optimized (~11MB)
-- ⬜ ⚠️ **Verificar que el Space deja salir a `json.edhrec.com`**: todo el diseño on-demand lo asume
-- ⬜ Probar el `docker build` de verdad (nunca se ha ejecutado)
+## Fase 6 — Despliegue ✅ (2026-07-19)
+Desplegado en https://huggingface.co/spaces/Caskis/commander-deckbuilder
+(sustituye la versión TFM). `/health = ok`, no degraded.
+- ✅ HF Space Docker (FastAPI + build React), puerto 7860; README con front-matter `sdk: docker`
+- ✅ **`cards.jsonl` (26MB)**: resuelto con **Git LFS** (COPY en la imagen). Refresco = regenerar el .jsonl y redeploy. (Se descartó `RUN pipeline.build` por builds lentos/dependientes de Scryfall.)
+- ✅ `data/cache/edhrec/`: **versionados los 61 optimized** (~5.7MB) y copiados a la imagen → primer clic de destacados instantáneo. No-destacados: on-demand.
+- ✅ Egress a `json.edhrec.com` verificado (Atraxa no-destacada construyó on-demand) y a `api.scryfall.com` (prints/imágenes)
+- ✅ Primer `docker build` real ejecutado (en HF) — OK
