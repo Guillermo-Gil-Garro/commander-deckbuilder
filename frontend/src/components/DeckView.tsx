@@ -18,7 +18,12 @@ import { Button, Panel } from './ui';
 import { CardTile, ManaCost, ScoreBadge } from './cards';
 import { categoryLabel } from '../labels';
 import { commanderCard, deckCards, type ViewCard } from '../deck';
-import { exportProxyPdf, type BuildResult, type CategoryRow } from '../api';
+import {
+  exportProxyPdf,
+  type BuildResult,
+  type CategoryRow,
+  type ColorSourceRow,
+} from '../api';
 
 // Spanish labels for the primary card type (derived from type_line), MTGGoldfish-style.
 const TYPE_LABELS: Record<string, string> = {
@@ -311,7 +316,10 @@ type CompositionIssue = {
   message: string;
 };
 
-function compositionIssues(result: BuildResult): CompositionIssue[] {
+function compositionIssues(
+  result: BuildResult,
+  liveColors: Record<string, ColorSourceRow> | null,
+): CompositionIssue[] {
   const issues: CompositionIssue[] = [];
   for (const [category, row] of Object.entries(result.category_breakdown)) {
     if (row.within_band) continue;
@@ -327,6 +335,23 @@ function compositionIssues(result: BuildResult): CompositionIssue[] {
         category,
         level: 'recommendation',
         message: `${label}: ${row.count}, por encima del máximo (${row.hi}).`,
+      });
+    }
+  }
+  // Color fixing is a *soft* objective the solver already balanced, so a
+  // multicolor deck legitimately ships with deficits — flagging those on every
+  // export would be noise. What matters is whether the player's *edits* made a
+  // color worse than the build delivered: compare the live deficit against the
+  // build baseline and warn (as a recommendation) only when it grew.
+  const base = result.color_source_breakdown;
+  const live = liveColors ?? base;
+  for (const [color, row] of Object.entries(live)) {
+    const baseDeficit = base[color]?.deficit ?? 0;
+    if (row.deficit > baseDeficit) {
+      issues.push({
+        category: `color-${color}`,
+        level: 'recommendation',
+        message: `Fuentes de ${color}: ${row.sources} (demanda ${row.demand}); tus cambios dejaron el fixing peor que el mazo original.`,
       });
     }
   }
@@ -416,6 +441,7 @@ export function DeckView({
   onArtSelect,
   pdfArtOverrides,
   onAudit,
+  liveColors = null,
 }: {
   result: BuildResult;
   showExport?: boolean;
@@ -430,6 +456,9 @@ export function DeckView({
   pdfArtOverrides?: Record<string, string>;
   // Audit entry point: when set, an "Auditar mazo" button joins the header.
   onAudit?: () => void;
+  // Fresh color sources for the current deck (the export check uses these over
+  // the build's frozen numbers). Null falls back to `result`'s own.
+  liveColors?: Record<string, ColorSourceRow> | null;
 }) {
   const [sort, setSort] = useState<SortAxis>('type');
   const [display, setDisplay] = useState<DisplayAxis>('list');
@@ -438,7 +467,10 @@ export function DeckView({
   // Export safety net: re-evaluate composition on the way out, so nobody prints
   // a deck below its minimums (or over a ceiling) without being warned first.
   const [confirmExport, setConfirmExport] = useState(false);
-  const issues = useMemo(() => compositionIssues(result), [result]);
+  const issues = useMemo(
+    () => compositionIssues(result, liveColors),
+    [result, liveColors],
+  );
 
   const groups = useMemo(
     () => groupCards(deckCards(result), sort, commanderCard(result)),

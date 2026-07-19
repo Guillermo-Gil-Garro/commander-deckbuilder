@@ -30,6 +30,7 @@ import { toViewCard, useMutableDeck, type ViewCard } from '../deck';
 import { OpeningHand } from './OpeningHand';
 import {
   auditDeck,
+  evaluateDeck,
   fetchMaybeboard,
   searchLegalCards,
   sequentialValidate,
@@ -40,6 +41,7 @@ import {
   type AuditResult,
   type BuildRequest,
   type BuildResult,
+  type ColorSourceRow,
   type CommanderListItem,
   type CurveRow,
   type DeckCard,
@@ -167,6 +169,33 @@ export function Result({
     isInfeasible ? null : deck,
   );
   const shownDeck = useMemo(() => withArt(deck, resolved), [deck, resolved]);
+
+  // Live manabase re-evaluation: the build's color fixing freezes at solve time
+  // and lies after swaps, so recompute it on the current deck whenever it
+  // changes. Feeds the constraints panel (fresh, no stale warning) and the
+  // pre-export check. Null until the first result / while a build is infeasible.
+  const [liveColors, setLiveColors] = useState<Record<
+    string,
+    ColorSourceRow
+  > | null>(null);
+  useEffect(() => {
+    if (!swapsEnabled || !req) {
+      setLiveColors(null);
+      return;
+    }
+    let cancelled = false;
+    evaluateDeck({ commander: req.commander, dials: req.dials, deck: deckRefs })
+      .then((res) => {
+        if (!cancelled) setLiveColors(res.color_source_breakdown);
+      })
+      .catch(() => {
+        // Keep the last good numbers rather than blanking the panel on a blip.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [swapsEnabled, req, deckRefs]);
+
   // Names in the deck now: the advanced free search greys these out.
   const deckNames = useMemo(
     () =>
@@ -263,7 +292,11 @@ export function Result({
           <NoticeList notices={result.unresolved} kind="unresolved" />
           <HonestyNote />
           <div className="grid gap-6 lg:grid-cols-2">
-            <ConstraintsPanel result={deck} swapped={swapped} />
+            <ConstraintsPanel
+              result={deck}
+              swapped={swapped}
+              liveColors={liveColors}
+            />
             <CompositionPanel result={deck} />
           </div>
           {swapsEnabled && req && (
@@ -301,12 +334,14 @@ export function Result({
               onAudit={openAudit}
               advanced={advanced}
               onToggleAdvanced={setAdvanced}
+              liveColors={liveColors}
             />
           ) : (
             <DeckView
               result={shownDeck}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
+              liveColors={liveColors}
             />
           )}
         </>
@@ -329,6 +364,7 @@ function SwapWorkspace({
   onAudit,
   advanced,
   onToggleAdvanced,
+  liveColors,
 }: {
   deck: BuildResult;
   /** `deck` with the art picker's printings applied — what the views render.
@@ -342,6 +378,7 @@ function SwapWorkspace({
   onAudit: () => void;
   advanced: boolean;
   onToggleAdvanced: (value: boolean) => void;
+  liveColors: Record<string, ColorSourceRow> | null;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -509,6 +546,7 @@ function SwapWorkspace({
         onArtSelect={onArtSelect}
         pdfArtOverrides={pdfArtOverrides}
         onAudit={onAudit}
+        liveColors={liveColors}
       />
 
       {/* Bench only: the active-swap candidates render as a modal instead
@@ -1308,11 +1346,18 @@ function InfeasiblePanel({ result }: { result: BuildResult }) {
 function ConstraintsPanel({
   result,
   swapped,
+  liveColors = null,
 }: {
   result: BuildResult;
   swapped: boolean;
+  /** Fresh color sources for the current deck; when present, replaces the
+   *  build's frozen numbers and clears the stale-after-swap warning. */
+  liveColors?: Record<string, ColorSourceRow> | null;
 }) {
-  const colors = Object.entries(result.color_source_breakdown);
+  const colorSources = liveColors ?? result.color_source_breakdown;
+  const colors = Object.entries(colorSources);
+  // With live numbers the figures are current, so the stale caveat is moot.
+  const showStaleWarning = swapped && liveColors === null;
   return (
     <Panel>
       <h3 className="mb-4 text-lg font-semibold">Restricciones</h3>
@@ -1345,7 +1390,7 @@ function ConstraintsPanel({
           <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
             Fuentes de cada color frente a la demanda de los pips del mazo
             (método Karsten).
-            {swapped && (
+            {showStaleWarning && (
               <span className="ml-1 font-medium text-amber-700 dark:text-amber-300">
                 Cambiar cartas puede afectar al fixing de color, y esto no se
                 reoptimiza: estas cifras son las del mazo que resolvió el solver.

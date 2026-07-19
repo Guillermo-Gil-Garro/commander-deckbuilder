@@ -18,6 +18,7 @@ const API_ROUTES = [
   '/build',
   '/sequential',
   '/swap',
+  '/evaluate',
   '/maybeboard',
   '/audit',
   '/export',

@@ -389,6 +389,21 @@ export async function swapOuts(req: {
   return post<SwapOuts>('/swap/outs', req);
 }
 
+/** `/evaluate`. The live manabase re-evaluation: color sources recomputed over
+ *  the deck as it stands (the build's froze at solve time). */
+export type DeckEvaluation = {
+  color_source_breakdown: Record<string, ColorSourceRow>;
+};
+
+/** Recompute the deck's color fixing on its current state (no re-solve). */
+export async function evaluateDeck(req: {
+  commander: string;
+  dials: Dials;
+  deck: DeckCardRef[];
+}): Promise<DeckEvaluation> {
+  return post<DeckEvaluation>('/evaluate', req);
+}
+
 /** Validate one prospective swap. The response is the source of truth for the
  *  post-swap category verdicts — the client must not re-derive them. */
 export async function sequentialValidate(req: {
