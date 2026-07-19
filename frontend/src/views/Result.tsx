@@ -87,6 +87,48 @@ function useAdvancedMode(): [boolean, (value: boolean) => void] {
   return [advanced, set];
 }
 
+// The advanced-mode switch. One shared control, rendered both at the top and
+// inside every place a card is swapped (Guille 2026-07-19), so it can be flipped
+// on right where it is needed. All instances drive the same persisted state.
+function AdvancedToggle({
+  advanced,
+  onChange,
+  className = '',
+}: {
+  advanced: boolean;
+  onChange: (value: boolean) => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={advanced}
+      onClick={() => onChange(!advanced)}
+      title="Busca y sustituye cualquier carta a mano, bajo tu responsabilidad"
+      className={`accent-focus inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-semibold transition ${
+        advanced
+          ? 'accent-border accent-text accent-soft-bg'
+          : 'border-black/10 text-zinc-600 hover:accent-border dark:border-white/10 dark:text-zinc-300'
+      } ${className}`}
+    >
+      <Wrench className="h-4 w-4" />
+      Modo avanzado
+      <span
+        className={`inline-flex h-4 w-7 items-center rounded-full p-0.5 transition ${
+          advanced ? 'accent-bg' : 'bg-zinc-300 dark:bg-zinc-600'
+        }`}
+      >
+        <span
+          className={`h-3 w-3 rounded-full bg-white transition ${
+            advanced ? 'translate-x-3' : ''
+          }`}
+        />
+      </span>
+    </button>
+  );
+}
+
 export function Result({
   result,
   commander,
@@ -180,32 +222,11 @@ export function Result({
           </Button>
         )}
         {swapsEnabled && (
-          <button
-            type="button"
-            role="switch"
-            aria-checked={advanced}
-            onClick={() => setAdvanced(!advanced)}
-            title="Busca y sustituye cualquier carta a mano, bajo tu responsabilidad"
-            className={`accent-focus ml-auto inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-semibold transition ${
-              advanced
-                ? 'accent-border accent-text accent-soft-bg'
-                : 'border-black/10 text-zinc-600 hover:accent-border dark:border-white/10 dark:text-zinc-300'
-            }`}
-          >
-            <Wrench className="h-4 w-4" />
-            Modo avanzado
-            <span
-              className={`inline-flex h-4 w-7 items-center rounded-full p-0.5 transition ${
-                advanced ? 'accent-bg' : 'bg-zinc-300 dark:bg-zinc-600'
-              }`}
-            >
-              <span
-                className={`h-3 w-3 rounded-full bg-white transition ${
-                  advanced ? 'translate-x-3' : ''
-                }`}
-              />
-            </span>
-          </button>
+          <AdvancedToggle
+            advanced={advanced}
+            onChange={setAdvanced}
+            className="ml-auto"
+          />
         )}
       </div>
 
@@ -279,6 +300,7 @@ export function Result({
               pdfArtOverrides={pdfArtOverrides}
               onAudit={openAudit}
               advanced={advanced}
+              onToggleAdvanced={setAdvanced}
             />
           ) : (
             <DeckView
@@ -306,6 +328,7 @@ function SwapWorkspace({
   pdfArtOverrides,
   onAudit,
   advanced,
+  onToggleAdvanced,
 }: {
   deck: BuildResult;
   /** `deck` with the art picker's printings applied — what the views render.
@@ -318,6 +341,7 @@ function SwapWorkspace({
   pdfArtOverrides: Record<string, string>;
   onAudit: () => void;
   advanced: boolean;
+  onToggleAdvanced: (value: boolean) => void;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -484,6 +508,7 @@ function SwapWorkspace({
           onChooseIn={setInCard}
           onCancel={cancelSwap}
           advanced={advanced}
+          onToggleAdvanced={onToggleAdvanced}
           commander={req.commander}
           deckNames={deckNames}
         />
@@ -518,6 +543,131 @@ const REPLACEMENT_LABEL: Record<AuditReplacement['kind'], string> = {
 // fills two clean rows of five (Guille 2026-07-19: nine crammed in one row read
 // as tiny thumbnails).
 const PLACING_OUT_LIMIT = 10;
+
+// The "elige qué sale" step as an overlay (Guille 2026-07-19: inline under the
+// deck forced a scroll). Shared by the audit's "buenas que te faltan" and the
+// advanced "meter una carta concreta": pick the card to bring in, this shows
+// the deck cards to cut for it (first = the recommendation). The active-swap
+// tray still floats over it to confirm.
+function PlacingModal({
+  placingName,
+  placingSlot,
+  outs,
+  loading = false,
+  error = null,
+  applying,
+  onPick,
+  onCancel,
+}: {
+  placingName: string;
+  placingSlot: string;
+  outs: DeckCard[];
+  loading?: boolean;
+  error?: string | null;
+  /** The `out=>in` key currently applying, so the picked tile shows a spinner. */
+  applying: string | null;
+  onPick: (outCard: DeckCard) => void;
+  onCancel: () => void;
+}) {
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') onCancel();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onCancel]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Meter ${placingName}`}
+      onClick={onCancel}
+      className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm sm:p-6"
+    >
+      <div
+        onClick={(event) => event.stopPropagation()}
+        className="surface flex max-h-[92vh] w-full max-w-7xl flex-col gap-4 overflow-y-auto rounded-lg p-5 pb-28 sm:p-7 sm:pb-28"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="flex items-center gap-2 text-lg font-semibold">
+            <ArrowRightLeft className="h-5 w-5 accent-text" />
+            Meter{' '}
+            <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-emerald-700 ring-1 ring-emerald-400/40 dark:text-emerald-200">
+              {placingName}
+            </span>
+            — elige qué sale
+          </h3>
+          <Button variant="secondary" onClick={onCancel}>
+            <X className="h-4 w-4" /> Cancelar
+          </Button>
+        </div>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          Primero las de su mismo rol ({categoryLabel(placingSlot)}), peor
+          puntuadas antes. La primera es la recomendada. El cambio se valida
+          antes de aplicarse.
+        </p>
+        {loading ? (
+          <p className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+            <Loader2 className="h-4 w-4 animate-spin" /> Buscando qué conviene
+            sacar…
+          </p>
+        ) : error ? (
+          <p className="text-sm text-amber-700 dark:text-amber-300">
+            No se pudo calcular ({error}).
+          </p>
+        ) : outs.length === 0 ? (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            No hay ningún cambio factible para meter esta carta sin romper el
+            mazo.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {outs.map((card, index) => {
+              const busy = applying === `${card.name}=>${placingName}`;
+              const suggested = index === 0;
+              return (
+                <button
+                  key={card.oracle_id}
+                  type="button"
+                  onClick={() => onPick(card)}
+                  disabled={applying !== null}
+                  title={`Sacar ${card.name}`}
+                  className={`accent-focus group relative flex flex-col gap-1 rounded-xl text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60 ${
+                    suggested ? 'ring-2 ring-emerald-500/70' : ''
+                  }`}
+                >
+                  <div className="relative overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                    <CardImage
+                      card={toViewCard(card)}
+                      className="aspect-[5/7] w-full object-cover"
+                    />
+                    {suggested && (
+                      <span className="absolute left-1 top-1 rounded bg-emerald-600/90 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
+                        Sugerida
+                      </span>
+                    )}
+                    {busy && (
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/50">
+                        <Loader2 className="h-6 w-6 animate-spin text-white" />
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className="truncate px-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+                    title={card.name}
+                  >
+                    {card.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function AuditPanel({
   commander,
@@ -716,69 +866,18 @@ function AuditPanel({
             })}
           </div>
 
-          {placing && (
-            <div className="mt-4 rounded-xl border accent-border bg-white/60 p-4 dark:bg-zinc-950/30">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                <h5 className="flex items-center gap-2 text-sm font-semibold">
-                  <ArrowRightLeft className="h-4 w-4 accent-text" />
-                  Meter{' '}
-                  <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-emerald-700 ring-1 ring-emerald-400/40 dark:text-emerald-200">
-                    {placing.name}
-                  </span>
-                  — elige qué sale
-                </h5>
-                <Button variant="secondary" onClick={() => setPlacing(null)}>
-                  <X className="h-4 w-4" /> Cancelar
-                </Button>
-              </div>
-              <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
-                Primero las de su mismo rol ({categoryLabel(placing.slot)}),
-                peor puntuadas antes. El cambio se valida antes de aplicarse.
-              </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {outCandidates.map((card, index) => {
-                  const busy = applying === `${card.name}=>${placing.name}`;
-                  const suggested = index === 0;
-                  return (
-                    <button
-                      key={card.oracle_id}
-                      type="button"
-                      onClick={() => void applySwapPair(card.name, placing)}
-                      disabled={applying !== null}
-                      title={`Sacar ${card.name}`}
-                      className={`accent-focus group relative flex flex-col gap-1 rounded-lg text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60 ${
-                        suggested ? 'ring-2 ring-emerald-500/70' : ''
-                      }`}
-                    >
-                      <div className="relative overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
-                        <CardImage
-                          card={toViewCard(card)}
-                          className="aspect-[5/7] w-full object-cover"
-                        />
-                        {suggested && (
-                          <span className="absolute left-1 top-1 rounded bg-emerald-600/90 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
-                            Sugerida
-                          </span>
-                        )}
-                        {busy && (
-                          <span className="absolute inset-0 flex items-center justify-center bg-black/50">
-                            <Loader2 className="h-5 w-5 animate-spin text-white" />
-                          </span>
-                        )}
-                      </div>
-                      <span
-                        className="truncate text-[0.65rem] text-zinc-500 dark:text-zinc-400"
-                        title={card.name}
-                      >
-                        {card.name}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
+      )}
+
+      {placing && (
+        <PlacingModal
+          placingName={placing.name}
+          placingSlot={placing.slot}
+          outs={outCandidates}
+          applying={applying}
+          onPick={(card) => void applySwapPair(card.name, placing)}
+          onCancel={() => setPlacing(null)}
+        />
       )}
     </Panel>
   );
@@ -833,7 +932,7 @@ function AdvancedAddPanel({
   }, [placingIn, commander, dials, deckRefs]);
 
   async function applySwapPair(outName: string, chosen: DeckCard) {
-    setApplying(outName);
+    setApplying(`${outName}=>${chosen.name}`);
     setApplyError(null);
     try {
       const validation = await sequentialValidate({
@@ -882,84 +981,16 @@ function AdvancedAddPanel({
       )}
 
       {placingIn && (
-        <div className="mt-4 rounded-xl border accent-border bg-white/60 p-4 dark:bg-zinc-950/30">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <h5 className="flex items-center gap-2 text-sm font-semibold">
-              <ArrowRightLeft className="h-4 w-4 accent-text" />
-              Meter{' '}
-              <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-emerald-700 ring-1 ring-emerald-400/40 dark:text-emerald-200">
-                {placingIn.name}
-              </span>
-              — elige qué sale
-            </h5>
-            <Button variant="secondary" onClick={() => setPlacingIn(null)}>
-              <X className="h-4 w-4" /> Cancelar
-            </Button>
-          </div>
-          {loading ? (
-            <p className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-              <Loader2 className="h-4 w-4 animate-spin" /> Buscando qué conviene
-              sacar…
-            </p>
-          ) : error ? (
-            <p className="text-sm text-amber-700 dark:text-amber-300">
-              No se pudo calcular ({error}).
-            </p>
-          ) : outs && outs.outs.length === 0 ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              No hay ningún cambio factible para meter esta carta sin romper el
-              mazo.
-            </p>
-          ) : (
-            <>
-              <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
-                Primero las de su mismo rol ({categoryLabel(placingIn.slot)}),
-                peor puntuadas antes. La primera es la recomendada.
-              </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {(outs?.outs ?? []).map((card, index) => {
-                  const busy = applying === card.name;
-                  const suggested = index === 0;
-                  return (
-                    <button
-                      key={card.oracle_id}
-                      type="button"
-                      onClick={() => void applySwapPair(card.name, placingIn)}
-                      disabled={applying !== null}
-                      title={`Sacar ${card.name}`}
-                      className={`accent-focus group relative flex flex-col gap-1 rounded-lg text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60 ${
-                        suggested ? 'ring-2 ring-emerald-500/70' : ''
-                      }`}
-                    >
-                      <div className="relative overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
-                        <CardImage
-                          card={toViewCard(card)}
-                          className="aspect-[5/7] w-full object-cover"
-                        />
-                        {suggested && (
-                          <span className="absolute left-1 top-1 rounded bg-emerald-600/90 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
-                            Sugerida
-                          </span>
-                        )}
-                        {busy && (
-                          <span className="absolute inset-0 flex items-center justify-center bg-black/50">
-                            <Loader2 className="h-5 w-5 animate-spin text-white" />
-                          </span>
-                        )}
-                      </div>
-                      <span
-                        className="truncate text-[0.65rem] text-zinc-500 dark:text-zinc-400"
-                        title={card.name}
-                      >
-                        {card.name}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
+        <PlacingModal
+          placingName={placingIn.name}
+          placingSlot={placingIn.slot}
+          outs={outs?.outs ?? []}
+          loading={loading}
+          error={error}
+          applying={applying}
+          onPick={(card) => void applySwapPair(card.name, placingIn)}
+          onCancel={() => setPlacingIn(null)}
+        />
       )}
     </Panel>
   );
@@ -1528,6 +1559,7 @@ function SwapCandidatesModal({
   onChooseIn,
   onCancel,
   advanced,
+  onToggleAdvanced,
   commander,
   deckNames,
 }: {
@@ -1539,6 +1571,7 @@ function SwapCandidatesModal({
   onChooseIn: (card: DeckCard) => void;
   onCancel: () => void;
   advanced: boolean;
+  onToggleAdvanced: (value: boolean) => void;
   commander: string;
   deckNames: Set<string>;
 }) {
@@ -1563,7 +1596,7 @@ function SwapCandidatesModal({
     >
       <div
         onClick={(event) => event.stopPropagation()}
-        className="surface flex max-h-[92vh] w-full max-w-4xl flex-col gap-4 overflow-y-auto rounded-lg p-5 pb-28 sm:p-7 sm:pb-28"
+        className="surface flex max-h-[92vh] w-full max-w-7xl flex-col gap-4 overflow-y-auto rounded-lg p-5 pb-28 sm:p-7 sm:pb-28"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="flex items-center gap-2 text-lg font-semibold">
@@ -1573,9 +1606,12 @@ function SwapCandidatesModal({
               {outCard.name}
             </span>
           </h3>
-          <Button variant="secondary" onClick={onCancel}>
-            <X className="h-4 w-4" /> Cancelar cambio
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <AdvancedToggle advanced={advanced} onChange={onToggleAdvanced} />
+            <Button variant="secondary" onClick={onCancel}>
+              <X className="h-4 w-4" /> Cancelar cambio
+            </Button>
+          </div>
         </div>
         <p className="text-sm text-zinc-600 dark:text-zinc-300">
           Las mejores alternativas por rol, como en la auditoría: mismo rol, la
