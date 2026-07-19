@@ -313,6 +313,11 @@ type CompositionIssue = {
   message: string;
 };
 
+// Categories whose floor is treated as an obligation even though the solver
+// bands them soft: interaction and board wipes. Below these the export check
+// blocks (with an override), not just nudges (Guille 2026-07-19).
+const HARD_FLOOR_CATEGORIES = new Set(['removal', 'board_wipe']);
+
 function compositionIssues(
   result: BuildResult,
   liveColors: Record<string, ColorSourceRow> | null,
@@ -323,13 +328,16 @@ function compositionIssues(
     if (row.within_band) continue;
     const label = categoryLabel(category);
     if (row.count < row.lo) {
-      // Only a `hard` floor (lands / the Karsten minimum) is an obligation — a
-      // deck below it is illegal. Every other category's floor is a soft target
-      // (Guille 2026-07-19: wincons and synergy may dip below with a warning),
-      // so being under it is a recommendation, not a block.
+      // Obligations are the floors the deck must not break: the hard Karsten
+      // land floor, plus interaction and board wipes (Guille 2026-07-19: leave
+      // those hard or people skip them). Every other category's floor is a soft
+      // target — wincons, synergy, ramp, protection, draw — so under it is a
+      // recommendation, not a block.
+      const isHardFloor =
+        row.band === 'hard' || HARD_FLOOR_CATEGORIES.has(category);
       issues.push({
         category,
-        level: row.band === 'hard' ? 'obligation' : 'recommendation',
+        level: isHardFloor ? 'obligation' : 'recommendation',
         message: `${label}: ${row.count}, por debajo del mínimo (${row.lo}).`,
       });
     } else if (row.count > row.hi) {

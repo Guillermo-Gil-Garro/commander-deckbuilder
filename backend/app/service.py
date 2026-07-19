@@ -1048,26 +1048,28 @@ _LAND_TYPE_TO_COLOR: dict[str, str] = {
 def _fetched_colors(card: Mapping[str, Any], identity: frozenset[str]) -> frozenset[str]:
     """Colours a *fetch* effect can supply, which ``_produced_colors`` ignores.
 
-    The solver's supply heuristic deliberately skips fetches; for the live
-    manabase re-evaluation they must count, or the export warning is nonsense
-    (Guille 2026-07-19). A card that searches the library and puts a land onto
-    the battlefield is a source of: the colours of the basic land types it names
-    (a fetchland or a Farseek-style ramp), intersected with the deck's identity;
-    or, when it fetches a generic "basic land" (Prismatic Vista, Cultivate…),
-    the whole identity. A fetch that can reach none of the deck's colours
-    (Flooded Strand in a B/R/G deck) contributes nothing.
+    The solver's supply heuristic skips fetches; the live manabase re-evaluation
+    must count them or the export warning is nonsense (Guille 2026-07-19). A card
+    that searches the library and puts a land onto the battlefield is a fetch.
 
-    Known limitation: fetchable *dual* lands are not modelled — a fetch counts
-    for the colours it literally names, not the duals a specific deck runs.
+    Modelling assumption (Guille): the deck runs the maximum useful fetches and
+    **every dual it can** — trivially true here, where proxies make price
+    irrelevant. Under that assumption a fetch reaches the deck's *whole* colour
+    identity as long as it can grab even one in-identity land: a fetch naming a
+    basic type of an in-identity colour can pull a dual of that type bridging to
+    any other identity colour, and a generic "basic land" fetch reaches them all.
+    A fetch that can reach none of the deck's colours (Flooded Strand, which
+    names Plains/Island, in a B/R/G deck) contributes nothing.
     """
     text = card.get("oracle_text") or ""
     lowered = text.lower()
     if "search your library" not in lowered or "onto the battlefield" not in lowered:
         return frozenset()
-    colors = {color for land, color in _LAND_TYPE_TO_COLOR.items() if land in text}
-    if not colors and ("basic land" in lowered or "a land card" in lowered):
-        colors = set(identity)
-    return frozenset(colors) & identity
+    named = {color for land, color in _LAND_TYPE_TO_COLOR.items() if land in text}
+    reaches_identity = bool(named & identity) or (
+        not named and ("basic land" in lowered or "a land card" in lowered)
+    )
+    return identity if reaches_identity else frozenset()
 
 
 def _source_colors(card: Mapping[str, Any], identity: frozenset[str]) -> frozenset[str]:

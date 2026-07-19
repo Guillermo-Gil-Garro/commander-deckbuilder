@@ -127,18 +127,20 @@ def test_thinnest_category_is_the_smallest_headroom() -> None:
     assert service._thinnest_category(counts, bands) == "ramp"
 
 
-def test_fetched_colors_counts_named_land_types_within_identity() -> None:
-    """A fetchland is a source of its named basic-land colours, capped by the
-    deck's identity — the fix Guille asked for (fetches were counted as zero)."""
+def test_fetched_colors_reaches_whole_identity_when_useful() -> None:
+    """Assuming max fetches + all duals (Guille): a fetch that can grab any
+    in-identity land reaches the deck's whole identity, and none otherwise."""
     flooded_strand = {
         "oracle_text": (
             "{T}, Pay 1 life, Sacrifice Flooded Strand: Search your library for "
             "a Plains or Island card, put it onto the battlefield, then shuffle."
         )
     }
-    five_color = frozenset("WUBRG")
-    assert service._fetched_colors(flooded_strand, five_color) == frozenset("WU")
-    # A W/U fetch reaches nothing in a Jund (B/R/G) deck.
+    # Names Plains/Island (W/U); in five colours it bridges to all via duals.
+    assert service._fetched_colors(flooded_strand, frozenset("WUBRG")) == frozenset(
+        "WUBRG"
+    )
+    # But a W/U fetch reaches nothing in a Jund (B/R/G) deck.
     assert service._fetched_colors(flooded_strand, frozenset("BRG")) == frozenset()
 
 
