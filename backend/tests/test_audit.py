@@ -250,6 +250,83 @@ def test_swap_replacements_rejects_a_card_not_in_the_deck(
     assert response.status_code == 422
 
 
+def test_legal_search_filters_by_color_identity(client: TestClient) -> None:
+    """A blue staple is legal under WUBRG but not under mono-red."""
+    ur = client.get(
+        "/cards/legal", params={"commander": COMMANDER, "q": "counterspell"}
+    )
+    assert ur.status_code == 200, ur.text
+    assert "Counterspell" in {c["name"] for c in ur.json()["cards"]}
+
+    krenko = client.get(
+        "/cards/legal", params={"commander": "Krenko, Mob Boss", "q": "counterspell"}
+    )
+    assert krenko.status_code == 200
+    assert krenko.json()["count"] == 0  # blue is outside mono-red identity
+
+
+def test_legal_search_excludes_the_banlist(client: TestClient) -> None:
+    """A banned card is findable in /cards/search but never in /cards/legal."""
+    banlist = client.get("/banlist").json()
+    banned = banlist["banned"] if isinstance(banlist, dict) else banlist
+    if not banned:
+        pytest.skip("no banlist to test against")
+    name = banned[0]["name"]
+    # It exists in the raw pool search...
+    raw = client.get("/cards/search", params={"q": name}).json()
+    assert name in raw["names"], "the banned card should exist in the pool"
+    # ...but not in the legal-to-add search for a five-colour commander.
+    legal = client.get("/cards/legal", params={"commander": COMMANDER, "q": name})
+    assert legal.status_code == 200
+    assert name not in {c["name"] for c in legal.json()["cards"]}
+
+
+def test_swap_outs_recommends_feasible_cuts(
+    client: TestClient, ur_dragon_deck: dict
+) -> None:
+    """Naming a card to bring in returns feasible deck cards to cut, in-role
+    first then weakest score first (the audit's placing order)."""
+    deck_names = {c["name"] for c in ur_dragon_deck["nonbasic_cards"]} | {
+        c["name"] for c in ur_dragon_deck["basic_lands"]
+    }
+    legal = client.get(
+        "/cards/legal", params={"commander": COMMANDER, "q": "dragon", "limit": 25}
+    ).json()["cards"]
+    in_card = next((c["name"] for c in legal if c["name"] not in deck_names), None)
+    if in_card is None:
+        pytest.skip("no legal dragon outside this build to bring in")
+
+    response = client.post(
+        "/swap/outs",
+        json={"commander": COMMANDER, "deck": _refs(ur_dragon_deck), "in": in_card},
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["current"]["name"] == in_card
+    outs = body["outs"]
+    assert outs, "there should be at least one feasible cut"
+    assert all(o["name"] in deck_names for o in outs), "outs come from the deck"
+    assert body["feasible_count"] >= len(outs)
+    # Weakest score first within the leading (in-role) tier: scores ascend while
+    # the slot stays the in-card's own.
+    in_slot = body["current"]["slot"]
+    in_role = [o for o in outs if in_slot in o["categories"]]
+    scores = [o["score"] for o in in_role]
+    assert scores == sorted(scores), "in-role cuts are weakest-score first"
+
+
+def test_swap_outs_rejects_a_deck_that_is_not_99(client: TestClient) -> None:
+    response = client.post(
+        "/swap/outs",
+        json={
+            "commander": COMMANDER,
+            "deck": [{"name": "Sol Ring", "count": 1}],
+            "in": "Lightning Greaves",
+        },
+    )
+    assert response.status_code == 422
+
+
 def test_audit_rejects_a_deck_that_is_not_99(client: TestClient) -> None:
     """A short deck is a 422 before any EDHREC read — a coherence error."""
     response = client.post(

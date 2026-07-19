@@ -46,6 +46,7 @@ from app.schemas import (
     DeckResponse,
     ExportRequest,
     HealthResponse,
+    LegalCardSearchResponse,
     MaybeboardRequest,
     MaybeboardResponse,
     PrintDefaultsRequest,
@@ -55,6 +56,8 @@ from app.schemas import (
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
+    SwapOutsRequest,
+    SwapOutsResponse,
     SwapReplacementsResponse,
     SwapValidateRequest,
     SwapValidateResponse,
@@ -316,6 +319,30 @@ def search_cards(
     return CardSearchResponse(count=len(names), names=names)
 
 
+@app.get("/cards/legal")
+def search_legal_cards(
+    request: Request,
+    q: str,
+    commander: str,
+    limit: int = CARD_SEARCH_LIMIT_DEFAULT,
+) -> LegalCardSearchResponse:
+    """Search cards **legal to add for ``commander``**. Advanced-mode typeahead.
+
+    Unlike ``/cards/search`` (names only, whole pool, banned cards included),
+    this filters to the commander's colour identity and drops the group
+    banlist, and returns full card views so the picker can show the art — every
+    result can actually be swapped in. No EDHREC read, so it is safe on the
+    keystroke path; ``score`` is 0.0 and the category is the tagger's.
+
+    Same matching and clamping as ``/cards/search``. 404 for an unknown
+    commander, 503 if the pool never loaded.
+    """
+    state = _state(request)
+    return service.search_legal_cards(
+        state, commander=commander, query=q, limit=limit
+    )
+
+
 @app.get("/banlist")
 def banlist(request: Request) -> BanlistResponse:
     """The group's banlist and watchlist, each entry with its reason and art.
@@ -565,6 +592,23 @@ async def swap_replacements(
     """
     state = _state(request)
     return await run_in_threadpool(service.swap_replacements_for, state, payload)
+
+
+@app.post("/swap/outs")
+async def swap_outs(
+    request: Request, payload: SwapOutsRequest
+) -> SwapOutsResponse:
+    """The best deck cards to take out for a chosen ``in`` card (advanced mode).
+
+    The reverse of ``/swap/replacements``: name the card you want in, get the
+    deck cards worth cutting for it — each a feasible swap, ranked in-role first
+    then weakest score first, the first being the recommendation.
+    ``feasible_count`` is the total. Same error codes as
+    ``/sequential/candidates`` (422 for a deck that is not 99 or a card outside
+    the pool, 502 if EDHREC is unreachable, 503 if the pool never loaded).
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.swap_outs_for, state, payload)
 
 
 @app.post("/maybeboard")

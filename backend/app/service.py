@@ -68,6 +68,7 @@ from app.schemas import (
     DeckRequest,
     DeckResponse,
     ExportRequest,
+    LegalCardSearchResponse,
     MaybeboardRequest,
     MaybeboardResponse,
     NoticeView,
@@ -78,6 +79,8 @@ from app.schemas import (
     StructureResponse,
     SwapCandidatesRequest,
     SwapCandidatesResponse,
+    SwapOutsRequest,
+    SwapOutsResponse,
     SwapReplacementsResponse,
     SwapRequest,
     SwapValidateRequest,
@@ -887,6 +890,140 @@ def swap_replacements_for(
         ),
         replacements=replacements,
         feasible_count=len(feasible),
+    )
+
+
+# How many ranked names to pull before identity/banlist filtering trims them to
+# the requested limit. Capped at the search's own [1, 50] clamp, so this is just
+# "as many as the index will give"; a tighter query is the real answer to a
+# mono-colour commander filtering out most of a broad match.
+_LEGAL_SEARCH_OVERFETCH = 50
+
+
+def search_legal_cards(
+    state: AppState, *, commander: str, query: str, limit: int
+) -> LegalCardSearchResponse:
+    """Cards matching ``query`` that are legal to add for ``commander``.
+
+    The advanced-mode "search any card to swap in" source: the whole pool by
+    name, filtered to the commander's colour identity and minus the group
+    banlist, so every result can actually go in the deck. No EDHREC read (this
+    is on the keystroke path): ``score`` is 0.0 — an arbitrary card need not be
+    a recommendation — and the category is the tagger's. Basics are excluded:
+    they enter through the solver's per-colour counters, not a swap.
+    """
+    row = resolve_commander(state, commander)
+    bands = bands_for(state, row.name, {})
+    identity = frozenset(row.color_identity)
+    banned = set(state.effective_banned_names(archetype_for(state.quotas, row.name)))
+    cards: list[DeckCardView] = []
+    # Over-fetch the ranked names, then trim by identity/banlist to fill `limit`.
+    for name in state.search_cards(query, _LEGAL_SEARCH_OVERFETCH):
+        card = state.pool.resolve(name)
+        if card is None:
+            continue
+        facts = _facts(state, card, bands)
+        if facts.is_basic or not facts.color_identity <= identity:
+            continue
+        if _name_variants(facts.name) & banned:
+            continue
+        category = primary_category(facts)
+        cards.append(
+            bench_card_view(
+                state.pool.by_name[facts.name],
+                categories=sorted(facts.categories),
+                score=0.0,
+                slot=category,
+                reason=candidate_reason(category, 0.0),
+            )
+        )
+        if len(cards) >= limit:
+            break
+    return LegalCardSearchResponse(count=len(cards), cards=cards)
+
+
+def swap_outs_for(state: AppState, request: SwapOutsRequest) -> SwapOutsResponse:
+    """The best deck cards to take out for a chosen ``in`` card (advanced mode).
+
+    The reverse of ``swap_replacements_for``: the player names the card they
+    want in, and this ranks the deck cards worth cutting for it — every one a
+    feasible swap, the ``in`` card's own role first, then weakest EDHREC score
+    first (the natural cut), exactly as the audit's placing picker orders them.
+    Blocking (reads EDHREC), never runs the solver.
+    """
+    row = resolve_commander(state, request.commander)
+    bands = bands_for(state, row.name, request.dials)
+    deck = [
+        (_facts(state, _pool_card(state, ref.name), bands), ref.count)
+        for ref in request.deck
+    ]
+    total = sum(count for _, count in deck)
+    if total != DECK_SIZE:
+        raise SwapRequestInvalid(deck_size_mismatch(total, DECK_SIZE))
+    in_card = _facts(state, _pool_card(state, request.card_in), bands)
+
+    archetype = archetype_for(state.quotas, row.name)
+    rule_ctx = RuleContext(
+        commander_name=row.name,
+        color_identity=frozenset(row.color_identity),
+        archetype=archetype,
+    )
+    effective_banned = state.effective_banned_names(archetype)
+    never_names = resolve_never(state.rules, rule_ctx)
+    always_names = frozenset(
+        rule.name for rule in resolve_always(state.rules, rule_ctx, effective_banned)
+    )
+    commander = _facts(state, state.pool.by_name[row.name], bands)
+
+    data = edhrec_data(state, row.name)
+    score_by_name = {
+        facts.name: score for facts, score in _pool_candidates(state, row, bands, data)
+    }
+
+    in_slot = primary_category(in_card)
+    feasible_outs: list[tuple[CardFacts, float]] = []
+    for facts, _count in deck:
+        if facts.is_basic or facts.name == in_card.name:
+            continue
+        verdict = swap_is_feasible(
+            deck=deck,
+            out_card=facts,
+            in_card=in_card,
+            bands=bands,
+            commander=commander,
+            banned_names=effective_banned,
+            never_names=never_names,
+            watchlist_names=state.watchlist_names,
+            always_names=always_names,
+        )
+        if verdict.feasible:
+            feasible_outs.append((facts, score_by_name.get(facts.name, 0.0)))
+    # In-role first, then weakest score first (the weakest link is the natural
+    # cut), then name for a stable order.
+    feasible_outs.sort(
+        key=lambda item: (in_slot not in item[0].categories, item[1], item[0].name)
+    )
+
+    in_score = score_by_name.get(in_card.name, 0.0)
+    return SwapOutsResponse(
+        current=bench_card_view(
+            state.pool.by_name[in_card.name],
+            categories=sorted(in_card.categories),
+            score=in_score,
+            slot=in_slot,
+            reason=candidate_reason(in_slot, in_score),
+        ),
+        outs=[
+            bench_card_view(
+                state.pool.by_name[facts.name],
+                categories=sorted(facts.categories),
+                score=score,
+                slot=primary_category(facts),
+                reason=candidate_reason(primary_category(facts), score),
+            )
+            for facts, score in feasible_outs[: request.limit]
+        ],
+        feasible_count=len(feasible_outs),
     )
 
 

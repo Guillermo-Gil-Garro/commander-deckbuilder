@@ -345,6 +345,24 @@ class DeckCardView(CardView):
     score: float | None  # None for basics: the solver places them, no score
 
 
+class LegalCardSearchResponse(BaseModel):
+    """Cards matching a query that are **legal** to add for a given commander.
+
+    Unlike ``/cards/search`` (names only, whole pool), this is the advanced-mode
+    "search any card to swap in" source: filtered to the commander's colour
+    identity and minus the group banlist, so every card here can actually go in
+    the deck. Full card views, not names, so the picker can show the art.
+
+    ``count`` is what was returned after ``limit`` trimmed the list, never how
+    many matched.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    count: int
+    cards: list[DeckCardView]
+
+
 # --- breakdowns --------------------------------------------------------------
 
 # How a category's band binds the solver. Reported per category so a client can
@@ -643,6 +661,25 @@ class SwapValidateRequest(SwapRequest):
     card_in: str = Field(alias="in", min_length=1)
 
 
+class SwapOutsRequest(BaseModel):
+    """Advanced mode's reverse swap: given a card to bring ``in``, ask which
+    deck cards are the best to take out for it (feasibility-checked). The
+    mirror of ``SwapCandidatesRequest`` — ``in`` instead of ``out``."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    dials: dict[str, str | None] = Field(default_factory=dict)
+    deck: list[DeckCardRef] = Field(min_length=1)
+    card_in: str = Field(alias="in", min_length=1)
+    limit: int = SWAP_CANDIDATES_LIMIT_DEFAULT
+
+    @field_validator("limit")
+    @classmethod
+    def _clamp_limit(cls, value: int) -> int:
+        return min(max(value, SWAP_CANDIDATES_LIMIT_MIN), SWAP_CANDIDATES_LIMIT_MAX)
+
+
 class SwapCandidatesResponse(BaseModel):
     """Replacements for ``current``, best first. ``feasible_count`` is the total.
 
@@ -661,6 +698,23 @@ class SwapCandidatesResponse(BaseModel):
     candidates: list[DeckCardView]
     feasible_count: int
     limit: int
+
+
+class SwapOutsResponse(BaseModel):
+    """The best cards to take out for a chosen ``in`` card, weakest first.
+
+    ``current`` is the card being brought in. ``outs`` are the deck cards that
+    leave a legal 99 when swapped for it, ranked the way the audit's placing
+    picker ranks them: the ``in`` card's own role first, then lowest EDHREC
+    score first (the weakest link is the natural cut). The first is the
+    recommendation. ``feasible_count`` is the total before ``limit`` trimmed it.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    current: DeckCardView
+    outs: list[DeckCardView]
+    feasible_count: int
 
 
 # --- maybeboard --------------------------------------------------------------
