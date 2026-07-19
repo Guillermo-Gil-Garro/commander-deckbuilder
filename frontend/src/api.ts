@@ -353,6 +353,42 @@ export async function swapReplacements(
   return post<SwapReplacements>('/swap/replacements', req);
 }
 
+/** `/cards/legal`. Cards legal to add for a commander (colour identity + minus
+ *  banlist), with art. Advanced mode's "search any card to swap in" source. */
+export type LegalCardSearch = {
+  count: number;
+  cards: DeckCard[];
+};
+
+/** Search cards legal to add for `commander`. Typeahead: debounce it. */
+export async function searchLegalCards(
+  commander: string,
+  q: string,
+  limit = 12,
+): Promise<LegalCardSearch> {
+  const params = new URLSearchParams({ commander, q, limit: String(limit) });
+  return request<LegalCardSearch>(`/cards/legal?${params.toString()}`);
+}
+
+/** `/swap/outs`. The reverse swap: the best deck cards to cut for a chosen `in`
+ *  card, weakest first. `current` is the in card; the first `out` is suggested. */
+export type SwapOuts = {
+  current: DeckCard;
+  outs: DeckCard[];
+  feasible_count: number;
+};
+
+/** Given a card to bring in, ask which deck cards are the best to take out. */
+export async function swapOuts(req: {
+  commander: string;
+  dials: Dials;
+  deck: DeckCardRef[];
+  in: string;
+  limit?: number;
+}): Promise<SwapOuts> {
+  return post<SwapOuts>('/swap/outs', req);
+}
+
 /** Validate one prospective swap. The response is the source of truth for the
  *  post-swap category verdicts — the client must not re-derive them. */
 export async function sequentialValidate(req: {

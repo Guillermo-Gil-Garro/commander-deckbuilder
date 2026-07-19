@@ -14,8 +14,10 @@ import {
   Loader2,
   Minus,
   Plus,
+  Search,
   Sparkles,
   TriangleAlert,
+  Wrench,
   X,
 } from 'lucide-react';
 import { Button, ColorPips, Panel } from '../components/ui';
@@ -29,7 +31,9 @@ import { OpeningHand } from './OpeningHand';
 import {
   auditDeck,
   fetchMaybeboard,
+  searchLegalCards,
   sequentialValidate,
+  swapOuts,
   swapReplacements,
   type AuditFlag,
   type AuditReplacement,
@@ -42,6 +46,7 @@ import {
   type DeckCardRef,
   type Maybeboard,
   type Notice,
+  type SwapOuts,
   type SwapReplacements,
   type SwapValidation,
 } from '../api';
@@ -56,6 +61,31 @@ const RELAXATION_NOTES: Record<string, string> = {
   base_size_and_lands:
     'Solo se garantizaron el tamaño del mazo y las tierras; la estructura objetivo no se pudo respetar.',
 };
+
+// Advanced mode: unlocks free-text card search wherever a card can be swapped
+// (search any legal card to bring in; search a card and get what to cut). Off
+// by default and persisted, so casual users see the guided flow and power users
+// opt in once. Under the player's own responsibility — validation still runs.
+const ADVANCED_MODE_KEY = 'advanced-mode-v1';
+
+function useAdvancedMode(): [boolean, (value: boolean) => void] {
+  const [advanced, setAdvanced] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(ADVANCED_MODE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const set = (value: boolean) => {
+    setAdvanced(value);
+    try {
+      localStorage.setItem(ADVANCED_MODE_KEY, value ? '1' : '0');
+    } catch {
+      // Private mode / disabled storage: the toggle still works this session.
+    }
+  };
+  return [advanced, set];
+}
 
 export function Result({
   result,
@@ -75,6 +105,7 @@ export function Result({
   const relaxed = result.relaxation_stage !== 'none' && !isInfeasible;
 
   const [handOpen, setHandOpen] = useState(false);
+  const [advanced, setAdvanced] = useAdvancedMode();
 
   // The deck is mutable: clicking a card opens a same-role swap.
   const { deck, deckRefs, swapped, swap, reset } = useMutableDeck(result);
@@ -94,6 +125,15 @@ export function Result({
     isInfeasible ? null : deck,
   );
   const shownDeck = useMemo(() => withArt(deck, resolved), [deck, resolved]);
+  // Names in the deck now: the advanced free search greys these out.
+  const deckNames = useMemo(
+    () =>
+      new Set([
+        ...deck.nonbasic_cards.map((c) => c.name),
+        ...deck.basic_lands.map((c) => c.name),
+      ]),
+    [deck.nonbasic_cards, deck.basic_lands],
+  );
   const pdfArtOverrides = useMemo(
     () => artOverridesForExport(deck, resolved),
     [deck, resolved],
@@ -138,6 +178,34 @@ export function Result({
           <Button variant="secondary" onClick={() => setHandOpen(true)}>
             <Hand className="h-4 w-4" /> Mano de apertura
           </Button>
+        )}
+        {swapsEnabled && (
+          <button
+            type="button"
+            role="switch"
+            aria-checked={advanced}
+            onClick={() => setAdvanced(!advanced)}
+            title="Busca y sustituye cualquier carta a mano, bajo tu responsabilidad"
+            className={`accent-focus ml-auto inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-semibold transition ${
+              advanced
+                ? 'accent-border accent-text accent-soft-bg'
+                : 'border-black/10 text-zinc-600 hover:accent-border dark:border-white/10 dark:text-zinc-300'
+            }`}
+          >
+            <Wrench className="h-4 w-4" />
+            Modo avanzado
+            <span
+              className={`inline-flex h-4 w-7 items-center rounded-full p-0.5 transition ${
+                advanced ? 'accent-bg' : 'bg-zinc-300 dark:bg-zinc-600'
+              }`}
+            >
+              <span
+                className={`h-3 w-3 rounded-full bg-white transition ${
+                  advanced ? 'translate-x-3' : ''
+                }`}
+              />
+            </span>
+          </button>
         )}
       </div>
 
@@ -190,6 +258,15 @@ export function Result({
               />
             </div>
           )}
+          {swapsEnabled && req && advanced && (
+            <AdvancedAddPanel
+              commander={req.commander}
+              dials={req.dials}
+              deckRefs={deckRefs}
+              deckNames={deckNames}
+              onSwap={swap}
+            />
+          )}
           <CurvePanel curve={deck.curve_breakdown} />
           {swapsEnabled && req ? (
             <SwapWorkspace
@@ -201,6 +278,7 @@ export function Result({
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
               onAudit={openAudit}
+              advanced={advanced}
             />
           ) : (
             <DeckView
@@ -227,6 +305,7 @@ function SwapWorkspace({
   onArtSelect,
   pdfArtOverrides,
   onAudit,
+  advanced,
 }: {
   deck: BuildResult;
   /** `deck` with the art picker's printings applied — what the views render.
@@ -238,6 +317,7 @@ function SwapWorkspace({
   onArtSelect: (card: ViewCard) => void;
   pdfArtOverrides: Record<string, string>;
   onAudit: () => void;
+  advanced: boolean;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -351,6 +431,16 @@ function SwapWorkspace({
     () => deck.nonbasic_cards.find((c) => c.name === outName) ?? null,
     [deck.nonbasic_cards, outName],
   );
+  // Names already in the deck: the free search greys these out (re-adding one
+  // is a duplicate the validator would reject anyway).
+  const deckNames = useMemo(
+    () =>
+      new Set([
+        ...deck.nonbasic_cards.map((c) => c.name),
+        ...deck.basic_lands.map((c) => c.name),
+      ]),
+    [deck.nonbasic_cards, deck.basic_lands],
+  );
 
   function startSwap(card: ViewCard) {
     setOutName(card.name);
@@ -393,6 +483,9 @@ function SwapWorkspace({
           selectedInName={inCard?.name ?? null}
           onChooseIn={setInCard}
           onCancel={cancelSwap}
+          advanced={advanced}
+          commander={req.commander}
+          deckNames={deckNames}
         />
       )}
 
@@ -684,6 +777,187 @@ function AuditPanel({
                 })}
               </div>
             </div>
+          )}
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+// Advanced mode's reverse flow: search any legal card to bring IN, and the
+// system recommends which deck cards to cut for it (same feasibility + ranking
+// as the audit's placing picker, but for a card you chose, not one it flagged).
+function AdvancedAddPanel({
+  commander,
+  dials,
+  deckRefs,
+  deckNames,
+  onSwap,
+}: {
+  commander: string;
+  dials: BuildRequest['dials'];
+  deckRefs: DeckCardRef[];
+  deckNames: Set<string>;
+  onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void;
+}) {
+  const [placingIn, setPlacingIn] = useState<DeckCard | null>(null);
+  const [outs, setOuts] = useState<SwapOuts | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [applying, setApplying] = useState<string | null>(null);
+  const [applyError, setApplyError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!placingIn) {
+      setOuts(null);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setOuts(null);
+    swapOuts({ commander, dials, deck: deckRefs, in: placingIn.name, limit: 10 })
+      .then((res) => {
+        if (!cancelled) setOuts(res);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled)
+          setError(err instanceof Error ? err.message : 'Error desconocido');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [placingIn, commander, dials, deckRefs]);
+
+  async function applySwapPair(outName: string, chosen: DeckCard) {
+    setApplying(outName);
+    setApplyError(null);
+    try {
+      const validation = await sequentialValidate({
+        commander,
+        dials,
+        deck: deckRefs,
+        out: outName,
+        in: chosen.name,
+      });
+      if (!validation.feasible) {
+        setApplyError(
+          `Ahora mismo no se puede cambiar ${outName} por ${chosen.name}.`,
+        );
+        return;
+      }
+      onSwap(outName, chosen, validation);
+      setPlacingIn(null);
+    } catch (err: unknown) {
+      setApplyError(err instanceof Error ? err.message : 'Error desconocido');
+    } finally {
+      setApplying(null);
+    }
+  }
+
+  return (
+    <Panel>
+      <h3 className="mb-1 flex items-center gap-2 text-lg font-semibold">
+        <Wrench className="h-5 w-5 accent-text" /> Meter una carta concreta
+      </h3>
+      <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+        Busca la carta que quieres meter y te recomendamos qué sacar (lo más
+        flojo de su rol primero). Cada cambio se valida antes de aplicarse.
+      </p>
+      <CardSearchBox
+        commander={commander}
+        deckNames={deckNames}
+        selectedName={placingIn?.name ?? null}
+        onPick={setPlacingIn}
+        placeholder="Busca la carta que quieres meter…"
+      />
+
+      {applyError && (
+        <p className="mt-3 text-sm text-amber-600 dark:text-amber-400">
+          {applyError}
+        </p>
+      )}
+
+      {placingIn && (
+        <div className="mt-4 rounded-xl border accent-border bg-white/60 p-4 dark:bg-zinc-950/30">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <h5 className="flex items-center gap-2 text-sm font-semibold">
+              <ArrowRightLeft className="h-4 w-4 accent-text" />
+              Meter{' '}
+              <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-emerald-700 ring-1 ring-emerald-400/40 dark:text-emerald-200">
+                {placingIn.name}
+              </span>
+              — elige qué sale
+            </h5>
+            <Button variant="secondary" onClick={() => setPlacingIn(null)}>
+              <X className="h-4 w-4" /> Cancelar
+            </Button>
+          </div>
+          {loading ? (
+            <p className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+              <Loader2 className="h-4 w-4 animate-spin" /> Buscando qué conviene
+              sacar…
+            </p>
+          ) : error ? (
+            <p className="text-sm text-amber-700 dark:text-amber-300">
+              No se pudo calcular ({error}).
+            </p>
+          ) : outs && outs.outs.length === 0 ? (
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              No hay ningún cambio factible para meter esta carta sin romper el
+              mazo.
+            </p>
+          ) : (
+            <>
+              <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
+                Primero las de su mismo rol ({categoryLabel(placingIn.slot)}),
+                peor puntuadas antes. La primera es la recomendada.
+              </p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {(outs?.outs ?? []).map((card, index) => {
+                  const busy = applying === card.name;
+                  const suggested = index === 0;
+                  return (
+                    <button
+                      key={card.oracle_id}
+                      type="button"
+                      onClick={() => void applySwapPair(card.name, placingIn)}
+                      disabled={applying !== null}
+                      title={`Sacar ${card.name}`}
+                      className={`accent-focus group relative flex flex-col gap-1 rounded-lg text-left transition hover:ring-2 hover:ring-rose-400 disabled:opacity-60 ${
+                        suggested ? 'ring-2 ring-emerald-500/70' : ''
+                      }`}
+                    >
+                      <div className="relative overflow-hidden rounded-lg ring-1 ring-black/10 dark:ring-white/10">
+                        <CardImage
+                          card={toViewCard(card)}
+                          className="aspect-[5/7] w-full object-cover"
+                        />
+                        {suggested && (
+                          <span className="absolute left-1 top-1 rounded bg-emerald-600/90 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white ring-1 ring-white/25">
+                            Sugerida
+                          </span>
+                        )}
+                        {busy && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/50">
+                            <Loader2 className="h-5 w-5 animate-spin text-white" />
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className="truncate text-[0.65rem] text-zinc-500 dark:text-zinc-400"
+                        title={card.name}
+                      >
+                        {card.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
       )}
@@ -1127,6 +1401,120 @@ function CurvePanel({ curve }: { curve: Record<string, CurveRow> }) {
   );
 }
 
+// Advanced mode's free card search: type a name, get the legal-to-add cards
+// (colour identity + minus banlist), pick one. Cards already in the deck are
+// shown greyed — re-adding one is a duplicate the validator would reject. The
+// selected card gets an accent ring so it reads as chosen.
+function CardSearchBox({
+  commander,
+  deckNames,
+  selectedName,
+  onPick,
+  placeholder,
+}: {
+  commander: string;
+  deckNames: Set<string>;
+  selectedName: string | null;
+  onPick: (card: DeckCard) => void;
+  placeholder?: string;
+}) {
+  const [q, setQ] = useState('');
+  const [results, setResults] = useState<DeckCard[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const query = q.trim();
+    if (query.length < 2) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    const timer = setTimeout(() => {
+      searchLegalCards(commander, query, 12)
+        .then((res) => {
+          if (!cancelled) setResults(res.cards);
+        })
+        .catch(() => {
+          if (!cancelled) setResults([]);
+        })
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [q, commander]);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+        <input
+          type="text"
+          value={q}
+          onChange={(event) => setQ(event.target.value)}
+          placeholder={placeholder ?? 'Busca cualquier carta legal…'}
+          className="accent-focus w-full rounded-lg border border-black/10 bg-white/70 py-2 pl-9 pr-3 text-sm dark:border-white/10 dark:bg-zinc-950/40"
+        />
+        {loading && (
+          <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-zinc-400" />
+        )}
+      </div>
+      {q.trim().length >= 2 && !loading && results.length === 0 && (
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          Ninguna carta legal coincide (revisa la identidad de color).
+        </p>
+      )}
+      {results.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {results.map((card) => {
+            const inDeck = deckNames.has(card.name);
+            const selected = card.name === selectedName;
+            return (
+              <button
+                key={card.oracle_id}
+                type="button"
+                disabled={inDeck}
+                onClick={() => onPick(card)}
+                aria-pressed={selected}
+                title={inDeck ? `${card.name} ya está en el mazo` : card.name}
+                className={`accent-focus flex flex-col overflow-hidden rounded-xl border bg-white/60 text-left transition disabled:opacity-40 dark:bg-zinc-950/40 ${
+                  selected
+                    ? 'border-transparent ring-2 accent-ring'
+                    : 'border-black/10 hover:accent-ring hover:ring-2 dark:border-white/10'
+                }`}
+              >
+                <CardImage
+                  card={toViewCard(card)}
+                  className="aspect-[5/7] w-full object-cover"
+                />
+                <span className="flex items-center justify-between gap-1 px-2 py-1.5">
+                  <span className="truncate text-xs font-semibold">
+                    {card.name}
+                  </span>
+                  {inDeck ? (
+                    <span className="shrink-0 text-[0.6rem] uppercase text-zinc-400">
+                      en mazo
+                    </span>
+                  ) : (
+                    <span className="shrink-0 text-[0.6rem] uppercase text-zinc-400">
+                      {categoryLabel(card.slot)}
+                    </span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // The active-swap candidates as an overlay (Guille 2026-07-19: the below-deck
 // panel forced a scroll past 100 cards; a popup like the opening hand does not).
 // The confirm tray (fixed bottom, higher z) floats over it, so choosing and
@@ -1139,6 +1527,9 @@ function SwapCandidatesModal({
   selectedInName,
   onChooseIn,
   onCancel,
+  advanced,
+  commander,
+  deckNames,
 }: {
   outCard: DeckCard;
   cands: SwapReplacements | null;
@@ -1147,6 +1538,9 @@ function SwapCandidatesModal({
   selectedInName: string | null;
   onChooseIn: (card: DeckCard) => void;
   onCancel: () => void;
+  advanced: boolean;
+  commander: string;
+  deckNames: Set<string>;
 }) {
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -1254,6 +1648,26 @@ function SwapCandidatesModal({
                 </button>
               );
             })}
+          </div>
+        )}
+
+        {advanced && (
+          <div className="mt-2 border-t border-black/10 pt-4 dark:border-white/10">
+            <p className="mb-3 flex items-center gap-2 text-sm font-semibold accent-text">
+              <Wrench className="h-4 w-4" /> Modo avanzado: mete la carta que
+              quieras
+            </p>
+            <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
+              Bajo tu responsabilidad. El cambio se valida igual: verás en rojo
+              lo que rompe el mazo y en ámbar lo que no recomendamos.
+            </p>
+            <CardSearchBox
+              commander={commander}
+              deckNames={deckNames}
+              selectedName={selectedInName}
+              onPick={onChooseIn}
+              placeholder={`Busca la carta que entra por ${outCard.name}…`}
+            />
           </div>
         )}
       </div>
