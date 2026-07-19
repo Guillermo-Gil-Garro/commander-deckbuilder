@@ -127,6 +127,51 @@ def test_thinnest_category_is_the_smallest_headroom() -> None:
     assert service._thinnest_category(counts, bands) == "ramp"
 
 
+def test_fetched_colors_counts_named_land_types_within_identity() -> None:
+    """A fetchland is a source of its named basic-land colours, capped by the
+    deck's identity — the fix Guille asked for (fetches were counted as zero)."""
+    flooded_strand = {
+        "oracle_text": (
+            "{T}, Pay 1 life, Sacrifice Flooded Strand: Search your library for "
+            "a Plains or Island card, put it onto the battlefield, then shuffle."
+        )
+    }
+    five_color = frozenset("WUBRG")
+    assert service._fetched_colors(flooded_strand, five_color) == frozenset("WU")
+    # A W/U fetch reaches nothing in a Jund (B/R/G) deck.
+    assert service._fetched_colors(flooded_strand, frozenset("BRG")) == frozenset()
+
+
+def test_fetched_colors_generic_basic_fetch_is_whole_identity() -> None:
+    prismatic_vista = {
+        "oracle_text": (
+            "{T}, Pay 1 life, Sacrifice Prismatic Vista: Search your library for "
+            "a basic land card, put it onto the battlefield, then shuffle."
+        )
+    }
+    assert service._fetched_colors(prismatic_vista, frozenset("WUG")) == frozenset("WUG")
+
+
+def test_fetched_colors_ignores_non_fetches() -> None:
+    # No "onto the battlefield" -> not a source (e.g. a tutor to hand).
+    to_hand = {"oracle_text": "Search your library for a card, put it into your hand."}
+    assert service._fetched_colors(to_hand, frozenset("WUBRG")) == frozenset()
+    assert service._fetched_colors({"oracle_text": ""}, frozenset("WUBRG")) == frozenset()
+
+
+def test_source_colors_unions_production_and_fetch() -> None:
+    # Command Tower-style any-colour production is already covered; a fetch adds
+    # on top. Here a card both taps for R and fetches Islands.
+    hybrid = {
+        "type_line": "Land",
+        "oracle_text": (
+            "{T}: Add {R}.\n"
+            "Search your library for an Island card, put it onto the battlefield."
+        ),
+    }
+    assert service._source_colors(hybrid, frozenset("UR")) == frozenset("UR")
+
+
 def test_thinnest_category_ignores_lands_and_synergy() -> None:
     bands = {"lands": QuotaBand(min=34, max=39), "synergy": QuotaBand(min=0, max=99)}
     assert service._thinnest_category({"lands": 34}, bands) is None
@@ -263,6 +308,19 @@ def test_legal_search_filters_by_color_identity(client: TestClient) -> None:
     )
     assert krenko.status_code == 200
     assert krenko.json()["count"] == 0  # blue is outside mono-red identity
+
+
+def test_legal_search_includes_basics_within_identity(client: TestClient) -> None:
+    """Basics are the one legal duplicate, so search must offer them (Guille
+    2026-07-19: 'if I search Forest I should be able to add one more')."""
+    green = client.get("/cards/legal", params={"commander": COMMANDER, "q": "Forest"})
+    assert green.status_code == 200
+    assert "Forest" in {c["name"] for c in green.json()["cards"]}
+    # But a Forest is green identity: it must not appear for a mono-red commander.
+    mono_red = client.get(
+        "/cards/legal", params={"commander": "Krenko, Mob Boss", "q": "Forest"}
+    )
+    assert "Forest" not in {c["name"] for c in mono_red.json()["cards"]}
 
 
 def test_legal_search_excludes_the_banlist(client: TestClient) -> None:

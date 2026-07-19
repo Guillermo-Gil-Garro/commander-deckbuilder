@@ -926,7 +926,11 @@ def search_legal_cards(
         if card is None:
             continue
         facts = _facts(state, card, bands)
-        if facts.is_basic or not facts.color_identity <= identity:
+        # Basics are kept: they are the one legal duplicate, so a player must be
+        # able to add another (Guille 2026-07-19). Identity still filters them —
+        # a Forest carries green identity and cannot go in a colourless-of-green
+        # deck. The banlist and off-identity cards are dropped.
+        if not facts.color_identity <= identity:
             continue
         if _name_variants(facts.name) & banned:
             continue
@@ -1032,6 +1036,46 @@ def swap_outs_for(state: AppState, request: SwapOutsRequest) -> SwapOutsResponse
 
 _COLOR_ORDER = ("W", "U", "B", "R", "G")
 
+_LAND_TYPE_TO_COLOR: dict[str, str] = {
+    "Plains": "W",
+    "Island": "U",
+    "Swamp": "B",
+    "Mountain": "R",
+    "Forest": "G",
+}
+
+
+def _fetched_colors(card: Mapping[str, Any], identity: frozenset[str]) -> frozenset[str]:
+    """Colours a *fetch* effect can supply, which ``_produced_colors`` ignores.
+
+    The solver's supply heuristic deliberately skips fetches; for the live
+    manabase re-evaluation they must count, or the export warning is nonsense
+    (Guille 2026-07-19). A card that searches the library and puts a land onto
+    the battlefield is a source of: the colours of the basic land types it names
+    (a fetchland or a Farseek-style ramp), intersected with the deck's identity;
+    or, when it fetches a generic "basic land" (Prismatic Vista, Cultivate…),
+    the whole identity. A fetch that can reach none of the deck's colours
+    (Flooded Strand in a B/R/G deck) contributes nothing.
+
+    Known limitation: fetchable *dual* lands are not modelled — a fetch counts
+    for the colours it literally names, not the duals a specific deck runs.
+    """
+    text = card.get("oracle_text") or ""
+    lowered = text.lower()
+    if "search your library" not in lowered or "onto the battlefield" not in lowered:
+        return frozenset()
+    colors = {color for land, color in _LAND_TYPE_TO_COLOR.items() if land in text}
+    if not colors and ("basic land" in lowered or "a land card" in lowered):
+        colors = set(identity)
+    return frozenset(colors) & identity
+
+
+def _source_colors(card: Mapping[str, Any], identity: frozenset[str]) -> frozenset[str]:
+    """All identity colours a card is a mana source of: direct production
+    (``_produced_colors``: basics, "Add …", any-colour lands like Command Tower)
+    plus fetch effects (``_fetched_colors``)."""
+    return _produced_colors(card, identity) | _fetched_colors(card, identity)
+
 
 def evaluate_deck(state: AppState, request: EvaluateRequest) -> EvaluateResponse:
     """Re-evaluate the manabase's colour fixing on the deck's current state.
@@ -1065,7 +1109,7 @@ def evaluate_deck(state: AppState, request: EvaluateRequest) -> EvaluateResponse
     supply: dict[str, int] = {}
     for ref in request.deck:
         card = _pool_card(state, ref.name)
-        for color in _produced_colors(card, identity):
+        for color in _source_colors(card, identity):
             supply[color] = supply.get(color, 0) + ref.count
 
     rows = {
