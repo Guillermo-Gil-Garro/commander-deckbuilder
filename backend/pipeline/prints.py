@@ -16,7 +16,11 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import tempfile
+import threading
 import time
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +55,18 @@ _MAX_PAGES = 3
 
 class PrintsError(Exception):
     """The printings for a card could not be fetched or parsed."""
+
+
+# One lock per oracle_id serializes concurrent fetches of the *same* card, so
+# two requests don't race on the cache file (WinError 32/5 on the shared write)
+# nor both hit the network. Distinct cards still fetch in parallel.
+_locks_guard = threading.Lock()
+_locks: dict[str, threading.Lock] = defaultdict(threading.Lock)
+
+
+def _lock_for(oracle_id: str) -> threading.Lock:
+    with _locks_guard:
+        return _locks[oracle_id]
 
 
 def _cache_path(oracle_id: str) -> Path:
@@ -152,6 +168,39 @@ def _download_prints(oracle_id: str) -> list[dict[str, Any]]:
     return prints
 
 
+def _read_cache(cache_path: Path) -> list[dict[str, Any]] | None:
+    """The cached rows if present and schema-current, else None."""
+    if not cache_path.exists():
+        return None
+    try:
+        rows = json.loads(cache_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning("Corrupt prints cache %s (%s); refetching", cache_path, exc)
+        return None
+    # Schema check: rows cached before `image_status` existed may hide
+    # placeholder "scans" the current policies must never pick.
+    if all("image_status" in row for row in rows):
+        return rows
+    logger.info("Prints cache %s predates image_status; refetching", cache_path)
+    return None
+
+
+def _write_cache(cache_path: Path, oracle_id: str, prints: list[dict[str, Any]]) -> None:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        dir=cache_path.parent, prefix=f"{oracle_id}.", suffix=".json.tmp"
+    )
+    tmp_path = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(json.dumps(prints, ensure_ascii=False))
+        tmp_path.replace(cache_path)
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)
+        raise
+    logger.info("Cached %d printings for %s", len(prints), oracle_id)
+
+
 def fetch_prints(oracle_id: str) -> list[dict[str, Any]]:
     """All es/en physical printings of a card, cached on disk by oracle_id.
 
@@ -160,24 +209,20 @@ def fetch_prints(oracle_id: str) -> list[dict[str, Any]]:
     Raises ``PrintsError`` on a network/parse failure with no cache to fall
     back on. An unknown oracle_id yields an empty list, not an error — the
     caller decides whether that is a 404.
+
+    Concurrent calls for the *same* oracle_id are serialized: the loser of the
+    race reads the freshly written cache instead of re-downloading and racing
+    on the file write. Different cards still fetch in parallel.
     """
     cache_path = _cache_path(oracle_id)
-    if cache_path.exists():
-        try:
-            rows = json.loads(cache_path.read_text(encoding="utf-8"))
-            # Schema check: rows cached before `image_status` existed may hide
-            # placeholder "scans" the current policies must never pick.
-            if all("image_status" in row for row in rows):
-                return rows
-            logger.info("Prints cache %s predates image_status; refetching", cache_path)
-        except (OSError, json.JSONDecodeError) as exc:
-            logger.warning("Corrupt prints cache %s (%s); refetching", cache_path, exc)
+    cached = _read_cache(cache_path)
+    if cached is not None:
+        return cached
 
-    prints = _download_prints(oracle_id)
-
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path = cache_path.with_suffix(".json.tmp")
-    tmp_path.write_text(json.dumps(prints, ensure_ascii=False), encoding="utf-8")
-    tmp_path.replace(cache_path)
-    logger.info("Cached %d printings for %s", len(prints), oracle_id)
-    return prints
+    with _lock_for(oracle_id):
+        cached = _read_cache(cache_path)  # another thread may have won the race
+        if cached is not None:
+            return cached
+        prints = _download_prints(oracle_id)
+        _write_cache(cache_path, oracle_id, prints)
+        return prints

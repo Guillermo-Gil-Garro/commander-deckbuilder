@@ -142,6 +142,56 @@ def test_stale_cache_without_image_status_is_refetched(
     assert rows[0]["scryfall_id"] == "fresh-id"
 
 
+def test_concurrent_fetch_of_same_id_is_serialized(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two threads fetching the same oracle_id must not race on the cache file.
+
+    Regression: concurrent writers collided on the shared cache path (WinError
+    32/5) -> 500 on the art default endpoint. A per-oracle_id lock serializes
+    them; the loser reads the freshly written cache instead of re-downloading.
+    """
+    import threading
+
+    monkeypatch.setattr(prints_module, "CACHE_DIR", tmp_path)
+    prints_module._locks.clear()
+    downloads: list[str] = []
+    downloads_lock = threading.Lock()
+    ready = threading.Barrier(2)
+
+    def counting_download(oracle_id: str) -> list[dict]:
+        with downloads_lock:
+            downloads.append(oracle_id)
+        return [_row("fresh-id", lang="es")]
+
+    monkeypatch.setattr(prints_module, "_download_prints", counting_download)
+
+    results: list[list[dict]] = []
+    results_lock = threading.Lock()
+    errors: list[BaseException] = []
+
+    def run() -> None:
+        ready.wait()  # release both threads at once to force the race
+        try:
+            rows = prints_module.fetch_prints("shared-oid")
+            with results_lock:
+                results.append(rows)
+        except BaseException as exc:  # noqa: BLE001 - surfaced via assert below
+            errors.append(exc)
+
+    threads = [threading.Thread(target=run) for _ in range(2)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert not errors, errors
+    assert len(downloads) == 1  # the loser reused the cache, no second fetch
+    assert all(r[0]["scryfall_id"] == "fresh-id" for r in results)
+    assert not list(tmp_path.glob("*.tmp"))  # no stray temp files
+    assert json.loads((tmp_path / "shared-oid.json").read_text(encoding="utf-8"))
+
+
 def test_normalize_drops_placeholder_scans() -> None:
     card = {
         "id": "x",
