@@ -27,6 +27,22 @@ const LANDS_CATEGORY = 'lands';
 /** CMCs at or above this collapse into the "7+" bucket (quotas/lands.py). */
 const CURVE_TOP_BUCKET = 7;
 
+/** The basic land names — the one card a deck may hold in multiples, so a search
+ *  result with one of these is addable even when already in the deck, and enters
+ *  `basic_lands[]` by count rather than `nonbasic_cards[]`. */
+const BASIC_LAND_NAMES = new Set([
+  'Plains',
+  'Island',
+  'Swamp',
+  'Mountain',
+  'Forest',
+  'Wastes',
+]);
+
+export function isBasicName(name: string): boolean {
+  return BASIC_LAND_NAMES.has(name);
+}
+
 /** A card plus what the API's response shape told us about it: whether it came
  *  from `basic_lands[]`, and whether it is the commander (shown in its own group,
  *  never swappable). Carried explicitly because `count` cannot say so. */
@@ -125,10 +141,29 @@ export function applySwap(
   validation: SwapValidation,
 ): BuildResult {
   if (!deck.nonbasic_cards.some((card) => card.name === outName)) return deck;
-  const nonbasics = deck.nonbasic_cards
-    .filter((card) => card.name !== outName)
-    .concat(chosen);
-  const next: BuildResult = { ...deck, nonbasic_cards: nonbasics };
+  const withoutOut = deck.nonbasic_cards.filter((card) => card.name !== outName);
+
+  // A basic coming in is the special case: it enters `basic_lands` by count (or
+  // bumps an existing copy), never `nonbasic_cards`. Anything else is the plain
+  // one-for-one into the non-basics.
+  let nonbasics = withoutOut;
+  let basics = deck.basic_lands;
+  if (isBasicName(chosen.name)) {
+    const existing = basics.find((b) => b.name === chosen.name);
+    basics = existing
+      ? basics.map((b) =>
+          b.name === chosen.name ? { ...b, count: b.count + 1 } : b,
+        )
+      : basics.concat({ ...chosen, count: 1, score: null });
+  } else {
+    nonbasics = withoutOut.concat(chosen);
+  }
+
+  const next: BuildResult = {
+    ...deck,
+    nonbasic_cards: nonbasics,
+    basic_lands: basics,
+  };
   return {
     ...next,
     category_breakdown: breakdownFromValidation(

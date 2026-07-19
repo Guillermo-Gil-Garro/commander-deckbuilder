@@ -4,10 +4,8 @@
 
 import { useMemo, useState, type ReactNode } from 'react';
 import {
-  Grid2x2,
   LayoutList,
   Loader2,
-  Palette,
   Printer,
   Sparkles,
   Tags,
@@ -15,7 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button, Panel } from './ui';
-import { CardTile, ManaCost, ScoreBadge } from './cards';
+import { CardTile } from './cards';
 import { categoryLabel } from '../labels';
 import { commanderCard, deckCards, type ViewCard } from '../deck';
 import {
@@ -204,7 +202,6 @@ function CategoryBar({
 }
 
 type SortAxis = 'type' | 'category';
-type DisplayAxis = 'list' | 'visual';
 
 type CardGroup = { key: string; label: string; cards: ViewCard[] };
 
@@ -319,15 +316,20 @@ type CompositionIssue = {
 function compositionIssues(
   result: BuildResult,
   liveColors: Record<string, ColorSourceRow> | null,
+  colorBaseline: Record<string, ColorSourceRow> | null,
 ): CompositionIssue[] {
   const issues: CompositionIssue[] = [];
   for (const [category, row] of Object.entries(result.category_breakdown)) {
     if (row.within_band) continue;
     const label = categoryLabel(category);
     if (row.count < row.lo) {
+      // Only a `hard` floor (lands / the Karsten minimum) is an obligation — a
+      // deck below it is illegal. Every other category's floor is a soft target
+      // (Guille 2026-07-19: wincons and synergy may dip below with a warning),
+      // so being under it is a recommendation, not a block.
       issues.push({
         category,
-        level: 'obligation',
+        level: row.band === 'hard' ? 'obligation' : 'recommendation',
         message: `${label}: ${row.count}, por debajo del mínimo (${row.lo}).`,
       });
     } else if (row.count > row.hi) {
@@ -343,7 +345,9 @@ function compositionIssues(
   // export would be noise. What matters is whether the player's *edits* made a
   // color worse than the build delivered: compare the live deficit against the
   // build baseline and warn (as a recommendation) only when it grew.
-  const base = result.color_source_breakdown;
+  // Compare live against the same-counter baseline (the freshly-built deck),
+  // falling back to the build's own numbers only until the baseline arrives.
+  const base = colorBaseline ?? result.color_source_breakdown;
   const live = liveColors ?? base;
   for (const [color, row] of Object.entries(live)) {
     const baseDeficit = base[color]?.deficit ?? 0;
@@ -442,6 +446,7 @@ export function DeckView({
   pdfArtOverrides,
   onAudit,
   liveColors = null,
+  colorBaseline = null,
 }: {
   result: BuildResult;
   showExport?: boolean;
@@ -459,17 +464,18 @@ export function DeckView({
   // Fresh color sources for the current deck (the export check uses these over
   // the build's frozen numbers). Null falls back to `result`'s own.
   liveColors?: Record<string, ColorSourceRow> | null;
+  // The unswapped-deck baseline the export check compares live sources against.
+  colorBaseline?: Record<string, ColorSourceRow> | null;
 }) {
   const [sort, setSort] = useState<SortAxis>('type');
-  const [display, setDisplay] = useState<DisplayAxis>('list');
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
   // Export safety net: re-evaluate composition on the way out, so nobody prints
   // a deck below its minimums (or over a ceiling) without being warned first.
   const [confirmExport, setConfirmExport] = useState(false);
   const issues = useMemo(
-    () => compositionIssues(result, liveColors),
-    [result, liveColors],
+    () => compositionIssues(result, liveColors, colorBaseline),
+    [result, liveColors, colorBaseline],
   );
 
   const groups = useMemo(
@@ -577,20 +583,6 @@ export function DeckView({
             ]}
           />
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Vista
-          </span>
-          <ToggleGroup<DisplayAxis>
-            ariaLabel="Modo de visualización"
-            value={display}
-            onChange={setDisplay}
-            options={[
-              { value: 'list', label: 'Lista', icon: <LayoutList className="h-4 w-4" /> },
-              { value: 'visual', label: 'Visual', icon: <Grid2x2 className="h-4 w-4" /> },
-            ]}
-          />
-        </div>
         {sort === 'category' && (
           <span className="basis-full text-xs text-zinc-500 dark:text-zinc-400">
             Cada carta aparece en un solo grupo (su rol principal); el panel de
@@ -600,21 +592,12 @@ export function DeckView({
         )}
       </div>
 
-      {display === 'list' ? (
-        <ListView
-          groups={groups}
-          onCardClick={onCardClick}
-          activeOutName={activeOutName}
-          onArtSelect={onArtSelect}
-        />
-      ) : (
-        <VisualGridView
-          groups={groups}
-          onCardClick={onCardClick}
-          activeOutName={activeOutName}
-          onArtSelect={onArtSelect}
-        />
-      )}
+      <VisualGridView
+        groups={groups}
+        onCardClick={onCardClick}
+        activeOutName={activeOutName}
+        onArtSelect={onArtSelect}
+      />
     </Panel>
   );
 }
@@ -631,42 +614,6 @@ type SwapProps = {
 // the flag from `basic_lands[]` is the test (see deck.ts).
 function isSwapSource(card: ViewCard, onCardClick?: (card: ViewCard) => void): boolean {
   return onCardClick !== undefined && !card.basic && !card.commander;
-}
-
-// ── LIST view (MTGGoldfish-style): rows grouped by section, image on hover ──
-function ListView({
-  groups,
-  onCardClick,
-  activeOutName,
-  onArtSelect,
-}: { groups: CardGroup[] } & SwapProps) {
-  return (
-    <div className="gap-x-6 lg:columns-2">
-      {groups.map((group) => (
-        <div key={group.key} className="mb-5 break-inside-avoid">
-          <div className="mb-2 flex items-baseline gap-2 border-b border-black/10 pb-1 dark:border-white/10">
-            <h4 className="text-xl font-extrabold tracking-tight accent-text">
-              {group.label}
-            </h4>
-            <span className="text-sm tabular-nums text-zinc-400 dark:text-zinc-500">
-              {groupCount(group.cards)}
-            </span>
-          </div>
-          <div className="grid gap-1.5">
-            {group.cards.map((card) => (
-              <CardRow
-                key={card.oracle_id}
-                card={card}
-                onCardClick={onCardClick}
-                active={card.name === activeOutName}
-                onArtSelect={onArtSelect}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
 }
 
 // ── VISUAL + TYPE (EDHREC-style grid): full card image, score below ──
@@ -751,104 +698,3 @@ function SwapTileButton({
   );
 }
 
-function CardRow({
-  card,
-  onCardClick,
-  active = false,
-  onArtSelect,
-}: {
-  card: ViewCard;
-  onCardClick?: (card: ViewCard) => void;
-  active?: boolean;
-  onArtSelect?: (card: ViewCard) => void;
-}) {
-  // Basic land: just "×N name" + hover art, no score/categories (a basic has no
-  // EDHREC score — the API sends null). The commander is never a swap source.
-  const clickable = onCardClick !== undefined && !card.basic && !card.commander;
-  return (
-    <div
-      role={clickable ? 'button' : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      onClick={clickable ? () => onCardClick!(card) : undefined}
-      onKeyDown={
-        clickable
-          ? (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onCardClick!(card);
-              }
-            }
-          : undefined
-      }
-      className={`group relative flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border px-3.5 py-2.5 transition ${
-        active
-          ? 'border-rose-400 bg-rose-50 ring-2 ring-rose-500/50 dark:border-rose-500/60 dark:bg-rose-950/30'
-          : 'border-black/5 bg-white/70 hover:border-black/10 hover:bg-white dark:border-white/5 dark:bg-zinc-950/40 dark:hover:border-white/15 dark:hover:bg-zinc-900/60'
-      } ${clickable ? 'cursor-pointer' : ''}`}
-    >
-      {card.basic && (
-        <span className="text-[1.05rem] font-bold tabular-nums text-zinc-500 dark:text-zinc-400">
-          ×{card.count}
-        </span>
-      )}
-      <span className="text-[1.05rem] font-bold leading-snug tracking-tight text-zinc-900 dark:text-zinc-50">
-        {card.name}
-      </span>
-      {!card.basic && <ManaCost manaCost={card.mana_cost} />}
-      {!card.basic && (
-        <div className="flex flex-wrap gap-1">
-          {card.categories.map((cat) => (
-            <span
-              key={cat}
-              className="rounded bg-zinc-100/70 px-1.5 py-0.5 text-[0.65rem] font-medium uppercase tracking-wide text-zinc-400 dark:bg-zinc-800/60 dark:text-zinc-500"
-            >
-              {categoryLabel(cat)}
-            </span>
-          ))}
-        </div>
-      )}
-      {!card.basic && (card.score !== null || onArtSelect) && (
-        <span className="ml-auto flex items-center gap-2.5">
-          {onArtSelect && (
-            <span
-              role="button"
-              tabIndex={0}
-              aria-label="Cambiar la edición / idioma de la carta"
-              title="Cambiar la edición / idioma de la carta"
-              onClick={(event) => {
-                event.stopPropagation();
-                onArtSelect(card);
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  onArtSelect(card);
-                }
-              }}
-              className="accent-focus inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-zinc-400 opacity-0 transition hover:bg-zinc-200/70 hover:text-zinc-700 group-hover:opacity-100 focus-visible:opacity-100 dark:hover:bg-zinc-700/60 dark:hover:text-zinc-200"
-            >
-              <Palette className="h-4 w-4" aria-hidden="true" />
-            </span>
-          )}
-          {card.score !== null && <ScoreBadge score={card.score} />}
-        </span>
-      )}
-
-      {/* Hover preview: medium card image, MTGGoldfish-style. */}
-      {card.image_uri_normal && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-2 top-full z-50 mt-1 hidden w-[244px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/20 group-hover:block"
-        >
-          <img
-            src={card.image_uri_normal}
-            alt=""
-            className="block w-full"
-            loading="lazy"
-          />
-        </div>
-      )}
-    </div>
-  );
-}

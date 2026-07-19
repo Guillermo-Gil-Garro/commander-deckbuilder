@@ -26,7 +26,7 @@ import { CompositionPanel, DeckView } from '../components/DeckView';
 import { ArtPicker } from '../components/ArtPicker';
 import { artOverridesForExport, useArtOverrides, withArt } from '../art';
 import { categoryLabel } from '../labels';
-import { toViewCard, useMutableDeck, type ViewCard } from '../deck';
+import { isBasicName, toViewCard, useMutableDeck, type ViewCard } from '../deck';
 import { OpeningHand } from './OpeningHand';
 import {
   auditDeck,
@@ -178,15 +178,26 @@ export function Result({
     string,
     ColorSourceRow
   > | null>(null);
+  // The baseline the export check compares against: the freshly-built deck's
+  // color sources under the *same* (improved) counter as the live numbers, so a
+  // warning means the player's edits made fixing worse — not a mismatch between
+  // the solver's frozen count and the live one. Captured while unswapped.
+  const [colorBaseline, setColorBaseline] = useState<Record<
+    string,
+    ColorSourceRow
+  > | null>(null);
   useEffect(() => {
     if (!swapsEnabled || !req) {
       setLiveColors(null);
+      setColorBaseline(null);
       return;
     }
     let cancelled = false;
     evaluateDeck({ commander: req.commander, dials: req.dials, deck: deckRefs })
       .then((res) => {
-        if (!cancelled) setLiveColors(res.color_source_breakdown);
+        if (cancelled) return;
+        setLiveColors(res.color_source_breakdown);
+        if (!swapped) setColorBaseline(res.color_source_breakdown);
       })
       .catch(() => {
         // Keep the last good numbers rather than blanking the panel on a blip.
@@ -194,7 +205,7 @@ export function Result({
     return () => {
       cancelled = true;
     };
-  }, [swapsEnabled, req, deckRefs]);
+  }, [swapsEnabled, req, deckRefs, swapped]);
 
   // Names in the deck now: the advanced free search greys these out.
   const deckNames = useMemo(
@@ -335,6 +346,7 @@ export function Result({
               advanced={advanced}
               onToggleAdvanced={setAdvanced}
               liveColors={liveColors}
+              colorBaseline={colorBaseline}
             />
           ) : (
             <DeckView
@@ -342,6 +354,7 @@ export function Result({
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
               liveColors={liveColors}
+              colorBaseline={colorBaseline}
             />
           )}
         </>
@@ -365,6 +378,7 @@ function SwapWorkspace({
   advanced,
   onToggleAdvanced,
   liveColors,
+  colorBaseline,
 }: {
   deck: BuildResult;
   /** `deck` with the art picker's printings applied — what the views render.
@@ -379,6 +393,7 @@ function SwapWorkspace({
   advanced: boolean;
   onToggleAdvanced: (value: boolean) => void;
   liveColors: Record<string, ColorSourceRow> | null;
+  colorBaseline: Record<string, ColorSourceRow> | null;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -547,6 +562,7 @@ function SwapWorkspace({
         pdfArtOverrides={pdfArtOverrides}
         onAudit={onAudit}
         liveColors={liveColors}
+        colorBaseline={colorBaseline}
       />
 
       {/* Bench only: the active-swap candidates render as a modal instead
@@ -1616,7 +1632,9 @@ function CardSearchBox({
       {results.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {results.map((card) => {
-            const inDeck = deckNames.has(card.name);
+            // Basics are the legal duplicate: never grey them out, so the player
+            // can always add one more.
+            const inDeck = deckNames.has(card.name) && !isBasicName(card.name);
             const selected = card.name === selectedName;
             return (
               <button
