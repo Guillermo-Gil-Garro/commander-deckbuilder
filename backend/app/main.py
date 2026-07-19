@@ -44,6 +44,8 @@ from app.schemas import (
     CommandersResponse,
     DeckRequest,
     DeckResponse,
+    EvaluateRequest,
+    EvaluateResponse,
     ExportRequest,
     HealthResponse,
     LegalCardSearchResponse,
@@ -609,6 +611,21 @@ async def swap_outs(
     """
     state = _state(request)
     return await run_in_threadpool(service.swap_outs_for, state, payload)
+
+
+@app.post("/evaluate")
+async def evaluate(request: Request, payload: EvaluateRequest) -> EvaluateResponse:
+    """Re-evaluate a deck's colour fixing on its current state, without solving.
+
+    The build's ``color_source_breakdown`` goes stale as cards are swapped; this
+    recomputes the supply on the deck the client holds now against the same
+    demand the build targeted. Used to refresh the constraints panel after edits
+    and to warn before exporting a PDF. 404 for an unknown commander, 422 for a
+    card outside the pool, 502 if EDHREC is unreachable, 503 if the pool never
+    loaded.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.evaluate_deck, state, payload)
 
 
 @app.post("/maybeboard")

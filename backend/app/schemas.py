@@ -717,6 +717,36 @@ class SwapOutsResponse(BaseModel):
     feasible_count: int
 
 
+class EvaluateRequest(BaseModel):
+    """Re-evaluate a deck's manabase on its *current* state, without re-solving.
+
+    Same shape as a swap request minus the swap. Used to refresh the color
+    fixing after edits: the build's ``color_source_breakdown`` is the solver's
+    and goes stale as cards are swapped, so this recomputes supply on the deck
+    the client holds now (demand stays the commander/pool target, as the build).
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    dials: dict[str, str | None] = Field(default_factory=dict)
+    deck: list[DeckCardRef] = Field(min_length=1)
+
+
+class EvaluateResponse(BaseModel):
+    """The live manabase re-evaluation: color sources for the current deck.
+
+    ``color_source_breakdown`` is ``{sources, demand, deficit}`` per colour,
+    recomputed over the deck as it stands (unlike the build's, which froze at
+    solve time). A deficit is a *soft* concern — fixing is a soft objective —
+    so the UI treats it as a recommendation, not an obligation.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    color_source_breakdown: dict[str, ColorSourceRow]
+
+
 # --- maybeboard --------------------------------------------------------------
 
 

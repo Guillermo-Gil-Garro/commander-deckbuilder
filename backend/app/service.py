@@ -67,6 +67,8 @@ from app.schemas import (
     DeckCardView,
     DeckRequest,
     DeckResponse,
+    EvaluateRequest,
+    EvaluateResponse,
     ExportRequest,
     LegalCardSearchResponse,
     MaybeboardRequest,
@@ -102,6 +104,7 @@ from pipeline.edhrec import (
     slugify_commander,
 )
 from quotas.config import CEILING_ONLY_CATEGORIES, QuotaBand, QuotasError
+from quotas.color_sources import pool_color_source_targets
 from rules.banlist import BANNED_STATUSES
 from rules.resolve import ResolutionError
 from quotas.lands import curve_bucket
@@ -109,7 +112,7 @@ from quotas.resolver import resolve_bands
 from quotas.validator import CategoryStatus
 from selector.audit import flag_conditionals, flag_low_synergy_filler
 from selector.constraints import CardFacts
-from selector.cp_sat import CpSatResult, build_deck_cpsat
+from selector.cp_sat import CpSatResult, build_deck_cpsat, _produced_colors
 from selector.deck_rules import (
     DeckRulesError,
     RuleContext,
@@ -1025,6 +1028,56 @@ def swap_outs_for(state: AppState, request: SwapOutsRequest) -> SwapOutsResponse
         ],
         feasible_count=len(feasible_outs),
     )
+
+
+_COLOR_ORDER = ("W", "U", "B", "R", "G")
+
+
+def evaluate_deck(state: AppState, request: EvaluateRequest) -> EvaluateResponse:
+    """Re-evaluate the manabase's colour fixing on the deck's current state.
+
+    The build's ``color_source_breakdown`` is the solver's and freezes at solve
+    time; swaps never re-run the solver, so after edits it lies. This recomputes
+    the **supply** (how many sources of each colour the current deck actually
+    holds, via the same ``_produced_colors`` heuristic the solver uses) against
+    the same **demand** the build targeted (the commander/pool Karsten target),
+    so the numbers stay comparable. Blocking (reads EDHREC for the demand), never
+    runs the solver. A deficit is soft — the caller shows it as a recommendation.
+    """
+    row = resolve_commander(state, request.commander)
+    bands = bands_for(state, row.name, request.dials)
+    identity = frozenset(row.color_identity)
+    commander_card = state.pool.by_name[row.name]
+    commander_cmc = float(commander_card.get("cmc") or 0.0)
+
+    # Demand: the pool Karsten target over the non-land candidates, exactly as
+    # the build computes it (so the demand column matches the constraints panel).
+    data = edhrec_data(state, row.name)
+    candidates = _pool_candidates(state, row, bands, data)
+    targets = pool_color_source_targets(
+        ((facts.mana_cost, facts.cmc) for facts, _ in candidates if not facts.is_land),
+        commander_cmc,
+    )
+    targets = {color: k for color, k in targets.items() if color in identity}
+
+    # Supply: sources per colour in the deck as it stands now (basics count once
+    # per copy — N Forests are N green sources).
+    supply: dict[str, int] = {}
+    for ref in request.deck:
+        card = _pool_card(state, ref.name)
+        for color in _produced_colors(card, identity):
+            supply[color] = supply.get(color, 0) + ref.count
+
+    rows = {
+        color: ColorSourceRow(
+            sources=supply.get(color, 0),
+            demand=targets.get(color, 0),
+            deficit=max(0, targets.get(color, 0) - supply.get(color, 0)),
+        )
+        for color in _COLOR_ORDER
+        if color in identity
+    }
+    return EvaluateResponse(color_source_breakdown=rows)
 
 
 def maybeboard_for(state: AppState, request: MaybeboardRequest) -> MaybeboardResponse:

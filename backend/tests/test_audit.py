@@ -327,6 +327,48 @@ def test_swap_outs_rejects_a_deck_that_is_not_99(client: TestClient) -> None:
     assert response.status_code == 422
 
 
+def test_evaluate_recomputes_color_sources_for_the_current_deck(
+    client: TestClient, ur_dragon_deck: dict
+) -> None:
+    """The live re-evaluation returns coherent color-source rows for the deck as
+    it stands, over the commander's colour identity."""
+    response = client.post(
+        "/evaluate", json={"commander": COMMANDER, "deck": _refs(ur_dragon_deck)}
+    )
+    assert response.status_code == 200, response.text
+    rows = response.json()["color_source_breakdown"]
+    # The Ur-Dragon is five-colour: every colour should have a row.
+    assert set(rows) == {"W", "U", "B", "R", "G"}
+    for row in rows.values():
+        assert row["sources"] >= 0
+        assert row["demand"] >= 0
+        assert row["deficit"] == max(0, row["demand"] - row["sources"])
+
+
+def test_evaluate_tracks_supply_when_a_source_leaves(
+    client: TestClient, ur_dragon_deck: dict
+) -> None:
+    """Removing a mana source drops that colour's supply — build data would not
+    move, which is the whole point of re-evaluating. (Deck size is not enforced
+    here: the colour count is valid for any deck.)"""
+    before = client.post(
+        "/evaluate", json={"commander": COMMANDER, "deck": _refs(ur_dragon_deck)}
+    ).json()["color_source_breakdown"]
+
+    refs = _refs(ur_dragon_deck)
+    forest = next((r for r in refs if r["name"] == "Forest"), None)
+    if forest is None or forest["count"] < 1:
+        pytest.skip("this build has no basic Forest to remove")
+    forest["count"] -= 1
+    if forest["count"] == 0:
+        refs.remove(forest)
+
+    after = client.post(
+        "/evaluate", json={"commander": COMMANDER, "deck": refs}
+    ).json()["color_source_breakdown"]
+    assert after["G"]["sources"] == before["G"]["sources"] - 1
+
+
 def test_audit_rejects_a_deck_that_is_not_99(client: TestClient) -> None:
     """A short deck is a 422 before any EDHREC read — a coherence error."""
     response = client.post(
