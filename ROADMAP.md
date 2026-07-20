@@ -123,3 +123,31 @@ Desplegado en https://huggingface.co/spaces/Caskis/commander-deckbuilder
 - ✅ `data/cache/edhrec/`: **versionados los 61 optimized** (~5.7MB) y copiados a la imagen → primer clic de destacados instantáneo. No-destacados: on-demand.
 - ✅ Egress a `json.edhrec.com` verificado (Atraxa no-destacada construyó on-demand) y a `api.scryfall.com` (prints/imágenes)
 - ✅ Primer `docker build` real ejecutado (en HF) — OK
+
+## Fase 7 — Actualización de datos ✅ (2026-07-20)
+El sistema ya no es un snapshot congelado: los datos se refrescan solos.
+- ✅ **Recs EDHREC (inclusión %, sinergia): TTL de 7 días** en `pipeline/edhrec.py`
+  (`DECKBUILDER_EDHREC_TTL_DAYS`, 0 desactiva). Un refetch fallido sirve la caché
+  vieja (EDHREC flojo nunca rompe un build). Auto-refresco por request, sin infra.
+- ✅ **Pool (sets nuevos) + ranking + precache: GitHub Actions** (`.github/workflows/deploy.yml`).
+  GitHub es la fuente de verdad; el repo está en `Guillermo-Gil-Garro/commander-deckbuilder`.
+  Cada run **regenera** (`pipeline.build` + `precache_edhrec_ranking` + `precache_edhrec`)
+  y hace push al Space. Triggers: push a `main`, **cron semanal (lunes 06:00 UTC)** y
+  dispatch manual. La data regenerada se force-adde solo para el push a HF, nunca se
+  commitea a GitHub → el LFS de GitHub no crece y un push de código nunca revierte un
+  refresco. Secret: `COMMANDER_DECKBUILDER_HF_SPACE` (token HF).
+- ⏸️ **Tagging de cartas nuevas (capa 3): pospuesto a la fase LLM.** Las cartas de sets
+  nuevos entran disponibles pero caen a `synergy` hasta que el tagger LLM las procese.
+- **Flujo nuevo:** código → `git push origin master:main` (rama local `master` → `main`),
+  el Action despliega. Cada deploy tarda unos minutos (reconstruye el pool). Se descartó
+  cachear la data en GitHub (crecería el LFS) y regenerar solo en el cron (un push de
+  código revertiría el refresco).
+
+## Pendiente (próximas sesiones)
+- **Arte de tokens de Magic** (features 3 y 4, "te coronas"): elegir el arte de los
+  tokens que el mazo genera para el PDF (mainboard + maybeboard), y arte distinto por
+  copia cuando se imprimen dos. Requiere: guardar el `oracle_id` del token en el pipeline
+  (hoy solo el id de impresión), exponer los tokens en la respuesta/UI, picker y override
+  en el PDF. Aparcado a propósito.
+- **Capa 3 — auditoría/tagging con LLM:** brief a escribir con el feedback real de partidas.
+- **Flujo de despliegue con token más limpio** (revisar cuando Guille quiera).
