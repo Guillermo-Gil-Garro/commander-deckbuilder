@@ -16,6 +16,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
+    # Tagging-engine experiments only (experiments/tagging). NOT installed in the
+    # HF image (the Dockerfile runs `pip install -e ./backend` with no extras),
+    # so the runtime stays provider/ML-dependency free; a trained model ships as
+    # exported numpy/onnx weights, never as a sklearn import.
+    "scikit-learn",
 ]
 
 [build-system]

@@ -200,8 +200,17 @@ No mezclar (decisión de Guille 2026-07-20).
    señala las palancas: umbral por categoría (0.5 mata el recall de las raras), class
    weighting, mejores features (char n-grams, símbolos de maná) y probablemente un modelo
    serio (sklearn tf-idf). Cuello de botella = soporte de las categorías raras
-   (wincons ~67, protection ~32), no volumen global. **Decisión de motor pendiente del
-   siguiente baseline.**
+   (wincons ~67, protection ~32), no volumen global.
+   - ✅ **Baseline serio** — `eval_holdout_sklearn.py` (2026-07-21): tf-idf word 1-2gram +
+     char_wb 3-5gram + LR one-vs-rest `class_weight='balanced'` + umbral por categoría
+     afinado en validación (split 70/15/15). **MACRO-F1 0.77 vs 0.64 del regex.** Domina
+     donde el regex es ciego (protection 0.74 vs 0.00, synergy 0.69 vs 0.29) y empata/mejora
+     en léxicas (lands 0.99, removal 0.84, card_draw 0.76); el regex solo aventaja en ramp
+     (0.82 vs 0.78), board_wipe (0.84 vs 0.81) y `wincons` (0.67 vs 0.50, n=10 = ruido).
+     **Veredicto: el motor ML es viable** — un único modelo tf-idf+LR, propio y exportable a
+     numpy/onnx (sin dependencia de proveedor), bate el listón. `wincons` (y en menor medida
+     `synergy`) se quedan bajo el gate de confianza para revisión humana/Opus. sklearn es dep
+     **solo-dev** (`backend/pyproject.toml [dev]`), no entra en la imagen de HF.
 3. ⬜ Entrenar el modelo (offline, sin API).
 4. ⬜ ML etiqueta el pool completo, con gate de confianza.
 5. ⬜ Auditoría del etiquetado ML con Opus.
