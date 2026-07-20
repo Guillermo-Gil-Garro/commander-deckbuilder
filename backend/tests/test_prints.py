@@ -267,6 +267,39 @@ def test_unknown_oracle_id_is_404(client: TestClient) -> None:
     assert response.status_code == 404
 
 
+def test_fullart_basics_defaults_to_theros(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The basics picker offers full-art options and defaults to the Theros
+    printing when it is among them (Guille 2026-07-20)."""
+    theros_id = service._theros_basic_id("Forest")
+    rows = [_row("other-fullart"), _row(theros_id)]
+    monkeypatch.setattr(service, "fetch_fullart_basics", lambda name: rows)
+    body = client.get("/cards/basics/Forest/fullart").json()
+    assert body["name"] == "Forest"
+    assert {p["scryfall_id"] for p in body["prints"]} == {"other-fullart", theros_id}
+    assert body["default_scryfall_id"] == theros_id
+
+
+def test_fullart_basics_dragon_theme_defaults_to_tdm(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A Dragon deck defaults its basics to the TDM 'dragon eye' printing."""
+    dragon_id = service.DRAGON_BASIC_IDS["Forest"]
+    theros_id = service._theros_basic_id("Forest")
+    rows = [_row(theros_id), _row(dragon_id)]
+    monkeypatch.setattr(service, "fetch_fullart_basics", lambda name: rows)
+    body = client.get("/cards/basics/Forest/fullart?theme=dragon").json()
+    assert body["default_scryfall_id"] == dragon_id
+    # Without the theme it stays Theros.
+    plain = client.get("/cards/basics/Forest/fullart").json()
+    assert plain["default_scryfall_id"] == theros_id
+
+
+def test_fullart_basics_rejects_a_nonbasic(client: TestClient) -> None:
+    assert client.get("/cards/basics/Sol Ring/fullart").status_code == 404
+
+
 def test_batch_defaults_resolve_per_card(
     client: TestClient, real_app_state: AppState, monkeypatch: pytest.MonkeyPatch
 ) -> None:

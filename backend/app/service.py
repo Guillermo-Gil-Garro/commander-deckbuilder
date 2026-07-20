@@ -95,7 +95,7 @@ from app.schemas import (
 )
 from app.state import AppState, CommanderRow
 from pipeline.card_images import fetch_card_image
-from pipeline.prints import PrintsError, fetch_prints
+from pipeline.prints import PrintsError, fetch_fullart_basics, fetch_prints
 from pipeline.edhrec import (
     EdhrecCommanderData,
     EdhrecError,
@@ -1776,6 +1776,64 @@ def card_prints(state: AppState, oracle_id: str) -> CardPrintsResponse:
         name=card["name"],
         prints=rows,
         default_scryfall_id=default.scryfall_id if default else None,
+    )
+
+
+# The "dragon eye" full-art basics from Tarkir: Dragonstorm (TDM 2025) — the
+# house default for Dragon decks (Guille 2026-07-20), used when the picker is
+# asked with theme=dragon. Scryfall labels these lowres for now (recent set),
+# but they print fine and are the ones Guille wants.
+DRAGON_BASIC_IDS: dict[str, str] = {
+    "Forest": "7e33e540-2828-46ad-a441-366552843d9c",
+    "Island": "b300be80-6618-4284-b5c3-95c1ab373e6f",
+    "Plains": "3e8c67e5-587a-43b2-af47-bbad1f8b52e9",
+    "Swamp": "57da24a0-89a7-4756-b4ca-4dea132e8f67",
+    "Mountain": "a4db1b7a-93f2-40a5-b649-80a099ddeb62",
+}
+
+
+def _theros_basic_id(name: str) -> str | None:
+    """The Theros full-art printing's scryfall_id, parsed from its CDN URL —
+    the house default the basics picker highlights and the export falls back to."""
+    url = THEROS_BASIC_IMAGES.get(name)
+    if not url:
+        return None
+    return url.rsplit("/", 1)[-1].split(".", 1)[0]
+
+
+def fullart_basics(
+    state: AppState, name: str, *, theme: str | None = None
+) -> CardPrintsResponse:
+    """The full-art printings a player may choose for one basic land.
+
+    Only full-art (Guille 2026-07-20): the house look is full-art, so the
+    gallery offers those alone. The default is the Theros printing, or the TDM
+    "dragon eye" one when ``theme == "dragon"`` (Dragon decks). Blocking
+    (Scryfall on a cold cache): call through a threadpool.
+    """
+    card = state.pool.resolve(name)
+    if card is None or "Basic" not in (card.get("type_line") or ""):
+        raise CardNotFound(f"{name!r} no es una tierra básica")
+    try:
+        rows = [CardPrintView(**row) for row in fetch_fullart_basics(name)]
+    except PrintsError as exc:
+        raise PrintsUnavailable(
+            "No se pudieron consultar las ediciones en Scryfall; "
+            "inténtalo de nuevo en un momento"
+        ) from exc
+    preferred = (
+        DRAGON_BASIC_IDS.get(name) if theme == "dragon" else _theros_basic_id(name)
+    )
+    default = (
+        preferred
+        if preferred and any(r.scryfall_id == preferred for r in rows)
+        else (rows[0].scryfall_id if rows else None)
+    )
+    return CardPrintsResponse(
+        oracle_id=card["oracle_id"],
+        name=name,
+        prints=rows,
+        default_scryfall_id=default,
     )
 
 

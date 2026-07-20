@@ -782,6 +782,24 @@ async def card_prints(request: Request, oracle_id: str) -> CardPrintsResponse:
     return await run_in_threadpool(service.card_prints, state, oracle_id)
 
 
+@app.get("/cards/basics/{name}/fullart")
+async def basics_fullart(
+    request: Request, name: str, theme: str | None = None
+) -> CardPrintsResponse:
+    """Full-art printings a player may choose for one basic land.
+
+    Only full-art (the house look), one tile per distinct illustration.
+    Defaults to the Theros printing, or the TDM "dragon eye" one for
+    ``theme=dragon`` (Dragon decks). 404 if ``name`` is not a basic, 502 when
+    Scryfall is unreachable. Backed by a disk cache; a cold basic costs one
+    Scryfall search, hence the threadpool.
+    """
+    state = _state(request)
+    return await run_in_threadpool(
+        lambda s, n: service.fullart_basics(s, n, theme=theme), state, name
+    )
+
+
 @app.post("/cards/prints/defaults")
 async def prints_defaults(
     request: Request, payload: PrintDefaultsRequest

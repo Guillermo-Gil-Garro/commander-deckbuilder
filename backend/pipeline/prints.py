@@ -50,6 +50,10 @@ _REQUEST_SLEEP_S = 0.1
 # already dropped by `image_status` in `_normalize`.
 _SEARCH_URL = "https://api.scryfall.com/cards/search"
 _QUERY_TEMPLATE = "oracleid:{oracle_id} (lang:en or lang:es)"
+# Full-art printings of one basic land, one tile per distinct illustration
+# (``unique=art``). The picker only offers full-art (Guille 2026-07-20): the
+# house look is full-art, and a gallery of framed basics is noise.
+_BASICS_QUERY = '!"{name}" type:basic is:fullart'
 
 # Basics have 500+ printings; anything else fits comfortably. 3 pages
 # (175/page) bounds the pathological cases without truncating real cards.
@@ -132,11 +136,17 @@ def _normalize(card: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
-def _download_prints(oracle_id: str) -> list[dict[str, Any]]:
-    prints: list[dict[str, Any]] = []
+def _paged_search(query: str, label: str, *, unique: str = "prints") -> list[dict[str, Any]]:
+    """Run a Scryfall card search, normalized, paginated and page-capped.
+
+    ``label`` only names the subject in errors/logs. ``unique`` is the Scryfall
+    dedupe axis: ``prints`` (every printing) for a card's gallery, ``art`` (one
+    per distinct illustration) for the full-art basics picker.
+    """
+    rows: list[dict[str, Any]] = []
     params: dict[str, Any] | None = {
-        "q": _QUERY_TEMPLATE.format(oracle_id=oracle_id),
-        "unique": "prints",
+        "q": query,
+        "unique": unique,
         "include_multilingual": "true",
         "order": "released",
         "dir": "desc",
@@ -146,22 +156,21 @@ def _download_prints(oracle_id: str) -> list[dict[str, Any]]:
         try:
             response = httpx.get(url, params=params, headers=HEADERS, timeout=_TIMEOUT)
         except httpx.HTTPError as exc:
-            raise PrintsError(f"Scryfall search failed for {oracle_id}: {exc}") from exc
+            raise PrintsError(f"Scryfall search failed for {label}: {exc}") from exc
         time.sleep(_REQUEST_SLEEP_S)
         if response.status_code == 404:
-            # Scryfall answers 404 for a search with no results: an unknown
-            # oracle_id or a card with no non-digital es/en printing. An empty
-            # list is the honest answer either way.
+            # Scryfall answers 404 for a search with no results. An empty list
+            # is the honest answer.
             break
         try:
             response.raise_for_status()
             payload = response.json()
         except (httpx.HTTPError, json.JSONDecodeError) as exc:
-            raise PrintsError(f"Scryfall search failed for {oracle_id}: {exc}") from exc
+            raise PrintsError(f"Scryfall search failed for {label}: {exc}") from exc
         for card in payload.get("data") or []:
             row = _normalize(card)
             if row is not None:
-                prints.append(row)
+                rows.append(row)
         if not payload.get("has_more"):
             break
         url = payload.get("next_page") or ""
@@ -170,10 +179,14 @@ def _download_prints(oracle_id: str) -> list[dict[str, Any]]:
             break
     else:
         logger.warning(
-            "Printings for %s truncated at %d pages (%d rows kept)",
-            oracle_id, _MAX_PAGES, len(prints),
+            "Search for %s truncated at %d pages (%d rows kept)",
+            label, _MAX_PAGES, len(rows),
         )
-    return prints
+    return rows
+
+
+def _download_prints(oracle_id: str) -> list[dict[str, Any]]:
+    return _paged_search(_QUERY_TEMPLATE.format(oracle_id=oracle_id), oracle_id)
 
 
 def _read_cache(cache_path: Path) -> list[dict[str, Any]] | None:
@@ -238,3 +251,24 @@ def fetch_prints(oracle_id: str) -> list[dict[str, Any]]:
         prints = _download_prints(oracle_id)
         _write_cache(cache_path, oracle_id, prints)
         return prints
+
+
+def fetch_fullart_basics(name: str) -> list[dict[str, Any]]:
+    """Full-art printings of a basic land (``Plains``…), one per illustration.
+
+    Cached on disk by name, same discipline as ``fetch_prints``. Used only by
+    the basic-land art picker, which offers full-art options exclusively.
+    """
+    cache_path = CACHE_DIR / f"fullart-basic-{name}.json"
+    cached = _read_cache(cache_path)
+    if cached is not None:
+        return cached
+
+    key = f"basic:{name}"
+    with _lock_for(key):
+        cached = _read_cache(cache_path)
+        if cached is not None:
+            return cached
+        rows = _paged_search(_BASICS_QUERY.format(name=name), key, unique="art")
+        _write_cache(cache_path, f"fullart-basic-{name}", rows)
+        return rows
