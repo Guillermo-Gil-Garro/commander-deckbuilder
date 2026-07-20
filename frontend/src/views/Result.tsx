@@ -24,13 +24,21 @@ import { Button, ColorPips, Panel } from '../components/ui';
 import { CardImage, CardTile } from '../components/cards';
 import { CompositionPanel, DeckView } from '../components/DeckView';
 import { ArtPicker } from '../components/ArtPicker';
-import { artOverridesForExport, useArtOverrides, withArt } from '../art';
+import {
+  artOverridesForExport,
+  tokenCopyImage,
+  tokenOverridesForExport,
+  useArtOverrides,
+  useTokenArt,
+  withArt,
+} from '../art';
 import { categoryLabel } from '../labels';
 import { isBasicName, toViewCard, useMutableDeck, type ViewCard } from '../deck';
 import { OpeningHand } from './OpeningHand';
 import {
   auditDeck,
   evaluateDeck,
+  fetchDeckTokens,
   fetchMaybeboard,
   searchLegalCards,
   sequentialValidate,
@@ -41,6 +49,7 @@ import {
   type AuditResult,
   type BuildRequest,
   type BuildResult,
+  type CardPrint,
   type ColorSourceRow,
   type CommanderListItem,
   type CurveRow,
@@ -51,6 +60,7 @@ import {
   type SwapOuts,
   type SwapReplacements,
   type SwapValidation,
+  type Token,
 } from '../api';
 
 // Human-readable, honest explanation of each relaxation stage. Surfacing this
@@ -217,6 +227,35 @@ export function Result({
     };
   }, [swapsEnabled, req, deckRefs, swapped]);
 
+  // Tokens the deck can create (for the art picker + the PDF). Live off the
+  // deck, like the maybeboard: a swap that drops a token maker drops its token.
+  const { tokenArt, setTokenArt, clearTokenArt } = useTokenArt();
+  const [tokens, setTokens] = useState<Token[]>([]);
+  const [tokenPick, setTokenPick] = useState<{ token: Token; copy: number } | null>(
+    null,
+  );
+  useEffect(() => {
+    if (!swapsEnabled || !req) {
+      setTokens([]);
+      return;
+    }
+    let cancelled = false;
+    fetchDeckTokens({ commander: req.commander, deck: deckRefs })
+      .then((res) => {
+        if (!cancelled) setTokens(res);
+      })
+      .catch(() => {
+        if (!cancelled) setTokens([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [swapsEnabled, req, deckRefs]);
+  const tokenOverrides = useMemo(
+    () => tokenOverridesForExport(tokens, tokenArt),
+    [tokens, tokenArt],
+  );
+
   // Names in the deck now: the advanced free search greys these out.
   const deckNames = useMemo(
     () =>
@@ -303,6 +342,34 @@ export function Result({
         />
       )}
 
+      {tokenPick && (
+        <ArtPicker
+          oracleId={tokenPick.token.scryfall_id}
+          cardName={
+            tokenPick.token.copies > 1
+              ? `${tokenPick.token.name} (copia ${tokenPick.copy + 1})`
+              : tokenPick.token.name
+          }
+          token
+          activeScryfallId={
+            tokenArt[`${tokenPick.token.scryfall_id}#${tokenPick.copy}`]
+              ?.scryfall_id ?? null
+          }
+          hasManual={
+            `${tokenPick.token.scryfall_id}#${tokenPick.copy}` in tokenArt
+          }
+          onPick={(print) => {
+            setTokenArt(tokenPick.token.scryfall_id, tokenPick.copy, print);
+            setTokenPick(null);
+          }}
+          onReset={() => {
+            clearTokenArt(tokenPick.token.scryfall_id, tokenPick.copy);
+            setTokenPick(null);
+          }}
+          onClose={() => setTokenPick(null)}
+        />
+      )}
+
       <ResultHeader result={deck} commander={commander} />
 
       {isInfeasible ? (
@@ -353,6 +420,7 @@ export function Result({
               onSwap={swap}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
+              tokenOverrides={tokenOverrides}
               onAudit={openAudit}
               advanced={advanced}
               onToggleAdvanced={setAdvanced}
@@ -364,8 +432,16 @@ export function Result({
               result={shownDeck}
               onArtSelect={setArtCard}
               pdfArtOverrides={pdfArtOverrides}
+              tokenOverrides={tokenOverrides}
               liveColors={liveColors}
               colorBaseline={colorBaseline}
+            />
+          )}
+          {tokens.length > 0 && (
+            <TokensPanel
+              tokens={tokens}
+              tokenArt={tokenArt}
+              onPickCopy={(token, copy) => setTokenPick({ token, copy })}
             />
           )}
         </>
@@ -385,6 +461,7 @@ function SwapWorkspace({
   onSwap,
   onArtSelect,
   pdfArtOverrides,
+  tokenOverrides,
   onAudit,
   advanced,
   onToggleAdvanced,
@@ -400,6 +477,7 @@ function SwapWorkspace({
   onSwap: (outName: string, chosen: DeckCard, validation: SwapValidation) => void;
   onArtSelect: (card: ViewCard) => void;
   pdfArtOverrides: Record<string, string>;
+  tokenOverrides: Record<string, string[]>;
   onAudit: () => void;
   advanced: boolean;
   onToggleAdvanced: (value: boolean) => void;
@@ -571,6 +649,7 @@ function SwapWorkspace({
         activeOutName={outName}
         onArtSelect={onArtSelect}
         pdfArtOverrides={pdfArtOverrides}
+        tokenOverrides={tokenOverrides}
         onAudit={onAudit}
         liveColors={liveColors}
         colorBaseline={colorBaseline}
@@ -1855,6 +1934,59 @@ function SwapCandidatesModal({
 
 // The maybeboard bench: best non-selected cards per role. The active-swap
 // candidates live in SwapCandidatesModal, not here.
+// The tokens the deck can create, for the proxy PDF. Each copy is its own tile
+// so a two-copy token can be given two different arts; clicking a tile opens the
+// token art picker for that copy.
+function TokensPanel({
+  tokens,
+  tokenArt,
+  onPickCopy,
+}: {
+  tokens: Token[];
+  tokenArt: Record<string, CardPrint>;
+  onPickCopy: (token: Token, copy: number) => void;
+}) {
+  return (
+    <Panel>
+      <h3 className="mb-1 text-lg font-semibold">Tokens</h3>
+      <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+        Las fichas que el mazo puede crear (se imprimen en el PDF). Haz clic en
+        una para elegir su arte. Las que se imprimen dos veces admiten un arte
+        distinto por copia.
+      </p>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        {tokens.flatMap((token) =>
+          Array.from({ length: token.copies }, (_, copy) => (
+            <button
+              key={`${token.scryfall_id}#${copy}`}
+              type="button"
+              onClick={() => onPickCopy(token, copy)}
+              title={`Elegir arte de ${token.name}`}
+              className="accent-focus flex cursor-pointer flex-col gap-1.5 rounded-xl text-left transition hover:accent-ring hover:ring-2"
+            >
+              <div className="overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                <img
+                  src={tokenCopyImage(token, copy, tokenArt)}
+                  alt={token.name}
+                  loading="lazy"
+                  className="aspect-[5/7] w-full object-cover"
+                />
+              </div>
+              <span
+                className="truncate px-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300"
+                title={token.name}
+              >
+                {token.name}
+                {token.copies > 1 ? ` (${copy + 1}/${token.copies})` : ''}
+              </span>
+            </button>
+          )),
+        )}
+      </div>
+    </Panel>
+  );
+}
+
 function MaybeboardPanel({
   bench,
   onPlaceIn,

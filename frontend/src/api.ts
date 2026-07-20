@@ -482,6 +482,32 @@ export async function fetchCardPrints(oracleId: string): Promise<CardPrints> {
   return request<CardPrints>(`/cards/${encodeURIComponent(oracleId)}/prints`);
 }
 
+/** One token a deck can create. `scryfall_id` is the base printing (and the key
+ *  the PDF's token overrides use); `copies` is how many the sheet prints. */
+export type Token = {
+  name: string;
+  type_line: string;
+  scryfall_id: string;
+  copies: number;
+  image_uri_normal: string;
+};
+
+/** The tokens a deck can create, live off its current state (like the bench). */
+export async function fetchDeckTokens(req: {
+  commander: string;
+  deck: DeckCardRef[];
+}): Promise<Token[]> {
+  const data = await post<{ tokens: Token[] }>('/tokens', req);
+  return data.tokens;
+}
+
+/** The art options for a token, given one of its printing ids. */
+export async function fetchTokenPrints(scryfallId: string): Promise<CardPrints> {
+  return request<CardPrints>(
+    `/tokens/${encodeURIComponent(scryfallId)}/prints`,
+  );
+}
+
 /** Full-art printings a player may choose for one basic land. Only full-art
  *  (the house look), defaulting to Theros — or the TDM "dragon eye" printing
  *  when `theme` is 'dragon' (Dragon decks). */
@@ -530,8 +556,11 @@ export async function exportProxyPdf(req: {
   /** Art picker choices: card name -> chosen printing's scryfall_id. The PDF
    *  prints those printings instead of the pool's default art. */
   artOverrides?: Record<string, string>;
+  /** Token art: base token scryfall_id -> the scryfall_id per copy (a token
+   *  printed twice can carry two different arts). */
+  tokenOverrides?: Record<string, string[]>;
 }): Promise<void> {
-  const { includeTokens, artOverrides, ...rest } = req;
+  const { includeTokens, artOverrides, tokenOverrides, ...rest } = req;
   const response = await fetch(`${API_BASE}/export/pdf`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -539,6 +568,7 @@ export async function exportProxyPdf(req: {
       ...rest,
       include_tokens: includeTokens ?? false,
       art_overrides: artOverrides ?? {},
+      token_overrides: tokenOverrides ?? {},
     }),
   });
   if (!response.ok) {

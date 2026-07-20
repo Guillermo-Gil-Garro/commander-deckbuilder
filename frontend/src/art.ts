@@ -17,6 +17,7 @@ import {
   fetchPrintDefaults,
   type BuildResult,
   type CardPrint,
+  type Token,
 } from './api';
 
 const MANUAL_KEY = 'art-overrides-v1';
@@ -179,6 +180,79 @@ export function useArtOverrides(deck: BuildResult | null): {
   const manualIds = useMemo(() => new Set(Object.keys(manual)), [manual]);
 
   return { resolved, setManual, clearManual, manualIds };
+}
+
+// --- token art ---------------------------------------------------------------
+//
+// Tokens are not deck cards: they exist only for the PDF. Their art picks live
+// in their own store, keyed by `${base scryfall_id}#${copy index}` so a token
+// printed twice can carry two different arts. Global like the card picks.
+
+const TOKEN_ART_KEY = 'token-art-v1';
+type TokenArtMap = Record<string, CardPrint>;
+
+export function useTokenArt(): {
+  tokenArt: TokenArtMap;
+  setTokenArt: (scryfallId: string, copy: number, print: CardPrint) => void;
+  clearTokenArt: (scryfallId: string, copy: number) => void;
+} {
+  const [tokenArt, setMap] = useState<TokenArtMap>(
+    () => readStore<TokenArtMap>(TOKEN_ART_KEY) ?? {},
+  );
+  const setTokenArt = useCallback(
+    (scryfallId: string, copy: number, print: CardPrint) => {
+      setMap((current) => {
+        const next = { ...current, [`${scryfallId}#${copy}`]: print };
+        writeStore(TOKEN_ART_KEY, next);
+        return next;
+      });
+    },
+    [],
+  );
+  const clearTokenArt = useCallback((scryfallId: string, copy: number) => {
+    setMap((current) => {
+      const key = `${scryfallId}#${copy}`;
+      if (!(key in current)) return current;
+      const next = { ...current };
+      delete next[key];
+      writeStore(TOKEN_ART_KEY, next);
+      return next;
+    });
+  }, []);
+  return { tokenArt, setTokenArt, clearTokenArt };
+}
+
+/** The PDF's `token_overrides`: base scryfall_id -> the id to print per copy.
+ *  Only tokens with at least one non-default copy are included. */
+export function tokenOverridesForExport(
+  tokens: Token[],
+  tokenArt: TokenArtMap,
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const token of tokens) {
+    const ids: string[] = [];
+    let overridden = false;
+    for (let copy = 0; copy < token.copies; copy++) {
+      const pick = tokenArt[`${token.scryfall_id}#${copy}`];
+      if (pick) {
+        ids.push(pick.scryfall_id);
+        overridden = true;
+      } else {
+        ids.push(token.scryfall_id);
+      }
+    }
+    if (overridden) out[token.scryfall_id] = ids;
+  }
+  return out;
+}
+
+/** The image to show for one token copy: the chosen art, else the base. */
+export function tokenCopyImage(
+  token: Token,
+  copy: number,
+  tokenArt: TokenArtMap,
+): string {
+  return tokenArt[`${token.scryfall_id}#${copy}`]?.image_uri_normal ?? token.image_uri_normal;
 }
 
 /** A BuildResult whose card images follow `resolved`. Same object when nothing

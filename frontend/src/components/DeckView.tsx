@@ -455,6 +455,7 @@ export function DeckView({
   onAudit,
   liveColors = null,
   colorBaseline = null,
+  tokenOverrides,
 }: {
   result: BuildResult;
   showExport?: boolean;
@@ -474,6 +475,8 @@ export function DeckView({
   liveColors?: Record<string, ColorSourceRow> | null;
   // The unswapped-deck baseline the export check compares live sources against.
   colorBaseline?: Record<string, ColorSourceRow> | null;
+  // Token art for the PDF: base token scryfall_id -> the id per copy.
+  tokenOverrides?: Record<string, string[]>;
 }) {
   const [sort, setSort] = useState<SortAxis>('type');
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -515,6 +518,7 @@ export function DeckView({
         includeTokens: true,
         // What you see is what you print: the art picker's choices.
         artOverrides: pdfArtOverrides,
+        tokenOverrides,
       });
     } catch (error: unknown) {
       setPdfError(error instanceof Error ? error.message : 'Error desconocido');

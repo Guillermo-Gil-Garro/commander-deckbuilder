@@ -11,6 +11,7 @@ import { Button } from './ui';
 import {
   fetchBasicFullart,
   fetchCardPrints,
+  fetchTokenPrints,
   type CardPrint,
   type CardPrints,
 } from '../api';
@@ -33,6 +34,7 @@ export function ArtPicker({
   activeScryfallId,
   hasManual,
   basic = false,
+  token = false,
   onPick,
   onReset,
   onClose,
@@ -46,6 +48,9 @@ export function ArtPicker({
   /** A basic land: the gallery is full-art only (a different endpoint) and not
    *  split by language (the art is what matters, not the printed name). */
   basic?: boolean;
+  /** A token: its arts are fetched by `oracleId` used as the base printing id,
+   *  shown as one gallery. */
+  token?: boolean;
   onPick: (print: CardPrint) => void;
   onReset: () => void;
   onClose: () => void;
@@ -55,7 +60,11 @@ export function ArtPicker({
 
   useEffect(() => {
     let active = true;
-    const load = basic ? fetchBasicFullart(cardName) : fetchCardPrints(oracleId);
+    const load = token
+      ? fetchTokenPrints(oracleId)
+      : basic
+        ? fetchBasicFullart(cardName)
+        : fetchCardPrints(oracleId);
     load
       .then((prints) => {
         if (active) setData(prints);
@@ -68,7 +77,7 @@ export function ArtPicker({
     return () => {
       active = false;
     };
-  }, [oracleId, cardName, basic]);
+  }, [oracleId, cardName, basic, token]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -84,8 +93,9 @@ export function ArtPicker({
   // default), then English; each tier high-res before soft, newest first.
   const sections = useMemo(() => {
     if (!data) return [];
-    if (basic) {
-      return [{ key: 'all', label: 'Full-art', prints: byResolution(data.prints) }];
+    if (basic || token) {
+      const label = basic ? 'Full-art' : 'Ediciones';
+      return [{ key: 'all', label, prints: byResolution(data.prints) }];
     }
     const spanish = byResolution(data.prints.filter((p) => p.lang === 'es'));
     const english = byResolution(data.prints.filter((p) => p.lang !== 'es'));
@@ -93,7 +103,7 @@ export function ArtPicker({
       { key: 'es', label: 'Español', prints: spanish },
       { key: 'en', label: 'Inglés', prints: english },
     ].filter((section) => section.prints.length > 0);
-  }, [data, basic]);
+  }, [data, basic, token]);
 
   return (
     <div
@@ -161,7 +171,8 @@ export function ArtPicker({
                   // For a basic with no manual pick, mark the Theros default as
                   // in use so the current print is always visible.
                   const effectiveActive =
-                    activeScryfallId ?? (basic ? data.default_scryfall_id : null);
+                    activeScryfallId ??
+                    (basic || token ? data.default_scryfall_id : null);
                   const active = print.scryfall_id === effectiveActive;
                   return (
                     <button
