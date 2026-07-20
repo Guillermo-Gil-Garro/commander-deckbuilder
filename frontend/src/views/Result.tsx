@@ -136,6 +136,7 @@ export function Result({
   commander,
   req,
   onBack,
+  onDeckChange,
 }: {
   result: BuildResult;
   commander: CommanderListItem | null;
@@ -143,6 +144,9 @@ export function Result({
   // the maybeboard. Null keeps the view read-only.
   req: BuildRequest | null;
   onBack: () => void;
+  // Called with the live deck whenever it changes, so the session can be
+  // persisted (swaps survive a reload). Optional: read-only views omit it.
+  onDeckChange?: (deck: BuildResult) => void;
 }) {
   const isInfeasible =
     result.status === 'INFEASIBLE' || result.infeasible_reason !== null;
@@ -157,6 +161,12 @@ export function Result({
   useEffect(() => {
     reset(result);
   }, [result, reset]);
+
+  // Persist the live deck (with swaps) so a reload restores this composition.
+  // Skips the first render's identity with `result` — only real changes write.
+  useEffect(() => {
+    if (onDeckChange && deck !== result) onDeckChange(deck);
+  }, [deck, result, onDeckChange]);
 
   // Swaps are offered only for a real, feasible deck with a known build request.
   const swapsEnabled = !isInfeasible && req !== null;

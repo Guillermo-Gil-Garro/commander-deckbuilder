@@ -14,19 +14,51 @@ import {
 
 type Step = 'setup' | 'result';
 
+// The last built deck WITH its swaps, so a reload lands back on the same
+// composition instead of an empty setup (Guille 2026-07-20). The whole
+// BuildResult is stored (not just names) so restore is instant and exact; art
+// picks persist separately in `art.ts`.
+const SESSION_KEY = 'deck-session-v1';
+type Session = {
+  req: BuildRequest;
+  commander: CommanderListItem | null;
+  deck: BuildResult;
+};
+
+function readSession(): Session | null {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    return raw ? (JSON.parse(raw) as Session) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSession(session: Session | null): void {
+  try {
+    if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    else localStorage.removeItem(SESSION_KEY);
+  } catch {
+    // Quota/blocked storage: the session just will not survive a reload.
+  }
+}
+
 function App() {
+  const restored = useMemo(() => readSession(), []);
   const [commanders, setCommanders] = useState<CommanderListItem[]>([]);
   const [commandersError, setCommandersError] = useState<string | null>(null);
   const [loadingCommanders, setLoadingCommanders] = useState(true);
 
-  const [step, setStep] = useState<Step>('setup');
+  const [step, setStep] = useState<Step>(restored ? 'result' : 'setup');
   const [building, setBuilding] = useState(false);
   const [buildError, setBuildError] = useState<string | null>(null);
   const [builtCommander, setBuiltCommander] = useState<CommanderListItem | null>(
-    null,
+    restored?.commander ?? null,
   );
-  const [result, setResult] = useState<BuildResult | null>(null);
-  const [buildReq, setBuildReq] = useState<BuildRequest | null>(null);
+  const [result, setResult] = useState<BuildResult | null>(restored?.deck ?? null);
+  const [buildReq, setBuildReq] = useState<BuildRequest | null>(
+    restored?.req ?? null,
+  );
   const [banlistOpen, setBanlistOpen] = useState(false);
 
   // Dark theme is the only theme: no toggle, no persistence. Force it once.
@@ -75,6 +107,7 @@ function App() {
       setResult(built);
       setBuildReq(req);
       setStep('result');
+      writeSession({ req, commander, deck: built });
     } catch (error: unknown) {
       setBuildError(
         error instanceof Error ? error.message : 'Error desconocido',
@@ -115,6 +148,10 @@ function App() {
             commander={builtCommander}
             req={buildReq}
             onBack={() => setStep('setup')}
+            onDeckChange={(deck) => {
+              // Persist swaps so a reload keeps the current composition.
+              if (buildReq) writeSession({ req: buildReq, commander: builtCommander, deck });
+            }}
           />
         ) : null}
       </div>
