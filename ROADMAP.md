@@ -143,11 +143,71 @@ El sistema ya no es un snapshot congelado: los datos se refrescan solos.
   cachear la data en GitHub (crecería el LFS) y regenerar solo en el cron (un push de
   código revertiría el refresco).
 
+## Fase 8 — Motor de etiquetado sostenible (LLM/ML) 🔄 (plan 2026-07-20)
+
+**Problema.** El etiquetado es hoy offline y manual: `data/tags/llm_tags.jsonl` tiene
+5.283 cartas (rúbrica v3, 8 categorías) sobre un pool de 31.552; se generó con Opus a mano
+por lotes (`make_batches.py`) y no hay ninguna llamada a API de LLM en el código. El refresco
+semanal (Fase 7) trae cartas de sets nuevos que **nadie etiqueta** → `tagger_from_store`
+devuelve set vacío → el selector las mete en `synergy` → **no cuentan para su suelo de
+categoría y el CP-SAT construye mazos plausibles pero mal, en silencio.** Es el daño a cerrar.
+
+**Alcance ahora: solo etiquetado.** La auditoría de mazo con feedback de juego real es una
+fase futura distinta que arranca cuando haya registro de partidas; hoy no hay datos que darle.
+No mezclar (decisión de Guille 2026-07-20).
+
+**Decisiones (2026-07-20):**
+1. **Dataset dorado = superficie EDHREC ampliada, no el pool crudo.** Etiquetar cartas que
+   EDHREC nunca recomienda es tirar tokens: su tag jamás se consulta. Opus etiqueta la unión
+   de recomendaciones sobre una lista de comandantes ampliada (los 55 actuales + los que el
+   grupo juega + top EDHREC). **Checkpoint gratis:** `merge_batch` es idempotente y
+   `make_batches` resta lo ya etiquetado → una sesión sin tokens se reanuda sola.
+2. **Motor de futuro = modelo ML propio, no "LLM gratis".** El requisito de Guille es *no
+   depender de un proveedor de LLM*. Un LLM gratuito **sigue siendo esa dependencia**, y la
+   más frágil (rate limits, tiers que desaparecen), y peor en las categorías de juicio. Un
+   modelo entrenado es **un fichero propio**: cero API, corre en CI/Space con sklearn/onnx.
+   Es la única opción que satisface de verdad la restricción.
+3. **El ML extiende al pool COMPLETO** (inferencia casi gratis). Justificación de Guille,
+   aceptada: una carta nueva puede combar con una jamás jugada en EDHREC y conviene tenerla
+   etiquetada. Reparto: Opus → superficie dorada (caro, alto valor); ML → pool entero
+   (barato, completitud).
+4. **Entrenar con TODO el dorado; "sesgar" en pérdida y umbrales, no en los datos.**
+   Descartar ejemplos difíciles = el modelo nunca aprende la frontera. En su lugar: class
+   weighting / resampling de positivos raros, **umbral por categoría** (no 0.5 global) y
+   **abstención** donde el holdout dé precisión baja (probablemente `wincons`/`synergy`:
+   dispara solo con alta confianza y marca el resto). **Sin peso por fuente** (Guille
+   2026-07-20): `human` y `llm` cuentan igual; holdout = split estratificado aleatorio. La
+   decisión final del training set se toma **viendo el eval real**.
+5. **Puerta de calidad: auto-merge + gate de confianza + audit regex.** Predicción de alta
+   confianza → auto-merge; baja confianza → cola de revisión. El regex tagger sigue como
+   cross-check independiente. Auditoría final del etiquetado ML con Opus.
+6. **Evidencia que sostiene el plan:** `audit_queue.jsonl` = 1.521 discrepancias / 5.283
+   (~29%) entre regex y Opus → el regex **solo no vale**, y hay un patrón aprendible que el
+   ML puede capturar sobre el regex.
+
+**Secuencia:**
+1. ✅ Superficie featured (61 comandantes, 5.171 cartas) **backfilleada con Opus** (2026-07-21):
+   store 5.283 → 5.527, `to label: 0`. No se amplía a más comandantes por ahora: el grupo no
+   juega otros (decisión de Guille 2026-07-21). Validador oid+nombre contra el pool obligatorio
+   **antes** de cada merge (un ~1% de typos a mano contamina el dataset si no se filtra).
+2. 🔄 Eval holdout (15%, estratificado) → precision/recall por categoría → decidir con criterio
+   qué y cómo se entrena. Baseline a batir: el regex tagger.
+3. ⬜ Entrenar el modelo (offline, sin API).
+4. ⬜ ML etiqueta el pool completo, con gate de confianza.
+5. ⬜ Auditoría del etiquetado ML con Opus.
+
+**Flujo humano-en-el-bucle para comandantes nuevos** (Guille 2026-07-21): cuando se añada un
+comandante a `featured_commanders.yaml`, Guille abre una sesión de Opus para (a) modelarlo
+(arquetipo/diales/overrides) y (b) **revisar el etiquetado de sus cartas específicas** — la
+superficie EDHREC de ese comandante que aún caiga a `synergy`. Es el mantenimiento del dataset
+dorado: Opus etiqueta lo nuevo de alto valor a mano; el ML (cuando exista) cubre el resto del
+pool. Pasos: añadir el comandante → `make_batches.py` (resta lo ya etiquetado) → etiquetar el
+lote → validar → `merge_batch` → auditoría regex.
+
 ## Pendiente (próximas sesiones)
-- **Arte de tokens de Magic** (features 3 y 4, "te coronas"): elegir el arte de los
-  tokens que el mazo genera para el PDF (mainboard + maybeboard), y arte distinto por
-  copia cuando se imprimen dos. Requiere: guardar el `oracle_id` del token en el pipeline
-  (hoy solo el id de impresión), exponer los tokens en la respuesta/UI, picker y override
-  en el PDF. Aparcado a propósito.
-- **Capa 3 — auditoría/tagging con LLM:** brief a escribir con el feedback real de partidas.
-- **Flujo de despliegue con token más limpio** (revisar cuando Guille quiera).
+- ✅ **Arte de tokens de Magic** (features 3 y 4): hecho y desplegado (picker de tokens
+  mainboard+maybeboard, arte por copia, override en el PDF; verificado en Krenko/Ur-Dragon).
+  Tokens ahora se muestran **antes** del maybeboard en Result.
+- **Capa 3 — motor de etiquetado LLM/ML:** planificado en **Fase 8** (arriba). La auditoría
+  de mazo con feedback de partidas queda para cuando haya datos de juego.
+- ~~Flujo de despliegue con token más limpio~~ **descartado** (Guille 2026-07-20: "olvídalo").

@@ -43,10 +43,12 @@ BATCH_FIELDS = ("oracle_id", "name", "mana_cost", "type_line", "oracle_text")
 
 def load_featured_names() -> list[str]:
     raw = yaml.safe_load(FEATURED_PATH.read_text(encoding="utf-8"))
-    names = raw["featured"]
-    if not isinstance(names, list) or not names:
+    entries = raw["featured"]
+    if not isinstance(entries, list) or not entries:
         raise SystemExit(f"no featured commanders in {FEATURED_PATH}")
-    return names
+    # Entries are {name, description} mappings (rules.featured schema); older
+    # revisions of this file were plain strings.
+    return [e["name"] if isinstance(e, dict) else e for e in entries]
 
 
 def main() -> None:
