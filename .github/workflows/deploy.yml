@@ -1,12 +1,15 @@
 name: Deploy to HF Space
 
 # GitHub is the source of truth; this deploys it to the Hugging Face Space.
-#  - on push to main: ship the code as-is.
-#  - weekly (and on manual dispatch): regenerate the data first (new sets,
-#    fresh EDHREC ranking, re-precached featured pages), then ship — so the
-#    Space picks up new cards and drifting inclusion %s without anyone running
-#    a command. New cards arrive untagged (they fall to `synergy`) until the
-#    LLM tagging phase; that is the accepted trade-off for now.
+# Every run regenerates the data (card pool, EDHREC ranking, featured precache)
+# and then ships, so the Space always gets fresh data — new sets and drifting
+# inclusion %s — without anyone running a command, and a code push never reverts
+# a weekly refresh. The regenerated pool is force-added for the HF push only,
+# never committed back to GitHub, so GitHub's LFS never grows. New cards arrive
+# untagged (they fall to `synergy`) until the LLM tagging phase; accepted.
+#
+# Triggers: push to main (deploy code), weekly cron (scheduled refresh), and
+# manual dispatch. A run takes a few minutes (it downloads the Scryfall bulk).
 on:
   push:
     branches: [main]
@@ -33,16 +36,13 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
-        if: github.event_name != 'push'
         with:
           python-version: '3.11'
 
       - name: Install the backend (for the data pipeline)
-        if: github.event_name != 'push'
         run: pip install -e ./backend
 
       - name: Regenerate data (pool, ranking, featured precache)
-        if: github.event_name != 'push'
         run: |
           set -e
           # New Commander-legal cards from any set released since the last run.
@@ -57,8 +57,8 @@ jobs:
           git config user.email "deckbuilder-bot@users.noreply.github.com"
           git add -f data/processed/cards.jsonl data/edhrec_ranking.json \
                      data/cache/edhrec/*--optimized.json
-          git commit -m "chore(data): weekly refresh (pool, ranking, precache)" \
-            || echo "No data changes this week."
+          git commit -m "chore(data): refresh (pool, ranking, precache)" \
+            || echo "No data changes."
 
       - name: Push to the Hugging Face Space
         env:
