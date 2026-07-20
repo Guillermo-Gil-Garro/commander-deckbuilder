@@ -180,6 +180,58 @@ def test_fetch_commander_downloads_and_caches(
     assert len(calls) == 1
 
 
+def test_stale_cache_is_refetched(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A cache older than the TTL refreshes on the next fetch (Guille 2026-07-20)."""
+    import os
+    import time
+    import pipeline.edhrec as edhrec
+
+    monkeypatch.setattr(edhrec, "CACHE_DIR", tmp_path)
+    cache_file = tmp_path / "atraxa-praetors-voice.json"
+    cache_file.write_bytes(FIXTURE.read_bytes())
+    old = time.time() - (edhrec._CACHE_MAX_AGE_S + 100)
+    os.utime(cache_file, (old, old))
+
+    calls: list[str] = []
+
+    class FakeResponse:
+        content = FIXTURE.read_bytes()
+
+        def raise_for_status(self) -> None:
+            return None
+
+    monkeypatch.setattr(
+        edhrec.httpx, "get", lambda url, **kw: (calls.append(url), FakeResponse())[1]
+    )
+    fetch_commander("Atraxa, Praetors' Voice")
+    assert len(calls) == 1  # refetched because stale, not served from cache
+
+
+def test_stale_refetch_failure_serves_stale_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A flaky EDHREC must never break a build over freshness: a failed refresh
+    keeps serving the stale page."""
+    import os
+    import time
+    import pipeline.edhrec as edhrec
+
+    monkeypatch.setattr(edhrec, "CACHE_DIR", tmp_path)
+    cache_file = tmp_path / "atraxa-praetors-voice.json"
+    cache_file.write_bytes(FIXTURE.read_bytes())
+    old = time.time() - (edhrec._CACHE_MAX_AGE_S + 100)
+    os.utime(cache_file, (old, old))
+
+    def _boom(url: str, path: object) -> None:
+        raise edhrec.EdhrecError("EDHREC down")
+
+    monkeypatch.setattr(edhrec, "_download_page", _boom)
+    data = fetch_commander("Atraxa, Praetors' Voice")  # must not raise
+    assert len(data.recommendations) == 65
+
+
 @pytest.mark.parametrize("status_code", [403, 404])
 def test_fetch_commander_missing_page_raises_not_found(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, status_code: int

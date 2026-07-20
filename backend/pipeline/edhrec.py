@@ -2,7 +2,9 @@
 
 Fetches the public page JSON from ``https://json.edhrec.com/pages/commanders/
 <slug>.json`` and caches the raw response under ``data/cache/edhrec/``. The
-cache never expires by time; parsing always starts from the cached raw file.
+cache refreshes once a page is older than a TTL (``_CACHE_MAX_AGE_S``, one week
+by default) so inclusion %s drift back into sync; a failed refresh keeps serving
+the stale page. Parsing always starts from the cached raw file.
 
 Bracket-filtered subpages (e.g. ``optimized`` = Bracket 4) live at
 ``.../commanders/<slug>/<variant>.json`` and share the exact cardlist
@@ -19,7 +21,9 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
+import time
 import unicodedata
 from pathlib import Path
 
@@ -29,6 +33,22 @@ from pydantic import BaseModel
 from pipeline.scryfall import REPO_ROOT
 
 logger = logging.getLogger(__name__)
+
+# Refetch a cached EDHREC page once it is older than this, so inclusion %s and
+# new-commander recommendations drift back into sync on their own — no manual
+# refresh (Guille 2026-07-20). Default one week; ``DECKBUILDER_EDHREC_TTL_DAYS=0``
+# disables expiry. A failed refetch falls back to the stale cache (see
+# ``fetch_commander``), so a flaky EDHREC never breaks a build.
+_CACHE_MAX_AGE_S = float(os.environ.get("DECKBUILDER_EDHREC_TTL_DAYS", "7")) * 86400.0
+
+
+def _cache_is_fresh(path: Path) -> bool:
+    if _CACHE_MAX_AGE_S <= 0:
+        return True
+    try:
+        return (time.time() - path.stat().st_mtime) < _CACHE_MAX_AGE_S
+    except OSError:
+        return False
 
 PAGE_URL_TEMPLATE = "https://json.edhrec.com/pages/commanders/{slug}.json"
 VARIANT_PAGE_URL_TEMPLATE = (
@@ -197,8 +217,21 @@ def fetch_commander(name: str, variant: str | None = None) -> EdhrecCommanderDat
     """
     slug = slugify_commander(name)
     cache_path = _cache_path(slug, variant)
-    if cache_path.exists():
+    if cache_path.exists() and _cache_is_fresh(cache_path):
         logger.info("Using cached EDHREC page %s", cache_path)
+    elif cache_path.exists():
+        # Stale by TTL: refresh, but keep serving the old page if the refresh
+        # fails — a flaky EDHREC must never break a build over freshness.
+        try:
+            _download_page(_page_url(slug, variant), cache_path)
+            logger.info("Refreshed stale EDHREC page %s", cache_path)
+        except EdhrecNotFound:
+            raise
+        except EdhrecError as exc:
+            logger.warning(
+                "EDHREC refresh failed for %s (%s); serving stale cache",
+                slug, exc,
+            )
     else:
         _download_page(_page_url(slug, variant), cache_path)
 
