@@ -87,6 +87,9 @@ from app.schemas import (
     SwapRequest,
     SwapValidateRequest,
     SwapValidateResponse,
+    TokenListRequest,
+    TokenListResponse,
+    TokenView,
     WhyNotResponse,
     band_view,
     bench_card_view,
@@ -95,7 +98,12 @@ from app.schemas import (
 )
 from app.state import AppState, CommanderRow
 from pipeline.card_images import fetch_card_image
-from pipeline.prints import PrintsError, fetch_fullart_basics, fetch_prints
+from pipeline.prints import (
+    PrintsError,
+    fetch_fullart_basics,
+    fetch_prints,
+    fetch_token_prints,
+)
 from pipeline.edhrec import (
     EdhrecCommanderData,
     EdhrecError,
@@ -1837,6 +1845,32 @@ def fullart_basics(
     )
 
 
+def token_prints(state: AppState, scryfall_id: str) -> CardPrintsResponse:
+    """The art options for a token, given one of its printing ids.
+
+    Tokens are not in the pool (only a printing id is stored on the maker), so
+    the gallery is fetched by the token's oracle_id. The default is the base
+    printing the request came in with. Blocking (Scryfall on a cold cache).
+    """
+    try:
+        rows = [CardPrintView(**row) for row in fetch_token_prints(scryfall_id)]
+    except PrintsError as exc:
+        raise PrintsUnavailable(
+            "No se pudieron consultar las ediciones del token en Scryfall; "
+            "inténtalo de nuevo en un momento"
+        ) from exc
+    default = (
+        scryfall_id
+        if any(r.scryfall_id == scryfall_id for r in rows)
+        else (rows[0].scryfall_id if rows else None)
+    )
+    # `oracle_id`/`name` are unused by the picker (the client supplies the token
+    # name); the id given is echoed so the response is self-describing.
+    return CardPrintsResponse(
+        oracle_id=scryfall_id, name="", prints=rows, default_scryfall_id=default
+    )
+
+
 def print_defaults(
     state: AppState, request: PrintDefaultsRequest
 ) -> PrintDefaultsResponse:
@@ -1971,18 +2005,24 @@ def build_proxy_pdf(
     # with a warning rather than sinking the whole sheet.
     if request.include_tokens:
         for token in _deck_tokens_to_print(producers):
-            url = TOKEN_IMAGE_URL.format(scryfall_id=token.scryfall_id)
-            if url not in fetched:
-                try:
-                    fetched[url] = fetch_image(url)
-                except httpx.HTTPError as exc:
-                    logger.warning(
-                        "No token image for %r (%s); leaving it off the sheet",
-                        token.name,
-                        exc,
-                    )
-                    continue
-            faces.extend([fetched[url]] * token.copies)
+            # Per-copy art: token_overrides maps the base scryfall_id to the id
+            # to print for each copy (so two copies can differ). A copy with no
+            # override, or an empty one, prints the base printing.
+            chosen = request.token_overrides.get(token.scryfall_id, [])
+            for copy in range(token.copies):
+                art_id = chosen[copy] if copy < len(chosen) and chosen[copy] else token.scryfall_id
+                url = TOKEN_IMAGE_URL.format(scryfall_id=art_id)
+                if url not in fetched:
+                    try:
+                        fetched[url] = fetch_image(url)
+                    except httpx.HTTPError as exc:
+                        logger.warning(
+                            "No token image for %r (%s); leaving it off the sheet",
+                            token.name,
+                            exc,
+                        )
+                        continue
+                faces.append(fetched[url])
 
     return ProxyPdf(
         filename=f"{slugify_commander(commander['name'])}_proxies.pdf",
@@ -2060,6 +2100,7 @@ _MULTIPLE_TOKEN_SIGNALS = (
 class _TokenToPrint:
     name: str
     scryfall_id: str
+    type_line: str
     copies: int
 
 
@@ -2111,12 +2152,40 @@ def _deck_tokens_to_print(
         _TokenToPrint(
             name=seen[key]["name"],
             scryfall_id=seen[key]["scryfall_id"],
+            type_line=seen[key]["type_line"],
             copies=_token_copies(seen[key]["type_line"], seen[key]["texts"]),
         )
         for key in order
     ]
     tokens.sort(key=lambda t: (-t.copies, t.name))
     return tokens
+
+
+def tokens_for(state: AppState, request: TokenListRequest) -> TokenListResponse:
+    """The tokens a deck can create in its current state, for the art picker.
+
+    Same producers as the PDF (the commander + the deck's cards), so the list
+    matches exactly what ``include_tokens`` would print. Live, like the
+    maybeboard: recomputed from the deck sent, so a swap that drops a token
+    maker drops its token on the next call. No network — the token data is baked
+    into the pool.
+    """
+    producers: list[Mapping[str, Any]] = [_pool_card(state, request.commander)]
+    for ref in request.deck:
+        card = state.pool.resolve(ref.name)
+        if card is not None:
+            producers.append(card)
+    tokens = [
+        TokenView(
+            name=token.name,
+            type_line=token.type_line,
+            scryfall_id=token.scryfall_id,
+            copies=token.copies,
+            image_uri_normal=TOKEN_IMAGE_URL.format(scryfall_id=token.scryfall_id),
+        )
+        for token in _deck_tokens_to_print(producers)
+    ]
+    return TokenListResponse(tokens=tokens)
 
 
 def _render_proxy_pdf(faces: Sequence[bytes]) -> bytes:

@@ -360,6 +360,61 @@ def test_face_urls_override_beats_theros_basics(real_app_state: AppState) -> Non
     assert "api.scryfall.com/cards/fancy-mountain" in urls[0]
 
 
+# --- tokens -------------------------------------------------------------------
+
+
+def test_deck_tokens_lists_maker_tokens(client: TestClient) -> None:
+    """The token list carries the tokens the commander makes (Krenko -> Goblins)."""
+    body = client.post("/tokens", json={"commander": COMMANDER, "deck": []}).json()
+    assert any("Goblin" in t["name"] for t in body["tokens"])
+
+
+def test_token_prints_default_is_the_given_id(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    rows = [_row("other-art"), _row("base-id")]
+    monkeypatch.setattr(service, "fetch_token_prints", lambda sid: rows)
+    body = client.get("/tokens/base-id/prints").json()
+    assert {p["scryfall_id"] for p in body["prints"]} == {"other-art", "base-id"}
+    assert body["default_scryfall_id"] == "base-id"
+
+
+def test_pdf_token_overrides_print_per_copy(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A token printed twice can carry two different arts (Guille 2026-07-20)."""
+    built = client.post("/build", json={"commander": COMMANDER})
+    if built.status_code != 200:
+        pytest.skip(f"Krenko build unavailable offline ({built.status_code})")
+    refs = [
+        {"name": c["name"], "count": c["count"]}
+        for c in built.json()["nonbasic_cards"]
+    ]
+    tokens = client.post(
+        "/tokens", json={"commander": COMMANDER, "deck": refs}
+    ).json()["tokens"]
+    two_copy = next((t for t in tokens if t["copies"] == 2), None)
+    if two_copy is None:
+        pytest.skip("no two-copy token in this build")
+
+    calls: list[str] = []
+    monkeypatch.setattr(
+        service, "fetch_card_image", lambda u: (calls.append(u), _ONE_BY_ONE_JPEG)[1]
+    )
+    response = client.post(
+        "/export/pdf",
+        json={
+            "commander": COMMANDER,
+            "cards": refs,  # same producers, so the token still prints twice
+            "include_tokens": True,
+            "token_overrides": {two_copy["scryfall_id"]: ["art-a", "art-b"]},
+        },
+    )
+    assert response.status_code == 200, response.text
+    assert any("cards/art-a?format=image" in u for u in calls)
+    assert any("cards/art-b?format=image" in u for u in calls)
+
+
 def test_pdf_export_fetches_the_override_url(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

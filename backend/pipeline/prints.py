@@ -253,6 +253,47 @@ def fetch_prints(oracle_id: str) -> list[dict[str, Any]]:
         return prints
 
 
+def _token_oracle_id(scryfall_id: str) -> str | None:
+    """The oracle_id of a token, from one of its printing ids. Tokens are not in
+    the pool (only a printing id is stored), so its arts are found by oracle_id."""
+    try:
+        response = httpx.get(
+            f"https://api.scryfall.com/cards/{scryfall_id}",
+            headers=HEADERS,
+            timeout=_TIMEOUT,
+        )
+        response.raise_for_status()
+        return response.json().get("oracle_id")
+    except (httpx.HTTPError, json.JSONDecodeError) as exc:
+        raise PrintsError(f"Could not resolve token {scryfall_id}: {exc}") from exc
+
+
+def fetch_token_prints(scryfall_id: str) -> list[dict[str, Any]]:
+    """Every distinct-art printing of a token, given one of its printing ids.
+
+    Resolves the token's oracle_id (one extra request on a cold cache) and
+    gathers its printings, one per illustration. Cached on disk by the id given.
+    """
+    cache_path = CACHE_DIR / f"token-{scryfall_id}.json"
+    cached = _read_cache(cache_path)
+    if cached is not None:
+        return cached
+
+    key = f"token:{scryfall_id}"
+    with _lock_for(key):
+        cached = _read_cache(cache_path)
+        if cached is not None:
+            return cached
+        oracle_id = _token_oracle_id(scryfall_id)
+        rows = (
+            _paged_search(f"oracleid:{oracle_id}", key, unique="art")
+            if oracle_id
+            else []
+        )
+        _write_cache(cache_path, f"token-{scryfall_id}", rows)
+        return rows
+
+
 def fetch_fullart_basics(name: str) -> list[dict[str, Any]]:
     """Full-art printings of a basic land (``Plains``…), one per illustration.
 

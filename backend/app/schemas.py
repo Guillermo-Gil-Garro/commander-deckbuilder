@@ -999,6 +999,44 @@ class ProxyPdfRequest(BaseModel):
     # with the pool's default art; basics keep the Theros house style unless
     # explicitly overridden.
     art_overrides: dict[str, str] = Field(default_factory=dict)
+    # Token art picker (2026-07-20): the base token scryfall_id (as returned by
+    # POST /tokens) -> the scryfall_id to print for each copy, in order. A token
+    # printed twice can carry two different arts. Copies without an entry (or an
+    # empty string) fall back to the base printing.
+    token_overrides: dict[str, list[str]] = Field(default_factory=dict)
+
+
+class TokenView(BaseModel):
+    """One token a deck can create, for the art picker and the PDF.
+
+    ``scryfall_id`` is the base printing (the pool stored it from the maker's
+    Scryfall ``all_parts``); it is the key the PDF's ``token_overrides`` uses.
+    ``copies`` is how many the sheet prints (2 for a creature token the deck
+    leans on, else 1), and each copy can be given its own art.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    name: str
+    type_line: str
+    scryfall_id: str
+    copies: int
+    image_uri_normal: str
+
+
+class TokenListRequest(BaseModel):
+    """The tokens a deck can create, for its current state (like the maybeboard)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    commander: str = Field(min_length=1)
+    deck: list[DeckCardRef] = Field(default_factory=list)
+
+
+class TokenListResponse(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    tokens: list[TokenView]
 
 
 class CardPrintView(BaseModel):

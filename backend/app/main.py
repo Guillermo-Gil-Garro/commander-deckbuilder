@@ -63,6 +63,8 @@ from app.schemas import (
     SwapReplacementsResponse,
     SwapValidateRequest,
     SwapValidateResponse,
+    TokenListRequest,
+    TokenListResponse,
     WhyNotResponse,
     commander_list_item,
     commander_view,
@@ -780,6 +782,30 @@ async def card_prints(request: Request, oracle_id: str) -> CardPrintsResponse:
     """
     state = _state(request)
     return await run_in_threadpool(service.card_prints, state, oracle_id)
+
+
+@app.post("/tokens")
+def deck_tokens(request: Request, payload: TokenListRequest) -> TokenListResponse:
+    """The tokens a deck can create in its current state (art picker source).
+
+    Same tokens ``include_tokens`` would print, live off the deck sent — no
+    network (the token data is baked into the pool). 503 if the pool never
+    loaded, 422 for an unknown commander or card.
+    """
+    state = _state(request)
+    return service.tokens_for(state, payload)
+
+
+@app.get("/tokens/{scryfall_id}/prints")
+async def token_prints(request: Request, scryfall_id: str) -> CardPrintsResponse:
+    """The art options for a token, one per illustration, given a printing id.
+
+    Tokens are not in the pool, so this resolves the token's oracle_id from
+    Scryfall and gathers its printings. 502 when Scryfall is unreachable, 503 if
+    the pool never loaded.
+    """
+    state = _state(request)
+    return await run_in_threadpool(service.token_prints, state, scryfall_id)
 
 
 @app.get("/cards/basics/{name}/fullart")
