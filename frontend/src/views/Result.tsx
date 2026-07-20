@@ -288,6 +288,7 @@ export function Result({
         <ArtPicker
           oracleId={artCard.oracle_id}
           cardName={artCard.name}
+          basic={artCard.basic}
           activeScryfallId={resolved[artCard.oracle_id]?.scryfall_id ?? null}
           hasManual={manualIds.has(artCard.oracle_id)}
           onPick={(print) => {

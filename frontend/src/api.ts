@@ -482,6 +482,19 @@ export async function fetchCardPrints(oracleId: string): Promise<CardPrints> {
   return request<CardPrints>(`/cards/${encodeURIComponent(oracleId)}/prints`);
 }
 
+/** Full-art printings a player may choose for one basic land. Only full-art
+ *  (the house look), defaulting to Theros — or the TDM "dragon eye" printing
+ *  when `theme` is 'dragon' (Dragon decks). */
+export async function fetchBasicFullart(
+  name: string,
+  theme?: string,
+): Promise<CardPrints> {
+  const q = theme ? `?theme=${encodeURIComponent(theme)}` : '';
+  return request<CardPrints>(
+    `/cards/basics/${encodeURIComponent(name)}/fullart${q}`,
+  );
+}
+
 /** Default (Spanish-first) printing for up to 25 cards. `null` for a card means
  *  "keep the art you already have". Cold cards cost the backend one Scryfall
  *  search each, so the first resolution of a deck takes a few seconds. */

@@ -201,7 +201,7 @@ export function CardTile({
             onToggle={() => setShowBack((value) => !value)}
           />
         )}
-        {onArtSelect && !card.basic && (
+        {onArtSelect && (
           <CardArtButton onOpen={() => onArtSelect(card)} />
         )}
         {card.basic && (

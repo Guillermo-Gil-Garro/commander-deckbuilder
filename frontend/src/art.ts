@@ -11,8 +11,13 @@
 // `withArt` rewrites a BuildResult's image URLs so every consumer (DeckView,
 // hover previews, the swap tiles) shows the chosen art with zero wiring.
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchPrintDefaults, type BuildResult, type CardPrint } from './api';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  fetchBasicFullart,
+  fetchPrintDefaults,
+  type BuildResult,
+  type CardPrint,
+} from './api';
 
 const MANUAL_KEY = 'art-overrides-v1';
 // v2 (2026-07-18): the default policy started admitting low-res Spanish scans,
@@ -63,6 +68,13 @@ export function useArtOverrides(deck: BuildResult | null): {
   const [defaults, setDefaults] = useState<DefaultsMap>(
     () => readStore<DefaultsMap>(DEFAULTS_KEY) ?? {},
   );
+  // Basic-land defaults are NOT global like the others: the default art depends
+  // on the deck's theme (Theros, or the TDM dragon eye for Dragon decks), so
+  // they live in memory keyed by oracle_id and are re-resolved per deck rather
+  // than persisted — otherwise a non-Dragon deck built after a Dragon one would
+  // inherit the dragon basics.
+  const [basicDefaults, setBasicDefaults] = useState<DefaultsMap>({});
+  const resolvedBasicsRef = useRef<Set<string>>(new Set());
 
   // Resolve the Spanish defaults for whatever cards of this deck we have not
   // answered before. Chunked; results apply as each chunk lands, so the deck
@@ -95,6 +107,43 @@ export function useArtOverrides(deck: BuildResult | null): {
     };
   }, [deck]);
 
+  // Resolve each basic land's default (the Theros full-art) once, so the deck
+  // view matches the picker's "En uso" and the PDF instead of showing the
+  // pool's stock basic. Basics use their own full-art endpoint, not the
+  // Spanish-first policy, and are keyed by oracle_id in the same defaults map.
+  useEffect(() => {
+    if (!deck) return;
+    // Dragon decks default their basics to the TDM "dragon eye" full-art; every
+    // other deck to Theros. The commander's type line is the signal.
+    const theme = deck.commander.type_line?.includes('Dragon')
+      ? 'dragon'
+      : 'theros';
+    let active = true;
+    void (async () => {
+      for (const basic of deck.basic_lands) {
+        const key = `${theme}:${basic.name}`;
+        if (resolvedBasicsRef.current.has(key)) continue;
+        try {
+          const data = await fetchBasicFullart(
+            basic.name,
+            theme === 'dragon' ? 'dragon' : undefined,
+          );
+          if (!active) return;
+          const def =
+            data.prints.find((p) => p.scryfall_id === data.default_scryfall_id) ??
+            null;
+          resolvedBasicsRef.current.add(key);
+          setBasicDefaults((current) => ({ ...current, [basic.oracle_id]: def }));
+        } catch {
+          return; // offline / Scryfall down: basics keep their pool art
+        }
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [deck]);
+
   const setManual = useCallback((oracleId: string, print: CardPrint) => {
     setManualMap((current) => {
       const next = { ...current, [oracleId]: print };
@@ -118,11 +167,14 @@ export function useArtOverrides(deck: BuildResult | null): {
     for (const [id, print] of Object.entries(defaults)) {
       if (print) map[id] = print;
     }
+    for (const [id, print] of Object.entries(basicDefaults)) {
+      if (print) map[id] = print;
+    }
     for (const [id, print] of Object.entries(manual)) {
       map[id] = print;
     }
     return map;
-  }, [manual, defaults]);
+  }, [manual, defaults, basicDefaults]);
 
   const manualIds = useMemo(() => new Set(Object.keys(manual)), [manual]);
 
@@ -152,9 +204,15 @@ export function withArt(
     };
   };
   const nonbasics = deck.nonbasic_cards.map(swapImages);
+  const basics = deck.basic_lands.map(swapImages);
   const commander = swapImages(deck.commander);
   if (!touched) return deck;
-  return { ...deck, nonbasic_cards: nonbasics, commander };
+  return {
+    ...deck,
+    nonbasic_cards: nonbasics,
+    basic_lands: basics,
+    commander,
+  };
 }
 
 /** The art cache as a plain read (no hook, no network): Spanish defaults with
@@ -187,5 +245,7 @@ export function artOverridesForExport(
   };
   claim(deck.commander_name, deck.commander.oracle_id);
   for (const card of deck.nonbasic_cards) claim(card.name, card.oracle_id);
+  // Basics too: a chosen full-art overrides the Theros house default in the PDF.
+  for (const card of deck.basic_lands) claim(card.name, card.oracle_id);
   return out;
 }

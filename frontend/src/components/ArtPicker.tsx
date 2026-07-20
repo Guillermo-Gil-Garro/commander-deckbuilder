@@ -8,7 +8,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Loader2, RotateCcw, X } from 'lucide-react';
 import { Button } from './ui';
-import { fetchCardPrints, type CardPrint, type CardPrints } from '../api';
+import {
+  fetchBasicFullart,
+  fetchCardPrints,
+  type CardPrint,
+  type CardPrints,
+} from '../api';
 
 // The label a printing shows under its thumbnail: set and year.
 function printCaption(print: CardPrint): string {
@@ -27,6 +32,7 @@ export function ArtPicker({
   cardName,
   activeScryfallId,
   hasManual,
+  basic = false,
   onPick,
   onReset,
   onClose,
@@ -37,6 +43,9 @@ export function ArtPicker({
    *  null when the card still wears the pool's stock art. */
   activeScryfallId: string | null;
   hasManual: boolean;
+  /** A basic land: the gallery is full-art only (a different endpoint) and not
+   *  split by language (the art is what matters, not the printed name). */
+  basic?: boolean;
   onPick: (print: CardPrint) => void;
   onReset: () => void;
   onClose: () => void;
@@ -46,7 +55,8 @@ export function ArtPicker({
 
   useEffect(() => {
     let active = true;
-    fetchCardPrints(oracleId)
+    const load = basic ? fetchBasicFullart(cardName) : fetchCardPrints(oracleId);
+    load
       .then((prints) => {
         if (active) setData(prints);
       })
@@ -58,7 +68,7 @@ export function ArtPicker({
     return () => {
       active = false;
     };
-  }, [oracleId]);
+  }, [oracleId, cardName, basic]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -70,17 +80,20 @@ export function ArtPicker({
 
   const hasLowres = data !== null && data.prints.some((p) => !p.highres);
 
-  // Spanish first (the house default), then English; each tier sorted high-res
-  // before soft, newest first within a tier.
+  // Basics: one full-art gallery. Other cards: Spanish first (the house
+  // default), then English; each tier high-res before soft, newest first.
   const sections = useMemo(() => {
     if (!data) return [];
+    if (basic) {
+      return [{ key: 'all', label: 'Full-art', prints: byResolution(data.prints) }];
+    }
     const spanish = byResolution(data.prints.filter((p) => p.lang === 'es'));
     const english = byResolution(data.prints.filter((p) => p.lang !== 'es'));
     return [
       { key: 'es', label: 'Español', prints: spanish },
       { key: 'en', label: 'Inglés', prints: english },
     ].filter((section) => section.prints.length > 0);
-  }, [data]);
+  }, [data, basic]);
 
   return (
     <div
@@ -145,7 +158,11 @@ export function ArtPicker({
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {section.prints.map((print) => {
-                  const active = print.scryfall_id === activeScryfallId;
+                  // For a basic with no manual pick, mark the Theros default as
+                  // in use so the current print is always visible.
+                  const effectiveActive =
+                    activeScryfallId ?? (basic ? data.default_scryfall_id : null);
+                  const active = print.scryfall_id === effectiveActive;
                   return (
                     <button
                       key={print.scryfall_id}
