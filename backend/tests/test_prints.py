@@ -112,7 +112,8 @@ def test_cached_prints_are_served_without_network(
     monkeypatch.setattr(prints_module, "CACHE_DIR", tmp_path)
     rows = [_row("cached-id", lang="es")]
     (tmp_path / "some-oracle-id.json").write_text(
-        json.dumps(rows), encoding="utf-8"
+        json.dumps({"schema": prints_module._CACHE_SCHEMA, "rows": rows}),
+        encoding="utf-8",
     )
 
     def boom(*args, **kwargs):  # any network call is a test failure
@@ -120,6 +121,23 @@ def test_cached_prints_are_served_without_network(
 
     monkeypatch.setattr(prints_module.httpx, "get", boom)
     assert prints_module.fetch_prints("some-oracle-id") == rows
+
+
+def test_query_does_not_exclude_digital_printings() -> None:
+    """Digital MTGO/Arena scans (e.g. Lion's Eye Diamond's Vintage Masters) are
+    legitimate proxy art and must stay in the picker (Guille 2026-07-20)."""
+    assert "is:digital" not in prints_module._QUERY_TEMPLATE
+
+
+def test_plain_list_cache_is_treated_as_stale(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A pre-schema cache (a bare list) refetches, so the -is:digital rollout
+    reaches every already-cached card."""
+    monkeypatch.setattr(prints_module, "CACHE_DIR", tmp_path)
+    (tmp_path / "oid.json").write_text(json.dumps([_row("old")]), encoding="utf-8")
+    monkeypatch.setattr(prints_module, "_download_prints", lambda o: [_row("fresh")])
+    assert prints_module.fetch_prints("oid")[0]["scryfall_id"] == "fresh"
 
 
 def test_stale_cache_without_image_status_is_refetched(

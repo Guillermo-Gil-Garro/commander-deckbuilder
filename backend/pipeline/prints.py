@@ -43,14 +43,22 @@ _TIMEOUT = httpx.Timeout(30.0)
 _REQUEST_SLEEP_S = 0.1
 
 # Search endpoint. `include_multilingual` is required for `lang:` filters;
-# `-is:digital` drops Arena/MTGO renders (useless as proxies); `unique=prints`
-# returns every physical printing.
+# `unique=prints` returns every printing. Digital printings (MTGO/Arena) are
+# NOT excluded (Guille 2026-07-20): several carry a distinct high-res art the
+# player legitimately wants for a proxy (e.g. Lion's Eye Diamond's Vintage
+# Masters scan). The truly useless renders are placeholders, and those are
+# already dropped by `image_status` in `_normalize`.
 _SEARCH_URL = "https://api.scryfall.com/cards/search"
-_QUERY_TEMPLATE = "oracleid:{oracle_id} (lang:en or lang:es) -is:digital"
+_QUERY_TEMPLATE = "oracleid:{oracle_id} (lang:en or lang:es)"
 
 # Basics have 500+ printings; anything else fits comfortably. 3 pages
 # (175/page) bounds the pathological cases without truncating real cards.
 _MAX_PAGES = 3
+
+# On-disk cache version. Bump on any change to the search query or row shape so
+# stale files refetch. 3: dropped `-is:digital` (2026-07-20, includes MTGO/Arena
+# high-res arts); 2 was the `image_status` addition; 1 the original.
+_CACHE_SCHEMA = 3
 
 
 class PrintsError(Exception):
@@ -169,19 +177,23 @@ def _download_prints(oracle_id: str) -> list[dict[str, Any]]:
 
 
 def _read_cache(cache_path: Path) -> list[dict[str, Any]] | None:
-    """The cached rows if present and schema-current, else None."""
+    """The cached rows if present and schema-current, else None.
+
+    Cache files are ``{"schema": N, "rows": [...]}``. Bumping ``_CACHE_SCHEMA``
+    invalidates every file after any change to the search query or the row shape
+    (a plain list, or a lower schema, reads as stale and refetches) — the clean
+    way to roll out a query change like dropping the ``-is:digital`` filter.
+    """
     if not cache_path.exists():
         return None
     try:
-        rows = json.loads(cache_path.read_text(encoding="utf-8"))
+        blob = json.loads(cache_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         logger.warning("Corrupt prints cache %s (%s); refetching", cache_path, exc)
         return None
-    # Schema check: rows cached before `image_status` existed may hide
-    # placeholder "scans" the current policies must never pick.
-    if all("image_status" in row for row in rows):
-        return rows
-    logger.info("Prints cache %s predates image_status; refetching", cache_path)
+    if isinstance(blob, dict) and blob.get("schema") == _CACHE_SCHEMA:
+        return blob["rows"]
+    logger.info("Prints cache %s is stale (schema bump); refetching", cache_path)
     return None
 
 
@@ -193,7 +205,7 @@ def _write_cache(cache_path: Path, oracle_id: str, prints: list[dict[str, Any]])
     tmp_path = Path(tmp_name)
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            fh.write(json.dumps(prints, ensure_ascii=False))
+            fh.write(json.dumps({"schema": _CACHE_SCHEMA, "rows": prints}, ensure_ascii=False))
         tmp_path.replace(cache_path)
     except BaseException:
         tmp_path.unlink(missing_ok=True)
