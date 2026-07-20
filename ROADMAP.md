@@ -211,6 +211,16 @@ No mezclar (decisión de Guille 2026-07-20).
      numpy/onnx (sin dependencia de proveedor), bate el listón. `wincons` (y en menor medida
      `synergy`) se quedan bajo el gate de confianza para revisión humana/Opus. sklearn es dep
      **solo-dev** (`backend/pyproject.toml [dev]`), no entra en la imagen de HF.
+   - ✅ **Aumento dirigido de clases raras** (2026-07-21, `surface_candidates.py`): el modelo
+     propone las cartas *sin etiquetar* que más puntúa para wincons/protection (top 100 c/u,
+     captura implícitos que el keyword no ve: Craterhoof, Overrun); Opus las etiqueta con
+     juicio (store 5.527 → 5.727). **Hallazgo:** protection **0.74 → 0.83** (era escasez de
+     datos, resuelta); **wincons plano 0.50 → 0.48** pese a +50% de ejemplos. wincons **no
+     es problema de volumen sino de heterogeneidad intrínseca** (enchantments "you win" +
+     Craterhoof + Phage + cierres de veneno no comparten señal de texto) → un modelo lineal
+     no la aprende con más datos. **Confirma que wincons vive bajo el gate de confianza +
+     revisión Opus, no en auto-merge.** La trampa del infect (60+ criaturas de veneno que el
+     modelo daba como wincons) quedó como `synergy` = negativos-frontera de oro.
 3. ⬜ Entrenar el modelo (offline, sin API).
 4. ⬜ ML etiqueta el pool completo, con gate de confianza.
 5. ⬜ Auditoría del etiquetado ML con Opus.

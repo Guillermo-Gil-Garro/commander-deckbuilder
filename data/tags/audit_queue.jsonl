@@ -2,8 +2,10 @@
 {"oracle_id": "eccc9a54-2b56-4a02-9926-258d5b2e25fb", "name": "Abundance", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "947a2665-2f4d-4193-8768-118f85334549", "name": "Abundant Growth", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "f36d1d8b-8303-44a9-ab56-531931641ea2", "name": "Academy Manufactor", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "6401d0ae-4635-497d-91ef-ce2eabefb893", "name": "Accelerated Evolution", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "fcdfe9d5-2743-4d3e-ab57-bf0f96beaa15", "name": "Aclazotz, Deepest Betrayal // Temple of the Dead", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "981b0e21-e5e6-4a1e-bfde-679d56623f7f", "name": "Ad Nauseam", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "467e22c3-6107-40ff-afc7-5960710c970b", "name": "Adamant Will", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "e91240bc-4a13-4131-9379-5ddac6555f4a", "name": "Adaptive Omnitool", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "12a6cad9-eb42-43bd-9e68-aaf862cd83db", "name": "Adrix and Nev, Twincasters", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f00bc101-8082-4459-b987-f0c4b7a12344", "name": "Advanced Reconstruction", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -29,6 +31,7 @@
 {"oracle_id": "fd949f82-fc10-4e37-8aa9-6c7569fe3c55", "name": "Akroma's Will", "llm_labels": ["wincons", "protection"], "regex_labels": [], "diff": {"only_llm": ["wincons", "protection"], "only_regex": []}}
 {"oracle_id": "97bb1589-2941-4a75-a5f6-916871e51e9e", "name": "Alandra, Sky Dreamer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "5a2dfff5-9dba-42f5-bcca-918c16f23807", "name": "Alchemist's Talent", "llm_labels": ["synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": ["ramp"]}}
+{"oracle_id": "c4229cc8-11e5-4221-b00d-86969701e21b", "name": "Alesha's Legacy", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "f3031397-c2d5-40c6-8eca-88faed00a5ea", "name": "Alex Wilder, Runaway", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e5e8e116-10fe-48b0-b3d8-6edb39bd5f90", "name": "Alibou, Ancient Witness", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a4d751e0-41c1-4e90-853d-512f385acd81", "name": "All That Glitters", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -50,6 +53,7 @@
 {"oracle_id": "02f46271-c90d-4318-9004-74e7bee64a89", "name": "Angel of Destiny", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "f4ce6078-8c7b-4f68-b324-13130c63a983", "name": "Angel of Serenity", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "635fe908-6f58-4c9e-ac55-0775a7c6f278", "name": "Angel of Vitality", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "42aa599f-de2f-411a-8cf3-f5cfb40568b3", "name": "Angelheart Protector", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "60d0c941-39f6-4144-abef-02b0a84d602e", "name": "Angelic Aberration", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "aa95501f-bb59-494a-bcae-b74ca10ad57e", "name": "Angelic Accord", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "05b020fd-21be-495d-ae45-7de3b1224e6d", "name": "Angelic Shield", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -60,6 +64,7 @@
 {"oracle_id": "0c201f79-9eca-48c8-88ba-a20fa6918a07", "name": "Anowon, the Ruin Sage", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "b4d6747c-3516-4e71-be30-af007c6b1dc4", "name": "Apex Devastator", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "d06eedb4-bd5a-4864-9505-a570a745d165", "name": "Apex of Power", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "b9dee727-8ad8-42e0-93c6-5ef91d3f7309", "name": "Aquitect's Defenses", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "d02befcb-3e2c-4cfe-a913-9bb648e5bb2c", "name": "Aquitect's Will", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7c4bbb1b-29c4-4e06-aed0-b361293a585b", "name": "Arabella, Abandoned Doll", "llm_labels": [], "regex_labels": ["board_wipe"], "diff": {"only_llm": [], "only_regex": ["board_wipe"]}}
 {"oracle_id": "4567a528-75f0-4ea6-b927-3a500caf76ac", "name": "Arbor Elf", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -83,6 +88,7 @@
 {"oracle_id": "2c654772-c786-4966-a46e-9556bbf31d7c", "name": "Ark of Hunger", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "3d5b6151-d985-423b-8ade-f00958bbd3f6", "name": "Armed and Armored", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "64de050c-7167-4ebd-8584-f064d8be3302", "name": "Armor of Shadows", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "46752289-01e8-4839-8889-49db1efd2e1a", "name": "Armored Guardian", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "dfc982a2-9ae8-4206-a2d7-4dcfcde02451", "name": "Arterial Alchemy", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6dccf583-1045-4058-86cc-ebbcc8de080e", "name": "Artificer Class", "llm_labels": ["ramp", "synergy"], "regex_labels": [], "diff": {"only_llm": ["ramp", "synergy"], "only_regex": []}}
 {"oracle_id": "be14b10a-7cac-47fc-a954-685091990291", "name": "Artificer's Intuition", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -105,6 +111,7 @@
 {"oracle_id": "9e774188-caa1-4b62-b9cc-547f8e444b7f", "name": "Augur of Autumn", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "bd5eb181-6a69-4dc2-93a0-fa000291bc3d", "name": "Auramancer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "03f5946b-e000-4b39-a49f-1c31668b51bd", "name": "Autumn's Veil", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "a8abc5db-4e0b-488d-898a-8109690d5099", "name": "Avacyn's Memorial", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "216cb26e-8da9-478b-bfbc-8030f7adee72", "name": "Avacyn, Angel of Hope", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "e3431dae-969c-4896-9f9e-a80e7bec4bdf", "name": "Avatar's Wrath", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "d31fd12f-b4dd-4bc3-ace4-703dabd0f607", "name": "Aven Interrupter", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -127,10 +134,12 @@
 {"oracle_id": "e25b516c-bf95-42bc-8b1e-04617a3d28df", "name": "Baron Bertram Graywater", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0fe6c042-1182-4392-8938-fee36149d74f", "name": "Baron Helmut Zemo", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "74c0164c-130f-4572-9066-626c77f6e2ff", "name": "Barrowgoyf", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "858f53ef-3fec-4aa0-867d-b7f040614b3c", "name": "Bastion Protector", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "4adf959b-2e09-47ff-a1b1-b889348735b8", "name": "Battering Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "c2bd0c24-3973-48bc-a591-3779e3640c5d", "name": "Battle Angels of Tyr", "llm_labels": ["card_draw"], "regex_labels": ["ramp", "card_draw"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "e74c4001-d958-4d2b-b57d-c3601f01580c", "name": "Battle Cry Goblin", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "4b977117-741c-4157-8fcf-719e475a8a4c", "name": "Battle Hymn", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
+{"oracle_id": "f88eeb04-4b8e-4c76-a8c6-90887b94d518", "name": "Beaming Defiance", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "44661108-d72f-4d02-9303-7e4b0ecf7e9c", "name": "Bear Umbra", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "3da5fbe2-e47b-4a1d-9e73-393f37314fa3", "name": "Beastie Beatdown", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "d9c2e674-11a9-47f0-8790-a53b62c43fe6", "name": "Bedrock Tortoise", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -139,17 +148,24 @@
 {"oracle_id": "01dbf1bc-ca62-4fb6-959c-ef7c0dc03bb0", "name": "Benevolent Hydra", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "b9000917-4f09-42f4-ae85-fc1ac7571d93", "name": "Benthic Biomancer", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "a5cbd257-c836-493e-bb1a-76242619dea2", "name": "Big Score", "llm_labels": ["card_draw"], "regex_labels": ["ramp", "card_draw"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
+{"oracle_id": "3abd2342-f783-4871-ac78-1a54b35722c2", "name": "Biosynthic Burst", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "5443557e-440f-4fdd-a29b-7740d7cec085", "name": "Biotransference", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "fb81e4d3-1d8c-4779-be62-87cf49277e51", "name": "Birgi, God of Storytelling // Harnfel, Horn of Bounty", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "af4684cf-f109-44be-adfb-7c551a36635e", "name": "Bishop of Wings", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "12b859f8-36f3-43cd-b537-6e07857b247e", "name": "Bismuth Mindrender", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "d2664f28-49e1-46f8-a863-b217e961a57c", "name": "Black Market Connections", "llm_labels": ["ramp", "card_draw"], "regex_labels": [], "diff": {"only_llm": ["ramp", "card_draw"], "only_regex": []}}
 {"oracle_id": "579f9a86-a1af-4c2a-a7e5-8fea0bd0eb61", "name": "Black Widow, Super Spy", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "156d1a58-c970-4b81-b6c7-5a0caa1699cd", "name": "Blackcleave Goblin", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "5c5b308c-07d5-422a-8b45-b8b19cb967ca", "name": "Blacksmith's Skill", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "c22cc70a-9533-4bfc-b3ce-b2d43a73f0c1", "name": "Bladewing the Risen", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6cf50e21-0f60-4e9a-b910-ebe1bad2a29e", "name": "Blasphemous Edict", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "3a38d2d1-c4ff-4088-b1df-5feb9602ee2e", "name": "Blasting Station", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "1bf505a7-292e-4642-83b6-8ff41ebe5d51", "name": "Blazing Firesinger // Seething Song", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
+{"oracle_id": "e11a856c-31d3-4f4b-a517-8a5134b88517", "name": "Blight Mamba", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "e48ea9ea-64bc-4f1c-a424-592d48569244", "name": "Blighted Agent", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "e80772e2-8623-4094-81a2-70828b2b151c", "name": "Blightsteel Colossus", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
+{"oracle_id": "282003f4-862a-4f80-8f45-e470fc0fe2fe", "name": "Blightwidow", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "50555471-a03c-4735-a6ce-6ae96e27d7c0", "name": "Blinding Fog", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "51acd176-e84d-42c2-acb2-cceeb28a9fec", "name": "Blink of an Eye", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "08497e8f-3521-48e4-a1e7-c192b485d891", "name": "Blinkmoth Urn", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "e05c6c80-a91a-45e0-b991-0014fd5a6472", "name": "Blood Pet", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
@@ -166,6 +182,7 @@
 {"oracle_id": "997d2f38-5a50-451e-bd48-e36dcb24d967", "name": "Boggart Shenanigans", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "2bd111bb-ce02-414c-b5b7-e0e037d8d96b", "name": "Bolas's Citadel", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "c20a96f7-aa5a-4c15-b8b1-806685c99b27", "name": "Bolt Bend", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "60092fb4-98db-4f2d-a5d7-24b5f11c8acc", "name": "Bombadil's Song", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "3984e5f6-8643-4104-aa9c-18d474e07801", "name": "Bone Miser", "llm_labels": ["ramp", "card_draw", "synergy"], "regex_labels": ["ramp", "card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a08f69f9-de48-46d6-8b75-31886159cf45", "name": "Boneclub Berserker", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7ba550a5-81fc-42c2-8df8-ad455d938605", "name": "Bonehoard Dracosaur", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -183,6 +200,7 @@
 {"oracle_id": "d85aa59b-c6aa-4b2f-885c-59d6e5e6e8b9", "name": "Braids, Cabal Minion", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "464c0150-3dbc-403b-9ada-fef25ab1f29d", "name": "Brain Freeze", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "13cb958f-1e66-4219-901a-ff58275c8475", "name": "Brainstealer Dragon", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "ae685a9b-4cb8-4a8a-935d-378102431c51", "name": "Branchblight Stalker", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "28fe909b-06e0-424c-9f75-c824a25f5865", "name": "Branching Evolution", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9d73a51a-1c8e-40cd-8124-aeff406a0884", "name": "Brave the Elements", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "5370ee80-0354-454f-a16e-ec133e432ecb", "name": "Breaching Dragonstorm", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -218,6 +236,7 @@
 {"oracle_id": "32e9aa23-fc0a-4b82-82f9-1659c304428c", "name": "Careful Study", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "c97957a2-8310-4cff-8aad-871b7901d124", "name": "Caretaker's Talent", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "2ffc6372-f63b-4f32-8dd0-2d7938aeb412", "name": "Carpet of Flowers", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "8f1e8f25-ee23-40a6-a3f2-369bb960267f", "name": "Carrion Call", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "2380fd04-6d19-4f5a-8a9e-c17d9ae09fb6", "name": "Case of the Locked Hothouse", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "de75e5dd-8a52-406c-b55c-96d686885500", "name": "Castle Garenbrig", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "b0479ca4-e925-4aa7-a4fa-f7e01f899ac5", "name": "Cataclysm", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
@@ -227,12 +246,16 @@
 {"oracle_id": "89ca686a-7c72-4d8f-9290-e89635624a83", "name": "Cavern of Souls", "llm_labels": ["lands"], "regex_labels": ["lands", "synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "d18a014e-16a0-4641-9546-ff3729437eed", "name": "Cayth, Famed Mechanist", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "41797e0c-94bb-42a1-81ed-ed8c6af79e80", "name": "Celestial Ancient", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "92f0677f-64d8-4c83-abad-ffa2a37f88c1", "name": "Celestial Convergence", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
 {"oracle_id": "9babcd0a-531f-417d-905e-b916a87112bb", "name": "Cemetery Tampering", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "c733873e-77db-471f-8061-139db24f7e7c", "name": "Cephalid Coliseum", "llm_labels": ["lands"], "regex_labels": ["lands", "card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "2167ac25-d042-4b48-b770-8b94acc1a965", "name": "Chain of Vapor", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "f971a597-caa7-4289-ae8f-1efdc9abb593", "name": "Chained Throatseeker", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "cb905eb0-bb20-41c0-9695-0f5c71972561", "name": "Chainer, Dementia Master", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
+{"oracle_id": "5acff7a3-bc84-4251-bd37-80231396ac38", "name": "Chains of Custody", "llm_labels": ["removal", "protection"], "regex_labels": ["removal"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "74027ba4-a6ba-4696-baf1-60ef0b27ee0a", "name": "Chalice of the Void", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "f3654fbd-16a5-4953-84ac-534e8421032f", "name": "Champion of the Perished", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c01aafb8-3da5-4eb1-8731-2a223e747d63", "name": "Champion's Helm", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "9cb7f23f-322d-4a87-b6c6-15b9d446aef3", "name": "Champions of the Perfect", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f61680da-606e-4d16-b0a0-361aa5210901", "name": "Chandra's Ignition", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "818f908c-9af6-4edc-bb0e-193bc830e2e4", "name": "Chandra, Flameshaper", "llm_labels": ["ramp", "card_draw", "removal"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw", "removal"], "only_regex": []}}
@@ -248,6 +271,7 @@
 {"oracle_id": "c38cc5fe-936a-4d61-a816-9be773ae1d02", "name": "Charix, the Raging Isle", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "c48d844c-3976-4fa5-8e0d-3f0e535e7619", "name": "Charming Prince", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "9f50ec9f-78e6-403f-8f41-84d603fee0eb", "name": "Charred Foyer // Warped Space", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "9c055ef0-1164-4a9f-80de-23405423aed5", "name": "Chase Inspiration", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "69facbc7-3859-4716-b627-5199571fb3cf", "name": "Chasm Skulker", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "f15b3b76-d38a-48db-bb44-3296183c8641", "name": "Chatterfang, Squirrel General", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7e6c7b57-bd6a-4ac8-bcab-c3a879f479c2", "name": "Chatterstorm", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -299,11 +323,15 @@
 {"oracle_id": "3bc0bd36-70be-4180-9fb3-b10ce054107b", "name": "Consuming Corruption", "llm_labels": ["removal"], "regex_labels": ["removal", "synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "24cd8f54-c1d4-4040-93bf-a7b9b719ac30", "name": "Consuming Tide", "llm_labels": ["board_wipe"], "regex_labels": ["card_draw", "board_wipe"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "a10ce333-48d7-499b-9355-f381f2395497", "name": "Consuming Vapors", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "02d4fe7d-ade4-40b1-b323-73a52c440525", "name": "Contagious Nim", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "54d48e54-be4a-4a78-a778-b28e74ef7134", "name": "Containment Construct", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "1f076303-d160-4e02-aa1e-9ed6040c3735", "name": "Cool but Rude", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "51c511c0-783a-456d-a7e2-959f6e8ddfc8", "name": "Coram, the Undertaker", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "d61fb9e8-d05a-481a-a90f-5def300c9abb", "name": "Cordial Vampire", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "0ad44727-41c3-471c-b038-1bf43c5f296a", "name": "Core Prowler", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "68a58e0b-1506-492e-8ca3-016e520c10ba", "name": "Cornered by Black Mages", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "8f59e4d9-67ba-4dc6-ae3e-183e63673318", "name": "Corpse Cur", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c645fab4-51ac-440c-b112-57777c8f4676", "name": "Corrupted Conscience", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "648100cd-d44a-48f8-87e4-a1d5467f348c", "name": "Cosima, God of the Voyage // The Omenkeel", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "0866a630-d962-4aa9-a15f-08b2947540ef", "name": "Cosmic Cube", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "acf4d685-a718-42f7-9a7a-dee069ae8db2", "name": "Council's Judgment", "llm_labels": ["removal"], "regex_labels": ["board_wipe"], "diff": {"only_llm": ["removal"], "only_regex": ["board_wipe"]}}
@@ -313,6 +341,7 @@
 {"oracle_id": "1f3f6336-6f99-4181-be3c-1814f7b8ef36", "name": "Court of Garenbrig", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6106ba65-f07b-41ec-8b59-e052bbde5529", "name": "Court of Locthwain", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "273f5483-b67e-4dd6-bba8-c0a047fa34d7", "name": "Crackle with Power", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "e0717287-9bff-446b-838d-6fc0adccc768", "name": "Cradle of Safety", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "75564721-e4e9-463a-b49e-f0c7cd6f53a7", "name": "Cranial Plating", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e958b3c5-0666-4a99-a933-e5cb8b0da9da", "name": "Cranial Ram", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "054fedbb-062e-491e-9a94-594fda33094f", "name": "Crested Sunmare", "llm_labels": ["protection", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -320,13 +349,16 @@
 {"oracle_id": "e7a7ba65-ad14-41d5-889b-9bbeae9ab3f7", "name": "Crippling Fear", "llm_labels": ["board_wipe", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "28b46183-c62f-47b1-9fee-3ba148202cab", "name": "Crop Rotation", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "1a362e4d-6c02-4b67-ab63-c6622e505195", "name": "Crossway Troublemakers", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "602d0d09-00c6-4073-80ec-2ad33aef1a97", "name": "Crown of Awe", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "db961314-fe78-4362-902f-aa0dbf6c487d", "name": "Crown of Skemfar", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0c572396-4e53-4c86-9b04-f41341dcea05", "name": "Crucible of Fire", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "52a0dae4-2a95-487e-acd4-eabdb2d031e2", "name": "Crux of Fate", "llm_labels": ["board_wipe", "synergy"], "regex_labels": ["board_wipe"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "456bbc0e-a648-481f-b37e-9996029556bd", "name": "Crypt Cobra", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a3c8d817-7949-4dae-b9f5-f9d952479270", "name": "Crypt Ghast", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "4fe8af73-c84a-44bd-9739-ee5c8b027874", "name": "Crypt of Agadeem", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "16f75a65-d067-4f79-81b9-833c373cf4d2", "name": "Cryptbreaker", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "043f869d-b11c-4c0d-9591-2bf0df7bde55", "name": "Cryptolith Rite", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "e26f0fcd-d6d2-4e7b-82dd-711bc0b9dad3", "name": "Cryptothrall", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "291c7abf-9d64-4ba0-ae21-e3459edc9a95", "name": "Crystal Barricade", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "b1f8eb7b-7e01-4bf8-a557-64e16a6052af", "name": "Crystal Skull, Isu Spyglass", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "6385fd0d-256d-4400-9319-afa8170024db", "name": "Culling the Weak", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
@@ -344,6 +376,7 @@
 {"oracle_id": "1e51fab7-3ca5-4fbb-a1e9-b39c842895e8", "name": "Cyberman Patrol", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8d035688-089f-4d5c-bcad-9140a6c1681b", "name": "Cybermen Squadron", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d75b9c82-1b49-4c3e-a1b5-aeef57d6644b", "name": "Cyclonic Rift", "llm_labels": ["removal", "board_wipe"], "regex_labels": [], "diff": {"only_llm": ["removal", "board_wipe"], "only_regex": []}}
+{"oracle_id": "81704164-bad9-4e52-9b69-3d49e92fe284", "name": "Cystbearer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d2a3f735-9523-4ddd-96a9-b0a5ecd39284", "name": "Daily Bugle Newspaper", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "b01d61cc-9844-4191-86a0-f2db6d42d6e5", "name": "Damn", "llm_labels": ["removal", "board_wipe"], "regex_labels": ["removal"], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "fdfac093-a5c0-47b4-9052-e0af517d83cf", "name": "Dance of the Manse", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -361,6 +394,7 @@
 {"oracle_id": "05a4f8ff-49da-42af-add5-6248c4b0644b", "name": "Darksteel Mutation", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "b5b4cf54-ed5e-42d0-9d98-5fec76b0b0b8", "name": "Darksteel Plate", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "63e0f03f-16da-4c09-ad03-8945f660942d", "name": "Daughter of the Deep", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c0516c2c-d7c9-4763-9180-980f60205a28", "name": "Dauntless Escort", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "37c06f89-db36-4937-9404-2b07cd22e1a6", "name": "Dawn's Truce", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "bb1c6266-5e25-4a5b-b15a-faeda3ce04dc", "name": "Dawnglade Regent", "llm_labels": ["card_draw", "protection"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "protection"], "only_regex": []}}
 {"oracle_id": "0f5ac364-447b-4c43-9aed-6098dc0bab82", "name": "Daybreak Coronet", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -370,6 +404,7 @@
 {"oracle_id": "22f1a4a4-c423-4d1c-8775-0ed604a9fa51", "name": "Deathrite Shaman", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "5df44b8d-b337-49d8-8427-34253f52cb47", "name": "Decadent Dragon // Expensive Taste", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "13e94530-defb-4c9b-9ec7-bb7789ec2630", "name": "Decaying Time Loop", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
+{"oracle_id": "eeabf42a-b1ac-4579-b82a-aabf9052ec20", "name": "Decimator Web", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "53b121df-3040-4ad0-a25d-587a299b4f8b", "name": "Deepchannel Mentor", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "debce64a-18bd-42f5-9e85-158c2242e9e9", "name": "Deepglow Skate", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "4b8d82fe-571d-4fd6-8d0c-77b7e5ef3e23", "name": "Deeproot Historian", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -377,6 +412,7 @@
 {"oracle_id": "8e7b31eb-7a91-4992-b24a-d81173e1dbc8", "name": "Deeproot Waters", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7bf5196d-a16c-418f-943c-2128e40c55da", "name": "Defiant Bloodlord", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ae120613-97d6-4393-b39d-c3e6c076f5d6", "name": "Deflecting Swat", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "ec7ae9ed-dc5b-47ed-a4ad-086f3c7c377c", "name": "Deflection", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "a81fcdf8-59e7-471d-96ce-f87e656572b1", "name": "Deluge of Doom", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "56ba8fe5-8693-4783-8406-9ced99de0b2a", "name": "Deluxe Dragster", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "393b9d9e-9d71-43e7-aede-eac7f85d2365", "name": "Demonic Covenant", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -404,7 +440,9 @@
 {"oracle_id": "09ef446c-a13d-49d9-a94c-cd5f5a2d440b", "name": "Displacer Kitten", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "ac6c5852-71c7-4f19-8c87-ccb345052862", "name": "Distant Melody", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6df57d67-2fd9-4e7a-b67b-f361fc30e496", "name": "Distinguished Conjurer", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
+{"oracle_id": "2f990b54-fbf3-4949-85bb-9ba39710e72a", "name": "Dive Down", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "f08e835a-7827-4fdc-8dcf-ae74507da052", "name": "Divergent Transformations", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "561aed01-322b-4699-b7b0-f4416075aa9b", "name": "Divert", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "15d8b339-7520-43c9-b2dc-4a936357042b", "name": "Divine Reckoning", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "4f6e2e47-34df-4bf3-a546-e06b42840167", "name": "Divine Resilience", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "5917216f-5b42-41fa-8976-401bdbeb782e", "name": "Divine Visitation", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -434,12 +472,16 @@
 {"oracle_id": "504cc26d-3fd5-4391-9d30-f0614e5c8bbc", "name": "Dream Pillager", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "d1678eed-a335-454c-9fa1-749317500a36", "name": "Dregscape Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "51780f71-bf60-4208-94ea-76fa84790fb6", "name": "Drivnod, Carnage Dominus", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c33604ac-636a-43ad-9efe-8d7b3a28bf81", "name": "Drogskol Captain", "llm_labels": ["protection", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "2b3f2e85-5ea4-44d6-86e8-e8ce6d4f98c0", "name": "Drowner of Hope", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "87c43776-dd98-4e12-9b95-82d2b8f4f1ab", "name": "Duskwatch Recruiter // Krallenhorde Howler", "llm_labels": ["card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": ["ramp"]}}
+{"oracle_id": "67e6ce99-4883-4713-9822-cb2334765b5b", "name": "Duty Beyond Death", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "3d4a7dd3-9258-4bd1-adc4-08f0205e196a", "name": "Dwynen's Elite", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "50aa7aff-1f01-4224-9a83-01f74d703ec2", "name": "Earthcraft", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "1903200d-0350-48a9-ac7c-b851f7df647f", "name": "Earthquake Dragon", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "454cbc6a-b7f0-445e-842c-5db267917a18", "name": "Earthshaker Dreadmaw", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "300f17a2-1594-40cb-9187-952898a83622", "name": "Earthshape", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "92442ca0-e49d-4fab-8d3a-83405c1b1437", "name": "Echo Storm", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "23a79523-4be0-4d17-80aa-5ea024cb3463", "name": "Echoes of Eternity", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d15dba3a-3b85-43fb-b5f3-c4d8d1e23b1d", "name": "Echoing Assault", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7c89ef4d-b375-4644-ac8b-034effdbe98c", "name": "Eclipsed Elf", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -460,6 +502,7 @@
 {"oracle_id": "7fab8d65-af51-47d3-8f10-2676bf6e8ba3", "name": "Eldrazi Temple", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "7dce1e8c-5cfd-4626-9f23-7bb3f1b10c1e", "name": "Eldritch Immunity", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "d9a7e5a6-3e41-4fc6-987a-18fe1b9d67dd", "name": "Elemental Bond", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "8629fdef-dbbe-4a97-a7e1-6b1646f4ca0b", "name": "Elemental Eruption", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7255705c-b788-4bb1-824a-9262f4a0864e", "name": "Elemental Teachings", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "cb99c675-adc5-4dad-8be8-524f5f921213", "name": "Elenda's Hierophant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "958d71ff-c9f7-46f0-96ca-79e7f4d65a16", "name": "Elesh Norn, Grand Cenobite", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
@@ -467,6 +510,7 @@
 {"oracle_id": "97f9b82f-b3cf-44ff-9abc-2d92d7cbaa27", "name": "Ellivere of the Wild Court", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "da339200-ed26-42e4-b24f-b96bc4daef7c", "name": "Elsha of the Infinite", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "f78af825-023a-42e9-8374-5c52303a1417", "name": "Elspeth, Storm Slayer", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "3f9a797b-85e7-474e-aefe-7e2ec08fc5b7", "name": "Elspeth, Undaunted Hero", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "027989e7-20c4-4773-b6b4-20337cc5fe8c", "name": "Eluge, the Shoreless Sea", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "a2373025-20c1-4416-91f7-e51f68dbd146", "name": "Elven Ambush", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "4d5df2d9-06bf-4bec-9be0-dabe75a858fb", "name": "Elven Chorus", "llm_labels": ["ramp", "card_draw"], "regex_labels": [], "diff": {"only_llm": ["ramp", "card_draw"], "only_regex": []}}
@@ -482,6 +526,7 @@
 {"oracle_id": "6c901ff4-15c3-468f-9a1b-4c69a7bbc31a", "name": "Emperor Mihail II", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "84f3736f-5b2a-40f9-8c3b-c18f8c637c22", "name": "Empty the Laboratory", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "3a59c882-8bb8-49ba-862f-125020dd5bec", "name": "Empty the Warrens", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "0af5f9f4-04d6-4701-be1f-65d4a0940737", "name": "Empyrial Storm", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "da3e7d3d-2ca0-40c3-9602-fca37c92f507", "name": "Emry, Lurker of the Loch", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "795b096a-2bce-4588-a2c9-abc5ea40dc0c", "name": "Enchantress's Presence", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "1f0bb053-4967-4289-b2b1-f6309f2eca7d", "name": "Encroaching Mycosynth", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -490,6 +535,7 @@
 {"oracle_id": "3577c47e-76d3-4659-b922-31c4b74be3a0", "name": "Enduring Vitality", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "7a756cd1-29a8-4edf-bb74-fbb5b4020022", "name": "Energy Flux", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "16090270-0ac5-404c-b0c8-a6c8a4b508a4", "name": "Ensnared by the Mara", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "4e552be1-0702-4e18-822f-98611f8a8e70", "name": "Enter the Avatar State", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "2adbb56a-45e9-4fbe-b586-3488ef8014a3", "name": "Enter the Infinite", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "4b031bb3-4bbc-4158-8485-b3fc42c6bd50", "name": "Enter the Unknown", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "c9db5293-4866-46ec-9ae8-059d27bd50fc", "name": "Entity Tracker", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
@@ -526,8 +572,11 @@
 {"oracle_id": "c0957e5e-c71b-439c-931c-9f55d2f76ace", "name": "Fable of the Mirror-Breaker // Reflection of Kiki-Jiki", "llm_labels": ["ramp"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["ramp"], "only_regex": ["card_draw"]}}
 {"oracle_id": "437b2dab-15e0-4b9a-a204-58622d37a3b3", "name": "Fact or Fiction", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "70a6f08e-854d-4e2f-9d8c-c45ec3231157", "name": "Faeburrow Elder", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "dd3cc9e5-b99a-429c-baeb-663a7af70081", "name": "Faith's Shield", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "3d6fa57a-aa53-4b5c-b8af-a7612c823117", "name": "Faithless Looting", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "46d6bc30-9a21-4476-947b-87951cd9c882", "name": "Falkenrath Pit Fighter", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "22446354-e5c3-4f19-9731-79a4562639d1", "name": "Fallen Ferromancer", "llm_labels": ["removal", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "synergy"], "only_regex": []}}
+{"oracle_id": "8972de18-2c49-4162-a285-264a44c0e675", "name": "Family Reunion", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "e7f53928-a4cc-41ed-877d-b72d786e77d9", "name": "Famished Worldsire", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "8d9bd4cc-564b-4fdf-9462-b4bb30583642", "name": "Fangs of Kalonia", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "729b7ce8-7e7f-4db9-b3ce-67aba46a7b0d", "name": "Fateful Showdown", "llm_labels": ["removal"], "regex_labels": ["card_draw", "removal"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
@@ -535,12 +584,14 @@
 {"oracle_id": "764f6412-c4ff-4eec-9a9d-870661f97f8b", "name": "Fblthp, Lost on the Range", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "0ae74149-60fc-407a-8782-8865458606b5", "name": "Fear of Burning Alive", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "7e4e1d13-db1a-48e5-9b5f-f3e71d10c23e", "name": "Feast of the Victorious Dead", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "2038f505-7b03-4c63-bc44-c5139729dd05", "name": "Feat of Resistance", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "a090be5a-b0f2-4c17-8f7d-e742f9de8f6b", "name": "Fecund Greenshell", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "33869ba6-13e5-4e48-8963-92f7965648fb", "name": "Felidar Guardian", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "cf14d4e5-5965-45ad-97f7-26facf2884b5", "name": "Fertile Ground", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "51545f6e-d0e3-4b4c-bc73-c731f85e26b0", "name": "Fevered Suspicion", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "70763549-4b4e-4cb8-8c02-0639ba18bb1a", "name": "Fevered Visions", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "3891a3b6-d8ac-4cd3-b2f6-d6d786e89a67", "name": "Fiend of the Shadows", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "16f93781-6740-40c7-a727-7911beac4e74", "name": "Fight as One", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "8a280ba8-6b7b-46dd-9c2b-6d0027cfff30", "name": "Fighter Class", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ab7c9e72-8f30-47f7-918c-cd3c0593d704", "name": "Filigree Attendant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "69872a9a-fe54-4e58-940c-89395af71acd", "name": "Finale of Devastation", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
@@ -551,9 +602,12 @@
 {"oracle_id": "4e183439-17d2-47ff-9d99-5e22821d91e3", "name": "Flawless Maneuver", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ba9f3c5d-556f-48d1-8d87-723f7893cfcd", "name": "Flayer of the Hatebound", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "52d349e7-4bd2-468a-ab26-df8cd262f6f6", "name": "Fleet Swallower", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "4b63bf36-cd0e-41d8-b0ca-aac459d91f3f", "name": "Flensermite", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "b1aae085-2dca-425c-911a-19a89a0a4993", "name": "Flesh-Eater Imp", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d5b9d250-92f5-40d8-b962-4ae4adb466c8", "name": "Flicker of Fate", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "3e2ae59a-40a1-46ca-8f24-3231ebd4e4eb", "name": "Flickering Ward", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "b23a3d30-6b8e-4aad-890f-db0c3af43ace", "name": "Flickerwisp", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
+{"oracle_id": "332716fb-cc1c-4a6f-b7d4-bd7f13cfa438", "name": "Floating Shield", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "d74a2cbf-4d13-401d-9b3f-bfbde4942afd", "name": "Florian, Voldaren Scion", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "e7194bca-0cf4-4a86-8b84-d2f9219a08b3", "name": "Flow State", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "3cda958a-f777-433d-850e-a6c8f581db4e", "name": "Flowering of the White Tree", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -616,12 +670,15 @@
 {"oracle_id": "295a831c-490e-42ba-afc1-dab3524a4f0c", "name": "Glacierwood Siege", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "df9409e6-bd6d-4b5b-b807-fcf347ee940a", "name": "Glarb, Calamity's Augur", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "0ffce5e0-6b1d-4d1a-9318-1a1a219df532", "name": "Glaring Fleshraker", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "21570481-190e-4cfa-a5fd-a0642e2af569", "name": "Glaring Spotlight", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "3edd6272-20fa-4c3a-bf34-2f253cc8ac9e", "name": "Glass-Cast Heart", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "f7716dff-5de7-4b52-966e-72ee3adc8d9a", "name": "Gleaming Overseer", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
 {"oracle_id": "7b70696e-b09e-4bc9-8438-d31075d78c0c", "name": "Glimpse the Impossible", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "552f0163-a19d-4671-888f-044fc0354875", "name": "Glimpse the Unthinkable", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "2fc07680-3ffb-4507-a1e1-b9580f5ce878", "name": "Glint", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "64ad5657-78e9-4f34-8877-18c4f51fff9a", "name": "Glint-Horn Buccaneer", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8859a692-d107-4de2-9110-4681fc2761c7", "name": "Glissa Sunslayer", "llm_labels": ["card_draw", "removal"], "regex_labels": ["removal"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "9d95d173-5c7f-4e0c-bcdc-9b90fcd7339b", "name": "Glistener Elf", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e9319f13-1f2b-429c-9d61-e58a3cbec86a", "name": "Goblin Anarchomancer", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "d1255776-b88b-4f05-9b71-ff89a2eba453", "name": "Goblin Assault", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "edad60c6-80de-4033-af1b-a703ac332983", "name": "Goblin Bombardment", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -639,6 +696,7 @@
 {"oracle_id": "9fc28e1f-f4ea-4bf8-9442-a36dba3b3b29", "name": "Goblin Welder", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "4885354f-0b77-47b6-b8f7-00753804436f", "name": "Goblinslide", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f890d51a-dc90-4179-8423-4738a72a527c", "name": "Godo, Bandit Warlord", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "48e603a2-b965-4fbc-ad57-4388bce5ac8b", "name": "Gods Willing", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "533d5bf9-0912-451f-a3f4-3842b0a75b1d", "name": "Golbez, Crystal Collector", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "c27e2d6f-498c-42d8-aa1a-ac6402bf3f9a", "name": "Gold-Forged Thopteryx", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "25977c02-e2d4-4afd-b12d-37ce4d58f453", "name": "Golden Egg", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
@@ -648,6 +706,7 @@
 {"oracle_id": "befb211f-37ca-4083-98d4-9ff1f28be3f2", "name": "Goreclaw, Terror of Qal Sisma", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "aebfdcc0-c5b9-4737-8498-764a5021b087", "name": "Graaz, Unstoppable Juggernaut", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d3ba6922-c2f7-45ab-87a3-d4bbd770d1ba", "name": "Graf Harvest", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "f4350c4e-7e53-4401-b889-14bed27bee9c", "name": "Grafted Exoskeleton", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ebd2d760-5ad8-4027-b124-171822f3edfe", "name": "Grapeshot", "llm_labels": ["removal", "wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "6f4ac4a4-53ec-4bc9-8f5c-d4b801d867b2", "name": "Grave Pact", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "1cb71772-592d-4dd1-91af-816933af760c", "name": "Grave Venerations", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -658,6 +717,7 @@
 {"oracle_id": "0129ffe2-389f-4e05-8a04-96461bac39a5", "name": "Greasefang, Okiba Boss", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e6e888ea-9935-4df2-a344-c54637e55f43", "name": "Greater Auramancy", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
 {"oracle_id": "dc0593c2-ccb4-4648-a592-c5bcd121dc72", "name": "Greater Good", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "727ab7f2-741e-4442-b5cb-e3032549fa87", "name": "Green Ward", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "80788290-1569-4c7f-b263-b4da7b31a9d1", "name": "Grenzo, Havoc Raiser", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "739a5220-50cd-4148-be58-1bbdeef2954e", "name": "Greymond, Avacyn's Stalwart", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7cab62dc-a256-4da8-a3ea-b3903ec37077", "name": "Griffin Aerie", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -672,10 +732,13 @@
 {"oracle_id": "9afb3b6e-4909-4efa-aa79-81c0229411c9", "name": "Gut Shot", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "c6bdaf76-6a03-4695-9c4b-f040e73435af", "name": "Guttersnipe", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "c48cf135-b280-4e9f-a9d9-225104870741", "name": "Gwenom, Remorseless", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "63584001-7f58-42ee-b072-914baa66c78a", "name": "Hajar, Loyal Bodyguard", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "687e772a-cdfe-41fd-a066-6cb3aee04193", "name": "Hakbal of the Surging Soul", "llm_labels": ["ramp", "card_draw", "synergy"], "regex_labels": ["ramp", "card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "2fc070dc-f2f7-4648-8069-31d74790a39c", "name": "Hall of Heliod's Generosity", "llm_labels": ["lands", "synergy"], "regex_labels": ["lands"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e310ab58-180e-4840-bc8d-9f9b06f1b478", "name": "Hallowed Haunting", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e3955573-3db5-490e-903e-65e0172a9202", "name": "Hammer of Nazahn", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
+{"oracle_id": "f595c7f6-783f-4825-9c1a-e7f8edd380fd", "name": "Hand of the Praetors", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
+{"oracle_id": "143d3fcf-2152-4911-b95a-d23b91662f33", "name": "Hapatra's Mark", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "d0cc7e79-69dc-4f9d-9eed-1848f8ddb1be", "name": "Harald Unites the Elves", "llm_labels": ["synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": ["removal"]}}
 {"oracle_id": "0089b07c-7f47-4a9a-9fb7-cc38ec9d7bcd", "name": "Harald, King of Skemfar", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a1f3da21-af6d-450e-bf0b-985d158418e6", "name": "Hardened Scales", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -744,8 +807,11 @@
 {"oracle_id": "ed1e5d24-c8a8-48fe-a88f-1003ad432477", "name": "Hurkyl's Recall", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "573151f0-00d4-4a8a-8a09-745c5f376532", "name": "Hydroelectric Specimen // Hydroelectric Laboratory", "llm_labels": ["lands", "protection"], "regex_labels": ["lands"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "6bd872b2-5c40-4e11-9a7f-0136a51b0642", "name": "Hydroid Krasis", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "f8148664-49c0-421f-93a5-cd59e4e9ea36", "name": "Ichor Rats", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "5b5ef43b-13fd-4461-8d2d-18be65e9a790", "name": "Ichor Wellspring", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "8462a2fa-944b-4fff-a161-10345690b56f", "name": "Ichorclaw Myr", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9fc7aba7-eda2-4134-9c10-31ee35201b72", "name": "Ichormoon Gauntlet", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "5a2f8474-b032-4567-a569-3f9725805f10", "name": "Ichorspit Basilisk", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a200daec-983c-4ea6-ae98-1c963b50fbb1", "name": "Identity Thief", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "b30d583b-e770-47e8-9f26-fca7ef43285c", "name": "Idol of False Gods", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "57c9ff89-dd30-467b-bb3e-499eeea8cb94", "name": "Idyllic Tutor", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -797,6 +863,7 @@
 {"oracle_id": "c14ac951-329d-452b-be75-5c72166cd9c7", "name": "It That Heralds the End", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f976a244-1240-4430-9182-bb8d6d932ea0", "name": "Itzquinth, Firstborn of Gishath", "llm_labels": ["removal"], "regex_labels": ["synergy"], "diff": {"only_llm": ["removal"], "only_regex": ["synergy"]}}
 {"oracle_id": "d847542b-7522-43ec-91b0-f0aba5d7dddd", "name": "Ivora, Insatiable Heir", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "028bc726-0e86-4c53-9648-625153ae4b01", "name": "Ivory Mask", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "a07698f6-5ad5-49a3-9da2-f82d407f5cd7", "name": "Izzet Charm", "llm_labels": ["removal"], "regex_labels": ["card_draw", "removal"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "cc2b6e58-2d6f-495e-95f3-9496105c4cba", "name": "Jace Beleren", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "b6c8ac69-daa7-4e2e-a1d9-439731a81870", "name": "Jace's Archivist", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -813,6 +880,8 @@
 {"oracle_id": "2a9a05b4-1910-4f97-a0fe-0f57017f6df0", "name": "Jeskai Charm", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "c803b788-4213-4fab-b841-7e5bbf66088e", "name": "Jhoira, Weatherlight Captain", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f5daadc1-98ff-480a-82bb-fe7bfaa7b60e", "name": "Jin-Gitaxias, Progress Tyrant", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "fda76032-7e6f-416f-8874-2a0642837522", "name": "Jirina, Dauntless General", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "1102524d-7287-496f-a18a-5fdae6d4c271", "name": "Join Shields", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "7c4dbaa8-e24f-4126-81fe-3f218f520d8c", "name": "Jor Kadeen, the Prevailer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a011aefe-5853-4435-b686-179e931ba897", "name": "Joraga Treespeaker", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7d6ccd0b-df16-40b2-930b-bcde0b6ef73f", "name": "Journey to Eternity // Atzal, Cave of Eternity", "llm_labels": ["lands"], "regex_labels": ["ramp"], "diff": {"only_llm": ["lands"], "only_regex": ["ramp"]}}
@@ -841,6 +910,7 @@
 {"oracle_id": "80ba76a6-cc48-4820-bc0b-c9ec18088a3b", "name": "Katsumasa, the Animator", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "4dd0594d-5b11-4350-a926-294a67d9fc3b", "name": "Kavu Lair", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "5e4c81b9-a31e-45e6-983f-30f11b8a05c0", "name": "Kaya, Ghost Assassin", "llm_labels": ["card_draw", "removal"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "a5575201-0d73-43c4-9290-940bbaefc61b", "name": "Keen-Eared Sentry", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "a492a323-df8a-40fd-bff0-50091baa7700", "name": "Kenrith's Transformation", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "de41ad94-b9d7-4c2b-bfa6-394d18737228", "name": "Ketramose, the New Dawn", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "19ef0329-08de-4835-8079-2e791e19f3a6", "name": "Kid Loki", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -851,6 +921,7 @@
 {"oracle_id": "f04441b0-755c-4e7b-a9e4-4e03b8175ab6", "name": "Kindred Boon", "llm_labels": ["protection", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "005ee549-1bf5-478f-bc3f-3e791bd7eecf", "name": "Kindred Discovery", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "b488e75f-af9c-43e2-8aca-f269fa2c720e", "name": "Kindred Summons", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "e923d956-b036-4789-9311-4763a71fcbf8", "name": "King Darien XLVIII", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
 {"oracle_id": "bba6075b-8bbb-4496-80a9-bfa7f003d1e8", "name": "Kinjalli's Caller", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8d11aa49-d4cd-48b1-aa0f-8548fa733416", "name": "Kinnan, Bonder Prodigy", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "1efe485e-6874-4f4c-b981-e10f41670865", "name": "Kiora, Behemoth Beckoner", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -900,6 +971,7 @@
 {"oracle_id": "59154c04-6bc5-4b95-af1f-6de5fed05649", "name": "Legolas's Quick Reflexes", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "a8a8407c-d0e3-4311-82ed-1ab1f75159d9", "name": "Lena, Selfless Champion", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "92a287a0-b3cc-4040-a530-fb71510cfc67", "name": "Leonardo da Vinci", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
+{"oracle_id": "10064324-34a0-47eb-a58e-01db10234ed9", "name": "Leonin Abunas", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ba1d34ab-7529-4f47-a5e7-7d8f66d7b901", "name": "Leveler", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "aa6c4079-72e1-4b2e-bd26-9399298c6105", "name": "Leyline Immersion", "llm_labels": ["ramp", "protection"], "regex_labels": [], "diff": {"only_llm": ["ramp", "protection"], "only_regex": []}}
 {"oracle_id": "1197a595-3afc-4f18-b868-bbb096771922", "name": "Leyline of Abundance", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -909,6 +981,7 @@
 {"oracle_id": "ac8fba34-512c-4f24-999a-ab72f1ce4acb", "name": "Life from the Loam", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "cb7baa46-7963-4d45-9a6e-e3c34db3c0e6", "name": "Life's Legacy", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "8d286376-f386-43ab-a9bd-8478fb9e2497", "name": "Light Up the Stage", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "601b7481-19fc-4779-950e-883a9a22aec3", "name": "Lightfoot Technique", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ca204b66-8d0c-431a-8d34-282f7c2d17da", "name": "Lightning Greaves", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "63625b26-3a19-4c3c-b18a-91247bb2a40c", "name": "Lignify", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "e04560ea-f2bd-4cb7-8f65-3aa0dd58fbdf", "name": "Likeness Looter", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -922,6 +995,7 @@
 {"oracle_id": "5bb06e6f-e3af-4caa-b66d-77248ad46b61", "name": "Lilypad Village", "llm_labels": ["lands", "synergy"], "regex_labels": ["lands"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "20194297-f2a4-4473-95bc-7c6835e5b6b3", "name": "Lilysplash Mentor", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "4cc014f3-05e0-442e-9dee-03eab1aa65a3", "name": "Lindblum, Industrial Regency // Mage Siege", "llm_labels": ["lands", "synergy"], "regex_labels": ["lands"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "afd8ff3e-1d57-4fc5-91dc-1a8400c98787", "name": "Linvala, Shield of Sea Gate", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ee6099b0-fb1f-42f1-b862-7708c6e36d05", "name": "Lion's Eye Diamond", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "f4bdc551-c2eb-4a34-a3e3-b4a017c925af", "name": "Liquimetal Coating", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "715cb547-726f-4bc8-ad46-297d4dccb881", "name": "Lita, Mechanical Engineer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -935,9 +1009,11 @@
 {"oracle_id": "38a55562-1e2d-4240-9454-219a4a25d38d", "name": "Lord Windgrace", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["card_draw", "removal"], "diff": {"only_llm": ["ramp"], "only_regex": ["removal"]}}
 {"oracle_id": "cc7f290f-ca00-4285-9bdb-4b4402444f30", "name": "Lord of Atlantis", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7714af0e-41d9-4609-967f-27233b46055f", "name": "Lord of the Undead", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "cc60181a-5eeb-4d66-9876-3194bac1e7a7", "name": "Lord of the Unreal", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
 {"oracle_id": "3858a2ff-cdc9-4e40-bc2c-42ed691aae08", "name": "Lorehold Apprentice", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a5729f11-6cde-4830-b882-ab4c5251c1a9", "name": "Lorehold Charm", "llm_labels": ["removal", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "synergy"], "only_regex": []}}
 {"oracle_id": "f8c2a972-e38f-47e5-a355-6f30ad09b1ae", "name": "Losheel, Clockwork Scholar", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c21b5c5b-9191-4748-b111-a51631e0bc5a", "name": "Lost Leonin", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "04cf02dc-f053-414e-87d8-1537f25bcbf4", "name": "Lotus Bloom", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "8ad91f64-ccab-4edc-bd54-b2ee9267d614", "name": "Lotus Cobra", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "134d5b82-7940-4b33-a922-7f9d1f403e50", "name": "Lotus Field", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -975,7 +1051,10 @@
 {"oracle_id": "dabbf796-3b88-499e-8839-06fa36fe01ac", "name": "Marionette Master", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e262ea6f-c8c7-45c7-a9a6-29dcbe6300a4", "name": "Markov Enforcer", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "3a9ca9b2-0085-41de-9c08-60aaa8122da2", "name": "Markov Retribution", "llm_labels": ["removal", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "synergy"], "only_regex": []}}
+{"oracle_id": "5249df56-7571-46c0-882e-cf88e452fb4d", "name": "Marsh Viper", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ee35de1c-aef1-4bd4-85fd-fe77bc927790", "name": "Marwyn, the Nurturer", "llm_labels": ["ramp", "synergy"], "regex_labels": [], "diff": {"only_llm": ["ramp", "synergy"], "only_regex": []}}
+{"oracle_id": "ab66f8a8-eb3d-4c2d-95e9-26a53c66b237", "name": "Mask of Avacyn", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "21474195-5d91-466d-8874-4818c900dea7", "name": "Mask of Law and Grace", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "9b2cdbed-c733-409b-b0e4-2c8960c25111", "name": "Maskwood Nexus", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "aef067b4-cd9c-4f18-8c63-fbbc39b63376", "name": "Mass Appeal", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "b133129d-1ffb-4b78-9f5b-852d163cc9b7", "name": "Mass Polymorph", "llm_labels": [], "regex_labels": ["board_wipe"], "diff": {"only_llm": [], "only_regex": ["board_wipe"]}}
@@ -984,9 +1063,11 @@
 {"oracle_id": "a65250f6-55e2-47ed-a355-d690047db6f2", "name": "Master of Dark Rites", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "181e6b3e-c33e-49e7-acb8-67473289a856", "name": "Master of Etherium", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "01dc86f3-5ebb-4b10-bf68-8fc9f232c724", "name": "Master of the Feast", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
+{"oracle_id": "1cb419cc-d8e4-4676-987f-089cebccc374", "name": "Masterful Flourish", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "cc6e6e16-da2b-4fc0-91ad-b76f0a101306", "name": "Masterful Replication", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "16182e01-22ff-4786-985d-919b47c4aa4d", "name": "Matzalantli, the Great Door // The Core", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "1b94a11b-21b0-4465-a520-69608f022fb4", "name": "Mavren Fein, Dusk Apostle", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "f0e85b74-12fb-4d63-853e-7a3f41f731b4", "name": "Maximum Overdrive", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "68957dca-df5c-4051-af22-407cb7e47200", "name": "Meathook Massacre II", "llm_labels": ["board_wipe"], "regex_labels": ["removal"], "diff": {"only_llm": ["board_wipe"], "only_regex": ["removal"]}}
 {"oracle_id": "f1eb489d-104c-4801-b6d2-3f1a7ee73a75", "name": "Mechtitan Core", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "52e8ec03-23ed-43a0-bce2-ad0cd5c4d737", "name": "Megantic Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1031,6 +1112,7 @@
 {"oracle_id": "ace8e88e-ca6a-4bdf-8c6d-1b914fc00259", "name": "Monologue Tax", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "6e27956e-ba2f-41a9-8e39-ec54424591b6", "name": "Monstrous Vortex", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "e69e8de4-b521-4888-8074-17f1efe2f345", "name": "Monument to Endurance", "llm_labels": ["ramp", "card_draw"], "regex_labels": [], "diff": {"only_llm": ["ramp", "card_draw"], "only_regex": []}}
+{"oracle_id": "9627ed9a-5ade-412d-bf8d-f0705b1c9405", "name": "Moogles' Valor", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "bb7638ce-3802-4198-89d2-6f5b647bd8fb", "name": "Moon-Boy, Dino Rider", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "df702b0c-e011-497f-ae29-9876efac4a4c", "name": "Moonlit Meditation", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7346c266-19d8-4432-acf5-f00aff074ad5", "name": "Moonsnare Prototype", "llm_labels": ["ramp", "removal"], "regex_labels": ["ramp"], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1068,6 +1150,8 @@
 {"oracle_id": "9837287b-d821-4655-8f01-93fc6c7f0ecc", "name": "Nature's Will", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "613a8774-165e-4cf6-ad43-124f9ffc9980", "name": "Nautiloid Ship", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d36acdfe-2b1b-4c19-8b81-0b3127e480fe", "name": "Necroduality", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "7d9a424e-cab1-410f-9c04-ee0025d04169", "name": "Necrogen Rotpriest", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "e5021798-1f3d-42ed-be88-e76349ef46c6", "name": "Necropede", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "94a844d2-0574-45a7-b347-e0e329767c42", "name": "Necropotence", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "a6e720a2-9819-40ec-a811-7812898b531a", "name": "Necrotic Hex", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "2fdeb920-2e48-4308-9517-743eec219c04", "name": "Necrotic Ooze", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1105,10 +1189,13 @@
 {"oracle_id": "55b6434b-1542-40fd-b12a-697d40976582", "name": "Ob Nixilis, Captive Kingpin", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "73021bd2-3b60-4fe4-8858-6eb525be1422", "name": "Ob Nixilis, Unshackled", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "d39b9f64-dc9b-413f-8d05-e21ef46d6756", "name": "Oblivion Sower", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "517be4da-9aa0-4a83-a559-962df0450f2c", "name": "Oblivion's Hunger", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "7e7abb44-47b0-4d80-b8a1-36f0c1032aa3", "name": "Obsessive Pursuit", "llm_labels": ["card_draw", "synergy"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "b4ce2c8f-a19c-461e-8a2e-0ec2bd3ebca3", "name": "Ocelot Pride", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "65681a2a-8395-4390-845f-9be974994dcb", "name": "Octavia, Living Thesis", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "1cf7e5a0-cc8f-4bf7-9767-2f3bcae26339", "name": "Octomancer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "6fec368d-374d-4318-861b-ff478ba51a3c", "name": "Octopus Form", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "e7c879fa-a34b-42d9-8edf-29254380c1f7", "name": "Ogre Menial", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0a5e3748-2e58-4e53-9653-8af4e21cf223", "name": "Ogre Slumlord", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d3b7b541-6f05-46c1-8031-c848c4bd4635", "name": "Ojer Axonil, Deepest Might // Temple of Power", "llm_labels": ["lands"], "regex_labels": [], "diff": {"only_llm": ["lands"], "only_regex": []}}
 {"oracle_id": "eda11077-b2ce-408b-b982-def2da8fe599", "name": "Ojer Kaslem, Deepest Growth // Temple of Cultivation", "llm_labels": ["ramp", "card_draw"], "regex_labels": [], "diff": {"only_llm": ["ramp", "card_draw"], "only_regex": []}}
@@ -1139,6 +1226,7 @@
 {"oracle_id": "e07297c7-83bc-4162-bbb1-362bc737efe0", "name": "Open the Way", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "bf0b252d-1295-44e4-bac3-113b5732a2a9", "name": "Opposition", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d9c36ed5-629c-4709-bff5-2f10fcde608a", "name": "Orb of Dragonkind", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c420d9c8-dc54-46b8-bd22-39c21019c3d7", "name": "Orbs of Warding", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ea5103f5-27e0-4eb1-902c-7f34652d6bf3", "name": "Orcish Bowmasters", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "31895957-5fa8-46dc-a76e-37bbdc6072ad", "name": "Orthion, Hero of Lavabrink", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "aa00ae0b-7c0f-427e-8102-ce0e2a6af5df", "name": "Orzhov Basilica", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -1163,6 +1251,7 @@
 {"oracle_id": "41fed659-237c-4d8e-ad31-d17fa0d3f764", "name": "Ozolith, the Shattered Spire", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0c7ba712-6a99-4d2f-9242-a2163a11f69c", "name": "Padeem, Consul of Innovation", "llm_labels": ["card_draw", "protection"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "4eedf21c-0ad1-48da-a9fe-2ffdbf8371e9", "name": "Pain for All", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "fb5a02ce-6080-47f9-815a-fef3758d753b", "name": "Paladin of Predation", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7798a4d9-1c1d-48e6-b9a2-ecd6aec1efa7", "name": "Palantír of Orthanc", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "0023888e-7bec-43e0-8dee-d1a4eb94b372", "name": "Palinchron", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "76678885-3674-443d-b9a2-2a460cf6aac0", "name": "Panharmonicon", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1179,6 +1268,7 @@
 {"oracle_id": "7e52e91b-70e6-4f26-a5d4-b8e33d1debbf", "name": "Pathbreaker Ibex", "llm_labels": ["wincons", "synergy"], "regex_labels": ["wincons"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "4bf95747-4572-49b8-b892-87fe7f910252", "name": "Pathrazer of Ulamog", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "25fc3bc2-d852-4f52-9adb-c7e35c06f3af", "name": "Patriarch's Bidding", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "1df7a09f-fbc8-4c2a-a903-bab9e680eda7", "name": "Patriot, Shield Wielder", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "2d70b4fe-7aaf-4ffd-920c-023b44707e1f", "name": "Patron Wizard", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8dbc8fdb-36ce-4f30-b679-9c2029fcd9c6", "name": "Patron of the Vein", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9bcaf141-1f1f-491f-aced-13dc093b9e2c", "name": "Pawn of Ulamog", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -1192,22 +1282,34 @@
 {"oracle_id": "e1708ad9-35d4-4243-92ca-ddf9d129aa32", "name": "Personify", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "dafe63ef-f3d6-45e7-877a-573da92ba85e", "name": "Pestilence", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "2572add6-c0b1-44bd-8713-1e94e3fe69d6", "name": "Pestilence Demon", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
+{"oracle_id": "c4779671-2a01-4eef-847c-ede36091fc4a", "name": "Pestilent Souleater", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "09d01406-b529-4c3b-900e-d8c889a4c400", "name": "Phage the Untouchable", "llm_labels": ["removal", "wincons"], "regex_labels": ["wincons"], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "046ccc8a-ec0d-4dc5-b41d-5e8a6d86812a", "name": "Phenax, God of Deception", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
 {"oracle_id": "08f17ebc-c0fd-493f-84b3-e9250694543e", "name": "Phial of Galadriel", "llm_labels": ["ramp"], "regex_labels": ["ramp", "card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "3d79cbe2-cf1b-4313-ab47-0118fcdbfc6c", "name": "Phylath, World Sculptor", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "958628af-243c-4eb0-8620-5d483b6da768", "name": "Phyresis", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
+{"oracle_id": "91760bdf-a82a-4f3d-b925-3bc81ffbd41f", "name": "Phyrexian Crusader", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "9e7b03ae-dcf5-4892-9000-aee7e2cd2fed", "name": "Phyrexian Digester", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "b16085d5-6d00-4d47-ab8b-d18d55c72141", "name": "Phyrexian Hydra", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "009fcd1e-5c5f-435b-afc1-099f1622e45c", "name": "Phyrexian Juggernaut", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "4fc2755c-ae7b-4147-a573-b33679a461e8", "name": "Phyrexian Swarmlord", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "f8526a36-eb8f-457d-b532-e12b47622cfa", "name": "Phyrexian Triniform", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "e9162478-0b10-422a-a11c-7b39b00f026e", "name": "Phyrexian Vatmother", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ad97333e-733c-402f-8ca3-e836c96b843c", "name": "Pili-Pala", "llm_labels": ["synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": ["ramp"]}}
 {"oracle_id": "9e62f30d-3130-416e-b459-48b5f71f8be9", "name": "Pillar of Origins", "llm_labels": ["ramp"], "regex_labels": ["ramp", "synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "522e8db5-857e-492f-afed-d60cd2ce3dcd", "name": "Pinnacle Emissary", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "1e2ee630-9d37-4396-ae18-697c1a3a4e62", "name": "Pip-Boy 3000", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "25afddd2-6e48-4742-b34e-e3b5def7c0fd", "name": "Pippin, Guard of the Citadel", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "4804fc42-588c-487a-8ff7-bcc16749fc1f", "name": "Pit Scorpion", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f086a82d-8dbe-4d02-a076-03789704e9d4", "name": "Plague Belcher", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "2f328e05-5edf-4b21-9c2a-50dcf1e7b3ec", "name": "Plague Myr", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "047e761e-7bbe-403b-86d7-cb9fb0b20b21", "name": "Plague Stinger", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "b368121b-9984-4a01-8d35-d1e4a8a87539", "name": "Planar Genesis", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "a959a91a-3e1d-4bd4-9e14-5ee977540146", "name": "Planar Incision", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "f89d093d-c815-4df7-a348-2005aa227586", "name": "Planetarium of Wan Shi Tong", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "9e769a65-7aa5-484d-9493-badb485b5964", "name": "Plargg and Nassari", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "9c58d241-4d9f-4b46-b8ee-f4587f9acfd6", "name": "Plaza of Heroes", "llm_labels": ["lands", "protection"], "regex_labels": ["lands"], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "e88b3066-eb10-4ade-8207-af4de40facec", "name": "Pledge of Loyalty", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "b099fc54-cdbc-46cb-b4e4-7c2ca77b115b", "name": "Plumb the Forbidden", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "9780d975-acbe-40c6-b444-1e1e6b772788", "name": "Poetic Ingenuity", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "2c9bf40b-ddcb-4f46-a81e-56b91dfc784f", "name": "Poison the Waters", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
@@ -1222,6 +1324,7 @@
 {"oracle_id": "83e2b251-bd60-4c5c-b9e2-32c22b28fb8b", "name": "Pride of the Perfect", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "2ad8ff62-d090-4835-9274-3b755ba0f8e6", "name": "Priest of Forgotten Gods", "llm_labels": ["ramp", "card_draw", "removal"], "regex_labels": ["ramp", "card_draw"], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "3a198a16-17b9-481e-b516-5bc945c7e247", "name": "Priest of Titania", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "793fe31a-2b11-49f8-9851-719469ad1726", "name": "Priests of Norn", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "350f5c0a-563f-41c5-8f7b-10f409bb4d3b", "name": "Primal Command", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "311e9368-696a-47e7-aa2f-3ef1b1a92e2b", "name": "Prime Speaker Zegana", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "c3c25a2c-f71c-4cb7-9117-0bcda9248bfd", "name": "Prismari Charm", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1229,16 +1332,19 @@
 {"oracle_id": "abd62af0-c17d-4f62-af15-9ea83037b990", "name": "Privileged Position", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "405a54b3-fb9f-4503-a4fc-3ba6a5e58205", "name": "Prodigy's Prototype", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "04152e7a-969c-4858-841b-0a569a9fc1bf", "name": "Professional Face-Breaker", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "e3c8e552-d315-486d-a176-813b3a300174", "name": "Professor's Warning", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "747f6d0f-3c10-4fef-b7ae-f578c8964ab5", "name": "Progenitor's Icon", "llm_labels": ["ramp"], "regex_labels": ["ramp", "synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "e1d294e8-67b1-4a4a-86b8-f98f28a327d9", "name": "Promise of Loyalty", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "eefe2d53-4856-465d-a900-77836ef9ae07", "name": "Prophet of the Scarab", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "1e9b0fd6-5aae-401a-8df5-d94ce6442696", "name": "Prosper, Tome-Bound", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "1fba543c-bd22-4f7b-9ff4-0631af8ee814", "name": "Protective Bubble", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "97024e8e-dfde-4769-bc27-c3d6fad19e7c", "name": "Proteus Staff", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "31324235-8a2b-4ce4-b0d4-6d947489b930", "name": "Prowess of the Fair", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "328b42f1-d679-4f9c-80e3-38fe3b965d10", "name": "Psychic Corrosion", "llm_labels": ["wincons"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["wincons"], "only_regex": ["card_draw"]}}
 {"oracle_id": "5f928e54-3027-4f2f-9fef-d63b9ca416aa", "name": "Psychic Spiral", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
 {"oracle_id": "451e35dd-e0b5-4157-8511-bacb315e19bd", "name": "Psychic Vortex", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "2876e74f-a242-4995-9702-0b737a1ab67a", "name": "Psychosis Crawler", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
+{"oracle_id": "3a336b30-335a-49d0-b192-c20f3670452b", "name": "Putrefax", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7192ff07-9a84-49ad-a40c-ce255ce21544", "name": "Putrid Imp", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "86ef6474-613f-41fb-931c-d4279b03ed99", "name": "Pyretic Ritual", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "d001febc-d511-4e65-a631-91dc9415056b", "name": "Pyrokinesis", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1260,11 +1366,15 @@
 {"oracle_id": "b7da26c9-78a6-41c5-a5ef-6555e8274d7a", "name": "Ral, Storm Conduit", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "49039519-62db-4605-b600-cef6f34c893f", "name": "Rampage of the Valkyries", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "a08393b5-603b-41c4-aa03-2ae9c74884a7", "name": "Rampant Frogantua", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "694cb93a-bcc5-44b0-a76c-19ae4a4e5e0f", "name": "Ranger's Guile", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "45873747-f2a4-4d83-9492-bfc97df7b605", "name": "Ravenous Robots", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8f0738ce-1f07-422c-9895-8ac3c65f9054", "name": "Ravenous Rotbelly", "llm_labels": ["removal", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "synergy"], "only_regex": []}}
 {"oracle_id": "9cfac390-4638-4654-8b50-65c0f0886b18", "name": "Ravenous Tyrannosaurus", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "669701a5-fd7a-43f8-93f4-da7a8c4dd3dc", "name": "Razor Barrier", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "4d5649a1-5716-4560-a956-84300bf6a2f4", "name": "Razor Swine", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "569da5d3-6af2-4021-a464-b30ebaaf6fa0", "name": "Reality Heist", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "77398866-eebb-4091-b566-7726f8194a59", "name": "Realmbreaker, the Invasion Tree", "llm_labels": ["ramp", "synergy"], "regex_labels": [], "diff": {"only_llm": ["ramp", "synergy"], "only_regex": []}}
+{"oracle_id": "251cee41-30f5-4bba-93cd-31493a5ea051", "name": "Reaper of Sheoldred", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "496999a7-a82a-45ea-9c4e-1b6aabc781cd", "name": "Rebuild", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "a621ae15-122a-4e11-bfcf-11dfc09784c0", "name": "Reckless Barbarian", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "928bf0d9-89be-462d-aeb7-74a65e95535c", "name": "Reckless Endeavor", "llm_labels": ["board_wipe"], "regex_labels": ["ramp"], "diff": {"only_llm": ["board_wipe"], "only_regex": ["ramp"]}}
@@ -1287,6 +1397,7 @@
 {"oracle_id": "f0449cbd-855c-4c20-a1f5-f76a395d8d39", "name": "Reprieve", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "611bfaa6-b098-48d9-9e49-1e7dc8687f15", "name": "Repulsive Mutation", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "ba5055ce-6809-47a4-bee6-fb97a5b60f8a", "name": "Research Thief", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "e68fa0e6-9f55-498b-a13e-197cb30ca4aa", "name": "Resistance Reunited", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ca2aee09-398d-4eaa-acbb-98663216185b", "name": "Resolute Watchdog", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "9263287d-f782-4318-9ab8-e2e5f8107f5e", "name": "Resonating Lute", "llm_labels": ["ramp"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["ramp"], "only_regex": ["card_draw"]}}
 {"oracle_id": "2ac93092-1a57-4cf7-8f03-1dca86d5c476", "name": "Resplendent Angel", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1305,6 +1416,8 @@
 {"oracle_id": "8dd6d060-d023-48a6-85cb-7a5521b6257b", "name": "Revitalizing Repast // Old-Growth Grove", "llm_labels": ["lands", "protection"], "regex_labels": ["lands"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "7613c50b-4568-4340-b64a-ab427aaffd51", "name": "Rhys the Exiled", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "891d2690-7144-4f87-b6ef-96f2469780a9", "name": "Righteous Valkyrie", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "acaab3fe-8b12-4f11-9714-7ca278674975", "name": "Righteous War", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "4548f379-2647-4446-9e56-e7ef0662793a", "name": "Ring of Evos Isle", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "be4f47e9-1bd2-4aa9-bc85-3f203ad21639", "name": "Rionya, Fire Dancer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "45bcebd0-5e93-4433-b92f-b4c161d04bd6", "name": "Ripples of Potential", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "2acf8e34-9215-4a72-a24f-09d3bdd0083a", "name": "Ripples of Undeath", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -1330,10 +1443,12 @@
 {"oracle_id": "6835bf6d-7197-481b-ac26-276ce363b4ad", "name": "Rooftop Storm", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "cb752313-dc7f-47fc-9077-9e3298e8f5fb", "name": "Root Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "36117e99-a2bc-46f9-8e17-bd2e2a9c31f4", "name": "Rot Hulk", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "7409906d-7111-48fa-bfea-8b95e0fdb7dc", "name": "Rot Wolf", "llm_labels": ["synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": ["card_draw"]}}
 {"oracle_id": "515c522f-51d5-4f6d-b9b1-ea3c7f6a378e", "name": "Rousing Refrain", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "290faa28-450e-4797-9a8f-642d8af3f82a", "name": "Run Away Together", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "2efea460-c3e1-4578-a587-134e13bdf264", "name": "Runechanter's Pike", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "61f68cf6-e083-4264-89b4-cc17749b2a8b", "name": "Ruthless Winnower", "llm_labels": ["removal", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "synergy"], "only_regex": []}}
+{"oracle_id": "115c7ca7-c27b-43ca-9281-be6913e90059", "name": "Sabertooth Cobra", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f53da056-97be-41ad-8cfc-0d92e17dcd7b", "name": "Sage of Fables", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "852621bf-9ab7-4027-89fb-b438e4080684", "name": "Sage of the Falls", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "1aee3a93-d064-4d10-9fe6-879a1f342c1f", "name": "Saheeli's Directive", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1359,13 +1474,16 @@
 {"oracle_id": "aa321138-b1a7-4b8e-a2ca-b9ce65704e92", "name": "Satyr Enchanter", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f5295bfe-7e73-44ad-9cfd-200e31c5d52b", "name": "Sauron, Dino Devotee", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "8dd5b7d5-3d92-40e2-9572-bf70ae591bed", "name": "Savage Order", "llm_labels": ["protection", "synergy"], "regex_labels": ["synergy"], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "7ef5c812-ad7d-4d6c-8ee5-68561e7e4bd7", "name": "Saved by the Shell", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "c235015e-a7a9-4f8d-bf4a-cf68b3847f83", "name": "Scapeshift", "llm_labels": [], "regex_labels": ["ramp"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "8c72d54e-97a6-408e-ae77-18d3c96b3bd8", "name": "Scarlet Witch, Chaotic Avenger", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "ed3652da-0127-4c9e-9913-f20becdd0ba9", "name": "Scattershot", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "7e97a242-0bac-4f18-9228-e98ecca36254", "name": "Scavenger Regent // Exude Toxin", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "fd547632-a29a-4dad-a9da-155882391815", "name": "Scion of Draco", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "5818b31e-2e86-4230-937e-478e14534f91", "name": "Scion of Opulence", "llm_labels": ["ramp", "card_draw", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": []}}
 {"oracle_id": "b4031540-584b-4c8a-9e4e-d68ae5cdec5b", "name": "Scion of the Ur-Dragon", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6ee68855-c8c5-422b-88da-163c09a96416", "name": "Scorched Ruins", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "561d514d-060e-491f-a703-8a7f9da5204d", "name": "Scourge Servant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "57308fc8-8915-4211-a5fd-9363caea9ab9", "name": "Scourge of Fleets", "llm_labels": ["board_wipe"], "regex_labels": ["synergy"], "diff": {"only_llm": ["board_wipe"], "only_regex": ["synergy"]}}
 {"oracle_id": "62dac700-49f7-4745-af67-37d2a81dcebc", "name": "Scrap Mastery", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9f762b9f-7525-4ff8-bc1d-fbab66fd4013", "name": "Scrollshift", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
@@ -1387,11 +1505,14 @@
 {"oracle_id": "98bf6311-bc9b-4bf8-ac83-c041973b86d0", "name": "Self-Destruct", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "ce19b337-9266-471d-bec3-49eb7f0e62ac", "name": "Selfless Safewright", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "20c9fb06-3941-456f-ba02-4fbde9deb1e2", "name": "Selfless Samurai", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
+{"oracle_id": "49dc3434-2501-4788-84f2-93e55730f67c", "name": "Selfless Savior", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "71d785a9-ddc8-472e-a778-a551b444a4bd", "name": "Selfless Spirit", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "bbd0c406-c995-46e0-898d-375fdbede203", "name": "Semblance Anvil", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "13575cf9-65c1-4861-b21e-eb2155e07766", "name": "Sensei's Divining Top", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "1d0f1186-be6c-45c3-9703-f0c1e13892fb", "name": "Sentinel Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ac8952c9-bd30-48cd-b964-7e6271f9cbc8", "name": "Sephara, Sky's Blade", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
+{"oracle_id": "c7335845-ace9-402d-a5be-3bfe3fe9b089", "name": "Septic Rats", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "0e3a11f4-c880-4932-bc7e-7aea8a9472bc", "name": "Serpent Generator", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d31c6043-e005-4efe-9aa7-d82cb122eebe", "name": "Serpent of Yawning Depths", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "5d451958-25f3-4e70-8be2-c832f60f39e9", "name": "Serpent's Soul-Jar", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7a56c6e1-0509-4783-9b29-cf3163977166", "name": "Serra's Emissary", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -1405,10 +1526,16 @@
 {"oracle_id": "037e7fc9-3aa6-484c-a2c8-43009e45f1d8", "name": "Sharuum the Hegemon", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9853d789-b048-4cba-a64d-db2694ca9173", "name": "Shattered Perception", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "78301998-fd9b-4cd5-afad-dbcb43cac2a7", "name": "Shatterskull Smashing // Shatterskull, the Hammer Pass", "llm_labels": ["lands", "removal"], "regex_labels": ["lands"], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "73535033-2875-4a82-98d5-84548e349f13", "name": "Shell Shield", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "c1909d70-d8f4-4c54-8587-0a910f123238", "name": "Shelter", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "d13fc657-c6fc-4394-bc70-691050550226", "name": "Sheltered by Ghosts", "llm_labels": ["removal", "protection"], "regex_labels": ["removal"], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "77aaaad5-7960-453d-b024-6dacbca3d606", "name": "Sheltering Word", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "a7df9a4e-d556-4345-9884-0724a3f9d5f8", "name": "Sheoldred's Headcleaver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9218b56d-aaec-482f-99e9-d95d227bfe25", "name": "Sheoldred, Whispering One", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "34f34409-326d-4994-a0ea-1a69aa278f03", "name": "Sheoldred, the Apocalypse", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "af18e496-fef9-4869-867b-bdac653cafd0", "name": "Shepherd of Rot", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "1c64ab87-1da1-4b07-a3f2-73631ae3d501", "name": "Shield of Duty and Reason", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "4fdd570f-dbe0-486f-9843-f77f80956307", "name": "Shield of Kaldra", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "9b598025-80a3-4144-be9a-863165161594", "name": "Shield of the Oversoul", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "4976f08c-6f8e-42e4-9584-f04793518ddb", "name": "Shield-Wall Sentinel", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "79085dea-8daa-41c0-a975-61e3e6da2e26", "name": "Shielded by Faith", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -1416,7 +1543,10 @@
 {"oracle_id": "cbad3570-5417-42e6-b3ef-f42194098314", "name": "Shigeki, Jukai Visionary", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "de1316f2-1cca-4ac4-aead-0fd8b4036d88", "name": "Shimmer Dragon", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "c63402b2-1f8c-4004-82d8-48ea26bfe3fc", "name": "Shimmerwilds Growth", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "c9d8c983-2845-42e6-b6b8-bf7cf2729b23", "name": "Shore Up", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "426bfd00-e727-49f4-be2d-df5289d2cc61", "name": "Shriek Raptor", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8ea46945-d5ab-4209-b473-4769e7b8b962", "name": "Shrine of the Forsaken Gods", "llm_labels": ["lands", "ramp"], "regex_labels": ["lands"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
+{"oracle_id": "e714bcfb-b451-4b7b-ab60-4cb845c75647", "name": "Shunt", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "de8ccd32-f537-4a11-8dc4-e48836a0b139", "name": "Sidewinder Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "3fad7072-21e3-446e-a28f-615038c8bfea", "name": "Sidisi, Brood Tyrant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9e9d538b-a9e5-4d59-b7c1-208fe18110e3", "name": "Siege-Gang Lieutenant", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1440,6 +1570,7 @@
 {"oracle_id": "daf6c421-e7f7-4fc6-967c-65f4ab96fcfd", "name": "Skithiryx, the Blight Dragon", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "cf890abd-b282-4dbb-ac86-9e7caec1c1b8", "name": "Skittering Invasion", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "20053847-6623-493c-8cdb-a69cda3b1577", "name": "Skrelv, Defector Mite", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
+{"oracle_id": "1c832491-6b78-49c6-baf2-63f17847f5f5", "name": "Slaughter Singer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "07190a8b-2a59-45b3-9fbf-505161698a9c", "name": "Slave of Bolas", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "bcd086ce-de5c-4b34-92a1-ece22055e479", "name": "Sledge-Class Seedship", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "82506e51-3fe1-446f-83c9-69e67583cefc", "name": "Slip Out the Back", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
@@ -1451,6 +1582,7 @@
 {"oracle_id": "1f2d6cf4-b8f4-440f-ac08-ca47ada868ac", "name": "Slobad, Goblin Tinkerer", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
 {"oracle_id": "17b29350-4f37-4552-8192-4856b15345f9", "name": "Smuggler's Share", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "605f719d-01f8-406c-9d4c-3f4992c6a69f", "name": "Smuggler's Surprise", "llm_labels": ["card_draw", "protection"], "regex_labels": [], "diff": {"only_llm": ["card_draw", "protection"], "only_regex": []}}
+{"oracle_id": "b6a64b19-e312-4e98-91bd-3bedca84eed3", "name": "Snake Cult Initiation", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "1e6a24be-8281-41c1-a5ba-b68f0ef1d7b8", "name": "Snakeskin Veil", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ac914d98-221e-426c-8a50-342896b15f9e", "name": "Snap", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "e88de17c-086d-4e2a-b5b2-2f9f57ca7c0f", "name": "Snapback", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1471,11 +1603,15 @@
 {"oracle_id": "5c63a244-75d7-4372-baf4-7a3526f240c8", "name": "Spaceshift", "llm_labels": ["synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": ["removal"]}}
 {"oracle_id": "3641ceef-4f26-4647-ac12-c958524d68ca", "name": "Spawn-Gang Commander", "llm_labels": ["removal"], "regex_labels": ["ramp", "removal"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "e4bacf1b-0a45-4c73-857d-dffadb7e6fa5", "name": "Speaker of the Heavens", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
+{"oracle_id": "025f8db8-11d1-4c59-8e1f-004c9c843fd8", "name": "Spearbreaker Behemoth", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "effb99e6-db1b-4ada-879d-431d9d13d4b7", "name": "Spectra Ward", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "bb9bb65e-504f-4edd-8d47-d0efa03e7d17", "name": "Spectral Deluge", "llm_labels": ["board_wipe"], "regex_labels": ["synergy"], "diff": {"only_llm": ["board_wipe"], "only_regex": ["synergy"]}}
 {"oracle_id": "0da4988f-47ca-4786-ac33-edbc9cfd6785", "name": "Spelltithe Enforcer", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "9aa8eef1-fc67-4d54-9783-4d0175a76741", "name": "Spellweaver Helix", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "158db438-52ba-4c30-b7bf-d1c4f76da917", "name": "Sphinx's Tutelage", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
+{"oracle_id": "9b844a0c-590f-46c7-b53e-c99398e0d8c0", "name": "Spinebiter", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "81a51328-b995-4f3b-90bc-a20ae21dd254", "name": "Spirit Mantle", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "30cd69a8-7893-4075-94ca-04450ff821d3", "name": "Spirit of the Hearth", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "c4d2c804-1448-4639-b41b-0a86bac083b9", "name": "Spiteful Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "29b537f5-4d9f-40ed-b38b-e8faa2b5af7d", "name": "Splash Portal", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "13fe5e46-77a6-45d8-ac0b-c3d740eccf86", "name": "Splendid Reclamation", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -1489,8 +1625,10 @@
 {"oracle_id": "55aafc25-76c5-4621-941b-754bd8f13e64", "name": "Stalwart Shield-Bearers", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "fb03befb-b4e4-4ae9-908d-a16d5b03b054", "name": "Star Athlete", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "922d603e-6623-4455-b91f-fad76f94045a", "name": "Starfield of Nyx", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "8a7643e4-b824-441a-bbe6-349fc7a3e11e", "name": "Starlit Mantle", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "e7b92789-47a9-430a-ad57-be7b6c3d63cb", "name": "Starnheim Aspirant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8d72ddb3-ef6e-4847-b6d4-5d85b1dd5802", "name": "Starscape Cleric", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c77c23bc-efde-43ce-bf6f-7a8531d81d89", "name": "Stave Off", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "de403543-e61a-44fc-85e1-1e621d90ca8b", "name": "Steal the Show", "llm_labels": ["removal"], "regex_labels": ["card_draw", "removal"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "986ae327-f433-4c58-93dc-afc544b9bfcb", "name": "Steel Overseer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d9abda7e-6ca2-42ea-ab24-c542e57014f1", "name": "Steelshaper's Gift", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1507,6 +1645,7 @@
 {"oracle_id": "0d6202c7-b19c-429a-85c4-332024381dd7", "name": "Stonybrook Banneret", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "03136fe1-17e2-4b1c-860a-dc6373c8fdb5", "name": "Storage Matrix", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
 {"oracle_id": "30aa362b-7ab1-486e-9802-1171e0dc2416", "name": "Storm Herd", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
+{"oracle_id": "7c47876d-143f-4e4c-b151-90c099e452a1", "name": "Storm, Force of Nature", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a145ff8c-5812-4bcb-bd16-9839dc25121d", "name": "Storm-Kiln Artist", "llm_labels": ["ramp", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0127c13f-7b0f-44c3-8b35-97f306c5f239", "name": "Strategic Betrayal", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "f52759f9-7aa5-4493-8fe3-7be9ec340dde", "name": "Street Urchin", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1520,11 +1659,14 @@
 {"oracle_id": "615603bb-3899-4419-9444-e4b64c94a438", "name": "Sunscape Familiar", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "d82929f2-57ad-45be-a834-984437046026", "name": "Super Intelligence", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "e1b577ad-1488-43b5-83d9-e40bd60c74be", "name": "Super Strength", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "db43b866-13e0-4336-a580-b64fe1ee5954", "name": "Suq'Ata Assassin", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "3f15349a-6ac6-4091-95a3-ae9f593e4650", "name": "Surgespanner", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "6d364283-617a-4661-865d-abd9c304b2f9", "name": "Surgical Skullbomb", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "0209dc74-ac49-4deb-907a-e9fa49d27a0f", "name": "Surly Badgersaur", "llm_labels": ["ramp", "removal", "synergy"], "regex_labels": ["ramp", "removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "50d6cadc-07e4-479e-90f4-e3a20f769bab", "name": "Susur Secundi, Void Altar", "llm_labels": ["lands", "card_draw"], "regex_labels": ["lands"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "872bebff-720d-459b-8f86-fb9129a8d1fb", "name": "Svyelun of Sea and Sky", "llm_labels": ["card_draw", "protection", "synergy"], "regex_labels": ["card_draw", "synergy"], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "4bb4844c-2678-45c7-8f5e-9cf185fd484b", "name": "Swamp Mosquito", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "c68627b1-025c-48c9-9646-98eb2d268e71", "name": "Swerve", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "5d47e820-913f-441a-a6cc-37ab3181d79a", "name": "Swift Reconfiguration", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "c8b143ad-43ec-4e0d-a440-e348daa31391", "name": "Swiftfoot Boots", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "0b1f6e77-55db-4638-9030-3f4e4d37eb1b", "name": "Swooping Pteranodon", "llm_labels": ["removal", "synergy"], "regex_labels": [], "diff": {"only_llm": ["removal", "synergy"], "only_regex": []}}
@@ -1549,11 +1691,14 @@
 {"oracle_id": "1f3c3365-7dc8-47e1-b304-2a09aa229292", "name": "Szarel, Genesis Shepherd", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "955abada-aba2-41c2-96ff-58e3679ad7e5", "name": "Taborax, Hope's Demise", "llm_labels": ["synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": ["card_draw"]}}
 {"oracle_id": "525d98d6-b117-44f4-b19c-3dd26e7c9fd4", "name": "Tail Swipe", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "95a53dd7-76dc-46f1-8833-fafd02ba49c4", "name": "Tainted Strike", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "e8d0eafe-540a-4b2e-a989-e98ff3c31105", "name": "Take Up the Shield", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "8c45bf9d-a017-43bf-9e32-67810a8a217b", "name": "Talon Gates of Madara", "llm_labels": ["lands", "protection"], "regex_labels": ["lands"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "ea1eb902-a23c-44ff-9169-19baf71de238", "name": "Talrand, Sky Summoner", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d9356199-4ce3-44fa-9463-90fc134088f9", "name": "Tamiyo's Logbook", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "bb2b324c-970a-4920-884e-c92ba49669f0", "name": "Tamiyo's Safekeeping", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "1576f031-57ca-4894-b461-8ea57b6cefdc", "name": "Tandem Lookout", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "887a9f2f-17b4-4a20-a464-9665cde6f293", "name": "Tangle Angler", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "76cb1912-3791-44b8-b594-b92dab21bafc", "name": "Tannuk, Memorial Ensign", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0715e860-3b3b-4331-9718-207973e94fee", "name": "Tatyova, Benthic Druid", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "fada8f16-85e8-44f1-9d2c-99da1e27851f", "name": "Taunting Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1568,6 +1713,7 @@
 {"oracle_id": "07d0b06b-80cb-4518-92c9-84ea87a7e08a", "name": "Teferi, Temporal Archmage", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "ae7604bb-4818-45a3-960c-cf3d83f15964", "name": "Teferi, Time Raveler", "llm_labels": ["card_draw", "removal"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "98c389ed-b960-42e2-9c76-a062f77c9a78", "name": "Teferi, Who Slows the Sunset", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "e02740e6-3eba-4f82-831b-35a9f122f07f", "name": "Tel-Jilad Fallen", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "c786a0aa-d86f-42c3-a7ea-5cb6ab72b5ec", "name": "Teleportation Circle", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "536c36d9-5ef4-441c-a6c8-5806644d805c", "name": "Tempered Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e220138c-5fc6-487d-9fa9-f21b2fb1f12c", "name": "Tempered Steel", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1624,6 +1770,7 @@
 {"oracle_id": "aed1f0cd-8df8-415f-afd6-ccfd12234334", "name": "The Rollercrusher Ride", "llm_labels": ["removal"], "regex_labels": ["board_wipe"], "diff": {"only_llm": ["removal"], "only_regex": ["board_wipe"]}}
 {"oracle_id": "283054ed-5fbd-4202-bc02-294079aaff03", "name": "The Ruinous Powers", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "c75e55f2-fd6c-4816-9d96-21eeb8369aff", "name": "The Scarab God", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
+{"oracle_id": "3688ad0d-653b-4d5d-a57e-444db679d83e", "name": "The Serpent Society", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a82d855c-50c8-43f2-99ba-a84fe84539c5", "name": "The Ten Rings", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "e58e94dc-9602-48db-9dd9-9d3051c33a76", "name": "The Thanos-Copter", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "80312910-5d53-44f1-9982-e46dc7532abb", "name": "The Unbeatable Squirrel Girl", "llm_labels": [], "regex_labels": ["synergy"], "diff": {"only_llm": [], "only_regex": ["synergy"]}}
@@ -1660,6 +1807,7 @@
 {"oracle_id": "3da5977a-36d4-4f32-ab9b-8b93809d818d", "name": "Time Sieve", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8e589dca-d31e-4d2f-81b1-18e5f9198795", "name": "Timely Ward", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "dd2f698c-b3b4-4dc8-9950-9be03ca7dc9e", "name": "Tinder Wall", "llm_labels": [], "regex_labels": ["ramp", "removal"], "diff": {"only_llm": [], "only_regex": ["ramp", "removal"]}}
+{"oracle_id": "e20ad2f7-cb41-4e6e-8f3b-bd260f4a2ecf", "name": "Tine Shrike", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "008eda1f-b913-4f04-8c29-5e87c270149e", "name": "Tinybones, Trinket Thief", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6a1bce89-0c11-4d8d-aacb-c0a5a5effffc", "name": "Tippy-Toe, Terrific Partner", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "e6555cca-e608-4c87-b835-9cd47fd1f543", "name": "Tireless Tracker", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
@@ -1670,6 +1818,7 @@
 {"oracle_id": "8c3495bf-02e7-4ad9-949d-92eb3d2b662a", "name": "Torbran, Thane of Red Fell", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "30a0a6c2-1fbb-4784-ab96-22611d57e62c", "name": "Torment of Hailfire", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
 {"oracle_id": "afaef788-34d1-460b-b884-9d7ae6ddeb18", "name": "Toxic Deluge", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
+{"oracle_id": "afc2a3a7-eb69-4fcb-b3a3-444dccb735d7", "name": "Toxic Nim", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "96ccad44-7912-4fdb-bb2d-9d16cc3cd68a", "name": "Toxin Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "c71b2325-bde6-4364-a93b-8477ffeb25d8", "name": "Toxrill, the Corrosive", "llm_labels": ["card_draw", "board_wipe"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "63788566-e25a-44bb-bb55-197e1b93b3e8", "name": "Trading Post", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1686,6 +1835,7 @@
 {"oracle_id": "45d40cdb-21cc-4569-a894-83dd3026c947", "name": "Triceraton Commander", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "5bca05c1-1c0a-45f4-aa20-69f68b99cd7e", "name": "Trickster's Elk", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "56e05b17-aa1d-483d-857c-4cab4f12aa8a", "name": "Triplicate Titan", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "d5b131c7-29d4-4745-95e3-70bdf9bf54b3", "name": "Triskaidekaphobia", "llm_labels": ["wincons"], "regex_labels": [], "diff": {"only_llm": ["wincons"], "only_regex": []}}
 {"oracle_id": "3ded0c0c-40ce-4d14-a9a6-b023bc19ee0e", "name": "Triumph of the Hordes", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "74c4c1e2-c50d-4c8f-889a-0d5674dc6d67", "name": "Turn to Frog", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "05d7222b-cc08-4f1f-8e35-6058599572ba", "name": "Twilight Diviner", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1697,6 +1847,7 @@
 {"oracle_id": "740aa9d9-91a9-431e-8bf9-1344e5273e27", "name": "Twists and Turns // Mycoid Maze", "llm_labels": ["lands"], "regex_labels": ["ramp"], "diff": {"only_llm": ["lands"], "only_regex": ["ramp"]}}
 {"oracle_id": "be857d6e-5bf2-491b-ab46-963b4d45adee", "name": "Two-Headed Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "867b3923-692c-4444-a071-518a290e43d8", "name": "Typhoid Mary, Fractured", "llm_labels": ["ramp", "card_draw"], "regex_labels": [], "diff": {"only_llm": ["ramp", "card_draw"], "only_regex": []}}
+{"oracle_id": "08261b68-b261-4e47-a085-c489ba394108", "name": "Tyrranax Atrocity", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "6e42da0c-151e-468d-91cb-5a5b117a9298", "name": "Tyrranax Rex", "llm_labels": ["wincons", "synergy"], "regex_labels": [], "diff": {"only_llm": ["wincons", "synergy"], "only_regex": []}}
 {"oracle_id": "14c8a590-88ec-4982-ad7b-36a219ff6de7", "name": "Tyvar Kell", "llm_labels": ["ramp", "synergy"], "regex_labels": [], "diff": {"only_llm": ["ramp", "synergy"], "only_regex": []}}
 {"oracle_id": "a21d321b-2172-4577-a05b-399a019e3448", "name": "Tyvar the Bellicose", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1762,7 +1913,9 @@
 {"oracle_id": "3567c3c8-b3c7-45b7-935b-b1fdbc973720", "name": "Vandalblast", "llm_labels": ["removal", "board_wipe"], "regex_labels": ["removal"], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "cd2791e8-0b61-49b8-8b72-ff2737df1049", "name": "Vanishing", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "e8d0accc-b320-4c07-8a71-a09db860351e", "name": "Vaultborn Tyrant", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "1950067a-cc57-42a8-b1ee-f03e1b50591b", "name": "Vector Asp", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "002965be-a36f-4a09-9ce0-c6535bca1703", "name": "Veil of Summer", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "eafd7ba5-691d-4f8d-94bb-70a5612245a1", "name": "Venerated Rotpriest", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "277c8ee9-0157-4e45-96ad-1b67716955ee", "name": "Vengeful Dead", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "ffe05d4b-0ec9-4319-bb11-1366dc091224", "name": "Venom Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "0f41cefc-d6ff-4db7-ba35-502b7e081de1", "name": "Venser, Shaper Savant", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
@@ -1773,6 +1926,9 @@
 {"oracle_id": "556dd333-4066-41f7-98f6-41794754de71", "name": "Vile Entomber", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f2fae95d-074b-4c0c-99cd-f9385a424c05", "name": "Villainous Wealth", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "8998d211-5ca6-41d2-bc64-f51f70bd41e5", "name": "Vines of Vastwood", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "3b1647d1-9aec-454f-a215-e28633cb7a2d", "name": "Viral Drake", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "1d5ebb4b-0248-4255-8e1a-bcba4d5eaf7f", "name": "Viridian Betrayers", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "8ba5e97b-3eac-4291-8674-4b402a5554bc", "name": "Viridian Corrupter", "llm_labels": ["removal", "synergy"], "regex_labels": ["removal"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8b9119b0-9948-497f-aa92-2879d07bed1c", "name": "Viridian Longbow", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "af6438b9-3fde-45c9-af69-dff686c1e0de", "name": "Virtue of Courage // Embereth Blaze", "llm_labels": ["card_draw", "removal"], "regex_labels": ["removal"], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
 {"oracle_id": "f0bbcabf-29e7-4c7e-893f-86b64d3620a9", "name": "Virtue of Knowledge // Vantress Visions", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1812,6 +1968,7 @@
 {"oracle_id": "9ab36915-b600-4970-961a-403f5da0dba1", "name": "Wanderwine Prophets", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "47f75e25-8a52-4452-a3a8-bf1bd00942d1", "name": "Warren Instigator", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "00fdcc19-88ed-46c3-91f0-095806228105", "name": "Waste Not", "llm_labels": ["card_draw", "synergy"], "regex_labels": ["ramp"], "diff": {"only_llm": ["card_draw", "synergy"], "only_regex": ["ramp"]}}
+{"oracle_id": "17f8e8cb-cd1b-4d94-9efa-ce268e8e7096", "name": "Water Wings", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "06ef46c6-00ba-40e6-b866-d0095ab83749", "name": "Wave Goodbye", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "24f7143c-d43a-4120-baa0-0235b15d8186", "name": "Wave of Reckoning", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "5b8b1f03-9e2e-40f2-97e0-c9fb8d780d56", "name": "Wave of Vitriol", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
@@ -1828,6 +1985,7 @@
 {"oracle_id": "13a3f2c1-0454-4661-a462-542254f8360d", "name": "Whirlpool Rider", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "b7a1c54b-bb2f-4423-865a-ad114cd18c76", "name": "Whirlpool Warrior", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "7bbc5f3a-f8fb-47e8-837e-ce319bc489de", "name": "Whispering Madness", "llm_labels": ["card_draw"], "regex_labels": [], "diff": {"only_llm": ["card_draw"], "only_regex": []}}
+{"oracle_id": "18d270bf-d0d3-4fac-a8d2-5f920e789bb5", "name": "Whispering Specter", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "9ad4f730-a18e-4a7c-a468-a926c718c741", "name": "Whispersilk Cloak", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "6022608a-6cf2-45bd-adec-63211710a5ed", "name": "White Auracite", "llm_labels": ["removal"], "regex_labels": ["ramp", "removal"], "diff": {"only_llm": [], "only_regex": ["ramp"]}}
 {"oracle_id": "fa6d7d68-34e3-4ff6-ae6c-36848974555a", "name": "Wickerfolk Thresher", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -1845,6 +2003,7 @@
 {"oracle_id": "499a4715-6776-461b-bee4-22ed172d455e", "name": "Winds of Abandon", "llm_labels": ["removal", "board_wipe"], "regex_labels": ["removal"], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "f525cf10-e24c-4c46-9a13-6f8579d09d50", "name": "Winds of Change", "llm_labels": [], "regex_labels": ["card_draw"], "diff": {"only_llm": [], "only_regex": ["card_draw"]}}
 {"oracle_id": "6840a63d-d627-4a18-afa9-018406767642", "name": "Winds of Rebuke", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
+{"oracle_id": "b302bce5-d7ad-46d8-9dbf-8159e8709b4f", "name": "Wing Shards", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "a178a789-1f5f-46ca-a90b-574bd236a671", "name": "Winged Boots", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "6f0d8900-8460-4b31-8b67-eb4e470c3317", "name": "Winged Hive Tyrant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "24e96682-14ca-4a62-a920-2d686c8a5dbf", "name": "Winged Sliver", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
@@ -1852,12 +2011,14 @@
 {"oracle_id": "02598a35-1b11-4abe-89cd-fc44c8c36c15", "name": "Winota, Joiner of Forces", "llm_labels": ["protection", "synergy"], "regex_labels": [], "diff": {"only_llm": ["protection", "synergy"], "only_regex": []}}
 {"oracle_id": "1275653f-de4e-4fe9-aad8-88555fa11680", "name": "Wirewood Lodge", "llm_labels": ["lands", "synergy"], "regex_labels": ["lands"], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "67a52a74-9474-4f4e-8785-6ff54078a8ca", "name": "Wirewood Symbiote", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "7411a8f4-b736-482f-886e-5fa671e94e0d", "name": "Witchbane Orb", "llm_labels": ["protection"], "regex_labels": ["board_wipe"], "diff": {"only_llm": ["protection"], "only_regex": ["board_wipe"]}}
 {"oracle_id": "696f554d-0485-48a5-9273-3f6fb7d16a5d", "name": "Witherbloom Apprentice", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a5f5e71e-83a7-468d-829a-6392b764c76e", "name": "Witness Protection", "llm_labels": ["removal"], "regex_labels": [], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "7579f57d-c76e-4703-a030-34fb7160cb23", "name": "Wolfwillow Haven", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "09070db6-01f6-4a8a-b167-a7825e6959f4", "name": "Wolverine Riders", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "7100fe0c-1c2a-461a-83b3-684d44279081", "name": "Wolverine, Claws Out", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "d0e80414-abde-4f5e-9539-3efc83aa507f", "name": "Wondrous Crucible", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
+{"oracle_id": "7756d2b9-7b10-4d05-8ad3-8d8f39c1eb23", "name": "Woodcutter's Grit", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "523d3e3d-8fdf-44f8-868d-7b00995e4577", "name": "Words of Wind", "llm_labels": ["synergy"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["synergy"], "only_regex": ["card_draw"]}}
 {"oracle_id": "319ee221-bace-41e9-b386-6b528bd780c1", "name": "Workshop Assistant", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "3c075bb6-1831-4521-bd8d-4ed2825ae796", "name": "World Shaper", "llm_labels": ["ramp"], "regex_labels": [], "diff": {"only_llm": ["ramp"], "only_regex": []}}
@@ -1872,14 +2033,17 @@
 {"oracle_id": "a6a7bf77-0560-4572-a826-3bc9df1f78d1", "name": "Y'shtola Rhul", "llm_labels": [], "regex_labels": ["removal"], "diff": {"only_llm": [], "only_regex": ["removal"]}}
 {"oracle_id": "a1e232c0-dc38-47be-a5a0-f68bc1d86a29", "name": "Yawgmoth, Thran Physician", "llm_labels": ["card_draw", "removal"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["removal"], "only_regex": []}}
 {"oracle_id": "0adede77-5181-4190-8066-4797cefe0189", "name": "Yenna, Redtooth Regent", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "49aa87c7-034b-409d-b37f-50db6a42e533", "name": "You See a Guard Approach", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "5fac139a-07d3-4e6c-98e3-d98b199f7a6f", "name": "Young Pyromancer", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f48f69c0-cca8-4f44-84cc-71e7cbbb9208", "name": "Your Temple Is Under Attack", "llm_labels": ["card_draw", "protection"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "6d37ba4b-ff56-4eec-9dc2-2d7f357dc9c9", "name": "Youthful Valkyrie", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a2375a23-a1f0-4514-87a0-e699f91acd7d", "name": "Zagras, Thief of Heartbeats", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
+{"oracle_id": "acb0fa6a-89c8-4957-881e-c61659e86f97", "name": "Zamriel, Seraph of Steel", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "04260930-ff38-4b35-9ec4-e89196a4f2c7", "name": "Zegana, Utopian Speaker", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "a0af158b-f42a-4022-a438-e0a2e1fd6d9e", "name": "Zendikar Resurgent", "llm_labels": ["ramp", "card_draw"], "regex_labels": ["card_draw"], "diff": {"only_llm": ["ramp"], "only_regex": []}}
 {"oracle_id": "a842cc2b-52eb-4dc5-86c6-6575c2ed913d", "name": "Zendikar's Roil", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "8f52fc65-a914-421a-9426-21eb520d55d5", "name": "Zenos yae Galvus // Shinryu, Transcendent Rival", "llm_labels": ["board_wipe", "wincons"], "regex_labels": ["wincons"], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
+{"oracle_id": "2f8b07ef-9d00-4eb6-a395-b5033aa3f80e", "name": "Zephid's Embrace", "llm_labels": ["protection"], "regex_labels": [], "diff": {"only_llm": ["protection"], "only_regex": []}}
 {"oracle_id": "7b515c56-7b1e-42a8-82b0-1b30201fb162", "name": "Zirda, the Dawnwaker", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
 {"oracle_id": "f1190fb9-72a2-48f8-bc2d-61240f1e9119", "name": "Zodiark, Umbral God", "llm_labels": ["board_wipe"], "regex_labels": [], "diff": {"only_llm": ["board_wipe"], "only_regex": []}}
 {"oracle_id": "5446c92f-ff22-4e9b-a2f6-e64c8560c1e0", "name": "Zombie Master", "llm_labels": ["synergy"], "regex_labels": [], "diff": {"only_llm": ["synergy"], "only_regex": []}}
