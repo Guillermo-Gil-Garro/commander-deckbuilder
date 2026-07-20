@@ -295,6 +295,18 @@ export function Result({
     [shownDeck.nonbasic_cards, shownDeck.basic_lands],
   );
 
+  // Built once, placed differently per layout: inside the swap workspace it
+  // renders just before the maybeboard bench; in the read-only view it trails
+  // the deck.
+  const tokensPanel =
+    tokens.length > 0 ? (
+      <TokensPanel
+        tokens={tokens}
+        tokenArt={tokenArt}
+        onPickCopy={(token, copy) => setTokenPick({ token, copy })}
+      />
+    ) : null;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-3">
@@ -426,23 +438,20 @@ export function Result({
               onToggleAdvanced={setAdvanced}
               liveColors={liveColors}
               colorBaseline={colorBaseline}
+              tokensPanel={tokensPanel}
             />
           ) : (
-            <DeckView
-              result={shownDeck}
-              onArtSelect={setArtCard}
-              pdfArtOverrides={pdfArtOverrides}
-              tokenOverrides={tokenOverrides}
-              liveColors={liveColors}
-              colorBaseline={colorBaseline}
-            />
-          )}
-          {tokens.length > 0 && (
-            <TokensPanel
-              tokens={tokens}
-              tokenArt={tokenArt}
-              onPickCopy={(token, copy) => setTokenPick({ token, copy })}
-            />
+            <>
+              <DeckView
+                result={shownDeck}
+                onArtSelect={setArtCard}
+                pdfArtOverrides={pdfArtOverrides}
+                tokenOverrides={tokenOverrides}
+                liveColors={liveColors}
+                colorBaseline={colorBaseline}
+              />
+              {tokensPanel}
+            </>
           )}
         </>
       )}
@@ -467,6 +476,7 @@ function SwapWorkspace({
   onToggleAdvanced,
   liveColors,
   colorBaseline,
+  tokensPanel,
 }: {
   deck: BuildResult;
   /** `deck` with the art picker's printings applied — what the views render.
@@ -483,6 +493,9 @@ function SwapWorkspace({
   onToggleAdvanced: (value: boolean) => void;
   liveColors: Record<string, ColorSourceRow> | null;
   colorBaseline: Record<string, ColorSourceRow> | null;
+  /** Rendered just before the maybeboard bench (null when the deck makes no
+   *  tokens). Built by the parent, which owns the token art state. */
+  tokensPanel: ReactNode;
 }) {
   const [bench, setBench] = useState<Maybeboard | null>(null);
   // Active swap: X marked to leave, the same-role candidates, and the chosen Y.
@@ -654,6 +667,8 @@ function SwapWorkspace({
         liveColors={liveColors}
         colorBaseline={colorBaseline}
       />
+
+      {tokensPanel}
 
       {/* Bench only: the active-swap candidates render as a modal instead
           (below), so the player never has to scroll past 100 cards to see
