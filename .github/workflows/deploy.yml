@@ -1,0 +1,68 @@
+name: Deploy to HF Space
+
+# GitHub is the source of truth; this deploys it to the Hugging Face Space.
+#  - on push to main: ship the code as-is.
+#  - weekly (and on manual dispatch): regenerate the data first (new sets,
+#    fresh EDHREC ranking, re-precached featured pages), then ship — so the
+#    Space picks up new cards and drifting inclusion %s without anyone running
+#    a command. New cards arrive untagged (they fall to `synergy`) until the
+#    LLM tagging phase; that is the accepted trade-off for now.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch: {}
+
+# Never let two deploys race the Space's git history.
+concurrency:
+  group: deploy-hf
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-python@v5
+        if: github.event_name != 'push'
+        with:
+          python-version: '3.11'
+
+      - name: Install the backend (for the data pipeline)
+        if: github.event_name != 'push'
+        run: pip install -e ./backend
+
+      - name: Regenerate data (pool, ranking, featured precache)
+        if: github.event_name != 'push'
+        run: |
+          set -e
+          # New Commander-legal cards from any set released since the last run.
+          (cd backend && python -m pipeline.build)
+          # Fresh commander popularity ranking.
+          python scripts/precache_edhrec_ranking.py
+          # Re-precache the featured pages; best-effort (on-demand + the TTL
+          # cover freshness anyway, and a transient EDHREC hiccup must not block
+          # the deploy).
+          python scripts/precache_edhrec.py || true
+          git config user.name "deckbuilder-bot"
+          git config user.email "deckbuilder-bot@users.noreply.github.com"
+          git add -f data/processed/cards.jsonl data/edhrec_ranking.json \
+                     data/cache/edhrec/*--optimized.json
+          git commit -m "chore(data): weekly refresh (pool, ranking, precache)" \
+            || echo "No data changes this week."
+
+      - name: Push to the Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git lfs install
+          git push \
+            "https://Caskis:${HF_TOKEN}@huggingface.co/spaces/Caskis/commander-deckbuilder" \
+            HEAD:main --force
