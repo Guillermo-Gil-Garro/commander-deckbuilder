@@ -29,6 +29,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
+          # Full history: HF rejects a shallow push ("shallow update not allowed").
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         if: github.event_name != 'push'
