@@ -60,7 +60,7 @@ jobs:
 
       - name: Push to the Hugging Face Space
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.COMMANDER_DECKBUILDER_HF_SPACE }}
         run: |
           git lfs install
           git push \
