@@ -190,8 +190,18 @@ No mezclar (decisión de Guille 2026-07-20).
    store 5.283 → 5.527, `to label: 0`. No se amplía a más comandantes por ahora: el grupo no
    juega otros (decisión de Guille 2026-07-21). Validador oid+nombre contra el pool obligatorio
    **antes** de cada merge (un ~1% de typos a mano contamina el dataset si no se filtra).
-2. 🔄 Eval holdout (15%, estratificado) → precision/recall por categoría → decidir con criterio
-   qué y cómo se entrena. Baseline a batir: el regex tagger.
+2. 🔄 Eval holdout (15%, estratificado, seed fijo) — `eval_holdout.py` (2026-07-21). Dataset
+   5.527, train 4.698 / test 829. **Regex (el listón): MACRO-F1 0.64** — casi perfecto en
+   léxicas (lands 0.99, board_wipe 0.84, ramp 0.82, removal 0.81, card_draw 0.72) pero
+   **ciego a `protection` (0.00, no tiene reglas v3) y flojo en `synergy` (0.29)**. Un
+   **logreg BoW solo-numpy (thr 0.5): MACRO-F1 0.53** — pierde en léxicas y colapsa en las
+   raras (`wincons` n=10 → 0.00 a 0.5), **pero ya bate al regex justo donde este es ciego:
+   protection 0.25 vs 0.00, synergy 0.45 vs 0.29.** Confirma la tesis (hueco aprendible) y
+   señala las palancas: umbral por categoría (0.5 mata el recall de las raras), class
+   weighting, mejores features (char n-grams, símbolos de maná) y probablemente un modelo
+   serio (sklearn tf-idf). Cuello de botella = soporte de las categorías raras
+   (wincons ~67, protection ~32), no volumen global. **Decisión de motor pendiente del
+   siguiente baseline.**
 3. ⬜ Entrenar el modelo (offline, sin API).
 4. ⬜ ML etiqueta el pool completo, con gate de confianza.
 5. ⬜ Auditoría del etiquetado ML con Opus.
