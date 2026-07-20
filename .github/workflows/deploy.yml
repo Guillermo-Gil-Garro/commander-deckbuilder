@@ -46,13 +46,14 @@ jobs:
         run: |
           set -e
           # New Commander-legal cards from any set released since the last run.
+          # The Scryfall pool is essential — a failure here must fail the deploy.
           (cd backend && python -m pipeline.build)
-          # Fresh commander popularity ranking.
-          python scripts/precache_edhrec_ranking.py
-          # Re-precache the featured pages; best-effort (on-demand + the TTL
-          # cover freshness anyway, and a transient EDHREC hiccup must not block
-          # the deploy).
-          python scripts/precache_edhrec.py || true
+          # The EDHREC precaches are best-effort: EDHREC rate-limits CI IPs
+          # (connection resets), and the in-app 7-day TTL refreshes these on
+          # demand anyway, so a hiccup must not block the deploy. A failure keeps
+          # the previously committed ranking / precache.
+          python scripts/precache_edhrec_ranking.py || echo "ranking refresh skipped"
+          python scripts/precache_edhrec.py || echo "featured precache skipped"
           git config user.name "deckbuilder-bot"
           git config user.email "deckbuilder-bot@users.noreply.github.com"
           git add -f data/processed/cards.jsonl data/edhrec_ranking.json \
