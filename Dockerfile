@@ -36,6 +36,9 @@ RUN pip install --no-cache-dir -e ./backend
 # without any of these, so they belong in the image, not in a volume.
 COPY banlist.yaml quotas.yaml rules.yaml featured_commanders.yaml ./
 COPY data/tags/llm_tags.jsonl data/tags/llm_tags.jsonl
+# The model's auto-tags for pool cards no human/LLM batch reached (keeps new
+# sets out of the `synergy` bucket). Regenerated in CI from data/tags/model.json.
+COPY data/tags/model_tags.jsonl data/tags/model_tags.jsonl
 
 # The EDHREC popularity ranking (committed, ~70 KB): without it the commander
 # picker degrades to alphabetical order.

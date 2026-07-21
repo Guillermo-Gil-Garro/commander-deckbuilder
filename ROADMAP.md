@@ -221,9 +221,23 @@ No mezclar (decisión de Guille 2026-07-20).
      no la aprende con más datos. **Confirma que wincons vive bajo el gate de confianza +
      revisión Opus, no en auto-merge.** La trampa del infect (60+ criaturas de veneno que el
      modelo daba como wincons) quedó como `synergy` = negativos-frontera de oro.
-3. ⬜ Entrenar el modelo (offline, sin API).
-4. ⬜ ML etiqueta el pool completo, con gate de confianza.
-5. ⬜ Auditoría del etiquetado ML con Opus.
+3. ✅ **Modelo entrenado + exportado** (2026-07-21). `backend/tags/model.py` = featurizer +
+   inferencia en **Python puro (stdlib, sin numpy ni sklearn)**; el runtime nunca importa ML.
+   El entrenador `train_model.py` (sklearn dev-only) usa **ese mismo featurizer** → paridad
+   train/inferencia por construcción. Exporta `data/tags/model.json` (vocab, idf, coefs
+   densos, umbrales, política). Test-fold **MACRO-F1 0.77**. `wincons` marcada `gate`, el
+   resto `auto`.
+4. ✅ **Pool completo etiquetado + gate + wiring** (2026-07-21). `tag_pool.py` (Python puro)
+   corre el modelo sobre las 25.494 cartas sin etiquetar → **13.100 auto-etiquetadas** en
+   `data/tags/model_tags.jsonl`; las `wincons` (29) van a `review_queue.jsonl`, nunca
+   auto-aplican. `tagger_from_store` gana una **capa de modelo** (explícito humano/LLM >
+   modelo > fallback de tierras > vacío); `build_app_state` la carga. Verificado: Krenko y
+   Urza construyen OPTIMAL stage=none. **El bucle se cierra en CI:** `tag_pool.py` corre en
+   el deploy (es stdlib) tras `pipeline.build`, así las cartas de sets nuevos se auto-etiquetan
+   cada semana sin intervención. 9 tests nuevos (`test_tag_model.py`), 708 verdes.
+5. 🔄 **Auditoría del etiquetado ML con Opus.** `review_queue.jsonl` (29 wincons dudosas)
+   pendiente de tu pase. El auto-etiquetado de las `auto` se puede muestrear a ojo cuando
+   quieras.
 
 **Flujo humano-en-el-bucle para comandantes nuevos** (Guille 2026-07-21): cuando se añada un
 comandante a `featured_commanders.yaml`, Guille abre una sesión de Opus para (a) modelarlo

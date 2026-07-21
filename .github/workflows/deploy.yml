@@ -48,6 +48,10 @@ jobs:
           # New Commander-legal cards from any set released since the last run.
           # The Scryfall pool is essential — a failure here must fail the deploy.
           (cd backend && python -m pipeline.build)
+          # Auto-tag the new cards with the committed model (pure stdlib, no
+          # sklearn) so a fresh set's cards don't silently fall to `synergy`.
+          # Deterministic — a failure here is a real bug, so it fails the deploy.
+          python experiments/tagging/production/tag_pool.py
           # The EDHREC precaches are best-effort: EDHREC rate-limits CI IPs
           # (connection resets), and the in-app 7-day TTL refreshes these on
           # demand anyway, so a hiccup must not block the deploy. A failure keeps
@@ -57,7 +61,7 @@ jobs:
           git config user.name "deckbuilder-bot"
           git config user.email "deckbuilder-bot@users.noreply.github.com"
           git add -f data/processed/cards.jsonl data/edhrec_ranking.json \
-                     data/cache/edhrec/*--optimized.json
+                     data/tags/model_tags.jsonl data/cache/edhrec/*--optimized.json
           git commit -m "chore(data): refresh (pool, ranking, precache)" \
             || echo "No data changes."
 
