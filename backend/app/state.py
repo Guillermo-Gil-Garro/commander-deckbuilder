@@ -53,7 +53,14 @@ from rules.featured import (
 from rules.resolve import DEFAULT_POOL_PATH, REPO_ROOT, NameIndex, name_index_from_cards
 from selector.deck_rules import DEFAULT_RULES_PATH, RulesConfig, load_rules, validate_rules_names
 from selector.greedy import PoolIndex, SelectorError, load_pool
-from tags.store import DEFAULT_STORE_PATH, TagStoreError, load_tags, tagger_from_store
+from tags.store import (
+    DEFAULT_MODEL_TAGS_PATH,
+    DEFAULT_STORE_PATH,
+    TagStoreError,
+    load_model_labels,
+    load_tags,
+    tagger_from_store,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -365,6 +372,7 @@ def build_app_state(
     banlist_path: Path | str = DEFAULT_BANLIST_PATH,
     featured_path: Path | str = DEFAULT_FEATURED_PATH,
     tags_path: Path | str = DEFAULT_STORE_PATH,
+    model_tags_path: Path | str = DEFAULT_MODEL_TAGS_PATH,
     ranking_path: Path | str = DEFAULT_RANKING_PATH,
     solver_time_limit_s: float | None = None,
 ) -> AppState | None:
@@ -421,7 +429,11 @@ def build_app_state(
             f"tag store {tags_path} is empty: every card would fall into "
             f"'synergy' and every quota would be silently violated"
         )
-    tagger = tagger_from_store(tag_store, pool_cards)
+    # Optional model layer: the offline linear tagger's auto-labels for cards no
+    # human/LLM batch reached (new sets). Absent file → prior behavior, so this
+    # never turns a working deploy into a degraded one.
+    model_labels = load_model_labels(model_tags_path)
+    tagger = tagger_from_store(tag_store, pool_cards, model_labels=model_labels)
 
     featured = load_featured(
         featured_path, resolved_banlist=resolved_banlist, name_index=name_index

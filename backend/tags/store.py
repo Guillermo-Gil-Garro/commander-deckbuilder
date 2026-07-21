@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 # Same anchoring pattern as rules.resolve: no pipeline imports needed here.
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_STORE_PATH = REPO_ROOT / "data" / "tags" / "llm_tags.jsonl"
+DEFAULT_MODEL_TAGS_PATH = REPO_ROOT / "data" / "tags" / "model_tags.jsonl"
 DEFAULT_POOL_PATH = REPO_ROOT / "data" / "processed" / "cards.jsonl"
 
 RUBRIC_VERSION = "v3"
@@ -286,20 +287,49 @@ def is_land_card(card: Mapping[str, Any]) -> bool:
     )
 
 
+def load_model_labels(
+    path: Path | str = DEFAULT_MODEL_TAGS_PATH,
+) -> dict[str, set[str]]:
+    """Load the model's pre-computed auto-labels as ``name -> set of labels``.
+
+    ``model_tags.jsonl`` is produced offline (``tag_pool.py``) by the linear
+    tagger: one line per untagged pool card the model tagged with confidence,
+    ``{oracle_id, name, labels}``, gated categories (``wincons``) excluded. A
+    missing file is an empty mapping — the model layer is optional and the
+    tagger falls back to its prior behavior. Names are indexed by full name and
+    any single face."""
+    path = Path(path)
+    if not path.is_file():
+        logger.info("Model tags not found at %s: model layer disabled", path)
+        return {}
+    labels_by_name: dict[str, set[str]] = {}
+    for entry in _read_entries(path):
+        names = {entry.name}
+        if FACE_SEPARATOR in entry.name:
+            names.update(entry.name.split(FACE_SEPARATOR))
+        for name in names:
+            labels_by_name.setdefault(name, set()).update(entry.labels)
+    logger.debug("Loaded model labels for %d names from %s", len(labels_by_name), path)
+    return labels_by_name
+
+
 def tagger_from_store(
     store: Mapping[str, TagEntry],
     pool_cards: Iterable[Mapping[str, Any]] | None = None,
     pool_path: Path | str = DEFAULT_POOL_PATH,
+    *,
+    model_labels: Mapping[str, set[str]] | None = None,
 ) -> Callable[[str], set[str]]:
     """Build the selector-compatible ``name -> set of labels`` callable.
 
-    Store labels win. On top of them there is a *lands fallback layer*: any
-    pool card without a store entry whose type_line (or playable MDFC land
-    face, rubric v2) is a land gets ``{"lands"}``. Rationale: EDHREC pages
-    rarely list basics/staple lands, so most lands will never go through an
-    LLM batch, yet the selector must see them as lands. Names are matched by
-    full Scryfall name or any single face name; unknown names return an
-    empty set (the selector treats that as the synergy bucket).
+    Explicit store labels (human/LLM) win. Below them sits an optional *model
+    layer* (``model_labels``, from ``load_model_labels``): the offline linear
+    tagger's auto-labels for cards no human/LLM batch reached — this is what
+    keeps a new set's cards from silently falling to ``synergy``. Below that, a
+    *lands fallback*: any still-untagged pool card that is a land (or playable
+    MDFC land face, rubric v2) gets ``{"lands"}``, since EDHREC rarely lists
+    staple lands. Names match by full Scryfall name or any single face; an
+    unknown name returns an empty set (the selector's synergy bucket).
     """
     if pool_cards is None:
         pool_cards = _iter_pool_cards(Path(pool_path))
@@ -323,15 +353,19 @@ def tagger_from_store(
             if FACE_SEPARATOR in name:
                 fallback_land_names.update(name.split(FACE_SEPARATOR))
 
+    model_labels = model_labels or {}
     logger.debug(
-        "Store tagger ready: %d tagged names, %d fallback land names",
-        len(labels_by_name), len(fallback_land_names),
+        "Store tagger ready: %d tagged names, %d model names, %d fallback land names",
+        len(labels_by_name), len(model_labels), len(fallback_land_names),
     )
 
     def tag(name: str) -> set[str]:
         labels = labels_by_name.get(name)
         if labels is not None:
             return set(labels)
+        model = model_labels.get(name)
+        if model:
+            return set(model)
         if name in fallback_land_names:
             return {"lands"}
         return set()
