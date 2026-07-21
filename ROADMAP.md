@@ -235,9 +235,18 @@ No mezclar (decisión de Guille 2026-07-20).
    Urza construyen OPTIMAL stage=none. **El bucle se cierra en CI:** `tag_pool.py` corre en
    el deploy (es stdlib) tras `pipeline.build`, así las cartas de sets nuevos se auto-etiquetan
    cada semana sin intervención. 9 tests nuevos (`test_tag_model.py`), 708 verdes.
-5. 🔄 **Auditoría del etiquetado ML con Opus.** `review_queue.jsonl` (29 wincons dudosas)
-   pendiente de tu pase. El auto-etiquetado de las `auto` se puede muestrear a ojo cuando
-   quieras.
+5. ✅ **Auditoría Opus de la cola de wincons** (2026-07-21). Revisadas las 29 gated: **6 son
+   wincons reales** → entradas explícitas en el store (Gallifrey Stands, Halo Fountain,
+   Mayael's Aria, Maze's End, Kamahl, Titanic Ultimatum); las otras 23 son falsos positivos
+   del modelo (Overrun/pump, drenaje genérico, lifegain, mill, ultimates de PW) y conservan
+   sus labels no-wincons correctos. Store 5.727 → **5.733**. El auto-etiquetado de las `auto`
+   se puede muestrear a ojo cuando se quiera. **Nota:** los 23 rechazados reaparecen en
+   `review_queue.jsonl` en cada regeneración (el gate sigue disparando sobre ellos); es
+   ruido advisory conocido, no un pendiente — suprimirlos costaría etiquetarlos explícitos.
+
+**Fase 8 completa.** Motor de etiquetado sostenible y sin dependencia de proveedor, con
+mantenimiento humano-en-el-bucle para comandantes nuevos (arriba) y auto-tag de sets nuevos
+en cada deploy de CI.
 
 **Flujo humano-en-el-bucle para comandantes nuevos** (Guille 2026-07-21): cuando se añada un
 comandante a `featured_commanders.yaml`, Guille abre una sesión de Opus para (a) modelarlo
