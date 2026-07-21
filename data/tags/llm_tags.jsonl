@@ -1848,6 +1848,7 @@
 {"oracle_id": "e46d0b57-5eec-4ab6-b9a7-a5c5cc01cc34", "name": "Galadriel's Dismissal", "labels": ["protection"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "cca15007-2faf-4696-a4c5-2d7b6c1ec5b5", "name": "Gale, Waterdeep Prodigy", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "1ad78038-44f9-4599-84db-fc1a87d9ed45", "name": "Galerider Sliver", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "52680471-a407-418b-9e74-c32308322772", "name": "Gallifrey Stands", "labels": ["wincons", "synergy"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "973c684c-a396-4e40-8aaa-365bc64a6f9a", "name": "Galvanic Relay", "labels": ["card_draw", "synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "a54f0869-94c8-42af-9080-166efb9486a4", "name": "Gamble", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "02746b0e-3ef9-46c0-9517-6c52c2905d0b", "name": "Game Plan", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
@@ -2138,6 +2139,7 @@
 {"oracle_id": "32fe7ac4-86f5-44af-9f73-ee8f6a9ce2ba", "name": "Hall of the Bandit Lord", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "f1750962-a87c-49f6-b731-02ae971ac6ea", "name": "Hallowed Fountain", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "e310ab58-180e-4840-bc8d-9f9b06f1b478", "name": "Hallowed Haunting", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "36a9de4c-8073-475d-8679-e50844eef09e", "name": "Halo Fountain", "labels": ["wincons", "synergy"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "e3955573-3db5-490e-903e-65e0172a9202", "name": "Hammer of Nazahn", "labels": ["protection", "synergy"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "212d058b-69c6-4dc2-8c93-bdfe26dc2ffe", "name": "Hammer of Purphoros", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "2ff5a5ed-d6db-4dfa-b1fd-38ad872ad30a", "name": "Hammerhead, Maggia Boss", "labels": [], "rubric_version": "v2", "source": "llm"}
@@ -2548,6 +2550,7 @@
 {"oracle_id": "7359e82b-db79-488d-a1d4-75a00f12a4cf", "name": "Kaldra Compleat", "labels": ["removal", "protection"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "7bd36106-04fe-481f-b16e-e076dcbb183b", "name": "Kalonian Hydra", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "a32860dd-e8df-4a3c-bdc2-948dcd07cf9a", "name": "Kamahl's Will", "labels": ["removal", "protection"], "rubric_version": "v3", "source": "llm"}
+{"oracle_id": "343fd080-c2c2-4dcd-84dd-c065addbaebe", "name": "Kamahl, Heart of Krosa", "labels": ["wincons"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "4987c458-604a-4727-b360-170616e91e67", "name": "Kambal, Consul of Allocation", "labels": [], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "0b620775-70a5-4423-8453-e403a5b79554", "name": "Kamber, the Plunderer", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "7baffe00-78a4-4675-9c74-29eb3882bd01", "name": "Kami of Transience", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
@@ -2956,8 +2959,10 @@
 {"oracle_id": "16182e01-22ff-4786-985d-919b47c4aa4d", "name": "Matzalantli, the Great Door // The Core", "labels": ["ramp", "card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "1b94a11b-21b0-4465-a520-69608f022fb4", "name": "Mavren Fein, Dusk Apostle", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "f0e85b74-12fb-4d63-853e-7a3f41f731b4", "name": "Maximum Overdrive", "labels": ["protection"], "rubric_version": "v3", "source": "llm"}
+{"oracle_id": "6cb9ca93-e0bb-4758-bf0d-c9a8fce5f11f", "name": "Mayael's Aria", "labels": ["wincons", "synergy"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "4709f11c-aef8-45ac-b2bf-e640c568dfac", "name": "Mayhem Devil", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "38a12bd7-4394-44a8-91a0-6a4ff7fa4f71", "name": "Maze of Ith", "labels": ["lands"], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "49479778-c4c0-43ba-a7b7-45f00d067462", "name": "Maze's End", "labels": ["lands", "wincons"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "800fb917-8898-4eba-9f94-aec6e9d75236", "name": "Mazemind Tome", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "e0420f2c-d578-421e-ae75-e7dc5f70661a", "name": "Mazirek, Kraul Death Priest", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "68957dca-df5c-4051-af22-407cb7e47200", "name": "Meathook Massacre II", "labels": ["board_wipe"], "rubric_version": "v2", "source": "llm"}
@@ -5074,6 +5079,7 @@
 {"oracle_id": "d0ade00d-a496-441d-9b7e-7dc033d3292c", "name": "Titania, Protector of Argoth", "labels": ["ramp"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "6d51f00e-46a5-4064-a0c8-e840c66dbf2b", "name": "Titania, Proud Pummeler", "labels": [], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "42bccda5-1754-4619-b94f-7a72f934a718", "name": "Titania, Voice of Gaea", "labels": [], "rubric_version": "v2", "source": "llm"}
+{"oracle_id": "0cd28580-d718-4d0b-96e3-a836c2911c27", "name": "Titanic Ultimatum", "labels": ["wincons"], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "3da6d24b-ecbd-4a41-a37e-84a19b243414", "name": "Titans' Vanguard", "labels": ["synergy"], "rubric_version": "v2", "source": "llm"}
 {"oracle_id": "c916b81f-700e-4a1a-8c8e-c4685ceaecd2", "name": "Tithe Taker", "labels": [], "rubric_version": "v3", "source": "llm"}
 {"oracle_id": "25c983e0-a8c9-4784-91a4-8fe04c6df882", "name": "Tocasia's Welcome", "labels": ["card_draw"], "rubric_version": "v2", "source": "llm"}

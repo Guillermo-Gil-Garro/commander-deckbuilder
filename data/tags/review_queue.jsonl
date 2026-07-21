@@ -8,13 +8,8 @@
 {"oracle_id": "09b7ea91-2620-4c45-af3c-60bbeab89966", "name": "Eiganjo Dynastorian // Replenish", "gated": {"wincons": 0.89}}
 {"oracle_id": "ae9a398e-f3a7-4878-a14d-0f6c2dac3d83", "name": "Essence Harvest", "gated": {"wincons": 0.763}}
 {"oracle_id": "61dd58e0-9879-4e13-b12d-e7401d4cc42e", "name": "For the Emperor!", "gated": {"wincons": 0.795}}
-{"oracle_id": "52680471-a407-418b-9e74-c32308322772", "name": "Gallifrey Stands", "gated": {"wincons": 0.77}}
 {"oracle_id": "a9bbaad7-c016-4908-a6a7-2c26112a6bf6", "name": "Gideon of the Trials", "gated": {"wincons": 0.859}}
-{"oracle_id": "36a9de4c-8073-475d-8679-e50844eef09e", "name": "Halo Fountain", "gated": {"wincons": 0.752}}
-{"oracle_id": "343fd080-c2c2-4dcd-84dd-c065addbaebe", "name": "Kamahl, Heart of Krosa", "gated": {"wincons": 0.789}}
 {"oracle_id": "84bb960c-c34e-4979-8c0f-893c85cee27d", "name": "Leech Collector // Bloodletting", "gated": {"wincons": 0.788}}
-{"oracle_id": "6cb9ca93-e0bb-4758-bf0d-c9a8fce5f11f", "name": "Mayael's Aria", "gated": {"wincons": 0.781}}
-{"oracle_id": "49479778-c4c0-43ba-a7b7-45f00d067462", "name": "Maze's End", "gated": {"wincons": 0.769}}
 {"oracle_id": "7a021af0-d54d-4220-ad01-1cfed9a65e98", "name": "Press the Advantage", "gated": {"wincons": 0.752}}
 {"oracle_id": "ac5427d7-9af9-4f94-a8c3-da019ec0b5c5", "name": "Psychic Drain", "gated": {"wincons": 0.78}}
 {"oracle_id": "fa38394b-6ac4-460c-ae3a-54d50037715b", "name": "Research // Development", "gated": {"wincons": 0.914}}
@@ -22,7 +17,6 @@
 {"oracle_id": "6f34d70e-7a3a-43f7-b2c9-f89519804d3c", "name": "Skull Storm", "gated": {"wincons": 0.77}}
 {"oracle_id": "49c997d5-7b41-4faf-b898-58db19055671", "name": "Stampede", "gated": {"wincons": 0.82}}
 {"oracle_id": "81674138-08d0-4126-9e6d-27f6e7dd2403", "name": "Tavern Swindler", "gated": {"wincons": 0.796}}
-{"oracle_id": "0cd28580-d718-4d0b-96e3-a836c2911c27", "name": "Titanic Ultimatum", "gated": {"wincons": 0.784}}
 {"oracle_id": "90379825-1894-4b79-bf72-445175e97ffb", "name": "Ulvenwald Oddity // Ulvenwald Behemoth", "gated": {"wincons": 0.787}}
 {"oracle_id": "6944261c-9f35-4a51-9b1a-c29e24f292e1", "name": "Volcanic Rush", "gated": {"wincons": 0.82}}
 {"oracle_id": "83045a9c-57da-411f-80aa-56178d14856b", "name": "Vraska, Scheming Gorgon", "gated": {"wincons": 0.838}}

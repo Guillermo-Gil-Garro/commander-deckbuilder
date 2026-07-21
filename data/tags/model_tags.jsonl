@@ -4949,7 +4949,6 @@
 {"oracle_id": "dcaaddee-00b1-495c-9161-40c91c900aac", "name": "Hallowed Burial", "labels": ["board_wipe"]}
 {"oracle_id": "ee8fd844-4551-4e44-9740-00d2e76eb337", "name": "Hallowed Ground", "labels": ["removal"]}
 {"oracle_id": "e9541db2-2874-4307-b896-c403f6d82e68", "name": "Hallowed Moonlight", "labels": ["card_draw"]}
-{"oracle_id": "36a9de4c-8073-475d-8679-e50844eef09e", "name": "Halo Fountain", "labels": ["card_draw"]}
 {"oracle_id": "1201c146-54af-4668-a544-cde3ece23f2e", "name": "Halo Scarab", "labels": ["ramp"]}
 {"oracle_id": "a5fdf1b2-da22-4fa6-810a-85c3f7587535", "name": "Halt Order", "labels": ["card_draw", "removal"]}
 {"oracle_id": "c7371040-160c-4502-b7f9-77b7f54cc020", "name": "Hama Pashar, Ruin Seeker", "labels": ["synergy"]}
@@ -5907,7 +5906,6 @@
 {"oracle_id": "68d0b5c0-df6a-4eea-8dea-20358270f916", "name": "Kalonian Behemoth", "labels": ["protection"]}
 {"oracle_id": "7d012731-f921-47bf-a2da-ce494650cd4f", "name": "Kamahl's Druidic Vow", "labels": ["card_draw"]}
 {"oracle_id": "defa9b92-4b54-4b00-852e-6c5ec4015643", "name": "Kamahl's Sledge", "labels": ["removal"]}
-{"oracle_id": "343fd080-c2c2-4dcd-84dd-c065addbaebe", "name": "Kamahl, Heart of Krosa", "labels": ["protection"]}
 {"oracle_id": "153bb46f-ee8a-4da3-aab4-ae884f6ff403", "name": "Kamahl, Pit Fighter", "labels": ["removal"]}
 {"oracle_id": "619e0686-e88c-4238-8364-75395e733533", "name": "Kambal, Profiteering Mayor", "labels": ["synergy"]}
 {"oracle_id": "e937e0f5-ca35-4dce-9f05-8f2075731628", "name": "Kami of Ancient Law", "labels": ["removal"]}
@@ -6876,7 +6874,6 @@
 {"oracle_id": "7f546d54-584d-4bec-8fbb-1ea2f8ab277e", "name": "Mayael the Anima", "labels": ["ramp", "card_draw"]}
 {"oracle_id": "3cb91e96-285d-4191-97cd-ee7ce5d86eb2", "name": "Maze Skullbomb", "labels": ["card_draw"]}
 {"oracle_id": "b7b51ab1-403e-4640-8827-b04965aa6760", "name": "Maze of Shadows", "labels": ["lands"]}
-{"oracle_id": "49479778-c4c0-43ba-a7b7-45f00d067462", "name": "Maze's End", "labels": ["lands"]}
 {"oracle_id": "b4e85b7c-3047-46d1-a6e6-2ec5eac0268a", "name": "Maze's Mantle", "labels": ["protection"]}
 {"oracle_id": "26ad696e-9f17-4110-9c59-b9211e662900", "name": "Me, the Immortal", "labels": ["card_draw"]}
 {"oracle_id": "708bf989-dd8d-4066-a463-96cc5eadbb06", "name": "Meadowboon", "labels": ["removal"]}
