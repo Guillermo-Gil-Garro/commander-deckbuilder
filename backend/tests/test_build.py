@@ -1,3 +1,4 @@
+import gzip
 import json
 from pathlib import Path
 
@@ -53,6 +54,13 @@ def test_has_playable_type_excludes_stickers_and_attractions() -> None:
     assert has_playable_type({"name": "No Type Line"})
 
 
+def _write_bulk(path: Path, cards: list) -> None:
+    """Scryfall bulk is gzipped JSONL (2026-08); build() reads it as such."""
+    with gzip.open(path, "wt", encoding="utf-8") as fh:
+        for card in cards:
+            fh.write(json.dumps(card) + "\n")
+
+
 def test_build_filters_and_writes_jsonl(tmp_path: Path) -> None:
     bulk = [
         _card("Keep Me"),
@@ -60,8 +68,8 @@ def test_build_filters_and_writes_jsonl(tmp_path: Path) -> None:
         _card("A Token", layout="token"),
         _card("An Emblem", layout="emblem"),
     ]
-    bulk_path = tmp_path / "bulk.json"
-    bulk_path.write_text(json.dumps(bulk), encoding="utf-8")
+    bulk_path = tmp_path / "bulk.jsonl.gz"
+    _write_bulk(bulk_path, bulk)
     output_path = tmp_path / "cards.jsonl"
 
     total, legal, written = build(bulk_path, output_path)
@@ -100,8 +108,8 @@ def test_build_writes_image_uris(tmp_path: Path) -> None:
             },
         },
     ]
-    bulk_path = tmp_path / "bulk.json"
-    bulk_path.write_text(json.dumps([_card("Keep Me"), mdfc]), encoding="utf-8")
+    bulk_path = tmp_path / "bulk.jsonl.gz"
+    _write_bulk(bulk_path, [_card("Keep Me"), mdfc])
     output_path = tmp_path / "cards.jsonl"
 
     build(bulk_path, output_path)

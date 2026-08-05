@@ -26,7 +26,7 @@ HEADERS = {
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = REPO_ROOT / "data" / "cache"
-BULK_FILE = CACHE_DIR / "oracle_cards.json"
+BULK_FILE = CACHE_DIR / "oracle_cards.jsonl.gz"
 META_FILE = CACHE_DIR / "oracle_cards.meta.json"
 
 _DOWNLOAD_TIMEOUT = httpx.Timeout(30.0, read=300.0)
@@ -67,12 +67,15 @@ def _is_cache_fresh(bulk_meta: dict) -> bool:
 
 
 def _download_bulk(client: httpx.Client, bulk_meta: dict) -> None:
-    download_uri = bulk_meta.get("download_uri")
+    # Scryfall migrated bulk data to gzipped JSONL (2026-08): `download_uri`
+    # (uncompressed .json array) was replaced by `jsonl_download_uri` (.jsonl.gz).
+    # We store the .gz as-is; build.py reads it with gzip.open, line by line.
+    download_uri = bulk_meta.get("jsonl_download_uri")
     if not download_uri:
-        raise ScryfallError("Bulk metadata is missing 'download_uri'")
+        raise ScryfallError("Bulk metadata is missing 'jsonl_download_uri'")
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    tmp_path = BULK_FILE.with_suffix(".json.tmp")
+    tmp_path = BULK_FILE.with_name(BULK_FILE.name + ".tmp")
     logger.info("Downloading %s to %s", download_uri, BULK_FILE)
 
     try:
@@ -92,8 +95,8 @@ def _download_bulk(client: httpx.Client, bulk_meta: dict) -> None:
         json.dumps(
             {
                 "updated_at": bulk_meta.get("updated_at"),
-                "download_uri": download_uri,
-                "size": bulk_meta.get("size"),
+                "jsonl_download_uri": download_uri,
+                "size": bulk_meta.get("compressed_size"),
             },
             indent=2,
         ),

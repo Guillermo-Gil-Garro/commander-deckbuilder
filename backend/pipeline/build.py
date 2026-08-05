@@ -8,6 +8,7 @@ playable layouts, and writes one Card JSON per line to
 
 from __future__ import annotations
 
+import gzip
 import json
 import logging
 from pathlib import Path
@@ -45,8 +46,8 @@ def has_playable_type(data: dict) -> bool:
 def build(bulk_path: Path, output_path: Path) -> tuple[int, int, int]:
     """Filter and parse the bulk file. Returns (total, legal, written)."""
     logger.info("Loading bulk file %s", bulk_path)
-    with bulk_path.open(encoding="utf-8") as fh:
-        cards = json.load(fh)
+    with gzip.open(bulk_path, "rt", encoding="utf-8") as fh:
+        cards = [json.loads(line) for line in fh if line.strip()]
 
     total = len(cards)
     legal = 0
