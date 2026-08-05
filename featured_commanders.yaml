@@ -138,3 +138,10 @@ featured:
     description: "Copia tus hechizos y habilidades de Eldrazi para doblar cada turno."
   - name: The First Sliver                 # WUBRG
     description: "Cada sliver encadena cascadas y llena tu mesa de bichos gratis."
+  # --- Madness / descarte (2026-07-21) ---
+  - name: Anje Falkenrath                  # BR
+    description: "Descarta para robar, lanza cartas con madness baratas y sacrifica en cadena."
+  - name: Asmoranomardicadaistinaculdacar   # BR
+    description: "Bucle de Food y cementerio: recicla lo descartado y sacrifica comida para quemar."
+  - name: "Norman Osborn // Green Goblin"    # UBR
+    description: "Golpea sin bloqueo y llena el cementerio, luego lanza lo descartado con mayhem."

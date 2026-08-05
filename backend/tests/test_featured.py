@@ -182,8 +182,8 @@ def test_real_featured_commanders_load() -> None:
     resolved = resolve_banlist(load_banlist(), index)
     featured = load_featured(resolved_banlist=resolved, name_index=index)
 
-    assert len(featured) == 61  # +5 artifacts commanders (2026-07-18)
-    assert len({c.oracle_id for c in featured}) == 61
+    assert len(featured) == 64  # +3 madness/discard (2026-07-21)
+    assert len({c.oracle_id for c in featured}) == 64
     names = {c.name for c in featured}
     assert "Krenko, Mob Boss" in names
     assert all(c.oracle_id not in resolved.banned_as_commander for c in featured)

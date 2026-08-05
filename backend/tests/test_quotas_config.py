@@ -235,7 +235,7 @@ def test_real_yaml_defaults_and_commanders() -> None:
     # The rest of the section is the featured commanders (2026-07-15); the
     # per-commander mapping itself lives in the YAML, not duplicated here. 61
     # since 5 artifacts commanders were added 2026-07-18.
-    assert len(config.commanders) == 61
+    assert len(config.commanders) == 64
     assert all(
         cmd.archetype in config.archetypes for cmd in config.commanders.values()
     )

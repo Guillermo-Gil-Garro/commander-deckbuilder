@@ -448,3 +448,18 @@ commanders:
                                      # rampa a bombas y dobla hechizos/habilidades).
   "The First Sliver":
     archetype: aggro
+  "Anje Falkenrath":
+    archetype: aristocrats
+    overrides:
+      wincons: [0, 5]              # 2026-07-21: mazo de madness/grind; gana por
+                                   # drenaje de aristócratas (synergy), no con
+                                   # wincons dedicados. Sin bajar, relajaba el suelo.
+  "Asmoranomardicadaistinaculdacar":
+    archetype: graveyard
+    overrides:
+      wincons: [0, 4]              # 2026-07-21: valor de Food/tumba, sin wincon-carta.
+  "Norman Osborn // Green Goblin":
+    archetype: graveyard
+    overrides:
+      wincons: [0, 4]              # 2026-07-21: Grixis discard/graveyard; gana por
+                                   # presión evasiva + mayhem, no por wincons.
